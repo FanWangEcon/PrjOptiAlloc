@@ -17,7 +17,7 @@
 #' urlcolor: blue
 #' ---
 #' 
-#' Back to **[Fan](https://fanwangecon.github.io/)**'s R4Econ Homepage **[Table of Content](https://fanwangecon.github.io/R4Econ/)**
+#' Back to **[Fan](https://fanwangecon.github.io/)**'s REconTools Homepage **[Table of Content](https://fanwangecon.github.io/REconTools/)**
 #' 
 #' # Outline
 #' 
@@ -45,7 +45,7 @@ options(knitr.duplicate.label = 'allow')
 ## ----loadlib, echo = T, results = 'hide', message=F, warning=F---------------------------------------------------------------------------------------------
 library(tidyverse)
 library(tidymodels)
-library(R4Econ)
+library(REconTools)
 library(knitr)
 library(kableExtra)
 # file name
@@ -53,8 +53,8 @@ st_file_name = 'fst_ces_plan_linlog'
 # Generate R File
 purl(paste0(st_file_name, ".Rmd"), output=paste0(st_file_name, ".R"), documentation = 2)
 # Generate PDF and HTML
-# rmarkdown::render("C:/Users/fan/R4Econ/support/function/fs_funceval.Rmd", "pdf_document")
-# rmarkdown::render("C:/Users/fan/R4Econ/support/function/fs_funceval.Rmd", "html_document")
+# rmarkdown::render("C:/Users/fan/REconTools/support/function/fs_funceval.Rmd", "pdf_document")
+# rmarkdown::render("C:/Users/fan/REconTools/support/function/fs_funceval.Rmd", "html_document")
 
 #' 
 #' ## Get Data

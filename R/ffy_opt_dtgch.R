@@ -15,7 +15,7 @@ ffy_opt_dtgch_cbem4 <- function() {
     #' @references
     #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_fourg.html}
     #' @export
-    #' @import dplyr tidyr stringr broom R4Econ
+    #' @import dplyr tidyr stringr broom REconTools
     #' @examples
     #' ls_opti_alpha_A <- ffy_opt_dtgch_cbem4()
     #' head(ls_opti_alpha_A$df_raw, 10)

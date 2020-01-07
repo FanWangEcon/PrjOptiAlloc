@@ -13,7 +13,7 @@ data(df_hgt_wgt_po)
 }
 \description{
 Data from INCAP and CEBU, used in various projects, \url{http://fanwangecon.github.io}, note po
-stands for project optimal choice, to differentiate this from the files in R4Econ
+stands for project optimal choice, to differentiate this from the files in REconTools
 }
 \examples{
 data(df_hgt_wgt_po)

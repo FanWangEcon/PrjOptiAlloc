@@ -1,7 +1,7 @@
 #' Test Dataset Panel Height and Weight, Guatemala and Philippines, scrambled data, not actual.
 #'
 #' Data from INCAP and CEBU, used in various projects, \url{http://fanwangecon.github.io}, note po
-#' stands for project optimal choice, to differentiate this from the files in R4Econ
+#' stands for project optimal choice, to differentiate this from the files in REconTools
 #'
 #' @docType data
 #'
