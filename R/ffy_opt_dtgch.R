@@ -1,10 +1,11 @@
 ffy_opt_dtgch_cbem4 <- function() {
-    #' Generates A and alpha for linear and log linear problems from Guat Cebu 4 Groups
+    #' Generates A and alpha for linear and log linear problems from Guat Cebu 4 Groups. See *ffv_opt_dtgch_cbem4.Rmd*
     #'
     #' @description
     #' Given a dataset with Y, x1, xothers. Regress with log linear and linear structures
     #' to obtain A and alpha that the linear and log linear optimal allocation problems understand.
     #' dtgch = data guatemala cebu height. There discrete groups, allowing for alpha to differ.
+    #' *ffv_opt_dtgch_cbem4.Rmd* tests the code here and generates rda file that is saved in data folder.
     #'
     #' @return a list with two tibble with guatemala and cebu dataset only some columns and A and alpha lin loglin
     #' \itemize{
@@ -24,8 +25,8 @@ ffy_opt_dtgch_cbem4 <- function() {
     ###############################################
     ### A. Data Selection
     ###############################################
-
-    df_hw <- df_hgt_wgt_po %>% filter(S.country == 'Cebu' & svymthRound == 24 & prot > 0 & hgt > 0) %>% drop_na()
+    data(df_opt_dtgch_aorig)
+    df_hw <- df_opt_dtgch_aorig %>% filter(S.country == 'Cebu' & svymthRound == 24 & prot > 0 & hgt > 0) %>% drop_na()
 
     # Generate Discrete Version of momEdu
     df_hw <- df_hw %>%
@@ -52,7 +53,6 @@ ffy_opt_dtgch_cbem4 <- function() {
 
     # Regress Height At Month 24 on Nutritional Inputs with controls
     rs_hgt_prot_lin = lm(hgt ~ prot:mt_linht + mt_lincv - 1)
-    print(summary(rs_hgt_prot_lin))
     rs_hgt_prot_lin_tidy = tidy(rs_hgt_prot_lin)
 
     ###############################################
@@ -65,7 +65,6 @@ ffy_opt_dtgch_cbem4 <- function() {
 
     # Log and log regression for month 24
     rs_hgt_prot_log = lm(log(hgt) ~ log(prot):mt_loght + mt_logcv - 1)
-    print(summary(rs_hgt_prot_log))
     rs_hgt_prot_log_tidy = tidy(rs_hgt_prot_log)
 
     ###############################################
@@ -99,7 +98,9 @@ ffy_opt_dtgch_cbem4 <- function() {
     ###############################################
     # 5. Return
     ###############################################
+    # df_esti still contains all identifying unique individual key information
+    df_esti <- bind_cols(df_hw, df_esti_alpha_A_beta) %>%
+                  select(one_of(c('S.country', 'vil.id', 'indi.id', 'svymthRound', ar_st_varnames)))
 
-    return(list(df_raw = df_hw, df_esti = df_esti_alpha_A_beta))
-
+    return(list(df_raw = df_hw, df_esti = df_esti))
 }

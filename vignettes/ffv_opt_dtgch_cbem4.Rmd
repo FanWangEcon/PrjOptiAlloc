@@ -1,0 +1,137 @@
+---
+title: Generate Data Cebu Four Category Test Regression Results
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generate Data Cebu Four Category Test Regression Results}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+urlcolor: blue
+---
+
+Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAlloc/)**
+
+# Outline
+
+The [Guatemala and Cebu dataset](https://www.sciencedirect.com/science/article/pii/S1570677X16300107) jitter/rand version, select cebu only between 0 and 24. Generates four categories based on initial height and mother education levels. Regress height on protein inputs allowing for heterogeneous effecst for each of the four categories.
+
+## Set Up
+
+```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
+rm(list = ls(all.names = TRUE))
+options(knitr.duplicate.label = 'allow')
+```
+```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
+setwd('C:/Users/fan/PrjOptiAlloc')
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(broom)
+library(ggplot2)
+library(REconTools)
+library(knitr)
+library(kableExtra)
+```
+
+## Get Data
+
+Generate four categories by initial height and mother's education levels combinations.
+
+```{r Load Packages and Process Data}
+# Load Library
+
+# Select Cebu Only
+df_hw_cebu_m24 <- df_hgt_wgt %>% filter(S.country == 'Cebu' & svymthRound == 24 & prot > 0 & hgt > 0) %>% drop_na()
+
+# Generate Discrete Version of momEdu
+df_hw_cebu_m24 <- df_hw_cebu_m24 %>%
+    mutate(momEduRound = cut(momEdu,
+                             breaks=c(-Inf, 10, Inf),
+                             labels=c("MEduLow","MEduHigh"))) %>%
+    mutate(hgt0med = cut(hgt0,
+                             breaks=c(-Inf, 50, Inf),
+                             labels=c("h0low","h0high")))
+
+df_hw_cebu_m24$momEduRound = as.factor(df_hw_cebu_m24$momEduRound)
+df_hw_cebu_m24$hgt0med = as.factor(df_hw_cebu_m24$hgt0med)
+
+# Attach
+attach(df_hw_cebu_m24)
+```
+
+# Regression with Data and Construct Input Arrays
+
+## Linear Regression
+
+Estimation *Production functions* or any other function. Below, Regression height outcomes on input interacted with the categories created before. This will generate category specific marginal effects.
+
+```{r Linear Regression}
+# Input Matrix
+mt_lincv <- model.matrix(~ hgt0 + wgt0)
+mt_linht <- model.matrix(~ sex:hgt0med - 1)
+
+# Regress Height At Month 24 on Nutritional Inputs with controls
+rs_hgt_prot_lin = lm(hgt ~ prot:mt_linht + mt_lincv - 1)
+print(summary(rs_hgt_prot_lin))
+rs_hgt_prot_lin_tidy = tidy(rs_hgt_prot_lin)
+```
+
+## Log-Linear Regression
+
+Now log-linear regressions, where inptut coefficient differs by input groups.
+
+```{r Log-Linear Regression}
+# Input Matrix Generation
+mt_logcv <- model.matrix(~ hgt0 + wgt0)
+mt_loght <- model.matrix(~ sex:hgt0med - 1)
+
+# Log and log regression for month 24
+rs_hgt_prot_log = lm(log(hgt) ~ log(prot):mt_loght + mt_logcv - 1)
+print(summary(rs_hgt_prot_log))
+rs_hgt_prot_log_tidy = tidy(rs_hgt_prot_log)
+```
+
+## Construct Input Arrays $A_i$ and $\alpha_i$
+
+Multiply coefficient vector by covariate matrix to generate *A* vector that is child/individual specific.
+
+```{r Post Regression Input Processing}
+
+# Generate A_i
+ar_Ai_lin <- mt_lincv %*% as.matrix(rs_hgt_prot_lin_tidy %>% filter(!str_detect(term, 'prot')) %>% select(estimate))
+ar_Ai_log <- mt_logcv %*% as.matrix(rs_hgt_prot_log_tidy %>% filter(!str_detect(term, 'prot')) %>% select(estimate))
+
+# Generate alpha_i
+ar_alphai_lin <- mt_linht %*% as.matrix(rs_hgt_prot_lin_tidy %>% filter(str_detect(term, 'prot')) %>% select(estimate))
+ar_alphai_log <- mt_loght %*% as.matrix(rs_hgt_prot_log_tidy %>% filter(str_detect(term, 'prot')) %>% select(estimate))
+
+# Child Weight
+ar_beta <- rep(1/length(ar_Ai_lin), times=length(ar_Ai_lin))
+
+# Estimation Results lin and log both store
+mt_opti <- cbind(ar_alphai_lin, ar_alphai_log, ar_Ai_lin, ar_Ai_log, ar_beta)
+ar_st_varnames <- c('alpha_lin', 'alpha_log', 'A_lin', 'A_log', 'beta')
+df_esti_alpha_A_beta <- as_tibble(mt_opti) %>% rename_all(~c(ar_st_varnames))
+
+# estimation results file to export (keeping data keys)
+df_esti <- bind_cols(df_hw_cebu_m24, df_esti_alpha_A_beta) %>%
+              select(one_of(c('S.country', 'vil.id', 'indi.id', 'svymthRound', ar_st_varnames)))
+
+# Initate Dataframe that will store all estimates and optimal allocation relevant information
+mt_opti <- cbind(ar_alphai_lin, ar_Ai_lin, ar_beta)
+ar_st_varnames <- c('alpha', 'A', 'beta')
+tb_opti <- as_tibble(mt_opti) %>% rename_all(~c(ar_st_varnames))
+
+# Unique beta, A, and alpha groups
+tb_opti_unique <- tb_opti %>% group_by(!!!syms(ar_st_varnames)) %>%
+                    arrange(!!!syms(ar_st_varnames)) %>%
+                    summarise(n_obs_group=n())
+```
+
+# Export Data to */data* Folder
+
+I would like to be able to directly call the dataset generated here in various functions. Save the datafile we just created in the project folder.
+
+```{r}
+df_opt_dtgch_cbem4 <- df_esti 
+usethis::use_data(df_opt_dtgch_cbem4, df_opt_dtgch_cbem4, overwrite = TRUE)
+```

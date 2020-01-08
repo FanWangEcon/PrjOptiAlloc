@@ -54,10 +54,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/ffv_opt_solin_flinf.html">Linear (CRS) Optimal Allocation Solution (Function)</a>
+      <a href="articles/ffv_opt_dtgch_cbem4.html">Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
-      <a href="articles/ffv_opt_solin_flinr.html">Linear (CRS) Optimal Allocation Solution (No Function)</a>
+      <a href="articles/ffv_opt_solin_flinr_vfunc.html">Linear (CRS) Optimal Allocation Solution (Function)</a>
+    </li>
+    <li>
+      <a href="articles/ffv_opt_solin_flinr_vline.html">Linear (CRS) Optimal Allocation Solution (line by line)</a>
     </li>
   </ul>
 </li>
@@ -105,6 +108,7 @@
 <li>rank receiving order</li>
 <li>solve first recipient problem</li>
 <li>solve all others relative to first</li>
+<li>predict expected optimal allocation given allocation: A + alpha*N</li>
 </ol>
 <p><strong>Tests</strong></p>
 <ol>
@@ -112,10 +116,21 @@
 <li>Graphically show how allocations change.</li>
 <li>Gini Inequality measure changes.</li>
 </ol>
+<p>There are two functions</p>
+<ol>
+<li>Inside <em>ffy_opt_solin.R</em>: function <em>ffy_opt_solin_flinr</em> solves the linear allocation problem at a particular rho level.</li>
+<li>But also to process the results, note there are similarity to how we want to process log lin and linear results</li>
+</ol>
 </div>
 <div id="log-linear-function-solution-algorithm" class="section level4">
 <h4 class="hasAnchor">
 <a href="#log-linear-function-solution-algorithm" class="anchor"></a>Log-Linear Function Solution Algorithm</h4>
+</div>
+<div id="results-processing" class="section level4">
+<h4 class="hasAnchor">
+<a href="#results-processing" class="anchor"></a>Results Processing</h4>
+<p>There are N children and teach are Z different planner preference parameters, going from perfect inequality to equality. Given actual allocation, there are observed inputs, and predicted expected inputs. There are two vectors for each planner preference: optimal allocation, and expected outcome given optimal allocation. This structure is the same for both linear and log linear models.</p>
+<p>So how should this be stored. x`</p>
 </div>
 </div>
 </div>

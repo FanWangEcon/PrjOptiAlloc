@@ -2,7 +2,7 @@
 % Please edit documentation in R/ffy_opt_dtgch.R
 \name{ffy_opt_dtgch_cbem4}
 \alias{ffy_opt_dtgch_cbem4}
-\title{Generates A and alpha for linear and log linear problems from Guat Cebu 4 Groups}
+\title{Generates A and alpha for linear and log linear problems from Guat Cebu 4 Groups. See *ffv_opt_dtgch_cbem4.Rmd*}
 \usage{
 ffy_opt_dtgch_cbem4()
 }
@@ -17,6 +17,7 @@ a list with two tibble with guatemala and cebu dataset only some columns and A a
 Given a dataset with Y, x1, xothers. Regress with log linear and linear structures
 to obtain A and alpha that the linear and log linear optimal allocation problems understand.
 dtgch = data guatemala cebu height. There discrete groups, allowing for alpha to differ.
+*ffv_opt_dtgch_cbem4.Rmd* tests the code here and generates rda file that is saved in data folder.
 }
 \examples{
 ls_opti_alpha_A <- ffy_opt_dtgch_cbem4()

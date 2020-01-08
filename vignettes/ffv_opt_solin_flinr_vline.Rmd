@@ -1,8 +1,8 @@
 ---
-title: Linear (CRS) Optimal Allocation Solution (No Function)
+title: Linear (CRS) Optimal Allocation Solution (line by line)
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Linear (CRS) Optimal Allocation Solution (No Function)}
+  %\VignetteIndexEntry{Linear (CRS) Optimal Allocation Solution (line by line)}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
@@ -120,12 +120,16 @@ ar_alphai_log <- mt_loght %*% as.matrix(rs_hgt_prot_log_tidy %>% filter(str_dete
 ar_beta <- rep(1/length(ar_Ai_lin), times=length(ar_Ai_lin))
 
 # Initate Dataframe that will store all estimates and optimal allocation relevant information
+# combine identifying key information along with estimation A, alpha results
+# note that we only need indi.id as key
 mt_opti <- cbind(ar_alphai_lin, ar_Ai_lin, ar_beta)
 ar_st_varnames <- c('alpha', 'A', 'beta')
-tb_opti <- as_tibble(mt_opti) %>% rename_all(~c(ar_st_varnames))
+df_esti_alpha_A_beta <- as_tibble(mt_opti) %>% rename_all(~c(ar_st_varnames))
+tb_key_alpha_A_beta <- bind_cols(df_hw_cebu_m24, df_esti_alpha_A_beta) %>%
+              select(one_of(c('S.country', 'vil.id', 'indi.id', 'svymthRound', ar_st_varnames)))
 
 # Unique beta, A, and alpha groups
-tb_opti_unique <- tb_opti %>% group_by(!!!syms(ar_st_varnames)) %>%
+tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
                     arrange(!!!syms(ar_st_varnames)) %>%
                     summarise(n_obs_group=n())
 ```
@@ -144,9 +148,10 @@ ar_prot_data = df_hw_cebu_m24$prot
 fl_N_agg = sum(ar_prot_data)
 
 # Vector of Planner Preference
-ar_rho = c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.99, length.out=5))
-ar_rho = c(-50, -25, -10)
-ar_rho = unique(ar_rho)
+ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.99, length.out=5))
+ar_rho <- c(-50, -25, -10)
+ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.8)
+ar_rho <- unique(ar_rho)
 ```
 
 ## Optimal Linear Allocation (CRS)
@@ -157,9 +162,9 @@ This also works with any CRS CES.
 
 ```{r Optimal Linear Allocation Hard Code All Rho}
 # Optimal Linear Equation
-# Planner Inputs
-mt_hev_lin = matrix(, nrow = length(ar_rho), ncol = 2)
-mt_opti_N = matrix(, nrow = it_obs, ncol = length(ar_rho))
+
+# accumulate allocation results 
+tb_opti_alloc_all_rho <- tb_key_alpha_A_beta
 
 # A. First Loop over Planner Preference
 # Generate Rank Order
@@ -168,7 +173,7 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
 
   # B. Generate V4, Rank Index Value, rho specific
   # tb_opti <- tb_opti %>% mutate(!!paste0('rv_', it_rho_ctr) := A/((alpha*beta))^(1/(1-rho)))
-  tb_opti <- tb_opti %>% mutate(rank_val = A/((alpha*beta))^(1/(1-rho)))
+  tb_opti <- tb_key_alpha_A_beta %>% mutate(rank_val = A/((alpha*beta))^(1/(1-rho)))
 
   # c. Generate Rank Index
   tb_opti <- tb_opti %>% arrange(rank_val) %>% mutate(rank_idx = row_number())
@@ -233,23 +238,49 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
                          rela_intercept_to_lowest +
                          rela_slope_to_lowest*allocate_lowest) %>%
                 mutate(opti_allocate =
-                         case_when(opti_allocate >= 0 ~ opti_allocate)) %>%
+                         case_when(opti_allocate >= 0 ~ opti_allocate, TRUE ~ 0)) %>%
                 mutate(opti_allocate_total = sum(opti_allocate, na.rm=TRUE))
-  
-  # l. Summarize outputs
-  tb_opti_main_results <- tb_opti %>% 
+
+  # l. optimal allocation individual key + optimal allocation
+  tb_opti_main_results <- tb_opti %>%
     select(-one_of(c('lowest_rank_alpha', 'lowest_rank_beta')))
+  tb_opti_allocate_wth_key <- tb_opti %>% select(one_of('indi.id','opti_allocate')) %>%
+                                rename(!!paste0('rho_c', it_rho_ctr) := !!sym('opti_allocate'))
   
-  
+  # m. merge optimal allocaiton results from different planner preference
+  tb_opti_alloc_all_rho <- tb_opti_alloc_all_rho %>% left_join(tb_opti_allocate_wth_key, by='indi.id')
+
   print('')
   print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
   print(paste0('xxx rho:', rho))
   print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
   print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-  
+
   print(summary(tb_opti_main_results))
 
 }
+
+# n. print results
+print(summary(tb_opti_alloc_all_rho))
+str(tb_opti_alloc_all_rho)
+
+# o. graph scatter of opposing preference correlation
+svr_lowrho_ctr <- 1
+svr_higrho_ctr <- length(ar_rho)-1
+svr_lowrho <- paste0('rho_c', svr_lowrho_ctr)
+svr_higrho <- paste0('rho_c', svr_higrho_ctr)
+tb_min_max_rho <- tb_opti_alloc_all_rho %>% select(one_of(c(svr_lowrho, svr_higrho)))
+
+scatter <- tb_min_max_rho %>%
+      ggplot(aes(x=!!sym(svr_lowrho), y=!!sym(svr_higrho))) +
+      geom_point(size=1) +
+      labs(title = 'Scatter Plot of Optimal Allocation Low and High Rho',
+           x = paste0('Allocation High Rho = ', ar_rho[svr_higrho_ctr], ', More Efficient'),
+           y = paste0('Allocation Low Rho = ', ar_rho[svr_lowrho_ctr], ', More Equal'),
+           caption = 'Optimal linear allocation results, given height reg on protein results. (Wang 2020)') +
+      theme_bw()
+print(scatter)
+
 
 # lineplot <- tb_opti %>%
 #     gather(variable, value, -month) %>%
