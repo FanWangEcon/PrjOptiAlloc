@@ -1,8 +1,8 @@
 ---
-title: Generate Data Cebu Four Category Test Regression Results
+title: DATA--Generate Data Cebu Four Category Test Regression Results
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Generate Data Cebu Four Category Test Regression Results}
+  %\VignetteIndexEntry{DATA--Generate Data Cebu Four Category Test Regression Results}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
@@ -10,9 +10,16 @@ urlcolor: blue
 
 Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAlloc/)**
 
-# Outline
+# Objective
 
 The [Guatemala and Cebu dataset](https://www.sciencedirect.com/science/article/pii/S1570677X16300107) jitter/rand version, select cebu only between 0 and 24. Generates four categories based on initial height and mother education levels. Regress height on protein inputs allowing for heterogeneous effecst for each of the four categories.
+
+This is the 2nd file in the structure below:
+
+1. R: [Function](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html)
+2. Rmd: [Function Line by Line Save](https://fanwangecon.github.io/REconTools/articles/ffv_opt_dtgch_cbem4.html)
+3. rda: [Data File Generated](https://github.com/FanWangEcon/REconTools/blob/master/data/df_opt_dtgch_cbem4.rda)
+4. R: [Data File Description](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html))   
 
 ## Set Up
 
@@ -132,6 +139,6 @@ tb_opti_unique <- tb_opti %>% group_by(!!!syms(ar_st_varnames)) %>%
 I would like to be able to directly call the dataset generated here in various functions. Save the datafile we just created in the project folder.
 
 ```{r}
-df_opt_dtgch_cbem4 <- df_esti 
+df_opt_dtgch_cbem4 <- df_esti
 usethis::use_data(df_opt_dtgch_cbem4, df_opt_dtgch_cbem4, overwrite = TRUE)
 ```

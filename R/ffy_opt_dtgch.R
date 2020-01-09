@@ -14,7 +14,8 @@ ffy_opt_dtgch_cbem4 <- function() {
     #' }
     #' @author Fan Wang, \url{http://fanwangecon.github.io}
     #' @references
-    #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_fourg.html}
+    #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html}
+    #' \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html}
     #' @export
     #' @import dplyr tidyr stringr broom REconTools
     #' @examples

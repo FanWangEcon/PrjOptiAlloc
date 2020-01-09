@@ -3,6 +3,7 @@ pkgdown: 1.4.1
 pkgdown_sha: ~
 articles:
   ffv_opt_dtgch_cbem4: ffv_opt_dtgch_cbem4.html
-  ffv_opt_solin_flinr_vfunc: ffv_opt_solin_flinr_vfunc.html
-  ffv_opt_solin_flinr_vline: ffv_opt_solin_flinr_vline.html
+  ffv_opt_solin_relow: ffv_opt_solin_relow.html
+  ffv_opt_solin_relow_allfn: ffv_opt_solin_relow_allfn.html
+  ffv_opt_solin_relow_allrw: ffv_opt_solin_relow_allrw.html
 

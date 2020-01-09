@@ -1,6 +1,7 @@
-ffy_opt_solin_flinr <- function(df, svr_A_i, svr_alpha_i, svr_beta_i,
+ffp_opt_solin_relow <- function(df, svr_A_i, svr_alpha_i, svr_beta_i,
                                 fl_N_agg, fl_rho) {
-    #' Solves the linear allocation problem with init condi A, marg. prod alpha, and planner preferences
+    #' Solves the linear allocation problem with init condi A, marg. prod alpha, and planner preferences.
+    #' solin, solution linear. relow, relative to the lowest allocation algoritm.
     #'
     #' @description
     #' This is the solution to the linear optimal allocation problem. Relative allocations, summed splined, inversion.
@@ -15,13 +16,14 @@ ffy_opt_solin_flinr <- function(df, svr_A_i, svr_alpha_i, svr_beta_i,
     #' @return a list with a dataframe and an array
     #' \itemize{
     #'   \item df_opti - Dataframe with various statistcs related to optimal allocation, all intermediary stats
-    #'   \item ar_opti - Array where each element is an optimal choice for each individual
+    #'   \item ar_opti_inpalc - Array where each element is an optimal choice for each individual
+    #'   \item ar_opti_expout - Array where each element is the expected outcome given optimal choices for each i
     #' }
     #'
     #' @author Fan Wang, \url{http://fanwangecon.github.io}
     #' @references
-    #' \url{https://fanwangecon.github.io/REconTools/reference/ffy_opt_solin_flinr.html}
-    #' \url{https://fanwangecon.github.io/REconTools/articles/ffy_opt_solin_flinr.html}
+    #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_solin_relow.html}
+    #' \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow.html}
     #' @export
     #' @import dplyr tidyr stringr broom REconTools
     #' @examples
@@ -32,11 +34,13 @@ ffy_opt_solin_flinr <- function(df, svr_A_i, svr_alpha_i, svr_beta_i,
     #' svr_beta_i <- 'beta'
     #' fl_N_agg <- 10000
     #' fl_rho <- -30
-    #' ls_lin_solu <- ffy_opt_solin_flinr(df, svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg, fl_rho)
+    #' ls_lin_solu <- ffp_opt_solin_relow(df, svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg, fl_rho)
     #' df_opti <- ls_lin_solu$df_opti
-    #' ar_opti <- ls_lin_solu$ar_opti
+    #' ar_opti_inpalc <- ls_lin_solu$ar_opti_inpalc
+    #' ar_opti_expout <- ls_lin_solu$ar_opti_expout
     #' summary(df_opti)
-    #' print(ar_opti)
+    #' print(ar_opti_inpalc)
+    #' print(ar_opti_expout)
 
     # a. select only relevant data
     df_opti <- df %>% rename(A = !!sym(svr_A_i), alpha = !!sym(svr_alpha_i), beta = !!sym(svr_beta_i))
@@ -111,11 +115,17 @@ ffy_opt_solin_flinr <- function(df, svr_A_i, svr_alpha_i, svr_beta_i,
                            case_when(opti_allocate >= 0 ~ opti_allocate)) %>%
                   mutate(opti_allocate_total = sum(opti_allocate, na.rm=TRUE))
 
-    # i. Drop some variables that I do not want to keep even in full df to export
+    # l. Predictes Expected choice: A + alpha*opti_allocate
+    df_opti <- df_opti %>% mutate(opti_exp_outcome = A + alpha*opti_allocate)
+
+    # m. Drop some variables that I do not want to keep even in full df to export
+    # inpalc = input allocation optimal
+    # expout = expected outcome given input allocation
     df_opti <- df_opti %>% select(-one_of(c('lowest_rank_alpha', 'lowest_rank_beta')))
-    ar_opti <- df_opti %>% pull(opti_allocate)
+    ar_opti_inpalc <- df_opti %>% pull(opti_allocate)
+    ar_opti_expout <- df_opti %>% pull(opti_exp_outcome)
 
     # Returns
-    return(list(df_opti = df_opti, ar_opti = ar_opti))
+    return(list(df_opti = df_opti, ar_opti_inpalc = ar_opti_inpalc, ar_opti_expout = ar_opti_expout))
 
 }

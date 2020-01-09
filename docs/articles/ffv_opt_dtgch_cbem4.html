@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generate Data Cebu Four Category Test Regression Results • PrjOptiAlloc</title>
+<title>DATA--Generate Data Cebu Four Category Test Regression Results • PrjOptiAlloc</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Generate Data Cebu Four Category Test Regression Results">
+<script src="../pkgdown.js"></script><meta property="og:title" content="DATA--Generate Data Cebu Four Category Test Regression Results">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -54,13 +54,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/ffv_opt_dtgch_cbem4.html">Generate Data Cebu Four Category Test Regression Results</a>
+      <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_solin_flinr_vfunc.html">Linear (CRS) Optimal Allocation Solution (Function)</a>
+      <a href="../articles/ffv_opt_solin_relow.html">LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_solin_flinr_vline.html">Linear (CRS) Optimal Allocation Solution (line by line)</a>
+      <a href="../articles/ffv_opt_solin_relow_allfn.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Function)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_solin_relow_allrw.html">Linear (CRS) Optimal Allocation Solution (line by line)</a>
     </li>
   </ul>
 </li>
@@ -78,7 +81,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Generate Data Cebu Four Category Test Regression Results</h1>
+      <h1>DATA–Generate Data Cebu Four Category Test Regression Results</h1>
             
       
       
@@ -89,10 +92,20 @@
     
     
 <p>Back to <strong><a href="https://fanwangecon.github.io/">Fan</a></strong>’s Optimal Allocation Homepage <strong><a href="https://fanwangecon.github.io/PrjOptiAlloc/">Table of Content</a></strong></p>
-<div id="outline" class="section level1">
+<div id="objective" class="section level1">
 <h1 class="hasAnchor">
-<a href="#outline" class="anchor"></a>Outline</h1>
+<a href="#objective" class="anchor"></a>Objective</h1>
 <p>The <a href="https://www.sciencedirect.com/science/article/pii/S1570677X16300107">Guatemala and Cebu dataset</a> jitter/rand version, select cebu only between 0 and 24. Generates four categories based on initial height and mother education levels. Regress height on protein inputs allowing for heterogeneous effecst for each of the four categories.</p>
+<p>This is the 2nd file in the structure below:</p>
+<ol style="list-style-type: decimal">
+<li>R: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html">Function</a>
+</li>
+<li>Rmd: <a href="https://fanwangecon.github.io/REconTools/articles/ffv_opt_dtgch_cbem4.html">Function Line by Line Save</a>
+</li>
+<li>rda: <a href="https://github.com/FanWangEcon/REconTools/blob/master/data/df_opt_dtgch_cbem4.rda">Data File Generated</a>
+</li>
+<li>R: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html">Data File Description</a>)</li>
+</ol>
 <div id="set-up" class="section level2">
 <h2 class="hasAnchor">
 <a href="#set-up" class="anchor"></a>Set Up</h2>
@@ -257,7 +270,7 @@
 <h1 class="hasAnchor">
 <a href="#export-data-to-data-folder" class="anchor"></a>Export Data to <em>/data</em> Folder</h1>
 <p>I would like to be able to directly call the dataset generated here in various functions. Save the datafile we just created in the project folder.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">df_opt_dtgch_cbem4 &lt;-<span class="st"> </span>df_esti </a>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">df_opt_dtgch_cbem4 &lt;-<span class="st"> </span>df_esti</a>
 <a class="sourceLine" id="cb13-2" title="2">usethis<span class="op">::</span><span class="kw"><a href="https://usethis.r-lib.org/reference/use_data.html">use_data</a></span>(df_opt_dtgch_cbem4, df_opt_dtgch_cbem4, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## &lt;U+2714&gt; Setting active project to 'C:/Users/fan/PrjOptiAlloc'</code></pre>
 <pre><code>## Warning: Saving duplicates only once: 'df_opt_dtgch_cbem4'</code></pre>
@@ -272,7 +285,7 @@
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li>
-<a href="#outline">Outline</a><ul class="nav nav-pills nav-stacked">
+<a href="#objective">Objective</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#set-up">Set Up</a></li>
       <li><a href="#get-data">Get Data</a></li>
       </ul>

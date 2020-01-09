@@ -25,7 +25,8 @@ head(ls_opti_alpha_A$df_raw, 10)
 head(ls_opti_alpha_A$df_esti, 10)
 }
 \references{
-\url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_fourg.html}
+\url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html}
+\url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html}
 }
 \author{
 Fan Wang, \url{http://fanwangecon.github.io}

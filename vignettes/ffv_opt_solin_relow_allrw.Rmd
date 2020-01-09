@@ -10,7 +10,18 @@ urlcolor: blue
 
 Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAlloc/)**
 
-# Outline
+# Objective
+
+The objective of this file is to solve the linear $N_i$ and $H_i$ problem without invoking any functions. This function first tested out the linear solution algorithm.
+
+File name *ffv_opt_solin_relow_allrw*:
+
+- *opt*: optimal allocation project
+- *solin*: linear production function
+- *relow*: solution method relying on relative allocation against lowest (first) to receive subsidy
+- *allrw*: all code line by line raw original file
+
+## Input and Output
 
 There is a dataset with child attributes, nutritional inputs and outputs. Run regression to estimate some input output relationship first. Then generate required inputs for code.
 
@@ -27,7 +38,29 @@ There is a dataset with child attributes, nutritional inputs and outputs. Run re
 
 Doing this allows for lagged intereaction that are time specific in an arbitrary way.
 
-## Set Up
+## Associated Functions
+
+There are three components to the function here, each component has four associated files. The first *R* file is a function that allows for this part of the overall solution structure to be invoked as a function. Then, there is an RMD file that has exactly the same lines of code, but perhaps with more descriptions and printing for that function, the vigenette for that function, since each function should have its own vignette. And to show what the function output looks like, the vignette saves the output of the function to a *rda* file in the *data* folder. That new data file now requires its own R file to describe the *rda*.
+
+1. **Regression Results**: linear and loglinear
+    - R: [Function](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html)
+       + Rmd: [Function Line by Line Save](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html)
+    - rda: [Data File Generated](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda)
+        + R: [Data File Description](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html))   
+2. **Linear Optimal Allocations**: for the *N_i* and *H_i* problem
+    - R: [Function](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_solin_relow.html)
+       + Rmd: [Function Line by Line Save](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow.html)
+    - rda: [Data File Generated](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop.rda)
+        + R: [Data File Description](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4_rrlop.html))   
+3. **Gini and Graphs**: post-estimation results analysis
+    - R: [Function](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html)
+       + Rmd: [Function Line by Line Save](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html)
+    - rda: [Data File Generated](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda)
+        + R: [Data File Description](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html))   
+
+# Load Packages and Data
+
+## Load Dependencies
 
 ```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
 rm(list = ls(all.names = TRUE))
@@ -44,7 +77,7 @@ library(knitr)
 library(kableExtra)
 ```
 
-## Get Data
+## Load Data
 
 Generate four categories by initial height and mother's education levels combinations.
 
@@ -254,7 +287,7 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
 
   # n. merge optimal allocaiton results from different planner preference
   tb_opti_alloc_all_rho <- tb_opti_alloc_all_rho %>% left_join(tb_opti_allocate_wth_key, by='indi.id')
-   
+
   # print subset
   if (it_rho_ctr == 1 | it_rho_ctr == length(ar_rho) | it_rho_ctr == round(length(ar_rho)/2)) {
     print('')
@@ -262,7 +295,7 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
     print(paste0('xxx rho:', rho))
     print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
     print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-  
+
     print(summary(tb_opti_main_results))
   }
 }
@@ -276,7 +309,7 @@ str(tb_opti_alloc_all_rho)
 
 ## Compute Gini Statistics for Allocations and Outcomes
 
-Compute Gini coefficient for each expected outcome and input vector, and store results in separate vectors for input allocation and expected outcomes, then combine. 
+Compute Gini coefficient for each expected outcome and input vector, and store results in separate vectors for input allocation and expected outcomes, then combine.
 
 See how **apply** works here: [R use Apply, Sapply and dplyr Mutate to Evaluate one Function Across Rows of a Matrix](https://fanwangecon.github.io/R4Econ/support/function/fs_applysapplymutate.html) from [R4Econ](https://fanwangecon.github.io/R4Econ).
 

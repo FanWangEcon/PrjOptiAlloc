@@ -1,8 +1,8 @@
 ---
-title: Linear (CRS) Optimal Allocation Solution (Function)
+title: LINEAR--CRS (Linear) Optimal Allocation Solution (Function)
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Linear (CRS) Optimal Allocation Solution (Function)}
+  %\VignetteIndexEntry{LINEAR--CRS (Linear) Optimal Allocation Solution (Function)}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
@@ -12,13 +12,22 @@ Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage 
 
 There are two related filed:
 
-1. *vignettes\ffv_opt_solin_flinf.Rmd*
+# Objective
 
-# Outline
+The objective of this file is to solve the linear $N_i$ and $H_i$ problem without invoking any functions. This function first tested out the linear solution algorithm.
 
-This is the function based file for
+File name *ffv_opt_solin_relow_allfn*:
 
-## Set Up
+- *opt*: optimal allocation project
+- *solin*: linear production function
+- *relow*: solution method relying on relative allocation against lowest (first) to receive subsidy
+- *allfn*: all code by calling relevant functions
+
+See associated functions in the [ffv_opt_dtgch_cbem4](https://fanwangecon.github.io/REconTools/articles/ffv_opt_dtgch_cbem4.html) file.
+
+# Load Packages and Data
+
+## Load Dependencies
 
 ```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
 rm(list = ls(all.names = TRUE))
@@ -85,6 +94,7 @@ This also works with any CRS CES.
 ```{r Optimal Linear Allocation Hard Code All Rho}
 
 # Matrixes to Store Solution Results
+tb_opti_alloc_all_rho <- df_esti
 mt_hev_lin = matrix(, nrow = length(ar_rho), ncol = 2)
 mt_opti_N = matrix(, nrow = it_obs, ncol = length(ar_rho))
 mt_opti_H = matrix(, nrow = it_obs, ncol = length(ar_rho))
@@ -108,21 +118,36 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
   # actually file here should contain unique keys, unique key ID as required input. should return?
   # actually it is fine, the function here needs the key, not solin_flinr
 
-  ls_lin_solu <- ffy_opt_solin_flinr(df, svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg, fl_rho)
-  df_opti <- ls_lin_solu$df_opti
-  ar_opti <- ls_lin_solu$ar_opti
+  ls_lin_solu <- ffp_opt_solin_relow(df, svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg, fl_rho)
+  tb_opti <- ls_lin_solu$df_opti
+  ar_opti_inpalc <- ls_lin_solu$ar_opti_inpalc
+  ar_opti_expout <- ls_lin_solu$ar_opti_expout
 
-  # Need to be very careful about keys/identifier, so that the same children are linked about. Should use merge.
+  mt_opti_N[, it_rho_ctr] = ar_opti_inpalc
+  mt_opti_H[, it_rho_ctr] = ar_opti_expout
 
-  print('')
-  print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-  print(paste0('xxx rho:', rho))
-  print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-  print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-  summary(df_opti)
+  # m. Keep for df collection individual key + optimal allocation
+  # _on stands for optimal nutritional choices
+  # _eh stands for expected height
+  tb_opti_main_results <- tb_opti %>%
+    select(-one_of(c('lowest_rank_alpha', 'lowest_rank_beta')))
+  tb_opti_allocate_wth_key <- tb_opti %>% select(one_of('indi.id','opti_allocate', 'opti_exp_outcome')) %>%
+                                rename(!!paste0('rho_c', it_rho_ctr, '_on') := !!sym('opti_allocate'),
+                                       !!paste0('rho_c', it_rho_ctr, '_eh') := !!sym('opti_exp_outcome'))
 
-  mt_opti_N[, it_rho_ctr] = ar_opti
-  # mt_opti_H[, it_rho_ctr] = ar_pred
+  # n. merge optimal allocaiton results from different planner preference
+  tb_opti_alloc_all_rho <- tb_opti_alloc_all_rho %>% left_join(tb_opti_allocate_wth_key, by='indi.id')
 
+  # print subset
+  if (it_rho_ctr == 1 | it_rho_ctr == length(ar_rho) | it_rho_ctr == round(length(ar_rho)/2)) {
+    print('')
+    print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+    print(paste0('xxx rho:', rho))
+    print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+    print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+
+    print(summary(tb_opti_main_results))
+  }
 }
+
 ```
