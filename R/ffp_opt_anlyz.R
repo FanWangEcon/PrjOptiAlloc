@@ -3,7 +3,7 @@ ffp_opt_anlyz_rhgin <- function(df, svr_id_i,
                                 ar_rho,
                                 svr_inpalc = 'optiallocate',
                                 svr_expout = 'opti_exp_outcome') {
-#' Solves for optimal allocation problem over many rhos, and computes gini.
+#' Solves for optimal allocation problem over many rhos, and computes gini
 #'
 #' @description
 #' Works with linear, log linear and discrete allocation problems. The function

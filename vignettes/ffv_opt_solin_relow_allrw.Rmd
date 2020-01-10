@@ -38,28 +38,6 @@ There is a dataset with child attributes, nutritional inputs and outputs. Run re
 
 Doing this allows for lagged intereaction that are time specific in an arbitrary way.
 
-## Associated Functions
-
-There are three components to the function here, each component has four associated files. The first *R* file is a function that allows for this part of the overall solution structure to be invoked as a function. Then, there is an RMD file that has exactly the same lines of code, but perhaps with more descriptions and printing for that function, the vigenette for that function, since each function should have its own vignette. And to show what the function output looks like, the vignette saves the output of the function to a *rda* file in the *data* folder. That new data file now requires its own R file to describe the *rda*.
-
-1. **Regression Results**: linear and loglinear
-    - R: [Function](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html)
-       + Rmd: [Function Line by Line Save](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html)
-    - rda: [Data File Generated](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda)
-        + R: [Data File Description](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html))   
-2. **Linear Optimal Allocations**: for the *N_i* and *H_i* problem
-    - R: [Function](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_solin_relow.html)
-       + Rmd: [Function Line by Line Save](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow.html)
-    - rda: [Data File Generated](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop.rda)
-        + R: [Data File Description](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4_rrlop.html))   
-3. **Gini and Graphs**: post-estimation results analysis
-    - R: [Function](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html)
-       + Rmd: [Function Line by Line Save](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html)
-    - rda: [Data File Generated](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda)
-        + R: [Data File Description](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html))   
-
-Note the structure above means that if anything in code changes, there are three spots that require changes: 1, this file here, the raw line by line implementation of the entire algorithm structure; 2, the *ffp* function file; 3, the *ffv* line by line file for only that function file. 
-
 # Load Packages and Data
 
 ## Load Dependencies

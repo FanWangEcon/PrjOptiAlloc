@@ -23,7 +23,7 @@ The we we approach an estimation problem here is in three steps.
 
 One key aspect of this project is that the theorems we derive are easily implemenable for large classes of estimation results. The theorems are computationally implemented here using R (the algorithms are language agnostic) in a package called [PrjOptiAlloc](https://github.com/FanWangEcon/PrjOptiAlloc). Functions in this package are described in the various [reference pages](https://fanwangecon.github.io/PrjOptiAlloc/reference/) and [vignette articles](https://fanwangecon.github.io/PrjOptiAlloc/articles/) on this website. 
 
-The tools here depend on [base R](), [tidyverse]() and [tidymodels](). After installing those, two packages should be installed, [fan](http://fanwangecon.github.io/)'s [REconTools](http://fanwangecon.github.io/REconTools/), which provides a number of support tools required, as well as this package itself [PrjOptiAllocs](http://fanwangecon.github.io/PrjOptiAllocs/). For installation help, see [devtools](http://r-pkgs.had.co.nz/intro.html).
+The tools here depend on [base R](), [tidyverse]() and [tidymodels](). After installing those, two packages should be installed, [fan](http://fanwangecon.github.io/)'s [REconTools](http://fanwangecon.github.io/REconTools/), which provides a number of support tools required, as well as this package itself [PrjOptiAllocs](http://fanwangecon.github.io/PrjOptiAlloc/). For installation help, see [devtools](http://r-pkgs.had.co.nz/intro.html).
 
 ```
 # To Install the Programs in the R folder of the REconTools Repository
@@ -49,14 +49,14 @@ Here, to illustrate all steps, we start from loading in data, estimate, allocate
 
 These functions show in practice how the various tools can be used in sequence to solve and anlyze the optimal allocation problem. 
 
-1. [**Line by Line**](https://fanwangecon.github.io/PrjOptiAlloc/article/ffv_opt_solin_relow_allrw.html): data to estimation to optimal allocation to planner preference to gini
+1. [**line by line**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow_allrw.html): data to estimation to optimal allocation to planner preference to gini
 2. [**call functions**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow_allfn.html): from data to gini call functions calling various functions in sequence.
 
 ## 2.3 Saved Allocation Examples
 
 To make the allocation results transparent, we store example allocation results from the [Height and Protein](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html) data, which has slightly more than 1000 observations. 
 
-1. [**data reference**](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4_rrlop.html): reference file describing example allocation data.
+1. [**data reference**](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop.html): reference file describing example allocation data.
 2. [**rda data file**](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop.rda): download the rda datafile and open in R to review example allocation results
 
 # 3 Support Files
@@ -67,14 +67,14 @@ First, we generate some regression results. These provide the optimal allocation
 
 1. **Height and Protein**: linear and log linear production function 
     - Data generation function: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html) \| [save data vignette](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html)
-    - Saved data file: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda)
+    - Saved data file: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda)
 
 ## 3.2 Allocation Distributional Analysis
 
 1. **Planner Preference and Gini**: variety of planner elasticity and resulting allocation gini
     - Data generation function: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin.html) \| [save data vignette](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_anlyz_rhgin.html)
-    - Saved example (height linear) allocations: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4_rrlop_allrh.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_allrh.rda)
-    - Saved example (height linear) gini: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4_rrlop_argin.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_argin.rda)
+    - Saved example (height linear) allocations: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop_allrh.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_allrh.rda)
+    - Saved example (height linear) gini: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop_argin.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_argin.rda)
   
 
 ----

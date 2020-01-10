@@ -12,14 +12,7 @@ Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage 
 
 # Objective
 
-This tests out the procedure to solve for optimal allocations over various rhos, and computes gini each time.
-
-This is the 2nd file in the four file structure below:
-
-1. R: [Function](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_solin_relow.html)
-2. Rmd: [Function Line by Line Save](https://fanwangecon.github.io/REconTools/articles/ffv_opt_solin_relow.html)
-3. rda: [Data File Generated](https://github.com/FanWangEcon/REconTools/blob/master/data/df_opt_dtgch_cbem4.rda)
-4. R: [Data File Description](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html))   
+This function tests out the procedure to solve for optimal allocations over various rhos, and computes gini each time.
 
 # Load Packages and Data
 

@@ -2,7 +2,7 @@ ffp_opt_solin_relow <- function(df, svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg,
                                 fl_rho,
                                 svr_inpalc = 'optiallocate',
                                 svr_expout = 'optiexpoutcm') {
-#' Solves the linear allocation problem with Ai_i, alpha_i, and planner preferences.
+#' Solves the linear allocation problem with Ai_i, alpha_i, and planner preferences
 #'
 #' @description
 #' This is the solution to the linear optimal allocation problem. Relative allocations, summed splined, inversion.
