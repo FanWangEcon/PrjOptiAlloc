@@ -2,6 +2,7 @@ pandoc: 2.7.2
 pkgdown: 1.4.1
 pkgdown_sha: ~
 articles:
+  ffv_opt_anlyz_rhgin: ffv_opt_anlyz_rhgin.html
   ffv_opt_dtgch_cbem4: ffv_opt_dtgch_cbem4.html
   ffv_opt_solin_relow: ffv_opt_solin_relow.html
   ffv_opt_solin_relow_allfn: ffv_opt_solin_relow_allfn.html

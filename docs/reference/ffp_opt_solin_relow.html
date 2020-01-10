@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Solves the linear allocation problem with init condi A, marg. prod alpha, and planner preferences.
-solin, solution linear. relow, relative to the lowest allocation algoritm. — ffp_opt_solin_relow • PrjOptiAlloc</title>
+<title>Solves the linear allocation problem with Ai_i, alpha_i, and planner preferences. — ffp_opt_solin_relow • PrjOptiAlloc</title>
 
 
 <!-- jquery -->
@@ -36,9 +35,9 @@ solin, solution linear. relow, relative to the lowest allocation algoritm. — f
 
 
 
-<meta property="og:title" content="Solves the linear allocation problem with init condi A, marg. prod alpha, and planner preferences.
-solin, solution linear. relow, relative to the lowest allocation algoritm. — ffp_opt_solin_relow" />
-<meta property="og:description" content="This is the solution to the linear optimal allocation problem. Relative allocations, summed splined, inversion." />
+<meta property="og:title" content="Solves the linear allocation problem with Ai_i, alpha_i, and planner preferences. — ffp_opt_solin_relow" />
+<meta property="og:description" content="This is the solution to the linear optimal allocation problem. Relative allocations, summed splined, inversion.
+solin, solution linear. relow, relative to the lowest allocation algoritm." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -94,6 +93,9 @@ solin, solution linear. relow, relative to the lowest allocation algoritm. — f
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/ffv_opt_anlyz_rhgin.html">ANALYSIS--Optimal Allocations Planner Elasticity Vector and Ginis</a>
+    </li>
+    <li>
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
@@ -103,7 +105,7 @@ solin, solution linear. relow, relative to the lowest allocation algoritm. — f
       <a href="../articles/ffv_opt_solin_relow_allfn.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Function)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_solin_relow_allrw.html">Linear (CRS) Optimal Allocation Solution (line by line)</a>
+      <a href="../articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
     </li>
   </ul>
 </li>
@@ -123,17 +125,26 @@ solin, solution linear. relow, relative to the lowest allocation algoritm. — f
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Solves the linear allocation problem with init condi A, marg. prod alpha, and planner preferences.
-solin, solution linear. relow, relative to the lowest allocation algoritm.</h1>
+    <h1>Solves the linear allocation problem with Ai_i, alpha_i, and planner preferences.</h1>
     
     <div class="hidden name"><code>ffp_opt_solin_relow.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This is the solution to the linear optimal allocation problem. Relative allocations, summed splined, inversion.</p>
+    <p>This is the solution to the linear optimal allocation problem. Relative allocations, summed splined, inversion.
+solin, solution linear. relow, relative to the lowest allocation algoritm.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ffp_opt_solin_relow</span>(<span class='no'>df</span>, <span class='no'>svr_A_i</span>, <span class='no'>svr_alpha_i</span>, <span class='no'>svr_beta_i</span>, <span class='no'>fl_N_agg</span>, <span class='no'>fl_rho</span>)</pre>
+    <pre class="usage"><span class='fu'>ffp_opt_solin_relow</span>(
+  <span class='no'>df</span>,
+  <span class='no'>svr_A_i</span>,
+  <span class='no'>svr_alpha_i</span>,
+  <span class='no'>svr_beta_i</span>,
+  <span class='no'>fl_N_agg</span>,
+  <span class='no'>fl_rho</span>,
+  <span class='kw'>svr_inpalc</span> <span class='kw'>=</span> <span class='st'>"optiallocate"</span>,
+  <span class='kw'>svr_expout</span> <span class='kw'>=</span> <span class='st'>"optiexpoutcm"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -161,6 +172,14 @@ solin, solution linear. relow, relative to the lowest allocation algoritm.</h1>
     <tr>
       <th>fl_rho</th>
       <td><p>float preference for equality for the planner</p></td>
+    </tr>
+    <tr>
+      <th>svr_inpalc</th>
+      <td><p>string variable name for newly generated input optimal allocation, single word no dash</p></td>
+    </tr>
+    <tr>
+      <th>svr_expout</th>
+      <td><p>string variable name for newly generated expected outcome, single word no dash</p></td>
     </tr>
     </table>
 
@@ -197,7 +216,6 @@ solin, solution linear. relow, relative to the lowest allocation algoritm.</h1>
 #&gt;                     Mean   :12.52   Mean   : 634.8   Mean   :24  
 #&gt;                     3rd Qu.:17.00   3rd Qu.: 939.5   3rd Qu.:24  
 #&gt;                     Max.   :33.00   Max.   :1349.0   Max.   :24  
-#&gt;                                                                  
 #&gt;      alpha           alpha_log              A             A_log      
 #&gt;  Min.   :0.01014   Min.   :0.006687   Min.   :73.70   Min.   :4.287  
 #&gt;  1st Qu.:0.01014   1st Qu.:0.006687   1st Qu.:77.73   1st Qu.:4.334  
@@ -205,7 +223,6 @@ solin, solution linear. relow, relative to the lowest allocation algoritm.</h1>
 #&gt;  Mean   :0.04108   Mean   :0.010321   Mean   :78.46   Mean   :4.343  
 #&gt;  3rd Qu.:0.06018   3rd Qu.:0.012090   3rd Qu.:79.15   3rd Qu.:4.351  
 #&gt;  Max.   :0.06619   Max.   :0.013940   Max.   :84.61   Max.   :4.417  
-#&gt;                                                                      
 #&gt;       beta              rank_val        rank_idx      lowest_rank_A 
 #&gt;  Min.   :0.0009588   Min.   :101.0   Min.   :   1.0   Min.   :73.7  
 #&gt;  1st Qu.:0.0009588   1st Qu.:107.5   1st Qu.: 261.5   1st Qu.:73.7  
@@ -213,7 +230,6 @@ solin, solution linear. relow, relative to the lowest allocation algoritm.</h1>
 #&gt;  Mean   :0.0009588   Mean   :109.8   Mean   : 522.0   Mean   :73.7  
 #&gt;  3rd Qu.:0.0009588   3rd Qu.:112.4   3rd Qu.: 782.5   3rd Qu.:73.7  
 #&gt;  Max.   :0.0009588   Max.   :118.3   Max.   :1043.0   Max.   :73.7  
-#&gt;                                                                     
 #&gt;  rela_slope_to_lowest rela_intercept_to_lowest rela_slope_to_lowest_cumsum
 #&gt;  Min.   :0.9119       Min.   :-979.72          Min.   :   1.0             
 #&gt;  1st Qu.:1.0000       1st Qu.:-758.11          1st Qu.: 259.7             
@@ -221,7 +237,6 @@ solin, solution linear. relow, relative to the lowest allocation algoritm.</h1>
 #&gt;  Mean   :2.6236       Mean   :-340.13          Mean   : 856.5             
 #&gt;  3rd Qu.:5.6008       3rd Qu.: -76.32          3rd Qu.:1349.4             
 #&gt;  Max.   :5.6008       Max.   :   0.00          Max.   :2736.4             
-#&gt;                                                                           
 #&gt;  rela_intercept_to_lowest_cumsum rela_slope_to_lowest_cumsum_invert
 #&gt;  Min.   :-354758                 Min.   :0.0003654                 
 #&gt;  1st Qu.:-143999                 1st Qu.:0.0007410                 
@@ -229,7 +244,6 @@ solin, solution linear. relow, relative to the lowest allocation algoritm.</h1>
 #&gt;  Mean   : -90708                 Mean   :0.0069946                 
 #&gt;  3rd Qu.: -16952                 3rd Qu.:0.0038500                 
 #&gt;  Max.   :      0                 Max.   :1.0000000                 
-#&gt;                                                                    
 #&gt;  rela_intercept_to_lowest_cumsum_invert rela_x_intercept
 #&gt;  Min.   :  0.00                         Min.   :  0.00  
 #&gt;  1st Qu.: 65.27                         1st Qu.: 79.37  
@@ -237,23 +251,20 @@ solin, solution linear. relow, relative to the lowest allocation algoritm.</h1>
 #&gt;  Mean   : 83.86                         Mean   :107.34  
 #&gt;  3rd Qu.:106.71                         3rd Qu.:138.90  
 #&gt;  Max.   :129.65                         Max.   :209.85  
-#&gt;                                                         
-#&gt;  opti_lowest_spline_knots    tot_devi      allocate_lowest opti_allocate    
-#&gt;  Min.   :     0           Min.   :-10000   Min.   :96.12   Min.   : 0.0776  
-#&gt;  1st Qu.:  3664           1st Qu.: -6336   1st Qu.:96.12   1st Qu.:11.1628  
-#&gt;  Median : 15077           Median :  5077   Median :96.12   Median :19.1319  
-#&gt;  Mean   : 25808           Mean   : 15808   Mean   :96.12   Mean   :21.4133  
-#&gt;  3rd Qu.: 43446           3rd Qu.: 33446   3rd Qu.:96.12   3rd Qu.:29.7293  
-#&gt;  Max.   :219471           Max.   :209471   Max.   :96.12   Max.   :96.1154  
-#&gt;                                                            NA's   :576      
-#&gt;  opti_allocate_total opti_exp_outcome
-#&gt;  Min.   :10000       Min.   :75.05   
-#&gt;  1st Qu.:10000       1st Qu.:79.48   
-#&gt;  Median :10000       Median :79.48   
-#&gt;  Mean   :10000       Mean   :79.54   
-#&gt;  3rd Qu.:10000       3rd Qu.:79.73   
-#&gt;  Max.   :10000       Max.   :79.73   
-#&gt;                      NA's   :576     </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>ar_opti_inpalc</span>)</div><div class='output co'>#&gt;    [1]  0.07757637  0.08698173  0.09955769  0.22957298  0.37913904  0.40937073
+#&gt;  opti_lowest_spline_knots    tot_devi      allocate_lowest  optiallocate   
+#&gt;  Min.   :     0           Min.   :-10000   Min.   :96.12   Min.   : 0.000  
+#&gt;  1st Qu.:  3664           1st Qu.: -6336   1st Qu.:96.12   1st Qu.: 0.000  
+#&gt;  Median : 15077           Median :  5077   Median :96.12   Median : 0.000  
+#&gt;  Mean   : 25808           Mean   : 15808   Mean   :96.12   Mean   : 9.588  
+#&gt;  3rd Qu.: 43446           3rd Qu.: 33446   3rd Qu.:96.12   3rd Qu.:16.688  
+#&gt;  Max.   :219471           Max.   :209471   Max.   :96.12   Max.   :96.115  
+#&gt;  allocate_total   optiexpoutcm  
+#&gt;  Min.   :10000   Min.   :75.05  
+#&gt;  1st Qu.:10000   1st Qu.:78.35  
+#&gt;  Median :10000   Median :79.48  
+#&gt;  Mean   :10000   Mean   :79.04  
+#&gt;  3rd Qu.:10000   3rd Qu.:79.73  
+#&gt;  Max.   :10000   Max.   :84.61  </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>ar_opti_inpalc</span>)</div><div class='output co'>#&gt;    [1]  0.07757637  0.08698173  0.09955769  0.22957298  0.37913904  0.40937073
 #&gt;    [7]  0.57345270  0.60795674  0.78881136  0.94574472  1.18772710  1.72333858
 #&gt;   [13]  1.72596536  1.83338817  1.86118932  1.99739447  2.36937909  2.21002823
 #&gt;   [19]  2.22658220  2.25865571  2.27164659  2.32435018  2.36268923  2.49921118
@@ -330,103 +341,103 @@ solin, solution linear. relow, relative to the lowest allocation algoritm.</h1>
 #&gt;  [445] 48.12113896 49.11209154 50.86289140 51.31969648 51.85651745 52.00857818
 #&gt;  [451] 53.66688288 53.78077502 53.87518816 54.07957422 54.57568573 55.37570285
 #&gt;  [457] 55.69941122 56.74460711 59.43684030 59.75852277 60.61170394 62.79799515
-#&gt;  [463] 66.89981739 78.77746473 80.91304951 81.64666783 96.11543459          NA
-#&gt;  [469]          NA          NA          NA          NA          NA          NA
-#&gt;  [475]          NA          NA          NA          NA          NA          NA
-#&gt;  [481]          NA          NA          NA          NA          NA          NA
-#&gt;  [487]          NA          NA          NA          NA          NA          NA
-#&gt;  [493]          NA          NA          NA          NA          NA          NA
-#&gt;  [499]          NA          NA          NA          NA          NA          NA
-#&gt;  [505]          NA          NA          NA          NA          NA          NA
-#&gt;  [511]          NA          NA          NA          NA          NA          NA
-#&gt;  [517]          NA          NA          NA          NA          NA          NA
-#&gt;  [523]          NA          NA          NA          NA          NA          NA
-#&gt;  [529]          NA          NA          NA          NA          NA          NA
-#&gt;  [535]          NA          NA          NA          NA          NA          NA
-#&gt;  [541]          NA          NA          NA          NA          NA          NA
-#&gt;  [547]          NA          NA          NA          NA          NA          NA
-#&gt;  [553]          NA          NA          NA          NA          NA          NA
-#&gt;  [559]          NA          NA          NA          NA          NA          NA
-#&gt;  [565]          NA          NA          NA          NA          NA          NA
-#&gt;  [571]          NA          NA          NA          NA          NA          NA
-#&gt;  [577]          NA          NA          NA          NA          NA          NA
-#&gt;  [583]          NA          NA          NA          NA          NA          NA
-#&gt;  [589]          NA          NA          NA          NA          NA          NA
-#&gt;  [595]          NA          NA          NA          NA          NA          NA
-#&gt;  [601]          NA          NA          NA          NA          NA          NA
-#&gt;  [607]          NA          NA          NA          NA          NA          NA
-#&gt;  [613]          NA          NA          NA          NA          NA          NA
-#&gt;  [619]          NA          NA          NA          NA          NA          NA
-#&gt;  [625]          NA          NA          NA          NA          NA          NA
-#&gt;  [631]          NA          NA          NA          NA          NA          NA
-#&gt;  [637]          NA          NA          NA          NA          NA          NA
-#&gt;  [643]          NA          NA          NA          NA          NA          NA
-#&gt;  [649]          NA          NA          NA          NA          NA          NA
-#&gt;  [655]          NA          NA          NA          NA          NA          NA
-#&gt;  [661]          NA          NA          NA          NA          NA          NA
-#&gt;  [667]          NA          NA          NA          NA          NA          NA
-#&gt;  [673]          NA          NA          NA          NA          NA          NA
-#&gt;  [679]          NA          NA          NA          NA          NA          NA
-#&gt;  [685]          NA          NA          NA          NA          NA          NA
-#&gt;  [691]          NA          NA          NA          NA          NA          NA
-#&gt;  [697]          NA          NA          NA          NA          NA          NA
-#&gt;  [703]          NA          NA          NA          NA          NA          NA
-#&gt;  [709]          NA          NA          NA          NA          NA          NA
-#&gt;  [715]          NA          NA          NA          NA          NA          NA
-#&gt;  [721]          NA          NA          NA          NA          NA          NA
-#&gt;  [727]          NA          NA          NA          NA          NA          NA
-#&gt;  [733]          NA          NA          NA          NA          NA          NA
-#&gt;  [739]          NA          NA          NA          NA          NA          NA
-#&gt;  [745]          NA          NA          NA          NA          NA          NA
-#&gt;  [751]          NA          NA          NA          NA          NA          NA
-#&gt;  [757]          NA          NA          NA          NA          NA          NA
-#&gt;  [763]          NA          NA          NA          NA          NA          NA
-#&gt;  [769]          NA          NA          NA          NA          NA          NA
-#&gt;  [775]          NA          NA          NA          NA          NA          NA
-#&gt;  [781]          NA          NA          NA          NA          NA          NA
-#&gt;  [787]          NA          NA          NA          NA          NA          NA
-#&gt;  [793]          NA          NA          NA          NA          NA          NA
-#&gt;  [799]          NA          NA          NA          NA          NA          NA
-#&gt;  [805]          NA          NA          NA          NA          NA          NA
-#&gt;  [811]          NA          NA          NA          NA          NA          NA
-#&gt;  [817]          NA          NA          NA          NA          NA          NA
-#&gt;  [823]          NA          NA          NA          NA          NA          NA
-#&gt;  [829]          NA          NA          NA          NA          NA          NA
-#&gt;  [835]          NA          NA          NA          NA          NA          NA
-#&gt;  [841]          NA          NA          NA          NA          NA          NA
-#&gt;  [847]          NA          NA          NA          NA          NA          NA
-#&gt;  [853]          NA          NA          NA          NA          NA          NA
-#&gt;  [859]          NA          NA          NA          NA          NA          NA
-#&gt;  [865]          NA          NA          NA          NA          NA          NA
-#&gt;  [871]          NA          NA          NA          NA          NA          NA
-#&gt;  [877]          NA          NA          NA          NA          NA          NA
-#&gt;  [883]          NA          NA          NA          NA          NA          NA
-#&gt;  [889]          NA          NA          NA          NA          NA          NA
-#&gt;  [895]          NA          NA          NA          NA          NA          NA
-#&gt;  [901]          NA          NA          NA          NA          NA          NA
-#&gt;  [907]          NA          NA          NA          NA          NA          NA
-#&gt;  [913]          NA          NA          NA          NA          NA          NA
-#&gt;  [919]          NA          NA          NA          NA          NA          NA
-#&gt;  [925]          NA          NA          NA          NA          NA          NA
-#&gt;  [931]          NA          NA          NA          NA          NA          NA
-#&gt;  [937]          NA          NA          NA          NA          NA          NA
-#&gt;  [943]          NA          NA          NA          NA          NA          NA
-#&gt;  [949]          NA          NA          NA          NA          NA          NA
-#&gt;  [955]          NA          NA          NA          NA          NA          NA
-#&gt;  [961]          NA          NA          NA          NA          NA          NA
-#&gt;  [967]          NA          NA          NA          NA          NA          NA
-#&gt;  [973]          NA          NA          NA          NA          NA          NA
-#&gt;  [979]          NA          NA          NA          NA          NA          NA
-#&gt;  [985]          NA          NA          NA          NA          NA          NA
-#&gt;  [991]          NA          NA          NA          NA          NA          NA
-#&gt;  [997]          NA          NA          NA          NA          NA          NA
-#&gt; [1003]          NA          NA          NA          NA          NA          NA
-#&gt; [1009]          NA          NA          NA          NA          NA          NA
-#&gt; [1015]          NA          NA          NA          NA          NA          NA
-#&gt; [1021]          NA          NA          NA          NA          NA          NA
-#&gt; [1027]          NA          NA          NA          NA          NA          NA
-#&gt; [1033]          NA          NA          NA          NA          NA          NA
-#&gt; [1039]          NA          NA          NA          NA          NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>ar_opti_expout</span>)</div><div class='output co'>#&gt;    [1] 79.72650 79.72650 79.72650 79.72650 79.72650 79.72650 79.72650 79.72650
+#&gt;  [463] 66.89981739 78.77746473 80.91304951 81.64666783 96.11543459  0.00000000
+#&gt;  [469]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [475]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [481]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [487]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [493]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [499]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [505]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [511]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [517]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [523]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [529]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [535]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [541]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [547]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [553]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [559]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [565]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [571]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [577]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [583]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [589]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [595]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [601]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [607]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [613]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [619]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [625]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [631]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [637]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [643]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [649]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [655]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [661]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [667]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [673]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [679]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [685]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [691]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [697]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [703]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [709]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [715]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [721]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [727]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [733]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [739]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [745]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [751]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [757]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [763]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [769]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [775]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [781]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [787]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [793]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [799]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [805]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [811]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [817]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [823]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [829]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [835]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [841]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [847]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [853]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [859]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [865]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [871]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [877]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [883]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [889]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [895]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [901]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [907]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [913]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [919]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [925]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [931]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [937]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [943]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [949]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [955]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [961]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [967]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [973]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [979]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [985]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [991]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt;  [997]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt; [1003]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt; [1009]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt; [1015]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt; [1021]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt; [1027]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt; [1033]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
+#&gt; [1039]  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>ar_opti_expout</span>)</div><div class='output co'>#&gt;    [1] 79.72650 79.72650 79.72650 79.72650 79.72650 79.72650 79.72650 79.72650
 #&gt;    [9] 79.72650 79.72650 79.72650 79.72650 79.72650 79.72650 79.72650 79.72650
 #&gt;   [17] 79.48187 79.72650 79.72650 79.72650 79.72650 79.72650 79.72650 79.72650
 #&gt;   [25] 79.72650 79.72650 79.48187 79.72650 79.72650 79.72650 79.72650 79.72650
@@ -484,79 +495,79 @@ solin, solution linear. relow, relative to the lowest allocation algoritm.</h1>
 #&gt;  [441] 79.48187 79.48187 79.48187 79.48187 79.48187 79.48187 79.48187 79.48187
 #&gt;  [449] 79.48187 79.48187 79.48187 79.48187 79.48187 79.48187 79.48187 79.48187
 #&gt;  [457] 79.48187 79.48187 79.48187 79.48187 79.48187 79.48187 79.48187 79.48187
-#&gt;  [465] 79.48187 79.48187 79.48187       NA       NA       NA       NA       NA
-#&gt;  [473]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [481]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [489]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [497]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [505]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [513]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [521]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [529]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [537]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [545]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [553]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [561]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [569]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [577]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [585]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [593]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [601]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [609]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [617]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [625]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [633]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [641]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [649]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [657]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [665]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [673]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [681]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [689]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [697]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [705]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [713]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [721]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [729]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [737]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [745]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [753]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [761]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [769]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [777]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [785]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [793]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [801]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [809]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [817]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [825]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [833]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [841]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [849]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [857]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [865]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [873]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [881]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [889]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [897]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [905]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [913]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [921]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [929]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [937]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [945]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [953]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [961]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [969]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [977]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [985]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt;  [993]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt; [1001]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt; [1009]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt; [1017]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt; [1025]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt; [1033]       NA       NA       NA       NA       NA       NA       NA       NA
-#&gt; [1041]       NA       NA       NA</div></pre>
+#&gt;  [465] 79.48187 79.48187 79.48187 79.73361 79.73949 79.74290 79.74462 79.75370
+#&gt;  [473] 75.09272 79.78232 79.78882 79.79048 79.80031 79.80101 79.80675 75.12223
+#&gt;  [481] 79.86010 79.86645 79.87024 79.88274 79.90824 79.66663 79.91848 79.95498
+#&gt;  [489] 79.96100 79.96759 79.97696 79.97840 79.99233 79.99614 80.00759 80.00903
+#&gt;  [497] 80.02731 80.05854 80.07188 75.37717 80.08700 80.11655 80.11942 80.12160
+#&gt;  [505] 80.12482 78.30534 80.17500 80.18398 80.18548 80.18778 80.18820 78.36651
+#&gt;  [513] 80.20961 80.23640 80.24788 80.27036 80.27731 80.27990 80.31003 75.61525
+#&gt;  [521] 80.33670 80.33879 78.49902 80.33999 80.36395 78.53825 75.67069 80.40841
+#&gt;  [529] 80.43347 78.59838 75.73533 80.47507 80.49621 78.67697 78.68392 78.68933
+#&gt;  [537] 78.70594 78.71795 80.56575 80.56593 80.58673 80.59173 80.59361 78.74854
+#&gt;  [545] 78.77002 75.88659 78.78695 78.80396 78.82172 78.83592 80.69424 78.85325
+#&gt;  [553] 78.86800 78.86823 78.87078 78.87194 78.87287 80.73063 78.88209 78.89190
+#&gt;  [561] 76.00335 78.89635 78.90078 80.75127 80.75767 78.90827 78.91993 78.92779
+#&gt;  [569] 78.93241 78.93804 76.05076 78.95007 78.95918 76.06796 78.96186 78.97775
+#&gt;  [577] 80.83032 78.98827 80.84773 79.00606 76.12665 76.12671 79.02993 80.88571
+#&gt;  [585] 79.03353 79.03756 79.03765 79.04114 79.05274 76.15721 80.90860 80.92110
+#&gt;  [593] 79.06816 80.92867 80.93852 80.94572 79.09631 76.21354 79.12616 79.13129
+#&gt;  [601] 79.13273 79.13894 76.25126 79.15316 79.15338 79.15546 81.01891 76.28828
+#&gt;  [609] 76.29115 76.29224 81.05269 79.19876 79.19981 79.20893 76.30844 76.32309
+#&gt;  [617] 76.32418 79.22959 79.23844 79.25681 79.26559 79.27642 81.15855 76.39433
+#&gt;  [625] 81.16084 81.16500 79.31479 79.31638 76.41246 79.32019 81.18115 76.41605
+#&gt;  [633] 79.32422 76.43025 79.33963 79.33995 79.34540 76.43804 79.35078 79.35601
+#&gt;  [641] 81.21669 79.37234 79.37470 79.37765 79.39466 79.40065 76.49277 79.44210
+#&gt;  [649] 79.44991 79.45076 76.54566 79.47582 79.47808 79.47947 79.48041 81.35327
+#&gt;  [657] 76.57810 79.49263 76.58325 79.49711 79.50418 76.60510 79.52303 79.52375
+#&gt;  [665] 79.52490 76.61658 76.61659 76.61918 79.53534 79.53994 81.40724 79.54352
+#&gt;  [673] 79.55294 79.56398 76.65557 79.57731 79.58435 79.59862 79.60146 76.69829
+#&gt;  [681] 79.61933 79.62682 79.62859 79.65780 76.75031 76.75675 79.69165 79.69735
+#&gt;  [689] 81.56994 79.70255 76.79124 79.72859 76.81346 79.73708 76.82148 76.82485
+#&gt;  [697] 79.75815 76.85751 76.85863 79.78821 76.86545 79.79678 79.80908 76.88868
+#&gt;  [705] 79.81400 79.81436 79.82265 76.89814 76.90105 79.84352 81.72991 79.86052
+#&gt;  [713] 76.93587 76.93914 79.86734 79.87958 79.88253 76.95930 81.76768 76.96770
+#&gt;  [721] 76.97398 76.97410 76.97503 76.98112 76.98962 76.99725 77.02021 79.95700
+#&gt;  [729] 77.03199 77.03324 77.03451 77.04278 77.06757 77.07086 77.07613 77.08902
+#&gt;  [737] 80.02808 77.11752 77.13914 81.95830 77.16132 77.17730 77.18297 77.18901
+#&gt;  [745] 77.19486 77.20135 77.20334 80.15564 80.15633 77.22010 77.22304 77.22735
+#&gt;  [753] 80.16541 77.23973 77.24234 77.25986 77.26350 77.27399 77.27682 80.21936
+#&gt;  [761] 77.28502 82.10624 77.30111 77.30315 80.24425 77.32263 77.32540 77.32702
+#&gt;  [769] 77.32958 77.34027 77.35112 77.36254 77.37350 77.38668 77.39062 80.35552
+#&gt;  [777] 77.42750 77.42873 80.37793 77.43854 77.45809 77.46988 82.31699 77.49317
+#&gt;  [785] 77.51610 80.46622 77.53989 77.54580 77.55284 77.55598 77.56532 80.52032
+#&gt;  [793] 77.57291 77.57799 77.59097 77.59099 77.59660 77.60119 77.60812 77.61631
+#&gt;  [801] 77.61664 77.62204 77.62369 80.57714 77.62612 77.62756 77.62891 77.63110
+#&gt;  [809] 77.63177 77.63213 77.63297 77.63792 77.63885 82.48301 77.64710 77.65687
+#&gt;  [817] 77.66538 77.66615 77.68510 77.68519 77.70306 77.70417 80.66141 80.66803
+#&gt;  [825] 77.72919 77.74582 77.74805 77.75001 77.75143 77.75550 77.75579 77.76104
+#&gt;  [833] 77.76381 80.72257 77.76772 77.77087 77.77210 80.73363 77.78097 77.79892
+#&gt;  [841] 77.80050 77.80788 77.80860 77.80883 77.81151 82.66567 77.81571 80.77672
+#&gt;  [849] 77.82360 77.82370 77.82972 77.83373 77.83778 77.83833 77.84043 77.84483
+#&gt;  [857] 77.84659 77.85771 77.86707 77.87311 77.87956 77.89290 77.89367 77.89820
+#&gt;  [865] 77.90775 77.91190 77.91305 77.91481 77.93637 77.93943 77.94175 77.94202
+#&gt;  [873] 77.94912 80.91568 77.95091 77.97456 77.97914 77.98546 77.99213 77.99844
+#&gt;  [881] 78.00086 78.00488 78.00809 78.01781 78.02450 81.00556 78.04462 78.06627
+#&gt;  [889] 78.07807 78.07829 78.07957 78.10010 78.10046 78.10260 78.10574 78.11050
+#&gt;  [897] 78.11672 78.11777 78.12668 78.12771 78.12803 78.12885 78.12898 78.13083
+#&gt;  [905] 78.13404 78.13666 78.13772 78.14546 78.14648 78.15364 78.15403 78.15454
+#&gt;  [913] 78.15990 78.17050 78.17562 78.17896 78.17959 78.19593 81.19769 78.22488
+#&gt;  [921] 78.22555 78.23050 78.23145 78.23374 78.24562 78.24722 78.24788 78.24811
+#&gt;  [929] 78.25378 78.25383 78.25650 78.26178 78.26257 78.26494 78.26499 78.26931
+#&gt;  [937] 78.27184 78.28061 78.28385 78.28530 78.28541 78.28645 78.28777 78.30397
+#&gt;  [945] 78.31157 78.32274 78.32474 78.32847 78.33612 78.34869 78.35063 78.35537
+#&gt;  [953] 78.36614 78.36829 78.37307 78.38329 78.39587 78.40152 78.40636 78.41266
+#&gt;  [961] 78.41340 78.41352 78.41607 78.42531 78.42745 78.42996 78.43560 78.43775
+#&gt;  [969] 78.44502 78.46064 78.46077 78.46454 78.47215 78.47367 78.48198 78.48729
+#&gt;  [977] 78.50209 78.50790 78.50797 78.50832 78.51844 78.53105 81.51984 78.54907
+#&gt;  [985] 78.54947 78.55185 78.55828 78.55875 78.56212 78.57038 78.58993 78.59732
+#&gt;  [993] 78.59735 78.60408 78.61014 78.61157 78.62410 78.63539 78.68103 78.68294
+#&gt; [1001] 78.68350 78.68774 78.69236 78.69330 78.70518 78.73668 78.74697 78.75868
+#&gt; [1009] 78.76318 78.78106 78.78464 81.78194 78.82434 78.83378 78.84038 78.87895
+#&gt; [1017] 78.88154 78.89056 78.89956 78.90591 81.93535 78.94894 78.95178 78.95991
+#&gt; [1025] 78.96625 78.97179 78.97390 78.97448 78.99004 79.03804 79.05826 79.06311
+#&gt; [1033] 79.08655 79.11331 82.14205 79.16941 79.17783 79.18255 79.20875 79.34690
+#&gt; [1041] 79.44826 79.52362 84.60875</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

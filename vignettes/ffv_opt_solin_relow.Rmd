@@ -203,11 +203,16 @@ df_opti <- df_opti %>%
                         rela_intercept_to_lowest +
                         rela_slope_to_lowest*allocate_lowest) %>%
               mutate(opti_allocate =
-                        case_when(opti_allocate >= 0 ~ opti_allocate)) %>%
-              mutate(opti_allocate_total = sum(opti_allocate, na.rm=TRUE))
+                        case_when(opti_allocate >= 0 ~ opti_allocate, TRUE ~ 0)) %>%
+              mutate(allocate_total = sum(opti_allocate, na.rm=TRUE))
+
+# if want 0 to be 0
+# case_when(opti_allocate >= 0 ~ opti_allocate, TRUE ~ 0)) %>%
+# if want 0 to be NA, makes it easier to see average change for non zeros
+# case_when(opti_allocate >= 0 ~ opti_allocate)) %>%
 
 # Print
-summary(df_opti %>% select(opti_allocate, opti_allocate_total))
+summary(df_opti %>% select(opti_allocate, allocate_total))
 ```
 
 ## Expected Outcomes Given Optimal Allocations

@@ -80,7 +80,8 @@ ar_prot_data = df_hw_cebu_m24$prot
 fl_N_agg = sum(ar_prot_data)
 
 # Vector of Planner Preference
-ar_rho = c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.99, length.out=5))
+ar_rho = c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5),
+           seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.99, length.out=5))
 ar_rho = c(-50, -25, -10)
 ar_rho = unique(ar_rho)
 ```
@@ -117,8 +118,11 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
   # use df_opti for merging, because that contains the individual keys.
   # actually file here should contain unique keys, unique key ID as required input. should return?
   # actually it is fine, the function here needs the key, not solin_flinr
-
-  ls_lin_solu <- ffp_opt_solin_relow(df, svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg, fl_rho)
+  
+  svr_inpalc <- 'opti_allocate'
+  svr_expout <- 'opti_exp_outcome'
+  ls_lin_solu <- ffp_opt_solin_relow(df, svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg, fl_rho,
+                                     svr_inpalc, svr_expout)
   tb_opti <- ls_lin_solu$df_opti
   ar_opti_inpalc <- ls_lin_solu$ar_opti_inpalc
   ar_opti_expout <- ls_lin_solu$ar_opti_expout
@@ -131,9 +135,9 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
   # _eh stands for expected height
   tb_opti_main_results <- tb_opti %>%
     select(-one_of(c('lowest_rank_alpha', 'lowest_rank_beta')))
-  tb_opti_allocate_wth_key <- tb_opti %>% select(one_of('indi.id','opti_allocate', 'opti_exp_outcome')) %>%
-                                rename(!!paste0('rho_c', it_rho_ctr, '_on') := !!sym('opti_allocate'),
-                                       !!paste0('rho_c', it_rho_ctr, '_eh') := !!sym('opti_exp_outcome'))
+  tb_opti_allocate_wth_key <- tb_opti %>% select(one_of('indi.id', svr_inpalc, svr_expout)) %>%
+                                rename(!!paste0('rho_c', it_rho_ctr, '_on') := !!sym(svr_inpalc),
+                                       !!paste0('rho_c', it_rho_ctr, '_eh') := !!sym(svr_expout))
 
   # n. merge optimal allocaiton results from different planner preference
   tb_opti_alloc_all_rho <- tb_opti_alloc_all_rho %>% left_join(tb_opti_allocate_wth_key, by='indi.id')

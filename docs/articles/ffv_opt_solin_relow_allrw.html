@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Linear (CRS) Optimal Allocation Solution (line by line) • PrjOptiAlloc</title>
+<title>LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line) • PrjOptiAlloc</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Linear (CRS) Optimal Allocation Solution (line by line)">
+<script src="../pkgdown.js"></script><meta property="og:title" content="LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -54,6 +54,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/ffv_opt_anlyz_rhgin.html">ANALYSIS--Optimal Allocations Planner Elasticity Vector and Ginis</a>
+    </li>
+    <li>
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
@@ -63,7 +66,7 @@
       <a href="../articles/ffv_opt_solin_relow_allfn.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Function)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_solin_relow_allrw.html">Linear (CRS) Optimal Allocation Solution (line by line)</a>
+      <a href="../articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
     </li>
   </ul>
 </li>
@@ -81,7 +84,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Linear (CRS) Optimal Allocation Solution (line by line)</h1>
+      <h1>LINEAR–CRS (Linear) Optimal Allocation Solution (Line by Line)</h1>
             
       
       
@@ -193,6 +196,7 @@
 </ul>
 </li>
 </ol>
+<p>Note the structure above means that if anything in code changes, there are three spots that require changes: 1, this file here, the raw line by line implementation of the entire algorithm structure; 2, the <em>ffp</em> function file; 3, the <em>ffv</em> line by line file for only that function file.</p>
 </div>
 </div>
 <div id="load-packages-and-data" class="section level1">
@@ -456,7 +460,7 @@
 <a class="sourceLine" id="cb14-76" title="76"><span class="st">                         </span>rela_slope_to_lowest<span class="op">*</span>allocate_lowest) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb14-77" title="77"><span class="st">                </span><span class="kw">mutate</span>(<span class="dt">opti_allocate =</span></a>
 <a class="sourceLine" id="cb14-78" title="78">                         <span class="kw">case_when</span>(opti_allocate <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> </span>opti_allocate, <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb14-79" title="79"><span class="st">                </span><span class="kw">mutate</span>(<span class="dt">opti_allocate_total =</span> <span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(opti_allocate, <span class="dt">na.rm=</span><span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb14-79" title="79"><span class="st">                </span><span class="kw">mutate</span>(<span class="dt">allocate_total =</span> <span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(opti_allocate, <span class="dt">na.rm=</span><span class="ot">TRUE</span>))</a>
 <a class="sourceLine" id="cb14-80" title="80"></a>
 <a class="sourceLine" id="cb14-81" title="81">  <span class="co"># l. Predictes Expected choice: A + alpha*opti_allocate</span></a>
 <a class="sourceLine" id="cb14-82" title="82">  tb_opti &lt;-<span class="st"> </span>tb_opti <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">opti_exp_outcome =</span> A <span class="op">+</span><span class="st"> </span>alpha<span class="op">*</span>opti_allocate)  </a>
@@ -531,13 +535,13 @@
 ##  Mean   : 83.42   Mean   : 29824           Mean   :  7002   Mean   :85.24  
 ##  3rd Qu.: 94.53   3rd Qu.: 41314           3rd Qu.: 18491   3rd Qu.:85.24  
 ##  Max.   :185.68   Max.   :295234           Max.   :272412   Max.   :85.24  
-##  opti_allocate     opti_allocate_total opti_exp_outcome
-##  Min.   :  0.000   Min.   :22823       Min.   :78.13   
-##  1st Qu.:  0.000   1st Qu.:22823       1st Qu.:78.36   
-##  Median :  1.289   Median :22823       Median :78.83   
-##  Mean   : 21.882   Mean   :22823       Mean   :78.94   
-##  3rd Qu.: 21.838   3rd Qu.:22823       3rd Qu.:79.15   
-##  Max.   :371.159   Max.   :22823       Max.   :84.61   
+##  opti_allocate     allocate_total  opti_exp_outcome
+##  Min.   :  0.000   Min.   :22823   Min.   :78.13   
+##  1st Qu.:  0.000   1st Qu.:22823   1st Qu.:78.36   
+##  Median :  1.289   Median :22823   Median :78.83   
+##  Mean   : 21.882   Mean   :22823   Mean   :78.94   
+##  3rd Qu.: 21.838   3rd Qu.:22823   3rd Qu.:79.15   
+##  Max.   :371.159   Max.   :22823   Max.   :84.61   
 ## [1] ""
 ## [1] "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ## [1] "xxx rho:-3"
@@ -585,13 +589,13 @@
 ##  Mean   :343.58   Mean   :191130           Mean   :168308   Mean   :111    
 ##  3rd Qu.:779.36   3rd Qu.:491900           3rd Qu.:469077   3rd Qu.:111    
 ##  Max.   :837.66   Max.   :590710           Max.   :567888   Max.   :111    
-##  opti_allocate    opti_allocate_total opti_exp_outcome
-##  Min.   :  0.00   Min.   :22823       Min.   :74.37   
-##  1st Qu.:  0.00   1st Qu.:22823       1st Qu.:78.35   
-##  Median : 21.29   Median :22823       Median :80.38   
-##  Mean   : 21.88   Mean   :22823       Mean   :79.83   
-##  3rd Qu.: 41.90   3rd Qu.:22823       3rd Qu.:80.38   
-##  Max.   :111.04   Max.   :22823       Max.   :84.61   
+##  opti_allocate    allocate_total  opti_exp_outcome
+##  Min.   :  0.00   Min.   :22823   Min.   :74.37   
+##  1st Qu.:  0.00   1st Qu.:22823   1st Qu.:78.35   
+##  Median : 21.29   Median :22823   Median :80.38   
+##  Mean   : 21.88   Mean   :22823   Mean   :79.83   
+##  3rd Qu.: 41.90   3rd Qu.:22823   3rd Qu.:80.38   
+##  Max.   :111.04   Max.   :22823   Max.   :84.61   
 ## [1] ""
 ## [1] "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ## [1] "xxx rho:0.9"
@@ -639,13 +643,13 @@
 ##  Mean   :5.467e+10   Mean   :2.023e+13        Mean   : 2.023e+13  
 ##  3rd Qu.:1.633e+11   3rd Qu.:6.041e+13        3rd Qu.: 6.041e+13  
 ##  Max.   :1.680e+11   Max.   :6.217e+13        Max.   : 6.217e+13  
-##  allocate_lowest opti_allocate    opti_allocate_total opti_exp_outcome
-##  Min.   :119.1   Min.   :  0.00   Min.   :22823       Min.   :73.70   
-##  1st Qu.:119.1   1st Qu.:  0.00   1st Qu.:22823       1st Qu.:77.73   
-##  Median :119.1   Median :  0.00   Median :22823       Median :78.46   
-##  Mean   :119.1   Mean   : 21.88   Mean   :22823       Mean   :79.91   
-##  3rd Qu.:119.1   3rd Qu.:  0.00   3rd Qu.:22823       3rd Qu.:79.87   
-##  Max.   :119.1   Max.   :119.06   Max.   :22823       Max.   :86.10</code></pre>
+##  allocate_lowest opti_allocate    allocate_total  opti_exp_outcome
+##  Min.   :119.1   Min.   :  0.00   Min.   :22823   Min.   :73.70   
+##  1st Qu.:119.1   1st Qu.:  0.00   1st Qu.:22823   1st Qu.:77.73   
+##  Median :119.1   Median :  0.00   Median :22823   Median :78.46   
+##  Mean   :119.1   Mean   : 21.88   Mean   :22823   Mean   :79.91   
+##  3rd Qu.:119.1   3rd Qu.:  0.00   3rd Qu.:22823   3rd Qu.:79.87   
+##  Max.   :119.1   Max.   :119.06   Max.   :22823   Max.   :86.10</code></pre>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co"># o. print results</span></a>
 <a class="sourceLine" id="cb16-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(tb_opti_alloc_all_rho))</a></code></pre></div>
 <pre><code>##   S.country             vil.id         indi.id        svymthRound

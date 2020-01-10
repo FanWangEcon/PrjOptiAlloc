@@ -54,6 +54,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/ffv_opt_anlyz_rhgin.html">ANALYSIS--Optimal Allocations Planner Elasticity Vector and Ginis</a>
+    </li>
+    <li>
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
@@ -63,7 +66,7 @@
       <a href="../articles/ffv_opt_solin_relow_allfn.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Function)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_solin_relow_allrw.html">Linear (CRS) Optimal Allocation Solution (line by line)</a>
+      <a href="../articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
     </li>
   </ul>
 </li>
@@ -400,19 +403,23 @@
 <a class="sourceLine" id="cb26-4" title="4">                        rela_intercept_to_lowest <span class="op">+</span></a>
 <a class="sourceLine" id="cb26-5" title="5"><span class="st">                        </span>rela_slope_to_lowest<span class="op">*</span>allocate_lowest) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb26-6" title="6"><span class="st">              </span><span class="kw">mutate</span>(<span class="dt">opti_allocate =</span></a>
-<a class="sourceLine" id="cb26-7" title="7">                        <span class="kw">case_when</span>(opti_allocate <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> </span>opti_allocate)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb26-8" title="8"><span class="st">              </span><span class="kw">mutate</span>(<span class="dt">opti_allocate_total =</span> <span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(opti_allocate, <span class="dt">na.rm=</span><span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb26-7" title="7">                        <span class="kw">case_when</span>(opti_allocate <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> </span>opti_allocate, <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-8" title="8"><span class="st">              </span><span class="kw">mutate</span>(<span class="dt">allocate_total =</span> <span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(opti_allocate, <span class="dt">na.rm=</span><span class="ot">TRUE</span>))</a>
 <a class="sourceLine" id="cb26-9" title="9"></a>
-<a class="sourceLine" id="cb26-10" title="10"><span class="co"># Print</span></a>
-<a class="sourceLine" id="cb26-11" title="11"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(df_opti <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(opti_allocate, opti_allocate_total))</a></code></pre></div>
-<pre><code>##  opti_allocate      opti_allocate_total
-##  Min.   :  0.0067   Min.   :22823      
-##  1st Qu.: 32.2789   1st Qu.:22823      
-##  Median : 40.5017   Median :22823      
-##  Mean   : 41.7230   Mean   :22823      
-##  3rd Qu.: 50.0891   3rd Qu.:22823      
-##  Max.   :119.1325   Max.   :22823      
-##  NA's   :496</code></pre>
+<a class="sourceLine" id="cb26-10" title="10"><span class="co"># if want 0 to be 0</span></a>
+<a class="sourceLine" id="cb26-11" title="11"><span class="co"># case_when(opti_allocate &gt;= 0 ~ opti_allocate, TRUE ~ 0)) %&gt;%</span></a>
+<a class="sourceLine" id="cb26-12" title="12"><span class="co"># if want 0 to be NA, makes it easier to see average change for non zeros</span></a>
+<a class="sourceLine" id="cb26-13" title="13"><span class="co"># case_when(opti_allocate &gt;= 0 ~ opti_allocate)) %&gt;%</span></a>
+<a class="sourceLine" id="cb26-14" title="14"></a>
+<a class="sourceLine" id="cb26-15" title="15"><span class="co"># Print</span></a>
+<a class="sourceLine" id="cb26-16" title="16"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(df_opti <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(opti_allocate, allocate_total))</a></code></pre></div>
+<pre><code>##  opti_allocate    allocate_total 
+##  Min.   :  0.00   Min.   :22823  
+##  1st Qu.:  0.00   1st Qu.:22823  
+##  Median : 15.17   Median :22823  
+##  Mean   : 21.88   Mean   :22823  
+##  3rd Qu.: 41.46   3rd Qu.:22823  
+##  Max.   :119.13   Max.   :22823</code></pre>
 </div>
 </div>
 <div id="expected-outcomes-given-optimal-allocations" class="section level2">
@@ -450,7 +457,7 @@
 ## #   rela_slope_to_lowest_cumsum_invert &lt;dbl&gt;,
 ## #   rela_intercept_to_lowest_cumsum_invert &lt;dbl&gt;, rela_x_intercept &lt;dbl&gt;,
 ## #   opti_lowest_spline_knots &lt;dbl&gt;, tot_devi &lt;dbl&gt;, allocate_lowest &lt;dbl&gt;,
-## #   opti_allocate &lt;dbl&gt;, opti_allocate_total &lt;dbl&gt;, opti_exp_outcome &lt;dbl&gt;</code></pre>
+## #   opti_allocate &lt;dbl&gt;, allocate_total &lt;dbl&gt;, opti_exp_outcome &lt;dbl&gt;</code></pre>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(df_opti)</a></code></pre></div>
 <pre><code>##   S.country             vil.id         indi.id        svymthRound
 ##  Length:1043        Min.   : 1.00   Min.   :   2.0   Min.   :24  
@@ -459,7 +466,6 @@
 ##                     Mean   :12.52   Mean   : 634.8   Mean   :24  
 ##                     3rd Qu.:17.00   3rd Qu.: 939.5   3rd Qu.:24  
 ##                     Max.   :33.00   Max.   :1349.0   Max.   :24  
-##                                                                  
 ##      alpha           alpha_log              A             A_log      
 ##  Min.   :0.01014   Min.   :0.006687   Min.   :73.70   Min.   :4.287  
 ##  1st Qu.:0.01014   1st Qu.:0.006687   1st Qu.:77.73   1st Qu.:4.334  
@@ -467,7 +473,6 @@
 ##  Mean   :0.04108   Mean   :0.010321   Mean   :78.46   Mean   :4.343  
 ##  3rd Qu.:0.06018   3rd Qu.:0.012090   3rd Qu.:79.15   3rd Qu.:4.351  
 ##  Max.   :0.06619   Max.   :0.013940   Max.   :84.61   Max.   :4.417  
-##                                                                      
 ##       beta              rank_val        rank_idx      lowest_rank_A 
 ##  Min.   :0.0009588   Min.   :179.0   Min.   :   1.0   Min.   :73.7  
 ##  1st Qu.:0.0009588   1st Qu.:190.1   1st Qu.: 261.5   1st Qu.:73.7  
@@ -475,7 +480,6 @@
 ##  Mean   :0.0009588   Mean   :202.8   Mean   : 522.0   Mean   :73.7  
 ##  3rd Qu.:0.0009588   3rd Qu.:220.6   3rd Qu.: 782.5   3rd Qu.:73.7  
 ##  Max.   :0.0009588   Max.   :227.1   Max.   :1043.0   Max.   :73.7  
-##                                                                     
 ##  rela_slope_to_lowest rela_intercept_to_lowest rela_slope_to_lowest_cumsum
 ##  Min.   :0.917        Min.   :-1659.82         Min.   :   1.0             
 ##  1st Qu.:1.000        1st Qu.:-1438.21         1st Qu.: 257.5             
@@ -483,7 +487,6 @@
 ##  Mean   :2.431        Mean   : -575.93         Mean   : 787.4             
 ##  3rd Qu.:5.046        3rd Qu.:  -73.43         3rd Qu.:1221.2             
 ##  Max.   :5.046        Max.   :    0.00         Max.   :2535.6             
-##                                                                           
 ##  rela_intercept_to_lowest_cumsum rela_slope_to_lowest_cumsum_invert
 ##  Min.   :-600691                 Min.   :0.0003944                 
 ##  1st Qu.:-203379                 1st Qu.:0.0008189                 
@@ -491,7 +494,6 @@
 ##  Mean   :-129856                 Mean   :0.0070661                 
 ##  3rd Qu.: -16569                 3rd Qu.:0.0038832                 
 ##  Max.   :      0                 Max.   :1.0000000                 
-##                                                                    
 ##  rela_intercept_to_lowest_cumsum_invert rela_x_intercept
 ##  Min.   :  0.00                         Min.   :  0.00  
 ##  1st Qu.: 64.34                         1st Qu.: 76.34  
@@ -499,23 +501,20 @@
 ##  Mean   :109.21                         Mean   :162.65  
 ##  3rd Qu.:166.54                         3rd Qu.:285.05  
 ##  Max.   :236.91                         Max.   :328.97  
-##                                                         
-##  opti_lowest_spline_knots    tot_devi      allocate_lowest opti_allocate     
-##  Min.   :     0           Min.   :-22823   Min.   :119.1   Min.   :  0.0067  
-##  1st Qu.:  3091           1st Qu.:-19732   1st Qu.:119.1   1st Qu.: 32.2789  
-##  Median : 14234           Median : -8588   Median :119.1   Median : 40.5017  
-##  Mean   : 63977           Mean   : 41154   Mean   :119.1   Mean   : 41.7230  
-##  3rd Qu.:144722           3rd Qu.:121899   3rd Qu.:119.1   3rd Qu.: 50.0891  
-##  Max.   :233432           Max.   :210609   Max.   :119.1   Max.   :119.1325  
-##                                                            NA's   :496       
-##  opti_allocate_total opti_exp_outcome
-##  Min.   :22823       Min.   :80.87   
-##  1st Qu.:22823       1st Qu.:80.87   
-##  Median :22823       Median :80.87   
-##  Mean   :22823       Mean   :81.16   
-##  3rd Qu.:22823       3rd Qu.:81.57   
-##  Max.   :22823       Max.   :81.57   
-##                      NA's   :496</code></pre>
+##  opti_lowest_spline_knots    tot_devi      allocate_lowest opti_allocate   
+##  Min.   :     0           Min.   :-22823   Min.   :119.1   Min.   :  0.00  
+##  1st Qu.:  3091           1st Qu.:-19732   1st Qu.:119.1   1st Qu.:  0.00  
+##  Median : 14234           Median : -8588   Median :119.1   Median : 15.17  
+##  Mean   : 63977           Mean   : 41154   Mean   :119.1   Mean   : 21.88  
+##  3rd Qu.:144722           3rd Qu.:121899   3rd Qu.:119.1   3rd Qu.: 41.46  
+##  Max.   :233432           Max.   :210609   Max.   :119.1   Max.   :119.13  
+##  allocate_total  opti_exp_outcome
+##  Min.   :22823   Min.   :74.37   
+##  1st Qu.:22823   1st Qu.:78.35   
+##  Median :22823   Median :80.87   
+##  Mean   :22823   Mean   :79.82   
+##  3rd Qu.:22823   3rd Qu.:80.87   
+##  Max.   :22823   Max.   :84.61</code></pre>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(ar_opti_expout,ar_opti_inpalc))</a></code></pre></div>
 <pre><code>##         ar_opti_expout ar_opti_inpalc
 ##    [1,]       81.57038   6.671383e-03
@@ -1065,502 +1064,502 @@
 ##  [545,]       80.86699   1.039301e+02
 ##  [546,]       80.86699   1.046637e+02
 ##  [547,]       80.86699   1.191325e+02
-##  [548,]             NA             NA
-##  [549,]             NA             NA
-##  [550,]             NA             NA
-##  [551,]             NA             NA
-##  [552,]             NA             NA
-##  [553,]             NA             NA
-##  [554,]             NA             NA
-##  [555,]             NA             NA
-##  [556,]             NA             NA
-##  [557,]             NA             NA
-##  [558,]             NA             NA
-##  [559,]             NA             NA
-##  [560,]             NA             NA
-##  [561,]             NA             NA
-##  [562,]             NA             NA
-##  [563,]             NA             NA
-##  [564,]             NA             NA
-##  [565,]             NA             NA
-##  [566,]             NA             NA
-##  [567,]             NA             NA
-##  [568,]             NA             NA
-##  [569,]             NA             NA
-##  [570,]             NA             NA
-##  [571,]             NA             NA
-##  [572,]             NA             NA
-##  [573,]             NA             NA
-##  [574,]             NA             NA
-##  [575,]             NA             NA
-##  [576,]             NA             NA
-##  [577,]             NA             NA
-##  [578,]             NA             NA
-##  [579,]             NA             NA
-##  [580,]             NA             NA
-##  [581,]             NA             NA
-##  [582,]             NA             NA
-##  [583,]             NA             NA
-##  [584,]             NA             NA
-##  [585,]             NA             NA
-##  [586,]             NA             NA
-##  [587,]             NA             NA
-##  [588,]             NA             NA
-##  [589,]             NA             NA
-##  [590,]             NA             NA
-##  [591,]             NA             NA
-##  [592,]             NA             NA
-##  [593,]             NA             NA
-##  [594,]             NA             NA
-##  [595,]             NA             NA
-##  [596,]             NA             NA
-##  [597,]             NA             NA
-##  [598,]             NA             NA
-##  [599,]             NA             NA
-##  [600,]             NA             NA
-##  [601,]             NA             NA
-##  [602,]             NA             NA
-##  [603,]             NA             NA
-##  [604,]             NA             NA
-##  [605,]             NA             NA
-##  [606,]             NA             NA
-##  [607,]             NA             NA
-##  [608,]             NA             NA
-##  [609,]             NA             NA
-##  [610,]             NA             NA
-##  [611,]             NA             NA
-##  [612,]             NA             NA
-##  [613,]             NA             NA
-##  [614,]             NA             NA
-##  [615,]             NA             NA
-##  [616,]             NA             NA
-##  [617,]             NA             NA
-##  [618,]             NA             NA
-##  [619,]             NA             NA
-##  [620,]             NA             NA
-##  [621,]             NA             NA
-##  [622,]             NA             NA
-##  [623,]             NA             NA
-##  [624,]             NA             NA
-##  [625,]             NA             NA
-##  [626,]             NA             NA
-##  [627,]             NA             NA
-##  [628,]             NA             NA
-##  [629,]             NA             NA
-##  [630,]             NA             NA
-##  [631,]             NA             NA
-##  [632,]             NA             NA
-##  [633,]             NA             NA
-##  [634,]             NA             NA
-##  [635,]             NA             NA
-##  [636,]             NA             NA
-##  [637,]             NA             NA
-##  [638,]             NA             NA
-##  [639,]             NA             NA
-##  [640,]             NA             NA
-##  [641,]             NA             NA
-##  [642,]             NA             NA
-##  [643,]             NA             NA
-##  [644,]             NA             NA
-##  [645,]             NA             NA
-##  [646,]             NA             NA
-##  [647,]             NA             NA
-##  [648,]             NA             NA
-##  [649,]             NA             NA
-##  [650,]             NA             NA
-##  [651,]             NA             NA
-##  [652,]             NA             NA
-##  [653,]             NA             NA
-##  [654,]             NA             NA
-##  [655,]             NA             NA
-##  [656,]             NA             NA
-##  [657,]             NA             NA
-##  [658,]             NA             NA
-##  [659,]             NA             NA
-##  [660,]             NA             NA
-##  [661,]             NA             NA
-##  [662,]             NA             NA
-##  [663,]             NA             NA
-##  [664,]             NA             NA
-##  [665,]             NA             NA
-##  [666,]             NA             NA
-##  [667,]             NA             NA
-##  [668,]             NA             NA
-##  [669,]             NA             NA
-##  [670,]             NA             NA
-##  [671,]             NA             NA
-##  [672,]             NA             NA
-##  [673,]             NA             NA
-##  [674,]             NA             NA
-##  [675,]             NA             NA
-##  [676,]             NA             NA
-##  [677,]             NA             NA
-##  [678,]             NA             NA
-##  [679,]             NA             NA
-##  [680,]             NA             NA
-##  [681,]             NA             NA
-##  [682,]             NA             NA
-##  [683,]             NA             NA
-##  [684,]             NA             NA
-##  [685,]             NA             NA
-##  [686,]             NA             NA
-##  [687,]             NA             NA
-##  [688,]             NA             NA
-##  [689,]             NA             NA
-##  [690,]             NA             NA
-##  [691,]             NA             NA
-##  [692,]             NA             NA
-##  [693,]             NA             NA
-##  [694,]             NA             NA
-##  [695,]             NA             NA
-##  [696,]             NA             NA
-##  [697,]             NA             NA
-##  [698,]             NA             NA
-##  [699,]             NA             NA
-##  [700,]             NA             NA
-##  [701,]             NA             NA
-##  [702,]             NA             NA
-##  [703,]             NA             NA
-##  [704,]             NA             NA
-##  [705,]             NA             NA
-##  [706,]             NA             NA
-##  [707,]             NA             NA
-##  [708,]             NA             NA
-##  [709,]             NA             NA
-##  [710,]             NA             NA
-##  [711,]             NA             NA
-##  [712,]             NA             NA
-##  [713,]             NA             NA
-##  [714,]             NA             NA
-##  [715,]             NA             NA
-##  [716,]             NA             NA
-##  [717,]             NA             NA
-##  [718,]             NA             NA
-##  [719,]             NA             NA
-##  [720,]             NA             NA
-##  [721,]             NA             NA
-##  [722,]             NA             NA
-##  [723,]             NA             NA
-##  [724,]             NA             NA
-##  [725,]             NA             NA
-##  [726,]             NA             NA
-##  [727,]             NA             NA
-##  [728,]             NA             NA
-##  [729,]             NA             NA
-##  [730,]             NA             NA
-##  [731,]             NA             NA
-##  [732,]             NA             NA
-##  [733,]             NA             NA
-##  [734,]             NA             NA
-##  [735,]             NA             NA
-##  [736,]             NA             NA
-##  [737,]             NA             NA
-##  [738,]             NA             NA
-##  [739,]             NA             NA
-##  [740,]             NA             NA
-##  [741,]             NA             NA
-##  [742,]             NA             NA
-##  [743,]             NA             NA
-##  [744,]             NA             NA
-##  [745,]             NA             NA
-##  [746,]             NA             NA
-##  [747,]             NA             NA
-##  [748,]             NA             NA
-##  [749,]             NA             NA
-##  [750,]             NA             NA
-##  [751,]             NA             NA
-##  [752,]             NA             NA
-##  [753,]             NA             NA
-##  [754,]             NA             NA
-##  [755,]             NA             NA
-##  [756,]             NA             NA
-##  [757,]             NA             NA
-##  [758,]             NA             NA
-##  [759,]             NA             NA
-##  [760,]             NA             NA
-##  [761,]             NA             NA
-##  [762,]             NA             NA
-##  [763,]             NA             NA
-##  [764,]             NA             NA
-##  [765,]             NA             NA
-##  [766,]             NA             NA
-##  [767,]             NA             NA
-##  [768,]             NA             NA
-##  [769,]             NA             NA
-##  [770,]             NA             NA
-##  [771,]             NA             NA
-##  [772,]             NA             NA
-##  [773,]             NA             NA
-##  [774,]             NA             NA
-##  [775,]             NA             NA
-##  [776,]             NA             NA
-##  [777,]             NA             NA
-##  [778,]             NA             NA
-##  [779,]             NA             NA
-##  [780,]             NA             NA
-##  [781,]             NA             NA
-##  [782,]             NA             NA
-##  [783,]             NA             NA
-##  [784,]             NA             NA
-##  [785,]             NA             NA
-##  [786,]             NA             NA
-##  [787,]             NA             NA
-##  [788,]             NA             NA
-##  [789,]             NA             NA
-##  [790,]             NA             NA
-##  [791,]             NA             NA
-##  [792,]             NA             NA
-##  [793,]             NA             NA
-##  [794,]             NA             NA
-##  [795,]             NA             NA
-##  [796,]             NA             NA
-##  [797,]             NA             NA
-##  [798,]             NA             NA
-##  [799,]             NA             NA
-##  [800,]             NA             NA
-##  [801,]             NA             NA
-##  [802,]             NA             NA
-##  [803,]             NA             NA
-##  [804,]             NA             NA
-##  [805,]             NA             NA
-##  [806,]             NA             NA
-##  [807,]             NA             NA
-##  [808,]             NA             NA
-##  [809,]             NA             NA
-##  [810,]             NA             NA
-##  [811,]             NA             NA
-##  [812,]             NA             NA
-##  [813,]             NA             NA
-##  [814,]             NA             NA
-##  [815,]             NA             NA
-##  [816,]             NA             NA
-##  [817,]             NA             NA
-##  [818,]             NA             NA
-##  [819,]             NA             NA
-##  [820,]             NA             NA
-##  [821,]             NA             NA
-##  [822,]             NA             NA
-##  [823,]             NA             NA
-##  [824,]             NA             NA
-##  [825,]             NA             NA
-##  [826,]             NA             NA
-##  [827,]             NA             NA
-##  [828,]             NA             NA
-##  [829,]             NA             NA
-##  [830,]             NA             NA
-##  [831,]             NA             NA
-##  [832,]             NA             NA
-##  [833,]             NA             NA
-##  [834,]             NA             NA
-##  [835,]             NA             NA
-##  [836,]             NA             NA
-##  [837,]             NA             NA
-##  [838,]             NA             NA
-##  [839,]             NA             NA
-##  [840,]             NA             NA
-##  [841,]             NA             NA
-##  [842,]             NA             NA
-##  [843,]             NA             NA
-##  [844,]             NA             NA
-##  [845,]             NA             NA
-##  [846,]             NA             NA
-##  [847,]             NA             NA
-##  [848,]             NA             NA
-##  [849,]             NA             NA
-##  [850,]             NA             NA
-##  [851,]             NA             NA
-##  [852,]             NA             NA
-##  [853,]             NA             NA
-##  [854,]             NA             NA
-##  [855,]             NA             NA
-##  [856,]             NA             NA
-##  [857,]             NA             NA
-##  [858,]             NA             NA
-##  [859,]             NA             NA
-##  [860,]             NA             NA
-##  [861,]             NA             NA
-##  [862,]             NA             NA
-##  [863,]             NA             NA
-##  [864,]             NA             NA
-##  [865,]             NA             NA
-##  [866,]             NA             NA
-##  [867,]             NA             NA
-##  [868,]             NA             NA
-##  [869,]             NA             NA
-##  [870,]             NA             NA
-##  [871,]             NA             NA
-##  [872,]             NA             NA
-##  [873,]             NA             NA
-##  [874,]             NA             NA
-##  [875,]             NA             NA
-##  [876,]             NA             NA
-##  [877,]             NA             NA
-##  [878,]             NA             NA
-##  [879,]             NA             NA
-##  [880,]             NA             NA
-##  [881,]             NA             NA
-##  [882,]             NA             NA
-##  [883,]             NA             NA
-##  [884,]             NA             NA
-##  [885,]             NA             NA
-##  [886,]             NA             NA
-##  [887,]             NA             NA
-##  [888,]             NA             NA
-##  [889,]             NA             NA
-##  [890,]             NA             NA
-##  [891,]             NA             NA
-##  [892,]             NA             NA
-##  [893,]             NA             NA
-##  [894,]             NA             NA
-##  [895,]             NA             NA
-##  [896,]             NA             NA
-##  [897,]             NA             NA
-##  [898,]             NA             NA
-##  [899,]             NA             NA
-##  [900,]             NA             NA
-##  [901,]             NA             NA
-##  [902,]             NA             NA
-##  [903,]             NA             NA
-##  [904,]             NA             NA
-##  [905,]             NA             NA
-##  [906,]             NA             NA
-##  [907,]             NA             NA
-##  [908,]             NA             NA
-##  [909,]             NA             NA
-##  [910,]             NA             NA
-##  [911,]             NA             NA
-##  [912,]             NA             NA
-##  [913,]             NA             NA
-##  [914,]             NA             NA
-##  [915,]             NA             NA
-##  [916,]             NA             NA
-##  [917,]             NA             NA
-##  [918,]             NA             NA
-##  [919,]             NA             NA
-##  [920,]             NA             NA
-##  [921,]             NA             NA
-##  [922,]             NA             NA
-##  [923,]             NA             NA
-##  [924,]             NA             NA
-##  [925,]             NA             NA
-##  [926,]             NA             NA
-##  [927,]             NA             NA
-##  [928,]             NA             NA
-##  [929,]             NA             NA
-##  [930,]             NA             NA
-##  [931,]             NA             NA
-##  [932,]             NA             NA
-##  [933,]             NA             NA
-##  [934,]             NA             NA
-##  [935,]             NA             NA
-##  [936,]             NA             NA
-##  [937,]             NA             NA
-##  [938,]             NA             NA
-##  [939,]             NA             NA
-##  [940,]             NA             NA
-##  [941,]             NA             NA
-##  [942,]             NA             NA
-##  [943,]             NA             NA
-##  [944,]             NA             NA
-##  [945,]             NA             NA
-##  [946,]             NA             NA
-##  [947,]             NA             NA
-##  [948,]             NA             NA
-##  [949,]             NA             NA
-##  [950,]             NA             NA
-##  [951,]             NA             NA
-##  [952,]             NA             NA
-##  [953,]             NA             NA
-##  [954,]             NA             NA
-##  [955,]             NA             NA
-##  [956,]             NA             NA
-##  [957,]             NA             NA
-##  [958,]             NA             NA
-##  [959,]             NA             NA
-##  [960,]             NA             NA
-##  [961,]             NA             NA
-##  [962,]             NA             NA
-##  [963,]             NA             NA
-##  [964,]             NA             NA
-##  [965,]             NA             NA
-##  [966,]             NA             NA
-##  [967,]             NA             NA
-##  [968,]             NA             NA
-##  [969,]             NA             NA
-##  [970,]             NA             NA
-##  [971,]             NA             NA
-##  [972,]             NA             NA
-##  [973,]             NA             NA
-##  [974,]             NA             NA
-##  [975,]             NA             NA
-##  [976,]             NA             NA
-##  [977,]             NA             NA
-##  [978,]             NA             NA
-##  [979,]             NA             NA
-##  [980,]             NA             NA
-##  [981,]             NA             NA
-##  [982,]             NA             NA
-##  [983,]             NA             NA
-##  [984,]             NA             NA
-##  [985,]             NA             NA
-##  [986,]             NA             NA
-##  [987,]             NA             NA
-##  [988,]             NA             NA
-##  [989,]             NA             NA
-##  [990,]             NA             NA
-##  [991,]             NA             NA
-##  [992,]             NA             NA
-##  [993,]             NA             NA
-##  [994,]             NA             NA
-##  [995,]             NA             NA
-##  [996,]             NA             NA
-##  [997,]             NA             NA
-##  [998,]             NA             NA
-##  [999,]             NA             NA
-## [1000,]             NA             NA
-## [1001,]             NA             NA
-## [1002,]             NA             NA
-## [1003,]             NA             NA
-## [1004,]             NA             NA
-## [1005,]             NA             NA
-## [1006,]             NA             NA
-## [1007,]             NA             NA
-## [1008,]             NA             NA
-## [1009,]             NA             NA
-## [1010,]             NA             NA
-## [1011,]             NA             NA
-## [1012,]             NA             NA
-## [1013,]             NA             NA
-## [1014,]             NA             NA
-## [1015,]             NA             NA
-## [1016,]             NA             NA
-## [1017,]             NA             NA
-## [1018,]             NA             NA
-## [1019,]             NA             NA
-## [1020,]             NA             NA
-## [1021,]             NA             NA
-## [1022,]             NA             NA
-## [1023,]             NA             NA
-## [1024,]             NA             NA
-## [1025,]             NA             NA
-## [1026,]             NA             NA
-## [1027,]             NA             NA
-## [1028,]             NA             NA
-## [1029,]             NA             NA
-## [1030,]             NA             NA
-## [1031,]             NA             NA
-## [1032,]             NA             NA
-## [1033,]             NA             NA
-## [1034,]             NA             NA
-## [1035,]             NA             NA
-## [1036,]             NA             NA
-## [1037,]             NA             NA
-## [1038,]             NA             NA
-## [1039,]             NA             NA
-## [1040,]             NA             NA
-## [1041,]             NA             NA
-## [1042,]             NA             NA
-## [1043,]             NA             NA</code></pre>
+##  [548,]       81.72991   0.000000e+00
+##  [549,]       81.76768   0.000000e+00
+##  [550,]       81.95830   0.000000e+00
+##  [551,]       82.10624   0.000000e+00
+##  [552,]       82.31699   0.000000e+00
+##  [553,]       82.48301   0.000000e+00
+##  [554,]       82.66567   0.000000e+00
+##  [555,]       78.30534   0.000000e+00
+##  [556,]       78.36651   0.000000e+00
+##  [557,]       78.49902   0.000000e+00
+##  [558,]       78.53825   0.000000e+00
+##  [559,]       78.59838   0.000000e+00
+##  [560,]       78.67697   0.000000e+00
+##  [561,]       78.68392   0.000000e+00
+##  [562,]       78.68933   0.000000e+00
+##  [563,]       78.70594   0.000000e+00
+##  [564,]       78.71795   0.000000e+00
+##  [565,]       78.74854   0.000000e+00
+##  [566,]       78.77002   0.000000e+00
+##  [567,]       78.78695   0.000000e+00
+##  [568,]       78.80396   0.000000e+00
+##  [569,]       78.82172   0.000000e+00
+##  [570,]       78.83592   0.000000e+00
+##  [571,]       78.85325   0.000000e+00
+##  [572,]       78.86800   0.000000e+00
+##  [573,]       78.86823   0.000000e+00
+##  [574,]       78.87078   0.000000e+00
+##  [575,]       78.87194   0.000000e+00
+##  [576,]       78.87287   0.000000e+00
+##  [577,]       78.88209   0.000000e+00
+##  [578,]       78.89190   0.000000e+00
+##  [579,]       78.89635   0.000000e+00
+##  [580,]       78.90078   0.000000e+00
+##  [581,]       78.90827   0.000000e+00
+##  [582,]       78.91993   0.000000e+00
+##  [583,]       78.92779   0.000000e+00
+##  [584,]       78.93241   0.000000e+00
+##  [585,]       78.93804   0.000000e+00
+##  [586,]       78.95007   0.000000e+00
+##  [587,]       78.95918   0.000000e+00
+##  [588,]       78.96186   0.000000e+00
+##  [589,]       78.97775   0.000000e+00
+##  [590,]       78.98827   0.000000e+00
+##  [591,]       79.00606   0.000000e+00
+##  [592,]       79.02993   0.000000e+00
+##  [593,]       79.03353   0.000000e+00
+##  [594,]       79.03756   0.000000e+00
+##  [595,]       79.03765   0.000000e+00
+##  [596,]       79.04114   0.000000e+00
+##  [597,]       79.05274   0.000000e+00
+##  [598,]       79.06816   0.000000e+00
+##  [599,]       79.09631   0.000000e+00
+##  [600,]       79.12616   0.000000e+00
+##  [601,]       79.13129   0.000000e+00
+##  [602,]       79.13273   0.000000e+00
+##  [603,]       79.13894   0.000000e+00
+##  [604,]       79.15316   0.000000e+00
+##  [605,]       79.15338   0.000000e+00
+##  [606,]       79.15546   0.000000e+00
+##  [607,]       79.19876   0.000000e+00
+##  [608,]       79.19981   0.000000e+00
+##  [609,]       79.20893   0.000000e+00
+##  [610,]       79.22959   0.000000e+00
+##  [611,]       79.23844   0.000000e+00
+##  [612,]       79.25681   0.000000e+00
+##  [613,]       79.26559   0.000000e+00
+##  [614,]       79.27642   0.000000e+00
+##  [615,]       79.31479   0.000000e+00
+##  [616,]       79.31638   0.000000e+00
+##  [617,]       79.32019   0.000000e+00
+##  [618,]       79.32422   0.000000e+00
+##  [619,]       79.33963   0.000000e+00
+##  [620,]       79.33995   0.000000e+00
+##  [621,]       79.34540   0.000000e+00
+##  [622,]       79.35078   0.000000e+00
+##  [623,]       79.35601   0.000000e+00
+##  [624,]       79.37234   0.000000e+00
+##  [625,]       79.37470   0.000000e+00
+##  [626,]       79.37765   0.000000e+00
+##  [627,]       79.39466   0.000000e+00
+##  [628,]       79.40065   0.000000e+00
+##  [629,]       79.44210   0.000000e+00
+##  [630,]       79.44991   0.000000e+00
+##  [631,]       79.45076   0.000000e+00
+##  [632,]       79.47582   0.000000e+00
+##  [633,]       79.47808   0.000000e+00
+##  [634,]       79.47947   0.000000e+00
+##  [635,]       79.48041   0.000000e+00
+##  [636,]       79.49263   0.000000e+00
+##  [637,]       79.49711   0.000000e+00
+##  [638,]       79.50418   0.000000e+00
+##  [639,]       79.52303   0.000000e+00
+##  [640,]       79.52375   0.000000e+00
+##  [641,]       79.52490   0.000000e+00
+##  [642,]       79.53534   0.000000e+00
+##  [643,]       79.53994   0.000000e+00
+##  [644,]       79.54352   0.000000e+00
+##  [645,]       79.55294   0.000000e+00
+##  [646,]       79.56398   0.000000e+00
+##  [647,]       79.57731   0.000000e+00
+##  [648,]       79.58435   0.000000e+00
+##  [649,]       79.59862   0.000000e+00
+##  [650,]       79.60146   0.000000e+00
+##  [651,]       79.61933   0.000000e+00
+##  [652,]       79.62682   0.000000e+00
+##  [653,]       79.62859   0.000000e+00
+##  [654,]       79.65780   0.000000e+00
+##  [655,]       79.69165   0.000000e+00
+##  [656,]       79.69735   0.000000e+00
+##  [657,]       79.70255   0.000000e+00
+##  [658,]       79.72859   0.000000e+00
+##  [659,]       79.73708   0.000000e+00
+##  [660,]       79.75815   0.000000e+00
+##  [661,]       79.78821   0.000000e+00
+##  [662,]       79.79678   0.000000e+00
+##  [663,]       79.80908   0.000000e+00
+##  [664,]       79.81400   0.000000e+00
+##  [665,]       79.81436   0.000000e+00
+##  [666,]       79.82265   0.000000e+00
+##  [667,]       79.84352   0.000000e+00
+##  [668,]       79.86052   0.000000e+00
+##  [669,]       79.86734   0.000000e+00
+##  [670,]       79.87958   0.000000e+00
+##  [671,]       79.88253   0.000000e+00
+##  [672,]       79.95700   0.000000e+00
+##  [673,]       80.02808   0.000000e+00
+##  [674,]       80.15564   0.000000e+00
+##  [675,]       80.15633   0.000000e+00
+##  [676,]       80.16541   0.000000e+00
+##  [677,]       80.21936   0.000000e+00
+##  [678,]       80.24425   0.000000e+00
+##  [679,]       80.35552   0.000000e+00
+##  [680,]       80.37793   0.000000e+00
+##  [681,]       80.46622   0.000000e+00
+##  [682,]       80.52032   0.000000e+00
+##  [683,]       80.57714   0.000000e+00
+##  [684,]       80.66141   0.000000e+00
+##  [685,]       80.66803   0.000000e+00
+##  [686,]       80.72257   0.000000e+00
+##  [687,]       80.73363   0.000000e+00
+##  [688,]       80.77672   0.000000e+00
+##  [689,]       80.91568   0.000000e+00
+##  [690,]       81.00556   0.000000e+00
+##  [691,]       81.19769   0.000000e+00
+##  [692,]       81.51984   0.000000e+00
+##  [693,]       81.78194   0.000000e+00
+##  [694,]       81.93535   0.000000e+00
+##  [695,]       82.14205   0.000000e+00
+##  [696,]       74.36725   0.000000e+00
+##  [697,]       74.75063   0.000000e+00
+##  [698,]       75.09272   0.000000e+00
+##  [699,]       75.12223   0.000000e+00
+##  [700,]       75.37717   0.000000e+00
+##  [701,]       75.61525   0.000000e+00
+##  [702,]       75.67069   0.000000e+00
+##  [703,]       75.73533   0.000000e+00
+##  [704,]       75.88659   0.000000e+00
+##  [705,]       76.00335   0.000000e+00
+##  [706,]       76.05076   0.000000e+00
+##  [707,]       76.06796   0.000000e+00
+##  [708,]       76.12665   0.000000e+00
+##  [709,]       76.12671   0.000000e+00
+##  [710,]       76.15721   0.000000e+00
+##  [711,]       84.60875   0.000000e+00
+##  [712,]       76.21354   0.000000e+00
+##  [713,]       76.25126   0.000000e+00
+##  [714,]       76.28828   0.000000e+00
+##  [715,]       76.29115   0.000000e+00
+##  [716,]       76.29224   0.000000e+00
+##  [717,]       76.30844   0.000000e+00
+##  [718,]       76.32309   0.000000e+00
+##  [719,]       76.32418   0.000000e+00
+##  [720,]       76.39433   0.000000e+00
+##  [721,]       76.41246   0.000000e+00
+##  [722,]       76.41605   0.000000e+00
+##  [723,]       76.43025   0.000000e+00
+##  [724,]       76.43804   0.000000e+00
+##  [725,]       76.49277   0.000000e+00
+##  [726,]       76.54566   0.000000e+00
+##  [727,]       76.57810   0.000000e+00
+##  [728,]       76.58325   0.000000e+00
+##  [729,]       76.60510   0.000000e+00
+##  [730,]       76.61658   0.000000e+00
+##  [731,]       76.61659   0.000000e+00
+##  [732,]       76.61918   0.000000e+00
+##  [733,]       76.65557   0.000000e+00
+##  [734,]       76.69829   0.000000e+00
+##  [735,]       76.75031   0.000000e+00
+##  [736,]       76.75675   0.000000e+00
+##  [737,]       76.79124   0.000000e+00
+##  [738,]       76.81346   0.000000e+00
+##  [739,]       76.82148   0.000000e+00
+##  [740,]       76.82485   0.000000e+00
+##  [741,]       76.85751   0.000000e+00
+##  [742,]       76.85863   0.000000e+00
+##  [743,]       76.86545   0.000000e+00
+##  [744,]       76.88868   0.000000e+00
+##  [745,]       76.89814   0.000000e+00
+##  [746,]       76.90105   0.000000e+00
+##  [747,]       76.93587   0.000000e+00
+##  [748,]       76.93914   0.000000e+00
+##  [749,]       76.95930   0.000000e+00
+##  [750,]       76.96770   0.000000e+00
+##  [751,]       76.97398   0.000000e+00
+##  [752,]       76.97410   0.000000e+00
+##  [753,]       76.97503   0.000000e+00
+##  [754,]       76.98112   0.000000e+00
+##  [755,]       76.98962   0.000000e+00
+##  [756,]       76.99725   0.000000e+00
+##  [757,]       77.02021   0.000000e+00
+##  [758,]       77.03199   0.000000e+00
+##  [759,]       77.03324   0.000000e+00
+##  [760,]       77.03451   0.000000e+00
+##  [761,]       77.04278   0.000000e+00
+##  [762,]       77.06757   0.000000e+00
+##  [763,]       77.07086   0.000000e+00
+##  [764,]       77.07613   0.000000e+00
+##  [765,]       77.08902   0.000000e+00
+##  [766,]       77.11752   0.000000e+00
+##  [767,]       77.13914   0.000000e+00
+##  [768,]       77.16132   0.000000e+00
+##  [769,]       77.17730   0.000000e+00
+##  [770,]       77.18297   0.000000e+00
+##  [771,]       77.18901   0.000000e+00
+##  [772,]       77.19486   0.000000e+00
+##  [773,]       77.20135   0.000000e+00
+##  [774,]       77.20334   0.000000e+00
+##  [775,]       77.22010   0.000000e+00
+##  [776,]       77.22304   0.000000e+00
+##  [777,]       77.22735   0.000000e+00
+##  [778,]       77.23973   0.000000e+00
+##  [779,]       77.24234   0.000000e+00
+##  [780,]       77.25986   0.000000e+00
+##  [781,]       77.26350   0.000000e+00
+##  [782,]       77.27399   0.000000e+00
+##  [783,]       77.27682   0.000000e+00
+##  [784,]       77.28502   0.000000e+00
+##  [785,]       77.30111   0.000000e+00
+##  [786,]       77.30315   0.000000e+00
+##  [787,]       77.32263   0.000000e+00
+##  [788,]       77.32540   0.000000e+00
+##  [789,]       77.32702   0.000000e+00
+##  [790,]       77.32958   0.000000e+00
+##  [791,]       77.34027   0.000000e+00
+##  [792,]       77.35112   0.000000e+00
+##  [793,]       77.36254   0.000000e+00
+##  [794,]       77.37350   0.000000e+00
+##  [795,]       77.38668   0.000000e+00
+##  [796,]       77.39062   0.000000e+00
+##  [797,]       77.42750   0.000000e+00
+##  [798,]       77.42873   0.000000e+00
+##  [799,]       77.43854   0.000000e+00
+##  [800,]       77.45809   0.000000e+00
+##  [801,]       77.46988   0.000000e+00
+##  [802,]       77.49317   0.000000e+00
+##  [803,]       77.51610   0.000000e+00
+##  [804,]       77.53989   0.000000e+00
+##  [805,]       77.54580   0.000000e+00
+##  [806,]       77.55284   0.000000e+00
+##  [807,]       77.55598   0.000000e+00
+##  [808,]       77.56532   0.000000e+00
+##  [809,]       77.57291   0.000000e+00
+##  [810,]       77.57799   0.000000e+00
+##  [811,]       77.59097   0.000000e+00
+##  [812,]       77.59099   0.000000e+00
+##  [813,]       77.59660   0.000000e+00
+##  [814,]       77.60119   0.000000e+00
+##  [815,]       77.60812   0.000000e+00
+##  [816,]       77.61631   0.000000e+00
+##  [817,]       77.61664   0.000000e+00
+##  [818,]       77.62204   0.000000e+00
+##  [819,]       77.62369   0.000000e+00
+##  [820,]       77.62612   0.000000e+00
+##  [821,]       77.62756   0.000000e+00
+##  [822,]       77.62891   0.000000e+00
+##  [823,]       77.63110   0.000000e+00
+##  [824,]       77.63177   0.000000e+00
+##  [825,]       77.63213   0.000000e+00
+##  [826,]       77.63297   0.000000e+00
+##  [827,]       77.63792   0.000000e+00
+##  [828,]       77.63885   0.000000e+00
+##  [829,]       77.64710   0.000000e+00
+##  [830,]       77.65687   0.000000e+00
+##  [831,]       77.66538   0.000000e+00
+##  [832,]       77.66615   0.000000e+00
+##  [833,]       77.68510   0.000000e+00
+##  [834,]       77.68519   0.000000e+00
+##  [835,]       77.70306   0.000000e+00
+##  [836,]       77.70417   0.000000e+00
+##  [837,]       77.72919   0.000000e+00
+##  [838,]       77.74582   0.000000e+00
+##  [839,]       77.74805   0.000000e+00
+##  [840,]       77.75001   0.000000e+00
+##  [841,]       77.75143   0.000000e+00
+##  [842,]       77.75550   0.000000e+00
+##  [843,]       77.75579   0.000000e+00
+##  [844,]       77.76104   0.000000e+00
+##  [845,]       77.76381   0.000000e+00
+##  [846,]       77.76772   0.000000e+00
+##  [847,]       77.77087   0.000000e+00
+##  [848,]       77.77210   0.000000e+00
+##  [849,]       77.78097   0.000000e+00
+##  [850,]       77.79892   0.000000e+00
+##  [851,]       77.80050   0.000000e+00
+##  [852,]       77.80788   0.000000e+00
+##  [853,]       77.80860   0.000000e+00
+##  [854,]       77.80883   0.000000e+00
+##  [855,]       77.81151   0.000000e+00
+##  [856,]       77.81571   0.000000e+00
+##  [857,]       77.82360   0.000000e+00
+##  [858,]       77.82370   0.000000e+00
+##  [859,]       77.82972   0.000000e+00
+##  [860,]       77.83373   0.000000e+00
+##  [861,]       77.83778   0.000000e+00
+##  [862,]       77.83833   0.000000e+00
+##  [863,]       77.84043   0.000000e+00
+##  [864,]       77.84483   0.000000e+00
+##  [865,]       77.84659   0.000000e+00
+##  [866,]       77.85771   0.000000e+00
+##  [867,]       77.86707   0.000000e+00
+##  [868,]       77.87311   0.000000e+00
+##  [869,]       77.87956   0.000000e+00
+##  [870,]       77.89290   0.000000e+00
+##  [871,]       77.89367   0.000000e+00
+##  [872,]       77.89820   0.000000e+00
+##  [873,]       77.90775   0.000000e+00
+##  [874,]       77.91190   0.000000e+00
+##  [875,]       77.91305   0.000000e+00
+##  [876,]       77.91481   0.000000e+00
+##  [877,]       77.93637   0.000000e+00
+##  [878,]       77.93943   0.000000e+00
+##  [879,]       77.94175   0.000000e+00
+##  [880,]       77.94202   0.000000e+00
+##  [881,]       77.94912   0.000000e+00
+##  [882,]       77.95091   0.000000e+00
+##  [883,]       77.97456   0.000000e+00
+##  [884,]       77.97914   0.000000e+00
+##  [885,]       77.98546   0.000000e+00
+##  [886,]       77.99213   0.000000e+00
+##  [887,]       77.99844   0.000000e+00
+##  [888,]       78.00086   0.000000e+00
+##  [889,]       78.00488   0.000000e+00
+##  [890,]       78.00809   0.000000e+00
+##  [891,]       78.01781   0.000000e+00
+##  [892,]       78.02450   0.000000e+00
+##  [893,]       78.04462   0.000000e+00
+##  [894,]       78.06627   0.000000e+00
+##  [895,]       78.07807   0.000000e+00
+##  [896,]       78.07829   0.000000e+00
+##  [897,]       78.07957   0.000000e+00
+##  [898,]       78.10010   0.000000e+00
+##  [899,]       78.10046   0.000000e+00
+##  [900,]       78.10260   0.000000e+00
+##  [901,]       78.10574   0.000000e+00
+##  [902,]       78.11050   0.000000e+00
+##  [903,]       78.11672   0.000000e+00
+##  [904,]       78.11777   0.000000e+00
+##  [905,]       78.12668   0.000000e+00
+##  [906,]       78.12771   0.000000e+00
+##  [907,]       78.12803   0.000000e+00
+##  [908,]       78.12885   0.000000e+00
+##  [909,]       78.12898   0.000000e+00
+##  [910,]       78.13083   0.000000e+00
+##  [911,]       78.13404   0.000000e+00
+##  [912,]       78.13666   0.000000e+00
+##  [913,]       78.13772   0.000000e+00
+##  [914,]       78.14546   0.000000e+00
+##  [915,]       78.14648   0.000000e+00
+##  [916,]       78.15364   0.000000e+00
+##  [917,]       78.15403   0.000000e+00
+##  [918,]       78.15454   0.000000e+00
+##  [919,]       78.15990   0.000000e+00
+##  [920,]       78.17050   0.000000e+00
+##  [921,]       78.17562   0.000000e+00
+##  [922,]       78.17896   0.000000e+00
+##  [923,]       78.17959   0.000000e+00
+##  [924,]       78.19593   0.000000e+00
+##  [925,]       78.22488   0.000000e+00
+##  [926,]       78.22555   0.000000e+00
+##  [927,]       78.23050   0.000000e+00
+##  [928,]       78.23145   0.000000e+00
+##  [929,]       78.23374   0.000000e+00
+##  [930,]       78.24562   0.000000e+00
+##  [931,]       78.24722   0.000000e+00
+##  [932,]       78.24788   0.000000e+00
+##  [933,]       78.24811   0.000000e+00
+##  [934,]       78.25378   0.000000e+00
+##  [935,]       78.25383   0.000000e+00
+##  [936,]       78.25650   0.000000e+00
+##  [937,]       78.26178   0.000000e+00
+##  [938,]       78.26257   0.000000e+00
+##  [939,]       78.26494   0.000000e+00
+##  [940,]       78.26499   0.000000e+00
+##  [941,]       78.26931   0.000000e+00
+##  [942,]       78.27184   0.000000e+00
+##  [943,]       78.28061   0.000000e+00
+##  [944,]       78.28385   0.000000e+00
+##  [945,]       78.28530   0.000000e+00
+##  [946,]       78.28541   0.000000e+00
+##  [947,]       78.28645   0.000000e+00
+##  [948,]       78.28777   0.000000e+00
+##  [949,]       78.30397   0.000000e+00
+##  [950,]       78.31157   0.000000e+00
+##  [951,]       78.32274   0.000000e+00
+##  [952,]       78.32474   0.000000e+00
+##  [953,]       78.32847   0.000000e+00
+##  [954,]       78.33612   0.000000e+00
+##  [955,]       78.34869   0.000000e+00
+##  [956,]       78.35063   0.000000e+00
+##  [957,]       78.35537   0.000000e+00
+##  [958,]       78.36614   0.000000e+00
+##  [959,]       78.36829   0.000000e+00
+##  [960,]       78.37307   0.000000e+00
+##  [961,]       78.38329   0.000000e+00
+##  [962,]       78.39587   0.000000e+00
+##  [963,]       78.40152   0.000000e+00
+##  [964,]       78.40636   0.000000e+00
+##  [965,]       78.41266   0.000000e+00
+##  [966,]       78.41340   0.000000e+00
+##  [967,]       78.41352   0.000000e+00
+##  [968,]       78.41607   0.000000e+00
+##  [969,]       78.42531   0.000000e+00
+##  [970,]       78.42745   0.000000e+00
+##  [971,]       78.42996   0.000000e+00
+##  [972,]       78.43560   0.000000e+00
+##  [973,]       78.43775   0.000000e+00
+##  [974,]       78.44502   0.000000e+00
+##  [975,]       78.46064   0.000000e+00
+##  [976,]       78.46077   0.000000e+00
+##  [977,]       78.46454   0.000000e+00
+##  [978,]       78.47215   0.000000e+00
+##  [979,]       78.47367   0.000000e+00
+##  [980,]       78.48198   0.000000e+00
+##  [981,]       78.48729   0.000000e+00
+##  [982,]       78.50209   0.000000e+00
+##  [983,]       78.50790   0.000000e+00
+##  [984,]       78.50797   0.000000e+00
+##  [985,]       78.50832   0.000000e+00
+##  [986,]       78.51844   0.000000e+00
+##  [987,]       78.53105   0.000000e+00
+##  [988,]       78.54907   0.000000e+00
+##  [989,]       78.54947   0.000000e+00
+##  [990,]       78.55185   0.000000e+00
+##  [991,]       78.55828   0.000000e+00
+##  [992,]       78.55875   0.000000e+00
+##  [993,]       78.56212   0.000000e+00
+##  [994,]       78.57038   0.000000e+00
+##  [995,]       78.58993   0.000000e+00
+##  [996,]       78.59732   0.000000e+00
+##  [997,]       78.59735   0.000000e+00
+##  [998,]       78.60408   0.000000e+00
+##  [999,]       78.61014   0.000000e+00
+## [1000,]       78.61157   0.000000e+00
+## [1001,]       78.62410   0.000000e+00
+## [1002,]       78.63539   0.000000e+00
+## [1003,]       78.68103   0.000000e+00
+## [1004,]       78.68294   0.000000e+00
+## [1005,]       78.68350   0.000000e+00
+## [1006,]       78.68774   0.000000e+00
+## [1007,]       78.69236   0.000000e+00
+## [1008,]       78.69330   0.000000e+00
+## [1009,]       78.70518   0.000000e+00
+## [1010,]       78.73668   0.000000e+00
+## [1011,]       78.74697   0.000000e+00
+## [1012,]       78.75868   0.000000e+00
+## [1013,]       78.76318   0.000000e+00
+## [1014,]       78.78106   0.000000e+00
+## [1015,]       78.78464   0.000000e+00
+## [1016,]       78.82434   0.000000e+00
+## [1017,]       78.83378   0.000000e+00
+## [1018,]       78.84038   0.000000e+00
+## [1019,]       78.87895   0.000000e+00
+## [1020,]       78.88154   0.000000e+00
+## [1021,]       78.89056   0.000000e+00
+## [1022,]       78.89956   0.000000e+00
+## [1023,]       78.90591   0.000000e+00
+## [1024,]       78.94894   0.000000e+00
+## [1025,]       78.95178   0.000000e+00
+## [1026,]       78.95991   0.000000e+00
+## [1027,]       78.96625   0.000000e+00
+## [1028,]       78.97179   0.000000e+00
+## [1029,]       78.97390   0.000000e+00
+## [1030,]       78.97448   0.000000e+00
+## [1031,]       78.99004   0.000000e+00
+## [1032,]       79.03804   0.000000e+00
+## [1033,]       79.05826   0.000000e+00
+## [1034,]       79.06311   0.000000e+00
+## [1035,]       79.08655   0.000000e+00
+## [1036,]       79.11331   0.000000e+00
+## [1037,]       79.16941   0.000000e+00
+## [1038,]       79.17783   0.000000e+00
+## [1039,]       79.18255   0.000000e+00
+## [1040,]       79.20875   0.000000e+00
+## [1041,]       79.34690   0.000000e+00
+## [1042,]       79.44826   0.000000e+00
+## [1043,]       79.52362   0.000000e+00</code></pre>
 </div>
 </div>
 <div id="save-outputs" class="section level1">

@@ -1,8 +1,8 @@
 ---
-title: Linear (CRS) Optimal Allocation Solution (line by line)
+title: LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Linear (CRS) Optimal Allocation Solution (line by line)}
+  %\VignetteIndexEntry{LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
@@ -57,6 +57,8 @@ There are three components to the function here, each component has four associa
        + Rmd: [Function Line by Line Save](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html)
     - rda: [Data File Generated](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda)
         + R: [Data File Description](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html))   
+
+Note the structure above means that if anything in code changes, there are three spots that require changes: 1, this file here, the raw line by line implementation of the entire algorithm structure; 2, the *ffp* function file; 3, the *ffv* line by line file for only that function file. 
 
 # Load Packages and Data
 
@@ -271,7 +273,7 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
                          rela_slope_to_lowest*allocate_lowest) %>%
                 mutate(opti_allocate =
                          case_when(opti_allocate >= 0 ~ opti_allocate, TRUE ~ 0)) %>%
-                mutate(opti_allocate_total = sum(opti_allocate, na.rm=TRUE))
+                mutate(allocate_total = sum(opti_allocate, na.rm=TRUE))
 
   # l. Predictes Expected choice: A + alpha*opti_allocate
   tb_opti <- tb_opti %>% mutate(opti_exp_outcome = A + alpha*opti_allocate)  

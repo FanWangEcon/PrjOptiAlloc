@@ -2,7 +2,7 @@
 % Please edit documentation in R/ffy_opt_dtgch.R
 \name{ffy_opt_dtgch_cbem4}
 \alias{ffy_opt_dtgch_cbem4}
-\title{Generates A and alpha for linear and log linear problems from Guat Cebu 4 Groups. See *ffv_opt_dtgch_cbem4.Rmd*}
+\title{Generates A_i and alpha_i for linear and log linear problems Cebu 4 Groups}
 \usage{
 ffy_opt_dtgch_cbem4()
 }

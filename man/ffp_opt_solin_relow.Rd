@@ -2,10 +2,18 @@
 % Please edit documentation in R/ffp_opt_solin.R
 \name{ffp_opt_solin_relow}
 \alias{ffp_opt_solin_relow}
-\title{Solves the linear allocation problem with init condi A, marg. prod alpha, and planner preferences.
-solin, solution linear. relow, relative to the lowest allocation algoritm.}
+\title{Solves the linear allocation problem with Ai_i, alpha_i, and planner preferences.}
 \usage{
-ffp_opt_solin_relow(df, svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg, fl_rho)
+ffp_opt_solin_relow(
+  df,
+  svr_A_i,
+  svr_alpha_i,
+  svr_beta_i,
+  fl_N_agg,
+  fl_rho,
+  svr_inpalc = "optiallocate",
+  svr_expout = "optiexpoutcm"
+)
 }
 \arguments{
 \item{df}{tibble data table including variables using svr names below each row is potentially an individual who will receive alternative allocations}
@@ -19,6 +27,10 @@ ffp_opt_solin_relow(df, svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg, fl_rho)
 \item{fl_N_agg}{float total resource avaible for allocation, if not specific, sum by svr_N_i}
 
 \item{fl_rho}{float preference for equality for the planner}
+
+\item{svr_inpalc}{string variable name for newly generated input optimal allocation, single word no dash}
+
+\item{svr_expout}{string variable name for newly generated expected outcome, single word no dash}
 }
 \value{
 a dataframe that expands the df inputs with additional results.
@@ -32,6 +44,7 @@ a list with a dataframe and an array
 }
 \description{
 This is the solution to the linear optimal allocation problem. Relative allocations, summed splined, inversion.
+solin, solution linear. relow, relative to the lowest allocation algoritm.
 }
 \examples{
 data(df_opt_dtgch_cbem4)
