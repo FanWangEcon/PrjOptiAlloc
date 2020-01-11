@@ -1,0 +1,68 @@
+---
+title: BINARY--Binary Provision Optimal Allocation Solution (Line by Line)
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{BINARY--Binary Provision Optimal Allocation Solution (Line by Line)}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+urlcolor: blue
+---
+
+Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAlloc/)**
+
+# Objective
+
+The objective of this file is to solve the linear $N_i\in{0,1}$ and $H_i$ problem without invoking any functions.
+
+File name *ffv_opt_sobin_rkone_allrw*:
+
+- *opt*: optimal allocation project
+- *sobin*: binary provision solution
+- *rkone*: rank at one
+- *allrw*: all code line by line raw original file
+
+## Algorithm Outline
+
+Given $N$ individuals, if each individual could or could not receive the provision, given finite resource, and common cost, if total resource avaible could finance input for $M$ individuals, there would be $\frac{N!}{(M-N)!\cdot N!)}$ number of possible choices. Even with 10 individuals,
+
+1. Solve unconstrained relative optimal allocation solutions from the continuous optimal allocation problem.
+2. Evaluate relative allocations when allocation for $q$ is equal to $1$
+3. This generates a new function where the y-axis values show outcomes for each other individual when individual $q$ allocation is at $1$.
+4. Treat the $m$ components of the function as slope and intercept, the $q$ remaining component is the $x$, for each individual, there is a unique $x$
+5. The randk order fully determin the sequence of provisions. This is similar to how rank order is determined in the continuous problem, with just a tiny difference of $\alpha$ added in the numerator.
+
+## Input and Output
+
+There is a dataset with child attributes, nutritional inputs and outputs. Run regression to estimate some input output relationship first. Then generate required inputs for code.
+
+1. Required Input
+  + @param df tibble data table including variables using svr names below each row is potentially an individual who will receive alternative allocations
+  + @param svr_A_i string name of the A_i variable, dot product of covariates and coefficients
+  + @param svr_alpha_i string name of the alpha_i variable, individual specific elasticity information
+  + @param svr_beta_i string name of the beta_i variable, relative preference weight for each child
+  + @param svr_N_i string name of the vector of existing inputs, based on which to compute aggregate resource
+  + @param fl_N_hat float total resource avaible for allocation, if not specific, sum by svr_N_i
+  + @param fl_rho float preference for equality for the planner
+  + @return a dataframe that expands the df inputs with additional results.
+2. The structure assumes some regression has already taken place to generate the i specific variables listed. and
+
+Doing this allows for lagged intereaction that are time specific in an arbitrary way.
+
+# Load Packages and Data
+
+## Load Dependencies
+
+```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
+rm(list = ls(all.names = TRUE))
+options(knitr.duplicate.label = 'allow')
+```
+```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(broom)
+library(ggplot2)
+library(REconTools)
+library(knitr)
+library(kableExtra)
+```
