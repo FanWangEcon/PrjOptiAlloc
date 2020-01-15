@@ -60,6 +60,9 @@
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
+      <a href="../articles/ffv_opt_sobin_rkone_allrw.html">BINARY--Binary Provision Optimal Allocation Solution (Line by Line)</a>
+    </li>
+    <li>
       <a href="../articles/ffv_opt_solin_relow.html">LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest</a>
     </li>
     <li>
@@ -67,6 +70,9 @@
     </li>
     <li>
       <a href="../articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_solog_bisec_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)</a>
     </li>
   </ul>
 </li>
@@ -98,17 +104,7 @@
 <div id="objective" class="section level1">
 <h1 class="hasAnchor">
 <a href="#objective" class="anchor"></a>Objective</h1>
-<p>This tests out the procedure to solve for optimal allocations over various rhos, and computes gini each time.</p>
-<p>This is the 2nd file in the four file structure below:</p>
-<ol style="list-style-type: decimal">
-<li>R: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_solin_relow.html">Function</a>
-</li>
-<li>Rmd: <a href="https://fanwangecon.github.io/REconTools/articles/ffv_opt_solin_relow.html">Function Line by Line Save</a>
-</li>
-<li>rda: <a href="https://github.com/FanWangEcon/REconTools/blob/master/data/df_opt_dtgch_cbem4.rda">Data File Generated</a>
-</li>
-<li>R: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html">Data File Description</a>)</li>
-</ol>
+<p>This function tests out the procedure to solve for optimal allocations over various rhos, and computes gini each time.</p>
 </div>
 <div id="load-packages-and-data" class="section level1">
 <h1 class="hasAnchor">
@@ -218,7 +214,7 @@
 <a class="sourceLine" id="cb10-11" title="11">  <span class="co"># use df_opti for merging, because that contains the individual keys.</span></a>
 <a class="sourceLine" id="cb10-12" title="12">  <span class="co"># actually file here should contain unique keys, unique key ID as required input. should return?</span></a>
 <a class="sourceLine" id="cb10-13" title="13">  <span class="co"># actually it is fine, the function here needs the key, not solin_flinr</span></a>
-<a class="sourceLine" id="cb10-14" title="14">  ls_lin_solu &lt;-<span class="st"> </span><span class="kw">ffp_opt_solin_relow</span>(df, svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg, fl_rho,</a>
+<a class="sourceLine" id="cb10-14" title="14">  ls_lin_solu &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ffp_opt_solin_relow.html">ffp_opt_solin_relow</a></span>(df, svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg, fl_rho,</a>
 <a class="sourceLine" id="cb10-15" title="15">                                     svr_inpalc, svr_expout)</a>
 <a class="sourceLine" id="cb10-16" title="16"></a>
 <a class="sourceLine" id="cb10-17" title="17">  <span class="co"># C. Keep for df collection individual key + optimal allocation ----</span></a>

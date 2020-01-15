@@ -60,6 +60,9 @@
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
+      <a href="../articles/ffv_opt_sobin_rkone_allrw.html">BINARY--Binary Provision Optimal Allocation Solution (Line by Line)</a>
+    </li>
+    <li>
       <a href="../articles/ffv_opt_solin_relow.html">LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest</a>
     </li>
     <li>
@@ -67,6 +70,9 @@
     </li>
     <li>
       <a href="../articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_solog_bisec_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)</a>
     </li>
   </ul>
 </li>
@@ -139,64 +145,6 @@
 <li>The structure assumes some regression has already taken place to generate the i specific variables listed. and</li>
 </ol>
 <p>Doing this allows for lagged intereaction that are time specific in an arbitrary way.</p>
-</div>
-<div id="associated-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#associated-functions" class="anchor"></a>Associated Functions</h2>
-<p>There are three components to the function here, each component has four associated files. The first <em>R</em> file is a function that allows for this part of the overall solution structure to be invoked as a function. Then, there is an RMD file that has exactly the same lines of code, but perhaps with more descriptions and printing for that function, the vigenette for that function, since each function should have its own vignette. And to show what the function output looks like, the vignette saves the output of the function to a <em>rda</em> file in the <em>data</em> folder. That new data file now requires its own R file to describe the <em>rda</em>.</p>
-<ol style="list-style-type: decimal">
-<li>
-<strong>Regression Results</strong>: linear and loglinear
-<ul>
-<li>R: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html">Function</a>
-<ul>
-<li>Rmd: <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html">Function Line by Line Save</a>
-</li>
-</ul>
-</li>
-<li>rda: <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda">Data File Generated</a>
-<ul>
-<li>R: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html">Data File Description</a>)<br>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<strong>Linear Optimal Allocations</strong>: for the <em>N_i</em> and <em>H_i</em> problem
-<ul>
-<li>R: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_solin_relow.html">Function</a>
-<ul>
-<li>Rmd: <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow.html">Function Line by Line Save</a>
-</li>
-</ul>
-</li>
-<li>rda: <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop.rda">Data File Generated</a>
-<ul>
-<li>R: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4_rrlop.html">Data File Description</a>)<br>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<strong>Gini and Graphs</strong>: post-estimation results analysis
-<ul>
-<li>R: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html">Function</a>
-<ul>
-<li>Rmd: <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html">Function Line by Line Save</a>
-</li>
-</ul>
-</li>
-<li>rda: <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda">Data File Generated</a>
-<ul>
-<li>R: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html">Data File Description</a>)</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<p>Note the structure above means that if anything in code changes, there are three spots that require changes: 1, this file here, the raw line by line implementation of the entire algorithm structure; 2, the <em>ffp</em> function file; 3, the <em>ffv</em> line by line file for only that function file.</p>
 </div>
 </div>
 <div id="load-packages-and-data" class="section level1">
@@ -935,7 +883,6 @@
 <li>
 <a href="#objective">Objective</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#input-and-output">Input and Output</a></li>
-      <li><a href="#associated-functions">Associated Functions</a></li>
       </ul>
 </li>
       <li>

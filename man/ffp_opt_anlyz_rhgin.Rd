@@ -2,7 +2,7 @@
 % Please edit documentation in R/ffp_opt_anlyz.R
 \name{ffp_opt_anlyz_rhgin}
 \alias{ffp_opt_anlyz_rhgin}
-\title{Solves for optimal allocation problem over many rhos, and computes gini.}
+\title{Solves for optimal allocation problem over many rhos, and computes gini}
 \usage{
 ffp_opt_anlyz_rhgin(
   df,

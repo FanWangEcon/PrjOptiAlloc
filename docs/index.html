@@ -60,6 +60,9 @@
       <a href="articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
+      <a href="articles/ffv_opt_sobin_rkone_allrw.html">BINARY--Binary Provision Optimal Allocation Solution (Line by Line)</a>
+    </li>
+    <li>
       <a href="articles/ffv_opt_solin_relow.html">LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest</a>
     </li>
     <li>
@@ -67,6 +70,9 @@
     </li>
     <li>
       <a href="articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
+    </li>
+    <li>
+      <a href="articles/ffv_opt_solog_bisec_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)</a>
     </li>
   </ul>
 </li>
@@ -103,7 +109,7 @@
 <h2 class="hasAnchor">
 <a href="#12-installation" class="anchor"></a>1.2 Installation</h2>
 <p>One key aspect of this project is that the theorems we derive are easily implemenable for large classes of estimation results. The theorems are computationally implemented here using R (the algorithms are language agnostic) in a package called <a href="https://github.com/FanWangEcon/PrjOptiAlloc">PrjOptiAlloc</a>. Functions in this package are described in the various <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/">reference pages</a> and <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/">vignette articles</a> on this website.</p>
-<p>The tools here depend on <a href="">base R</a>, <a href="">tidyverse</a> and <a href="">tidymodels</a>. After installing those, two packages should be installed, <a href="http://fanwangecon.github.io/">fan</a>’s <a href="http://fanwangecon.github.io/REconTools/">REconTools</a>, which provides a number of support tools required, as well as this package itself <a href="http://fanwangecon.github.io/PrjOptiAllocs/">PrjOptiAllocs</a>. For installation help, see <a href="http://r-pkgs.had.co.nz/intro.html">devtools</a>.</p>
+<p>The tools here depend on <a href="">base R</a>, <a href="">tidyverse</a> and <a href="">tidymodels</a>. After installing those, two packages should be installed, <a href="http://fanwangecon.github.io/">fan</a>’s <a href="http://fanwangecon.github.io/REconTools/">REconTools</a>, which provides a number of support tools required, as well as this package itself <a href="http://fanwangecon.github.io/PrjOptiAlloc/">PrjOptiAllocs</a>. For installation help, see <a href="http://r-pkgs.had.co.nz/intro.html">devtools</a>.</p>
 <pre><code># To Install the Programs in the R folder of the REconTools Repository
 devtools::install_github("fanwangecon/PrjOptiAlloc")
 # There are various dependencies that need to be installed, including
@@ -132,7 +138,7 @@ devtools::install_github("fanwangecon/REconTools")</code></pre>
 <p>These functions show in practice how the various tools can be used in sequence to solve and anlyze the optimal allocation problem.</p>
 <ol>
 <li>
-<a href="https://fanwangecon.github.io/PrjOptiAlloc/article/ffv_opt_solin_relow_allrw.html"><strong>Line by Line</strong></a>: data to estimation to optimal allocation to planner preference to gini</li>
+<a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow_allrw.html"><strong>line by line</strong></a>: data to estimation to optimal allocation to planner preference to gini</li>
 <li>
 <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow_allfn.html"><strong>call functions</strong></a>: from data to gini call functions calling various functions in sequence.</li>
 </ol>
@@ -143,7 +149,7 @@ devtools::install_github("fanwangecon/REconTools")</code></pre>
 <p>To make the allocation results transparent, we store example allocation results from the <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html">Height and Protein</a> data, which has slightly more than 1000 observations.</p>
 <ol>
 <li>
-<a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4_rrlop.html"><strong>data reference</strong></a>: reference file describing example allocation data.</li>
+<a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop.html"><strong>data reference</strong></a>: reference file describing example allocation data.</li>
 <li>
 <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop.rda"><strong>rda data file</strong></a>: download the rda datafile and open in R to review example allocation results</li>
 </ol>
@@ -162,7 +168,7 @@ devtools::install_github("fanwangecon/REconTools")</code></pre>
 <ul>
 <li>Data generation function: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html">reference</a> | <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html">save data vignette</a>
 </li>
-<li>Saved data file: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4.html">reference</a> | <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda">data file</a>
+<li>Saved data file: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4.html">reference</a> | <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda">data file</a>
 </li>
 </ul>
 </li>
@@ -177,9 +183,9 @@ devtools::install_github("fanwangecon/REconTools")</code></pre>
 <ul>
 <li>Data generation function: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin.html">reference</a> | <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_anlyz_rhgin.html">save data vignette</a>
 </li>
-<li>Saved example (height linear) allocations: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4_rrlop_allrh.html">reference</a> | <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_allrh.rda">data file</a>
+<li>Saved example (height linear) allocations: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop_allrh.html">reference</a> | <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_allrh.rda">data file</a>
 </li>
-<li>Saved example (height linear) gini: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffd_opt_dtgch_cbem4_rrlop_argin.html">reference</a> | <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_argin.rda">data file</a>
+<li>Saved example (height linear) gini: <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop_argin.html">reference</a> | <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_argin.rda">data file</a>
 </li>
 </ul>
 </li>
