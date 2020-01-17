@@ -66,3 +66,320 @@ library(REconTools)
 library(knitr)
 library(kableExtra)
 ```
+
+## Load Data
+
+Generate four categories by initial height and mother's education levels combinations.
+
+```{r Load Packages and Process Data}
+# Load Library
+
+# Select Cebu Only
+tb_mtcars <- mtcars
+
+# Generate Discrete Version of momEdu
+tb_mtcars <- tb_mtcars %>%
+    mutate(wgtLowHigh = cut(wt,
+                             breaks=c(-Inf, 3.2, Inf),
+                             labels=c("LowWgt","HighWgt"))) %>%
+    mutate(dratLowHigh = cut(drat,
+                             breaks=c(-Inf, 3.59, Inf),
+                             labels=c("lowRearAxleRatio","highRearAxleRatio")))
+
+tb_mtcars$wgtLowHigh = as.factor(tb_mtcars$wgtLowHigh)
+tb_mtcars$dratLowHigh = as.factor(tb_mtcars$dratLowHigh)
+
+# Attach
+attach(tb_mtcars)
+```
+
+# Regression with Data and Construct Input Arrays
+
+## What is the E
+
+We
+
+```{r Linear Regression}
+# Input Matrix
+mt_lincv <- model.matrix(~ hp)
+mt_linht <- model.matrix(~ wgtLowHigh:dratLowHigh - 1)
+
+# Regress Height At Month 24 on Nutritional Inputs with controls
+rs_mpg_on_auto = lm(mpg ~ am:gear - 1)
+print(summary(rs_mpg_on_auto))
+rs_mpg_on_auto_tidy = tidy(rs_mpg_on_auto)
+```
+
+## Log-Linear Regression
+
+Now log-linear regressions, where inptut coefficient differs by input groups.
+
+```{r Log-Linear Regression}
+# Input Matrix Generation
+mt_logcv <- model.matrix(~ hgt0 + wgt0)
+mt_loght <- model.matrix(~ sex:hgt0med - 1)
+
+# Log and log regression for month 24
+rs_hgt_prot_log = lm(log(hgt) ~ log(prot):mt_loght + mt_logcv - 1)
+print(summary(rs_hgt_prot_log))
+rs_hgt_prot_log_tidy = tidy(rs_hgt_prot_log)
+```
+
+## Construct Input Arrays $A_i$ and $\alpha_i$
+
+Multiply coefficient vector by covariate matrix to generate *A* vector that is child/individual specific.
+
+```{r Post Regression Input Processing}
+
+# Generate A_i
+ar_Ai_lin <- mt_lincv %*% as.matrix(rs_mpg_on_auto_tidy %>% filter(!str_detect(term, 'prot')) %>% select(estimate))
+ar_Ai_log <- mt_logcv %*% as.matrix(rs_hgt_prot_log_tidy %>% filter(!str_detect(term, 'prot')) %>% select(estimate))
+
+# Generate alpha_i
+ar_alphai_lin <- mt_linht %*% as.matrix(rs_mpg_on_auto_tidy %>% filter(str_detect(term, 'prot')) %>% select(estimate))
+ar_alphai_log <- mt_loght %*% as.matrix(rs_hgt_prot_log_tidy %>% filter(str_detect(term, 'prot')) %>% select(estimate))
+
+# Child Weight
+ar_beta <- rep(1/length(ar_Ai_lin), times=length(ar_Ai_lin))
+
+# Initate Dataframe that will store all estimates and optimal allocation relevant information
+# combine identifying key information along with estimation A, alpha results
+# note that we only need indi.id as key
+mt_opti <- cbind(ar_alphai_lin, ar_Ai_lin, ar_beta)
+ar_st_varnames <- c('alpha', 'A', 'beta')
+df_esti_alpha_A_beta <- as_tibble(mt_opti) %>% rename_all(~c(ar_st_varnames))
+tb_key_alpha_A_beta <- bind_cols(tb_mtcars, df_esti_alpha_A_beta) %>%
+              select(one_of(c('S.country', 'vil.id', 'indi.id', 'svymthRound', ar_st_varnames)))
+
+# Unique beta, A, and alpha groups
+tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
+                    arrange(!!!syms(ar_st_varnames)) %>%
+                    summarise(n_obs_group=n())
+```
+
+# Optimal Linear Allocations
+
+## Parameters for Optimal Allocation
+
+```{r Set Allocation Parameters}
+# Child Count
+tb_mtcars_full <- tb_mtcars
+it_obs = dim(tb_mtcars)[1]
+
+# Total Resource Count
+ar_prot_data = tb_mtcars$prot
+fl_N_agg = sum(ar_prot_data)
+
+# Vector of Planner Preference
+ar_rho <- c(-100, 0.8)
+ar_rho <- c(-50, -25, -10)
+ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.8)
+ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))
+ar_rho <- unique(ar_rho)
+```
+
+## Optimal Linear Allocation (CRS)
+
+This also works with any CRS CES.
+
+```{r Optimal Linear Allocation Hard Code All Rho}
+# Optimal Linear Equation
+
+# accumulate allocation results
+tb_opti_alloc_all_rho <- tb_key_alpha_A_beta
+
+# A. First Loop over Planner Preference
+# Generate Rank Order
+for (it_rho_ctr in seq(1,length(ar_rho))) {
+  rho = ar_rho[it_rho_ctr]
+
+  # B. Generate V4, Rank Index Value, rho specific
+  # tb_opti <- tb_opti %>% mutate(!!paste0('rv_', it_rho_ctr) := A/((alpha*beta))^(1/(1-rho)))
+  tb_opti <- tb_key_alpha_A_beta %>% mutate(rank_val = A/((alpha*beta))^(1/(1-rho)))
+
+  # c. Generate Rank Index
+  tb_opti <- tb_opti %>% arrange(rank_val) %>% mutate(rank_idx = row_number())
+
+  # d. Populate lowest index alpha, beta, and A to all rows
+  tb_opti <- tb_opti %>% mutate(lowest_rank_A = A[rank_idx==1]) %>%
+                mutate(lowest_rank_alpha = alpha[rank_idx==1]) %>%
+                mutate(lowest_rank_beta = beta[rank_idx==1])
+
+  # e. relative slope and relative intercept with respect to lowest index
+  tb_opti <- tb_opti %>%
+                mutate(rela_slope_to_lowest =
+                         (((lowest_rank_alpha*lowest_rank_beta)/(alpha*beta))^(1/(rho-1))*(lowest_rank_alpha/alpha))
+                      ) %>%
+                mutate(rela_intercept_to_lowest =
+                         ((((lowest_rank_alpha*lowest_rank_beta)/(alpha*beta))^(1/(rho-1))*(lowest_rank_A/alpha)) - (A/alpha))
+                      )
+
+  # f. cumulative sums
+  tb_opti <- tb_opti %>%
+                mutate(rela_slope_to_lowest_cumsum =
+                         cumsum(rela_slope_to_lowest)
+                      ) %>%
+                mutate(rela_intercept_to_lowest_cumsum =
+                         cumsum(rela_intercept_to_lowest)
+                      )
+
+  # g. inverting cumulative slopes and intercepts
+  tb_opti <- tb_opti %>%
+                mutate(rela_slope_to_lowest_cumsum_invert =
+                         (1/rela_slope_to_lowest_cumsum)
+                      ) %>%
+                mutate(rela_intercept_to_lowest_cumsum_invert =
+                         ((-1)*(rela_intercept_to_lowest_cumsum)/(rela_slope_to_lowest_cumsum))
+                      )
+
+  # h. Relative x-intercept points
+  tb_opti <- tb_opti %>%
+                mutate(rela_x_intercept =
+                         (-1)*(rela_intercept_to_lowest/rela_slope_to_lowest)
+                      )
+
+  # i. Inverted relative x-intercepts
+  tb_opti <- tb_opti %>%
+                mutate(opti_lowest_spline_knots =
+                         (rela_intercept_to_lowest_cumsum + rela_slope_to_lowest_cumsum*rela_x_intercept)
+                      )
+
+  # j. Sort by order of receiving transfers/subsidies
+  tb_opti <- tb_opti %>% arrange(rela_x_intercept)
+
+  # k. Find position of subsidy
+  tb_opti <- tb_opti %>% arrange(opti_lowest_spline_knots) %>%
+                mutate(tot_devi = opti_lowest_spline_knots - fl_N_agg) %>%
+                arrange((-1)*case_when(tot_devi < 0 ~ tot_devi)) %>%
+                mutate(allocate_lowest =
+                         case_when(row_number() == 1 ~
+                                     rela_intercept_to_lowest_cumsum_invert +
+                                     rela_slope_to_lowest_cumsum_invert*fl_N_agg)) %>%
+                mutate(allocate_lowest = allocate_lowest[row_number() == 1]) %>%
+                mutate(opti_allocate =
+                         rela_intercept_to_lowest +
+                         rela_slope_to_lowest*allocate_lowest) %>%
+                mutate(opti_allocate =
+                         case_when(opti_allocate >= 0 ~ opti_allocate, TRUE ~ 0)) %>%
+                mutate(allocate_total = sum(opti_allocate, na.rm=TRUE))
+
+  # l. Predictes Expected choice: A + alpha*opti_allocate
+  tb_opti <- tb_opti %>% mutate(opti_exp_outcome = A + alpha*opti_allocate)  
+
+  # m. Keep for df collection individual key + optimal allocation
+  # _on stands for optimal nutritional choices
+  # _eh stands for expected height
+  tb_opti_main_results <- tb_opti %>%
+    select(-one_of(c('lowest_rank_alpha', 'lowest_rank_beta')))
+  tb_opti_allocate_wth_key <- tb_opti %>% select(one_of('indi.id','opti_allocate', 'opti_exp_outcome')) %>%
+                                rename(!!paste0('rho_c', it_rho_ctr, '_on') := !!sym('opti_allocate'),
+                                       !!paste0('rho_c', it_rho_ctr, '_eh') := !!sym('opti_exp_outcome'))
+
+  # n. merge optimal allocaiton results from different planner preference
+  tb_opti_alloc_all_rho <- tb_opti_alloc_all_rho %>% left_join(tb_opti_allocate_wth_key, by='indi.id')
+
+  # print subset
+  if (it_rho_ctr == 1 | it_rho_ctr == length(ar_rho) | it_rho_ctr == round(length(ar_rho)/2)) {
+    print('')
+    print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+    print(paste0('xxx rho:', rho))
+    print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+    print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+
+    print(summary(tb_opti_main_results))
+  }
+}
+
+# o. print results
+print(summary(tb_opti_alloc_all_rho))
+str(tb_opti_alloc_all_rho)
+```
+
+# Linear optimal Allocation Statistics and Graphs
+
+## Compute Gini Statistics for Allocations and Outcomes
+
+Compute Gini coefficient for each expected outcome and input vector, and store results in separate vectors for input allocation and expected outcomes, then combine.
+
+See how **apply** works here: [R use Apply, Sapply and dplyr Mutate to Evaluate one Function Across Rows of a Matrix](https://fanwangecon.github.io/R4Econ/support/function/fs_applysapplymutate.html) from [R4Econ](https://fanwangecon.github.io/R4Econ).
+
+See how gini function works: [ff_dist_gini_vector_pos](https://fanwangecon.github.io/REconTools/reference/ff_dist_gini_vector_pos.html) from [REconTools](https://fanwangecon.github.io/REconTools).
+
+```{r Compute Gini}
+# Select out columns for _on = optimal nutrition
+mt_opti_alloc_all_rho <- data.matrix(tb_opti_alloc_all_rho %>% select(ends_with('_on')))
+mt_expc_outcm_all_rho <- data.matrix(tb_opti_alloc_all_rho %>% select(ends_with('_eh')))
+
+# Compute gini for each rho
+ar_opti_alloc_gini <- suppressMessages(apply(t(mt_opti_alloc_all_rho), 1, ff_dist_gini_vector_pos))
+ar_expc_outcm_gini <- suppressMessages(apply(t(mt_expc_outcm_all_rho), 1, ff_dist_gini_vector_pos))
+
+# Combine results
+# column names look like: rho_c1_on rho_c2_on rho_c3_on rho_c1_eh rho_c2_eh rho_c3_eh
+tb_gini_onerow_wide <- cbind(as_tibble(t(ar_opti_alloc_gini)), as_tibble(t(ar_expc_outcm_gini)))
+tb_gini_long <- tb_gini_onerow_wide %>%
+  pivot_longer(
+    cols = starts_with("rho"),
+    names_to = c("it_rho_ctr", "oneh"),
+    names_pattern = "rho_c(.*)_(.*)",
+    values_to = "gini"
+  ) %>%
+  pivot_wider(
+    id_cols = it_rho_ctr,
+    names_from = oneh,
+    values_from = gini
+  )
+planner_elas <- log(1/(1-ar_rho)+2)
+tb_gini_long <- cbind(tb_gini_long, planner_elas)
+```
+
+
+### Gini Graphs
+
+```{r Gini Allocation and Outcome Scatter Correlation}
+
+scatter <- tb_gini_long %>%
+      ggplot(aes(x=on, y=eh)) +
+      geom_point(size=planner_elas) +
+      labs(title = 'Scatter Plot of Optimal Allocation and Expected Outcomes Gini',
+           x = paste0('GINI for Optimal Allocations'),
+           y = paste0('GINI for Exp Outcome given Optimal Allocations'),
+           caption = 'Optimal Allocations and Expected Outcomes, Cebu Height and Protein Example (Wang 2020)') +
+      theme_bw()
+print(scatter)
+```
+
+
+## Graphs Based on Individual Allocations
+```{r Individal Allocation Plots}
+# p. graph scatter of opposing preference correlation
+svr_lowrho_ctr <- 1
+svr_higrho_ctr <- length(ar_rho)-1
+svr_lowrho <- paste0('rho_c', svr_lowrho_ctr, '_on')
+svr_higrho <- paste0('rho_c', svr_higrho_ctr, '_eh')
+tb_min_max_rho <- tb_opti_alloc_all_rho %>% select(one_of(c(svr_lowrho, svr_higrho)))
+
+scatter <- tb_min_max_rho %>%
+      ggplot(aes(x=!!sym(svr_lowrho), y=!!sym(svr_higrho))) +
+      geom_point(size=1) +
+      labs(title = 'Scatter Plot of Optimal Allocation Low and High Rho',
+           x = paste0('Allocation High Rho = ', ar_rho[svr_higrho_ctr], ', More Efficient'),
+           y = paste0('Allocation Low Rho = ', ar_rho[svr_lowrho_ctr], ', More Equal'),
+           caption = 'Optimal linear allocation results, given height reg on protein results. (Wang 2020)') +
+      theme_bw()
+print(scatter)
+
+# lineplot <- tb_opti %>%
+#     gather(variable, value, -month) %>%
+#     ggplot(aes(x=month, y=value, colour=variable, linetype=variable)) +
+#         geom_line() +
+#         geom_point() +
+#         labs(title = 'Mean and SD of Temperature Acorss US Cities',
+#              x = 'Months',
+#              y = 'Temperature in Fahrenheit',
+#              caption = 'Temperature data 2017') +
+#         scale_x_continuous(labels = as.character(df_temp_mth_summ$month),
+#                            breaks = df_temp_mth_summ$month)
+
+```
+
