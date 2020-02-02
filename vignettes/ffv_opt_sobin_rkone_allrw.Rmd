@@ -105,6 +105,115 @@ tb_mtcars %>%
   pivot_wider(names_from = vs, values_from = freq)
 ```
 
+# Testing the Equation
+
+## Fraction Principle Testing
+
+i value is larger than j value
+
+```{r Formula Parameter Testing Basic}
+
+alpha = 10
+A_j_l = 0.4
+A_i_l = 0.3
+
+A_j_h = 1.4
+A_i_h = 1.3
+
+for (it_set in 1:4) {
+  if(it_set == 1 || it_set == 2) {
+    rho = 0.75
+    if (it_set==1){
+      A_j = A_j_l
+      A_i = A_i_l
+    } else if(it_set == 2) {
+      A_j = A_j_h
+      A_i = A_i_h
+    }
+  } else if(it_set == 3 || it_set == 4) {
+    rho = -1
+    if (it_set==3){
+      A_j = A_j_l
+      A_i = A_i_l
+    } else if(it_set == 4) {
+      A_j = A_j_h
+      A_i = A_i_h
+    }  
+  }
+  fl_num = (A_i+alpha)^rho - (A_j+alpha)^rho
+  fl_den = (A_i)^rho - (A_j)^rho
+  fl_rat = fl_num/fl_den
+  cat('it_set:', it_set, ', fl_num:', fl_num, ', fl_den:', fl_den, ', fl_rat:', fl_rat, '\n')
+}
+```
+
+## Testing Formula
+```{r Formula Parameter Testing Basic}
+alpha = 1
+A_j_l = 0.3
+A_i_l = 0.4
+A_j_h = 1.3
+A_i_h = 1.4
+for (it_set in 1:4) {
+  if(it_set == 1 || it_set == 2) {
+    rho = 0.75
+    if (it_set==1){
+      A_j = A_j_l
+      A_i = A_i_l
+    } else if(it_set == 2) {
+      A_j = A_j_h
+      A_i = A_i_h
+    }
+  } else if(it_set == 3 || it_set == 4) {
+    rho = -1
+    if (it_set==3){
+      A_j = A_j_l
+      A_i = A_i_l
+    } else if(it_set == 4) {
+      A_j = A_j_h
+      A_i = A_i_h
+    }  
+  }
+  fl_num = (A_j+alpha)^rho - (A_j)^rho
+  fl_den = (A_i+alpha)^rho - (A_i)^rho
+  fl_rat = fl_num/fl_den
+  cat('it_set:', it_set, ', fl_num:', fl_num, ', fl_den:', fl_den, ', fl_rat:', fl_rat, '\n')
+}
+```
+```{r Formula Parameter Testing Common Params}
+alpha = 0.1
+A_j_l = 0.4
+A_i_l = 0.5
+A_j_h = 1.4
+A_i_h = 1.5
+for (it_set in 1:4) {
+  if(it_set == 1 || it_set == 2) {
+    rho = 0.75
+    if (it_set==1){
+      A_j = A_j_l
+      A_i = A_i_l
+    } else if(it_set == 2) {
+      A_j = A_j_h
+      A_i = A_i_h
+    }
+  } else if(it_set == 3 || it_set == 4) {
+    alpha = 0.5
+    rho = -10
+    if (it_set==3){
+      A_j = A_j_l
+      A_i = A_i_l
+    } else if(it_set == 4) {
+      A_j = A_j_h
+      A_i = A_i_h
+    }  
+  }
+  fl_num = (A_j+alpha)^rho - (A_i+alpha)^rho
+  fl_den = (A_j)^rho - (A_i)^rho
+  fl_rat = fl_num/fl_den
+  cat('it_set:', it_set, ', fl_num:', fl_num, ', fl_den:', fl_den, ', fl_rat:', fl_rat, '\n')
+}
+```
+
 # Regression with Data and Construct Input Arrays
 
 ## Regress MPG on Manual Transmission
@@ -206,7 +315,7 @@ ar_rho <- c(-100, 0.8)
 ar_rho <- c(-50, -25, -10)
 ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.8)
 ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))
-ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.8)
+ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.99)
 ar_rho <- unique(ar_rho)
 ```
 
@@ -223,7 +332,8 @@ ar_alpha <- tb_key_alpha_A_beta %>% pull(alpha)
 ar_beta <- tb_key_alpha_A_beta %>% pull(beta)
 
 # Define Function for each individual m, with hard coded arrays
-ffi_binary_dplyrdo_func <- function(ls_row, fl_rho){
+ffi_binary_dplyrdo_func <- function(ls_row, fl_rho, bl_old=FALSE){
+  # @param bl_old, weather to use old incorrect solution
   # hard coded inputs are:
   # 1, ar_A
   # 2, ar_alpha
@@ -234,10 +344,33 @@ ffi_binary_dplyrdo_func <- function(ls_row, fl_rho){
   fl_A <- ls_row$A
   fl_beta <- ls_row$beta
   
-  ar_left <- ((ar_A + ar_alpha)/(fl_A + fl_alpha))
-  ar_right <- ((ar_alpha*ar_beta)/(fl_alpha*fl_beta))^(1/(1-fl_rho))
-  ar_full <- ar_left*ar_right
-  ar_indicator <- (ar_full <= 1)
+  if (bl_old) {
+    
+    # the equation below is like doubly wrong I think, should be 1/(fl_rho-1)
+    bl_old_wrong = TRUE
+    if (bl_old_wrong) {
+      ar_left <- ((ar_A + ar_alpha)/(fl_A + fl_alpha))
+      ar_right <- ((ar_alpha*ar_beta)/(fl_alpha*fl_beta))^(1/(1-fl_rho))
+      ar_full <- ar_left*ar_right
+      ar_indicator <- (ar_full <= 1)
+    } else {
+      ar_left <- ((ar_A + ar_alpha)/(fl_A + fl_alpha))
+      ar_right <- ((ar_alpha*ar_beta)/(fl_alpha*fl_beta))^(1/(fl_rho-1))
+      ar_full <- ar_left*ar_right
+      ar_indicator <- (ar_full <= 1)
+    }
+    
+  } else {
+      ar_left <- (
+                  ((ar_A + ar_alpha)^fl_rho - (ar_A)^fl_rho)
+                  /
+                  ((fl_A + fl_alpha)^fl_rho - (fl_A)^fl_rho)
+                 )
+      ar_right <- ((ar_beta)/(fl_beta))
+      ar_full <- ar_left*ar_right
+      ar_indicator <- (ar_full >= 1)
+  }
+  
   it_rank <- sum(ar_indicator)
   return(it_rank)
 }
