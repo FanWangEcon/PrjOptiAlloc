@@ -316,6 +316,7 @@ ar_rho <- c(-50, -25, -10)
 ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.8)
 ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))
 ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.99)
+ar_rho <- c(-100, -10, -1, 0.05, 0.9)
 ar_rho <- unique(ar_rho)
 ```
 
@@ -404,6 +405,76 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
 # o. print results
 print(summary(tb_opti_alloc_all_rho))
 str(tb_opti_alloc_all_rho)
+
+# Make Longer
+st_bisec_prefix <- 'rho_c'
+svr_abfafb_long_name <- 'rho'
+svr_bisect_iter <- 'nothing'
+svr_number_col <- 'rank'
+tb_opti_alloc_all_rho_long <- tb_opti_alloc_all_rho %>%
+  pivot_longer(
+    cols = starts_with(st_bisec_prefix),
+    names_to = c(svr_abfafb_long_name, svr_bisect_iter),
+    names_pattern = paste0(st_bisec_prefix, "(.*)_(.*)"),
+    values_to = svr_number_col
+  )
+```
+
+### Bump Plot for Optimal Binary Allocations
+
+```{r custom theme online}
+# custom theme by Dominik Koch
+my_theme <- function() {
+  
+  # Colors
+  color.background = "white"
+  color.text = "#22211d"
+  
+  # Begin construction of chart
+  theme_bw(base_size=15) +
+    
+    # Format background colors
+    theme(panel.background = element_rect(fill=color.background, color=color.background)) +
+    theme(plot.background  = element_rect(fill=color.background, color=color.background)) +
+    theme(panel.border     = element_rect(color=color.background)) +
+    theme(strip.background = element_rect(fill=color.background, color=color.background)) +
+    
+    # Format the grid
+    theme(panel.grid.major.y = element_blank()) +
+    theme(panel.grid.minor.y = element_blank()) +
+    theme(axis.ticks       = element_blank()) +
+    
+    # Format the legend
+    theme(legend.position = "none") +
+    
+    # Format title and axis labels
+    theme(plot.title       = element_text(color=color.text, size=20, face = "bold")) +
+    theme(axis.title.x     = element_text(size=14, color="black", face = "bold")) +
+    theme(axis.title.y     = element_text(size=14, color="black", face = "bold", vjust=1.25)) +
+    theme(axis.text.x      = element_text(size=10, vjust=0.5, hjust=0.5, color = color.text)) +
+    theme(axis.text.y      = element_text(size=10, color = color.text)) +
+    theme(strip.text       = element_text(face = "bold")) +
+    
+    # Plot margins
+    theme(plot.margin = unit(c(0.35, 0.2, 0.3, 0.35), "cm"))
+}
+```
+
+```{r binary allocation bump plot, fig.height = 10, fig.width = 10, fig.align = "center"}
+
+tb_opti_alloc_all_rho_long %>%
+  ggplot(aes(x = rho, y = rank, group = carname)) +
+    geom_line(aes(color = carname, alpha = 1), size = 2) +
+    geom_point(aes(color = carname, alpha = 1), size = 4) +
+    scale_x_discrete(expand = c(0.85,0))+
+    scale_y_reverse(breaks = 1:nrow(tb_opti_alloc_all_rho_long))+
+    theme(legend.position = "none") +
+    labs(x = "Equality vs Efficiency",
+         y = "Rank",
+         title = "Binary Allocation Rank") +
+    my_theme() + 
+    geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=carname),hjust="right")
+
 ```
 
 # Linear optimal Allocation Statistics and Graphs
