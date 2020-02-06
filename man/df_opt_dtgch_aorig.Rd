@@ -19,9 +19,9 @@ stands for project optimal choice, to differentiate this from the files in REcon
 data(df_opt_dtgch_aorig)
 var_wgt <- df_opt_dtgch_aorig$wgt
 head(df_opt_dtgch_aorig, 10)
-var_wgt[1:10] 
+var_wgt[1:10]
 }
 \references{
-“Early life height and weight production functions with endogenous energy and protein inputs”, September 2016, 65-81, Economics & Human Biology, 22, Esteban Puentes, Fan Wang, Jere R. Behrman, Flavio Cunha, John Hoddinott, John A. Maluccio, Linda S. Adair, Judith Borja and Reynaldo Martorell
+"Early life height and weight production functions with endogenous energy and protein inputs", September 2016, 65-81, Economics & Human Biology, 22, Esteban Puentes, Fan Wang, Jere R. Behrman, Flavio Cunha, John Hoddinott, John A. Maluccio, Linda S. Adair, Judith Borja and Reynaldo Martorell
 }
 \keyword{datasets}

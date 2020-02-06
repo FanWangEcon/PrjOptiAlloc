@@ -88,7 +88,7 @@ tb_mtcars <- tb_mtcars %>%
                              labels=c("LowWgt","HighWgt"))) %>%
     mutate(dratLowHigh = cut(drat,
                              breaks=c(-Inf, 3.59, Inf),
-                             labels=c("lowRearAxleRatio","highRearAxleRatio"))) 
+                             labels=c("lowRearAxleRatio","highRearAxleRatio")))
 
 # Relabel some factors
 tb_mtcars$vs <- factor(tb_mtcars$vs,
@@ -101,7 +101,7 @@ tb_mtcars$am <- factor(tb_mtcars$am,
 # tabulate
 tb_mtcars %>%
   group_by(am, vs) %>%
-  summarize(freq = n()) %>% 
+  summarize(freq = n()) %>%
   pivot_wider(names_from = vs, values_from = freq)
 ```
 
@@ -138,7 +138,7 @@ for (it_set in 1:4) {
     } else if(it_set == 4) {
       A_j = A_j_h
       A_i = A_i_h
-    }  
+    }
   }
   fl_num = (A_i+alpha)^rho - (A_j+alpha)^rho
   fl_den = (A_i)^rho - (A_j)^rho
@@ -148,7 +148,7 @@ for (it_set in 1:4) {
 ```
 
 ## Testing Formula
-```{r Formula Parameter Testing Basic}
+```{r Formula Parameter Testing Basic TWo }
 alpha = 1
 A_j_l = 0.3
 A_i_l = 0.4
@@ -172,7 +172,7 @@ for (it_set in 1:4) {
     } else if(it_set == 4) {
       A_j = A_j_h
       A_i = A_i_h
-    }  
+    }
   }
   fl_num = (A_j+alpha)^rho - (A_j)^rho
   fl_den = (A_i+alpha)^rho - (A_i)^rho
@@ -205,7 +205,7 @@ for (it_set in 1:4) {
     } else if(it_set == 4) {
       A_j = A_j_h
       A_i = A_i_h
-    }  
+    }
   }
   fl_num = (A_j+alpha)^rho - (A_i+alpha)^rho
   fl_den = (A_j)^rho - (A_i)^rho
@@ -281,7 +281,7 @@ head(ar_alpha_m, 5)
 ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
 ```
 
-## Matrix with Required Inputs for Allocation 
+## Matrix with Required Inputs for Allocation
 
 ```{r}
 # Initate Dataframe that will store all estimates and optimal allocation relevant information
@@ -340,13 +340,13 @@ ffi_binary_dplyrdo_func <- function(ls_row, fl_rho, bl_old=FALSE){
   # 2, ar_alpha
   # 3, ar_beta
   # note follow https://fanwangecon.github.io/R4Econ/support/function/fs_applysapplymutate.html
-  
+
   fl_alpha <- ls_row$alpha
   fl_A <- ls_row$A
   fl_beta <- ls_row$beta
-  
+
   if (bl_old) {
-    
+
     # the equation below is like doubly wrong I think, should be 1/(fl_rho-1)
     bl_old_wrong = TRUE
     if (bl_old_wrong) {
@@ -360,7 +360,7 @@ ffi_binary_dplyrdo_func <- function(ls_row, fl_rho, bl_old=FALSE){
       ar_full <- ar_left*ar_right
       ar_indicator <- (ar_full <= 1)
     }
-    
+
   } else {
       ar_left <- (
                   ((ar_A + ar_alpha)^fl_rho - (ar_A)^fl_rho)
@@ -371,7 +371,7 @@ ffi_binary_dplyrdo_func <- function(ls_row, fl_rho, bl_old=FALSE){
       ar_full <- ar_left*ar_right
       ar_indicator <- (ar_full >= 1)
   }
-  
+
   it_rank <- sum(ar_indicator)
   return(it_rank)
 }
@@ -389,7 +389,7 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
   queue_rank <- tb_key_alpha_A_beta %>% rowwise() %>%
                               do(rk = ffi_binary_dplyrdo_func(., rho)) %>%
                               unnest(rk) %>% pull(rk)
-  
+
   tb_with_rank <- tb_key_alpha_A_beta %>% add_column(queue_rank)
 
   # m. Keep for df collection individual key + optimal allocation
@@ -425,28 +425,28 @@ tb_opti_alloc_all_rho_long <- tb_opti_alloc_all_rho %>%
 ```{r custom theme online}
 # custom theme by Dominik Koch
 my_theme <- function() {
-  
+
   # Colors
   color.background = "white"
   color.text = "#22211d"
-  
+
   # Begin construction of chart
   theme_bw(base_size=15) +
-    
+
     # Format background colors
     theme(panel.background = element_rect(fill=color.background, color=color.background)) +
     theme(plot.background  = element_rect(fill=color.background, color=color.background)) +
     theme(panel.border     = element_rect(color=color.background)) +
     theme(strip.background = element_rect(fill=color.background, color=color.background)) +
-    
+
     # Format the grid
     theme(panel.grid.major.y = element_blank()) +
     theme(panel.grid.minor.y = element_blank()) +
     theme(axis.ticks       = element_blank()) +
-    
+
     # Format the legend
     theme(legend.position = "none") +
-    
+
     # Format title and axis labels
     theme(plot.title       = element_text(color=color.text, size=20, face = "bold")) +
     theme(axis.title.x     = element_text(size=14, color="black", face = "bold")) +
@@ -454,7 +454,7 @@ my_theme <- function() {
     theme(axis.text.x      = element_text(size=10, vjust=0.5, hjust=0.5, color = color.text)) +
     theme(axis.text.y      = element_text(size=10, color = color.text)) +
     theme(strip.text       = element_text(face = "bold")) +
-    
+
     # Plot margins
     theme(plot.margin = unit(c(0.35, 0.2, 0.3, 0.35), "cm"))
 }
@@ -472,96 +472,7 @@ tb_opti_alloc_all_rho_long %>%
     labs(x = "Equality vs Efficiency",
          y = "Rank",
          title = "Binary Allocation Rank") +
-    my_theme() + 
+    my_theme() +
     geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=carname),hjust="right")
 
 ```
-
-# Linear optimal Allocation Statistics and Graphs
-
-## Compute Gini Statistics for Allocations and Outcomes
-
-Compute Gini coefficient for each expected outcome and input vector, and store results in separate vectors for input allocation and expected outcomes, then combine.
-
-See how **apply** works here: [R use Apply, Sapply and dplyr Mutate to Evaluate one Function Across Rows of a Matrix](https://fanwangecon.github.io/R4Econ/support/function/fs_applysapplymutate.html) from [R4Econ](https://fanwangecon.github.io/R4Econ).
-
-See how gini function works: [ff_dist_gini_vector_pos](https://fanwangecon.github.io/REconTools/reference/ff_dist_gini_vector_pos.html) from [REconTools](https://fanwangecon.github.io/REconTools).
-
-```{r Compute Gini}
-# Select out columns for _on = optimal nutrition
-mt_opti_alloc_all_rho <- data.matrix(tb_opti_alloc_all_rho %>% select(ends_with('_on')))
-mt_expc_outcm_all_rho <- data.matrix(tb_opti_alloc_all_rho %>% select(ends_with('_eh')))
-
-# Compute gini for each rho
-ar_opti_alloc_gini <- suppressMessages(apply(t(mt_opti_alloc_all_rho), 1, ff_dist_gini_vector_pos))
-ar_expc_outcm_gini <- suppressMessages(apply(t(mt_expc_outcm_all_rho), 1, ff_dist_gini_vector_pos))
-
-# Combine results
-# column names look like: rho_c1_on rho_c2_on rho_c3_on rho_c1_eh rho_c2_eh rho_c3_eh
-tb_gini_onerow_wide <- cbind(as_tibble(t(ar_opti_alloc_gini)), as_tibble(t(ar_expc_outcm_gini)))
-tb_gini_long <- tb_gini_onerow_wide %>%
-  pivot_longer(
-    cols = starts_with("rho"),
-    names_to = c("it_rho_ctr", "oneh"),
-    names_pattern = "rho_c(.*)_(.*)",
-    values_to = "gini"
-  ) %>%
-  pivot_wider(
-    id_cols = it_rho_ctr,
-    names_from = oneh,
-    values_from = gini
-  )
-planner_elas <- log(1/(1-ar_rho)+2)
-tb_gini_long <- cbind(tb_gini_long, planner_elas)
-```
-
-
-### Gini Graphs
-
-```{r Gini Allocation and Outcome Scatter Correlation}
-
-scatter <- tb_gini_long %>%
-      ggplot(aes(x=on, y=eh)) +
-      geom_point(size=planner_elas) +
-      labs(title = 'Scatter Plot of Optimal Allocation and Expected Outcomes Gini',
-           x = paste0('GINI for Optimal Allocations'),
-           y = paste0('GINI for Exp Outcome given Optimal Allocations'),
-           caption = 'Optimal Allocations and Expected Outcomes, Cebu Height and Protein Example (Wang 2020)') +
-      theme_bw()
-print(scatter)
-```
-
-
-## Graphs Based on Individual Allocations
-```{r Individal Allocation Plots}
-# p. graph scatter of opposing preference correlation
-svr_lowrho_ctr <- 1
-svr_higrho_ctr <- length(ar_rho)-1
-svr_lowrho <- paste0('rho_c', svr_lowrho_ctr, '_on')
-svr_higrho <- paste0('rho_c', svr_higrho_ctr, '_eh')
-tb_min_max_rho <- tb_opti_alloc_all_rho %>% select(one_of(c(svr_lowrho, svr_higrho)))
-
-scatter <- tb_min_max_rho %>%
-      ggplot(aes(x=!!sym(svr_lowrho), y=!!sym(svr_higrho))) +
-      geom_point(size=1) +
-      labs(title = 'Scatter Plot of Optimal Allocation Low and High Rho',
-           x = paste0('Allocation High Rho = ', ar_rho[svr_higrho_ctr], ', More Efficient'),
-           y = paste0('Allocation Low Rho = ', ar_rho[svr_lowrho_ctr], ', More Equal'),
-           caption = 'Optimal linear allocation results, given height reg on protein results. (Wang 2020)') +
-      theme_bw()
-print(scatter)
-
-# lineplot <- tb_opti %>%
-#     gather(variable, value, -month) %>%
-#     ggplot(aes(x=month, y=value, colour=variable, linetype=variable)) +
-#         geom_line() +
-#         geom_point() +
-#         labs(title = 'Mean and SD of Temperature Acorss US Cities',
-#              x = 'Months',
-#              y = 'Temperature in Fahrenheit',
-#              caption = 'Temperature data 2017') +
-#         scale_x_continuous(labels = as.character(df_temp_mth_summ$month),
-#                            breaks = df_temp_mth_summ$month)
-
-```
-
