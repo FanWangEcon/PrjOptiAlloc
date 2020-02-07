@@ -1,5 +1,5 @@
 ---
-title: DISCRETE--Binary Provision Optimal Allocation Solution (Line by Line)
+title: DISCRETE--Discrete Provision Optimal Allocation Solution (Line by Line)
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{BINARY--Binary Provision Optimal Allocation Solution (Line by Line)}
@@ -64,6 +64,9 @@ library(stringr)
 library(broom)
 library(ggplot2)
 library(REconTools)
+
+library(PrjOptiAlloc)
+
 library(knitr)
 library(kableExtra)
 ```
@@ -74,144 +77,33 @@ Generate four categories by initial height and mother's education levels combina
 
 ```{r Load Packages and Process Data}
 # Load Data
-tb_mtcars <- as_tibble(rownames_to_column(mtcars, var = "carname")) %>% rowid_to_column()
-attach(tb_mtcars)
+data(df_opt_birthwt)
 
 # Summarize
-str(tb_mtcars)
-summary(tb_mtcars)
+str(df_opt_birthwt)
+summary(df_opt_birthwt)
 
 # Generate Discrete Version of continuous variables
-tb_mtcars <- tb_mtcars %>%
-    mutate(wgtLowHigh = cut(wt,
-                             breaks=c(-Inf, 3.1, Inf),
-                             labels=c("LowWgt","HighWgt"))) %>%
-    mutate(dratLowHigh = cut(drat,
-                             breaks=c(-Inf, 3.59, Inf),
-                             labels=c("lowRearAxleRatio","highRearAxleRatio")))
+df_opt_birthwt <- df_opt_birthwt %>%
+    mutate(momwgtLowHigh = cut(lwt,
+                               breaks=c(-Inf, 129, Inf),
+                               labels=c("LW","HW"))) 
+
+attach(df_opt_birthwt)
 
 # Relabel some factors
-tb_mtcars$vs <- factor(tb_mtcars$vs,
-                        levels = c(0,1),
-                        labels = c("engineVShaped", "engineStraight"))
-tb_mtcars$am <- factor(tb_mtcars$am,
-                        levels = c(0,1),
-                        labels = c("automatic", "manual"))
+# tb_mtcars$vs <- factor(tb_mtcars$vs,
+#                         levels = c(0,1),
+#                         labels = c("engineVShaped", "engineStraight"))
+# tb_mtcars$am <- factor(tb_mtcars$am,
+#                         levels = c(0,1),
+#                         labels = c("automatic", "manual"))
 
 # tabulate
-tb_mtcars %>%
-  group_by(am, vs) %>%
+df_opt_birthwt %>%
+  group_by(race, smoke, momwgtLowHigh) %>%
   summarize(freq = n()) %>%
-  pivot_wider(names_from = vs, values_from = freq)
-```
-
-# Testing the Equation
-
-## Fraction Principle Testing
-
-i value is larger than j value
-
-```{r Formula Parameter Testing Basic}
-
-alpha = 10
-A_j_l = 0.4
-A_i_l = 0.3
-
-A_j_h = 1.4
-A_i_h = 1.3
-
-for (it_set in 1:4) {
-  if(it_set == 1 || it_set == 2) {
-    rho = 0.75
-    if (it_set==1){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 2) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  } else if(it_set == 3 || it_set == 4) {
-    rho = -1
-    if (it_set==3){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 4) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  }
-  fl_num = (A_i+alpha)^rho - (A_j+alpha)^rho
-  fl_den = (A_i)^rho - (A_j)^rho
-  fl_rat = fl_num/fl_den
-  cat('it_set:', it_set, ', fl_num:', fl_num, ', fl_den:', fl_den, ', fl_rat:', fl_rat, '\n')
-}
-```
-
-## Testing Formula
-```{r Formula Parameter Testing Basic TWo }
-alpha = 1
-A_j_l = 0.3
-A_i_l = 0.4
-A_j_h = 1.3
-A_i_h = 1.4
-for (it_set in 1:4) {
-  if(it_set == 1 || it_set == 2) {
-    rho = 0.75
-    if (it_set==1){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 2) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  } else if(it_set == 3 || it_set == 4) {
-    rho = -1
-    if (it_set==3){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 4) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  }
-  fl_num = (A_j+alpha)^rho - (A_j)^rho
-  fl_den = (A_i+alpha)^rho - (A_i)^rho
-  fl_rat = fl_num/fl_den
-  cat('it_set:', it_set, ', fl_num:', fl_num, ', fl_den:', fl_den, ', fl_rat:', fl_rat, '\n')
-}
-```
-```{r Formula Parameter Testing Common Params}
-alpha = 0.1
-A_j_l = 0.4
-A_i_l = 0.5
-A_j_h = 1.4
-A_i_h = 1.5
-for (it_set in 1:4) {
-  if(it_set == 1 || it_set == 2) {
-    rho = 0.75
-    if (it_set==1){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 2) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  } else if(it_set == 3 || it_set == 4) {
-    alpha = 0.5
-    rho = -10
-    if (it_set==3){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 4) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  }
-  fl_num = (A_j+alpha)^rho - (A_i+alpha)^rho
-  fl_den = (A_j)^rho - (A_i)^rho
-  fl_rat = fl_num/fl_den
-  cat('it_set:', it_set, ', fl_num:', fl_num, ', fl_den:', fl_den, ', fl_rat:', fl_rat, '\n')
-}
+  pivot_wider(names_from = race, values_from = freq)
 ```
 
 # Regression with Data and Construct Input Arrays
@@ -219,15 +111,12 @@ for (it_set in 1:4) {
 ## Regress MPG on Manual Transmission
 
 ```{r Linear Regression Testing}
-# A. Regree MPG on horse power and binary if Manual or not (manual = 1)
-# 1. more horse power less MPG
-# 2. manual larger MPG
-print(summary(lm(mpg ~ hp + wt + factor(am) - 1)))
-
-# B. Also incorporate now engine shape, vs = 0 if v-shaped
-print(summary(lm(mpg ~ hp + factor(am) - 1)))
-
-print(summary(lm(mpg ~ hp + carb + factor(am):factor(vs) - 1)))
+# A. Regress child birth weight on mother's age, race and mother's weight
+print(summary(lm(bwt ~ lwt + age + factor(race) + factor(smoke))))
+print(summary(lm(bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) +  factor(smoke))))
+print(summary(lm(bwt ~ lwt + age + factor(momwgtLowHigh):factor(smoke) - 1)))
+print(summary(lm(bwt ~ lwt + age + factor(ht) + factor(ui) + factor(race) + factor(race):factor(smoke))))
+print(summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1)))
 
 #
 print(summary(lm(mpg ~ hp + carb + factor(vs) + factor(am):factor(vs))))

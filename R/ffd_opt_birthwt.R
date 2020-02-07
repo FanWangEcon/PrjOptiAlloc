@@ -2,6 +2,17 @@
 #'
 #' Dataset from Baystate Medical Center in Springfield, Massachusetts (Hosmer et. al. 1998)
 #'
+#' low: indicator of birth weight less than 2.5 kg.
+#' age: mother's age in years.
+#' lwt: mother's weight in pounds at last menstrual period.
+#' race: mother's race (1 = white, 2 = black, 3 = other).
+#' smoke: smoking status during pregnancy.
+#' ptl: number of previous premature labours.
+#' ht: history of hypertension.
+#' ui: presence of uterine irritability.
+#' ftv: number of physician visits during the first trimester.
+#' bwt: birth weight in grams.
+#'
 #' @docType data
 #'
 #' @usage data(df_opt_birthwt)
