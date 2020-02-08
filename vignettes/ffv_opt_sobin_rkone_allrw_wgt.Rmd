@@ -87,39 +87,41 @@ summary(df_opt_birthwt)
 df_opt_birthwt <- df_opt_birthwt %>%
     mutate(momwgtLowHigh = cut(lwt,
                                breaks=c(-Inf, 129, Inf),
-                               labels=c("LW","HW"))) 
+                               labels=c("LW","HW"))) %>%
+    mutate(mombirthage = cut(age,
+                               breaks=c(-Inf, 24, Inf),
+                               labels=c("young","older")))
 
 attach(df_opt_birthwt)
-
-# Relabel some factors
-# tb_mtcars$vs <- factor(tb_mtcars$vs,
-#                         levels = c(0,1),
-#                         labels = c("engineVShaped", "engineStraight"))
-# tb_mtcars$am <- factor(tb_mtcars$am,
-#                         levels = c(0,1),
-#                         labels = c("automatic", "manual"))
+summary(df_opt_birthwt)
 
 # tabulate
 df_opt_birthwt %>%
-  group_by(race, smoke, momwgtLowHigh) %>%
+  group_by(race, smoke, mombirthage) %>%
   summarize(freq = n()) %>%
   pivot_wider(names_from = race, values_from = freq)
+
+summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race) + factor(ht) + factor(ui)))
+summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1))
+summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1))
 ```
 
 # Regression with Data and Construct Input Arrays
 
-## Regress MPG on Manual Transmission
+## Binary Problem Regress Birth Weight on Mother's Smoking Status
 
 ```{r Linear Regression Testing}
 # A. Regress child birth weight on mother's age, race and mother's weight
+print(summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race))))
+print(summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race) + factor(ht) + factor(ui))))
+print(summary(lm(bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) + factor(ptl))))
+
 print(summary(lm(bwt ~ lwt + age + factor(race) + factor(smoke))))
 print(summary(lm(bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) +  factor(smoke))))
+
 print(summary(lm(bwt ~ lwt + age + factor(momwgtLowHigh):factor(smoke) - 1)))
 print(summary(lm(bwt ~ lwt + age + factor(ht) + factor(ui) + factor(race) + factor(race):factor(smoke))))
 print(summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1)))
-
-#
-print(summary(lm(mpg ~ hp + carb + factor(vs) + factor(am):factor(vs))))
 
 # Preferred way of appearing, in the following regression we can se:
 # 1. more more power less MPG, Straight engine slightly higher MPG
@@ -127,8 +129,8 @@ print(summary(lm(mpg ~ hp + carb + factor(vs) + factor(am):factor(vs))))
 # 2. straight shape engine, going from auto to manual trans gain 6.67 MPG
 
 # Store Regression Results
-mt_model <- model.matrix(~ hp + qsec + factor(vs) + factor(am):factor(vs))
-rs_mpg_on_auto = lm(mpg ~ mt_model - 1)
+mt_model <- model.matrix(~ lwt + age + factor(ht) + factor(ui) + factor(ptl) + factor(race) + factor(smoke):factor(race))
+rs_mpg_on_auto = lm(bwt ~ mt_model - 1)
 print(summary(rs_mpg_on_auto))
 rs_mpg_on_auto_tidy = tidy(rs_mpg_on_auto)
 rs_mpg_on_auto_tidy
@@ -145,14 +147,14 @@ head(rs_mpg_on_auto_tidy, 6)
 head(mt_model, 5)
 
 # Covariates coefficients from regression (including constant)
-ar_fl_cova_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(!str_detect(term, 'am')) %>% select(estimate))
-ar_fl_main_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(str_detect(term, 'am')) %>% select(estimate))
+ar_fl_cova_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(!str_detect(term, 'smoke')) %>% select(estimate))
+ar_fl_main_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(str_detect(term, 'smoke')) %>% select(estimate))
 head(ar_fl_cova_esti, 5)
 head(ar_fl_main_esti, 5)
 
 # Select Matrix subcomponents
-mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("am")))
-mt_intr <- model.matrix(~ factor(am) - 1)
+mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("smoke")))
+mt_intr <- model.matrix(~ factor(race) - 1)
 
 # Generate A_i, use mt_cova_wth_const
 ar_A_m <- mt_cova %*% ar_fl_cova_esti
@@ -179,9 +181,12 @@ ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
 mt_opti <- cbind(ar_alpha_m, ar_A_m, ar_beta_m)
 ar_st_varnames <- c('alpha', 'A', 'beta')
 df_esti_alpha_A_beta <- as_tibble(mt_opti) %>% rename_all(~c(ar_st_varnames))
-tb_key_alpha_A_beta <- bind_cols(tb_mtcars, df_esti_alpha_A_beta) %>%
-              select(one_of(c('rowid', 'carname', 'mpg', 'hp', 'qsec', 'vs', 'am', ar_st_varnames)))
+tb_key_alpha_A_beta <- bind_cols(df_opt_birthwt, df_esti_alpha_A_beta) %>%
+              select(one_of(c('Index', 'age', 'lwt', 'race', 'smoke', 'ptl', 'ht', 'ui', ar_st_varnames)))
 
+# Need to only include the smokers here 
+tb_key_alpha_A_beta <- tb_key_alpha_A_beta %>% filter(smoke == 1)
+  
 # Unique beta, A, and alpha check
 tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
                     arrange(!!!syms(ar_st_varnames)) %>%
@@ -284,11 +289,11 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
   # m. Keep for df collection individual key + optimal allocation
   # _on stands for optimal nutritional choices
   # _eh stands for expected height
-  tb_opti_allocate_wth_key <- tb_with_rank %>% select(one_of('rowid','queue_rank')) %>%
+  tb_opti_allocate_wth_key <- tb_with_rank %>% select(one_of('Index','queue_rank')) %>%
                                 rename(!!paste0('rho_c', it_rho_ctr, '_rk') := !!sym('queue_rank'))
 
   # n. merge optimal allocaiton results from different planner preference
-  tb_opti_alloc_all_rho <- tb_opti_alloc_all_rho %>% left_join(tb_opti_allocate_wth_key, by='rowid')
+  tb_opti_alloc_all_rho <- tb_opti_alloc_all_rho %>% left_join(tb_opti_allocate_wth_key, by='Index')
 }
 
 # o. print results
@@ -351,10 +356,10 @@ my_theme <- function() {
 
 ```{r binary allocation bump plot, fig.height = 10, fig.width = 10, fig.align = "center"}
 
-tb_opti_alloc_all_rho_long %>%
-  ggplot(aes(x = rho, y = rank, group = carname)) +
-    geom_line(aes(color = carname, alpha = 1), size = 2) +
-    geom_point(aes(color = carname, alpha = 1), size = 4) +
+tb_opti_alloc_all_rho_long %>% 
+  ggplot(aes(x = rho, y = rank, group = Index)) +
+    geom_line(aes(color = race, alpha = 1), size = 2) +
+    geom_point(aes(color = race, alpha = 1), size = 4) +
     scale_x_discrete(expand = c(0.85,0))+
     scale_y_reverse(breaks = 1:nrow(tb_opti_alloc_all_rho_long))+
     theme(legend.position = "none") +
@@ -362,6 +367,6 @@ tb_opti_alloc_all_rho_long %>%
          y = "Rank",
          title = "Binary Allocation Rank") +
     my_theme() +
-    geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=carname),hjust="right")
+    geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=Index),hjust="right")
 
 ```

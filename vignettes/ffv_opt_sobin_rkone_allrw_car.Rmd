@@ -263,7 +263,7 @@ head(ar_fl_main_esti, 5)
 
 # Select Matrix subcomponents
 mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("am")))
-mt_intr <- model.matrix(~ factor(am) - 1)
+mt_intr <- model.matrix(~ factor(vs) - 1)
 
 # Generate A_i, use mt_cova_wth_const
 ar_A_m <- mt_cova %*% ar_fl_cova_esti

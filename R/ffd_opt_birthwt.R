@@ -1,7 +1,6 @@
 #' Test Dataset Birth Weight
 #'
 #' Dataset from Baystate Medical Center in Springfield, Massachusetts (Hosmer et. al. 1998)
-#'
 #' low: indicator of birth weight less than 2.5 kg.
 #' age: mother's age in years.
 #' lwt: mother's weight in pounds at last menstrual period.
