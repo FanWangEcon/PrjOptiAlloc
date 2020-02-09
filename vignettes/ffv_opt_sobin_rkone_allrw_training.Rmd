@@ -1,8 +1,8 @@
 ---
-title: DISCRETE--Binary Provision Optimal Allocation Solution (Line by Line)
+title: BINARY--Wage and Training Optimal Allocation Solution (Line by Line)
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--Binary Provision Optimal Allocation Solution (Line by Line)}
+  %\VignetteIndexEntry{BINARY--Wage and Training Optimal Allocation Solution (Line by Line)}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
@@ -12,41 +12,7 @@ Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage 
 
 # Objective
 
-The objective of this file is to solve the linear $N_i\in{0,1}$ and $H_i$ problem without invoking any functions.
-
-File name *ffv_opt_sobin_rkone_allrw*:
-
-- *opt*: optimal allocation project
-- *sobin*: binary provision solution
-- *rkone*: rank at one
-- *allrw*: all code line by line raw original file
-
-## Algorithm Outline
-
-Given $N$ individuals, if each individual could or could not receive the provision, given finite resource, and common cost, if total resource avaible could finance input for $M$ individuals, there would be $\frac{N!}{(M-N)!\cdot N!)}$ number of possible choices. Even with 10 individuals,
-
-1. Solve unconstrained relative optimal allocation solutions from the continuous optimal allocation problem.
-2. Evaluate relative allocations when allocation for $q$ is equal to $1$
-3. This generates a new function where the y-axis values show outcomes for each other individual when individual $q$ allocation is at $1$.
-4. Treat the $m$ components of the function as slope and intercept, the $q$ remaining component is the $x$, for each individual, there is a unique $x$
-5. The randk order fully determin the sequence of provisions. This is similar to how rank order is determined in the continuous problem, with just a tiny difference of $\alpha$ added in the numerator.
-
-## Input and Output
-
-There is a dataset with child attributes, nutritional inputs and outputs. Run regression to estimate some input output relationship first. Then generate required inputs for code.
-
-1. Required Input
-  + @param df tibble data table including variables using svr names below each row is potentially an individual who will receive alternative allocations
-  + @param svr_A_i string name of the A_i variable, dot product of covariates and coefficients
-  + @param svr_alpha_i string name of the alpha_i variable, individual specific elasticity information
-  + @param svr_beta_i string name of the beta_i variable, relative preference weight for each child
-  + @param svr_N_i string name of the vector of existing inputs, based on which to compute aggregate resource
-  + @param fl_N_hat float total resource avaible for allocation, if not specific, sum by svr_N_i
-  + @param fl_rho float preference for equality for the planner
-  + @return a dataframe that expands the df inputs with additional results.
-2. The structure assumes some regression has already taken place to generate the i specific variables listed. and
-
-Doing this allows for lagged intereaction that are time specific in an arbitrary way.
+Test binary allocation queue with Lalonde training dataset. There are 722 observations, 297 in the treatment group, 425 in the control group.
 
 # Load Packages and Data
 
@@ -64,6 +30,9 @@ library(stringr)
 library(broom)
 library(ggplot2)
 library(REconTools)
+
+library(PrjOptiAlloc)
+
 library(knitr)
 library(kableExtra)
 ```
@@ -74,172 +43,94 @@ Generate four categories by initial height and mother's education levels combina
 
 ```{r Load Packages and Process Data}
 # Load Data
-tb_mtcars <- as_tibble(rownames_to_column(mtcars, var = "carname")) %>% rowid_to_column()
-attach(tb_mtcars)
+data(df_opt_lalonde_training)
+df_opt_lalonde_training <- df_opt_lalonde_training %>% 
+  mutate(id = X)
 
 # Summarize
-str(tb_mtcars)
-summary(tb_mtcars)
+str(df_opt_lalonde_training)
+summary(df_opt_lalonde_training)
+
+# Summarize average for all variables grouping by treatment status
+# re78 is significantly different
+df_opt_lalonde_training %>% group_by(trt) %>%
+  summarise_if(is.numeric, funs(mean = mean), na.rm = TRUE)
+
+# Generate combine black + hispanic status
+# 0 = white, 1 = black, 2 = hispanics
+df_opt_lalonde_training <- df_opt_lalonde_training %>% 
+    mutate(race =
+             case_when(black == 1 ~ 1,
+                       hisp == 1 ~ 2,
+                       TRUE ~ 0))
 
 # Generate Discrete Version of continuous variables
-tb_mtcars <- tb_mtcars %>%
-    mutate(wgtLowHigh = cut(wt,
-                             breaks=c(-Inf, 3.1, Inf),
-                             labels=c("LowWgt","HighWgt"))) %>%
-    mutate(dratLowHigh = cut(drat,
-                             breaks=c(-Inf, 3.59, Inf),
-                             labels=c("lowRearAxleRatio","highRearAxleRatio")))
-
-# Relabel some factors
-tb_mtcars$vs <- factor(tb_mtcars$vs,
-                        levels = c(0,1),
-                        labels = c("engineVShaped", "engineStraight"))
-tb_mtcars$am <- factor(tb_mtcars$am,
-                        levels = c(0,1),
-                        labels = c("automatic", "manual"))
-
-# tabulate
-tb_mtcars %>%
-  group_by(am, vs) %>%
-  summarize(freq = n()) %>%
-  pivot_wider(names_from = vs, values_from = freq)
-```
-
-# Testing the Equation
-
-## Fraction Principle Testing
-
-i value is larger than j value
-
-```{r Formula Parameter Testing Basic}
-
-alpha = 10
-A_j_l = 0.4
-A_i_l = 0.3
-
-A_j_h = 1.4
-A_i_h = 1.3
-
-for (it_set in 1:4) {
-  if(it_set == 1 || it_set == 2) {
-    rho = 0.75
-    if (it_set==1){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 2) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  } else if(it_set == 3 || it_set == 4) {
-    rho = -1
-    if (it_set==3){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 4) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  }
-  fl_num = (A_i+alpha)^rho - (A_j+alpha)^rho
-  fl_den = (A_i)^rho - (A_j)^rho
-  fl_rat = fl_num/fl_den
-  cat('it_set:', it_set, ', fl_num:', fl_num, ', fl_den:', fl_den, ', fl_rat:', fl_rat, '\n')
-}
-```
-
-## Testing Formula
-```{r Formula Parameter Testing Basic TWo }
-alpha = 1
-A_j_l = 0.3
-A_i_l = 0.4
-A_j_h = 1.3
-A_i_h = 1.4
-for (it_set in 1:4) {
-  if(it_set == 1 || it_set == 2) {
-    rho = 0.75
-    if (it_set==1){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 2) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  } else if(it_set == 3 || it_set == 4) {
-    rho = -1
-    if (it_set==3){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 4) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  }
-  fl_num = (A_j+alpha)^rho - (A_j)^rho
-  fl_den = (A_i+alpha)^rho - (A_i)^rho
-  fl_rat = fl_num/fl_den
-  cat('it_set:', it_set, ', fl_num:', fl_num, ', fl_den:', fl_den, ', fl_rat:', fl_rat, '\n')
-}
-```
-```{r Formula Parameter Testing Common Params}
-alpha = 0.1
-A_j_l = 0.4
-A_i_l = 0.5
-A_j_h = 1.4
-A_i_h = 1.5
-for (it_set in 1:4) {
-  if(it_set == 1 || it_set == 2) {
-    rho = 0.75
-    if (it_set==1){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 2) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  } else if(it_set == 3 || it_set == 4) {
-    alpha = 0.5
-    rho = -10
-    if (it_set==3){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 4) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  }
-  fl_num = (A_j+alpha)^rho - (A_i+alpha)^rho
-  fl_den = (A_j)^rho - (A_i)^rho
-  fl_rat = fl_num/fl_den
-  cat('it_set:', it_set, ', fl_num:', fl_num, ', fl_den:', fl_den, ', fl_rat:', fl_rat, '\n')
-}
-```
+# df_opt_lalonde_training <- df_opt_lalonde_training %>%
+#     mutate(momwgtLowHigh = cut(lwt,
+#                                breaks=c(-Inf, 129, Inf),
+#                                labels=c("LW","HW"))) %>%
+#     mutate(mombirthage = cut(age,
+#                                breaks=c(-Inf, 24, Inf),
+#                                labels=c("young","older")))
+```            
 
 # Regression with Data and Construct Input Arrays
 
-## Regress MPG on Manual Transmission
+## Tabulate 
 
-```{r Linear Regression Testing}
-# A. Regree MPG on horse power and binary if Manual or not (manual = 1)
-# 1. more horse power less MPG
-# 2. manual larger MPG
-print(summary(lm(mpg ~ hp + wt + factor(am) - 1)))
+```{r tabulate groups}
+# Tabulate groups, how many in each group, enough for group heterogeneity in effects?
+df_opt_lalonde_training %>%
+  group_by(trt, marr) %>%
+  summarize(freq = n()) %>%
+  pivot_wider(names_from = trt, values_from = freq)
 
-# B. Also incorporate now engine shape, vs = 0 if v-shaped
-print(summary(lm(mpg ~ hp + factor(am) - 1)))
+# Tabulate groups, how many in each group, enough for group heterogeneity in effects?
+df_opt_lalonde_training %>%
+  group_by(trt, marr, nodeg) %>%
+  summarize(freq = n()) %>%
+  pivot_wider(names_from = trt, values_from = freq)
+```
 
-print(summary(lm(mpg ~ hp + carb + factor(am):factor(vs) - 1)))
+## Regression Testing
 
-#
-print(summary(lm(mpg ~ hp + carb + factor(vs) + factor(am):factor(vs))))
+```{r Regression Testing}
+attach(df_opt_lalonde_training)
 
+# Basic Regressions, treatment effects, include all variables
+summary(lm(re78 ~ factor(age) + factor(educ)
+                  + factor(race)
+                  + factor(marr) + factor(nodeg)
+                  + factor(trt) - 1))
+
+# Basic Regressions, Heterogeneous treatment effects
+# More effects for married
+summary(lm(re78 ~ factor(marr)
+                  + factor(marr):factor(trt) - 1))
+
+# Basic Regressions, covar and heter treatment
+summary(lm(re78 ~  age + I(age^2) + 
+                   educ + I(educ^2) + 
+                  + factor(race)
+                  + factor(marr) + factor(nodeg)
+                  + factor(marr):factor(trt) - 1))
+```
+
+## Binary Problem Regress Wage on Training Status
+
+```{r Binary Linear Regression}
 # Preferred way of appearing, in the following regression we can se:
 # 1. more more power less MPG, Straight engine slightly higher MPG
 # 2. V-shape engine car, going from auto to manual trans gain 4.1 MPG
 # 2. straight shape engine, going from auto to manual trans gain 6.67 MPG
 
 # Store Regression Results
-mt_model <- model.matrix(~ hp + qsec + factor(vs) + factor(am):factor(vs))
-rs_mpg_on_auto = lm(mpg ~ mt_model - 1)
+mt_model <- model.matrix( ~ age + I(age^2) + 
+                            educ + I(educ^2) + 
+                          + factor(race)
+                          + factor(marr) + factor(nodeg)
+                          + factor(marr):factor(trt))
+rs_mpg_on_auto = lm(re78 ~ mt_model - 1)
 print(summary(rs_mpg_on_auto))
 rs_mpg_on_auto_tidy = tidy(rs_mpg_on_auto)
 rs_mpg_on_auto_tidy
@@ -256,14 +147,14 @@ head(rs_mpg_on_auto_tidy, 6)
 head(mt_model, 5)
 
 # Covariates coefficients from regression (including constant)
-ar_fl_cova_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(!str_detect(term, 'am')) %>% select(estimate))
-ar_fl_main_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(str_detect(term, 'am')) %>% select(estimate))
+ar_fl_cova_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(!str_detect(term, 'trt')) %>% select(estimate))
+ar_fl_main_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(str_detect(term, 'trt')) %>% select(estimate))
 head(ar_fl_cova_esti, 5)
 head(ar_fl_main_esti, 5)
 
 # Select Matrix subcomponents
-mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("am")))
-mt_intr <- model.matrix(~ factor(vs) - 1)
+mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("trt")))
+mt_intr <- model.matrix(~ factor(marr) - 1)
 
 # Generate A_i, use mt_cova_wth_const
 ar_A_m <- mt_cova %*% ar_fl_cova_esti
@@ -290,8 +181,12 @@ ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
 mt_opti <- cbind(ar_alpha_m, ar_A_m, ar_beta_m)
 ar_st_varnames <- c('alpha', 'A', 'beta')
 df_esti_alpha_A_beta <- as_tibble(mt_opti) %>% rename_all(~c(ar_st_varnames))
-tb_key_alpha_A_beta <- bind_cols(tb_mtcars, df_esti_alpha_A_beta) %>%
-              select(one_of(c('rowid', 'carname', 'mpg', 'hp', 'qsec', 'vs', 'am', ar_st_varnames)))
+tb_key_alpha_A_beta <- bind_cols(df_opt_lalonde_training, df_esti_alpha_A_beta) %>%
+              select(one_of(c('id', 'trt', 'age', 'educ', 'race', 'marr', 'nodeg', 're78', 
+                              ar_st_varnames)))
+
+# Need to only include the smokers here
+tb_key_alpha_A_beta <- tb_key_alpha_A_beta %>% filter(trt == 0)
 
 # Unique beta, A, and alpha check
 tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
@@ -316,7 +211,8 @@ ar_rho <- c(-50, -25, -10)
 ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.8)
 ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))
 ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.99)
-ar_rho <- c(-100, -10, -1, 0.05, 0.9)
+ar_rho <- c(-20, -1, 0.05, 0.9)
+ar_rho <- c(-50, -40, -30, -20, -15, -10, -7.5, -5,-3,-2,-1)
 ar_rho <- unique(ar_rho)
 ```
 
@@ -345,32 +241,14 @@ ffi_binary_dplyrdo_func <- function(ls_row, fl_rho, bl_old=FALSE){
   fl_A <- ls_row$A
   fl_beta <- ls_row$beta
 
-  if (bl_old) {
-
-    # the equation below is like doubly wrong I think, should be 1/(fl_rho-1)
-    bl_old_wrong = TRUE
-    if (bl_old_wrong) {
-      ar_left <- ((ar_A + ar_alpha)/(fl_A + fl_alpha))
-      ar_right <- ((ar_alpha*ar_beta)/(fl_alpha*fl_beta))^(1/(1-fl_rho))
-      ar_full <- ar_left*ar_right
-      ar_indicator <- (ar_full <= 1)
-    } else {
-      ar_left <- ((ar_A + ar_alpha)/(fl_A + fl_alpha))
-      ar_right <- ((ar_alpha*ar_beta)/(fl_alpha*fl_beta))^(1/(fl_rho-1))
-      ar_full <- ar_left*ar_right
-      ar_indicator <- (ar_full <= 1)
-    }
-
-  } else {
-      ar_left <- (
-                  ((ar_A + ar_alpha)^fl_rho - (ar_A)^fl_rho)
-                  /
-                  ((fl_A + fl_alpha)^fl_rho - (fl_A)^fl_rho)
-                 )
-      ar_right <- ((ar_beta)/(fl_beta))
-      ar_full <- ar_left*ar_right
-      ar_indicator <- (ar_full >= 1)
-  }
+  ar_left <- (
+              ((ar_A + ar_alpha)^fl_rho - (ar_A)^fl_rho)
+              /
+              ((fl_A + fl_alpha)^fl_rho - (fl_A)^fl_rho)
+             )
+  ar_right <- ((ar_beta)/(fl_beta))
+  ar_full <- ar_left*ar_right
+  ar_indicator <- (ar_full >= 1)
 
   it_rank <- sum(ar_indicator)
   return(it_rank)
@@ -395,11 +273,11 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
   # m. Keep for df collection individual key + optimal allocation
   # _on stands for optimal nutritional choices
   # _eh stands for expected height
-  tb_opti_allocate_wth_key <- tb_with_rank %>% select(one_of('rowid','queue_rank')) %>%
+  tb_opti_allocate_wth_key <- tb_with_rank %>% select(one_of('id','queue_rank')) %>%
                                 rename(!!paste0('rho_c', it_rho_ctr, '_rk') := !!sym('queue_rank'))
 
   # n. merge optimal allocaiton results from different planner preference
-  tb_opti_alloc_all_rho <- tb_opti_alloc_all_rho %>% left_join(tb_opti_allocate_wth_key, by='rowid')
+  tb_opti_alloc_all_rho <- tb_opti_alloc_all_rho %>% left_join(tb_opti_allocate_wth_key, by='id')
 }
 
 # o. print results
@@ -422,57 +300,19 @@ tb_opti_alloc_all_rho_long <- tb_opti_alloc_all_rho %>%
 
 ### Bump Plot for Optimal Binary Allocations
 
-```{r custom theme online}
-# custom theme by Dominik Koch
-my_theme <- function() {
-
-  # Colors
-  color.background = "white"
-  color.text = "#22211d"
-
-  # Begin construction of chart
-  theme_bw(base_size=15) +
-
-    # Format background colors
-    theme(panel.background = element_rect(fill=color.background, color=color.background)) +
-    theme(plot.background  = element_rect(fill=color.background, color=color.background)) +
-    theme(panel.border     = element_rect(color=color.background)) +
-    theme(strip.background = element_rect(fill=color.background, color=color.background)) +
-
-    # Format the grid
-    theme(panel.grid.major.y = element_blank()) +
-    theme(panel.grid.minor.y = element_blank()) +
-    theme(axis.ticks       = element_blank()) +
-
-    # Format the legend
-    theme(legend.position = "none") +
-
-    # Format title and axis labels
-    theme(plot.title       = element_text(color=color.text, size=20, face = "bold")) +
-    theme(axis.title.x     = element_text(size=14, color="black", face = "bold")) +
-    theme(axis.title.y     = element_text(size=14, color="black", face = "bold", vjust=1.25)) +
-    theme(axis.text.x      = element_text(size=10, vjust=0.5, hjust=0.5, color = color.text)) +
-    theme(axis.text.y      = element_text(size=10, color = color.text)) +
-    theme(strip.text       = element_text(face = "bold")) +
-
-    # Plot margins
-    theme(plot.margin = unit(c(0.35, 0.2, 0.3, 0.35), "cm"))
-}
-```
-
-```{r binary allocation bump plot, fig.height = 10, fig.width = 10, fig.align = "center"}
+```{r binary allocation bump plot, fig.height = 10, fig.width = 20, fig.align = "center"}
 
 tb_opti_alloc_all_rho_long %>%
-  ggplot(aes(x = rho, y = rank, group = carname)) +
-    geom_line(aes(color = carname, alpha = 1), size = 2) +
-    geom_point(aes(color = carname, alpha = 1), size = 4) +
+  ggplot(aes(x = rho, y = rank, group = id)) +
+    geom_line(aes(color = race, alpha = 1), size = 2) +
+    geom_point(aes(color = race, alpha = 1), size = 4) +
     scale_x_discrete(expand = c(0.85,0))+
     scale_y_reverse(breaks = 1:nrow(tb_opti_alloc_all_rho_long))+
     theme(legend.position = "none") +
     labs(x = "Equality vs Efficiency",
          y = "Rank",
-         title = "Binary Allocation Rank") +
-    my_theme() +
-    geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=carname),hjust="right")
+         title = "Binary Allocation Rank, which untrained to receive training first") +
+    ffy_opt_ghthm_dk() +
+    geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=id),hjust="right")
 
 ```

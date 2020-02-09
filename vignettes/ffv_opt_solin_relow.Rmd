@@ -235,4 +235,3 @@ print(cbind(ar_opti_expout,ar_opti_inpalc))
 df_opt_dtgch_cbem4_rrlop <- df_opti
 usethis::use_data(df_opt_dtgch_cbem4_rrlop, df_opt_dtgch_cbem4_rrlop, overwrite = TRUE)
 ```
-

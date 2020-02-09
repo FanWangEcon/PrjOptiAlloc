@@ -1,8 +1,8 @@
 ---
-title: DISCRETE--Binary Provision Optimal Allocation Solution (Line by Line)
+title: BINARY--MPG and Shift Optimal Allocation Solution (Line by Line)
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--Binary Provision Optimal Allocation Solution (Line by Line)}
+  %\VignetteIndexEntry{BINARY--MPG and Shift Optimal Allocation Solution (Line by Line)}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
@@ -103,115 +103,6 @@ tb_mtcars %>%
   group_by(am, vs) %>%
   summarize(freq = n()) %>%
   pivot_wider(names_from = vs, values_from = freq)
-```
-
-# Testing the Equation
-
-## Fraction Principle Testing
-
-i value is larger than j value
-
-```{r Formula Parameter Testing Basic}
-
-alpha = 10
-A_j_l = 0.4
-A_i_l = 0.3
-
-A_j_h = 1.4
-A_i_h = 1.3
-
-for (it_set in 1:4) {
-  if(it_set == 1 || it_set == 2) {
-    rho = 0.75
-    if (it_set==1){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 2) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  } else if(it_set == 3 || it_set == 4) {
-    rho = -1
-    if (it_set==3){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 4) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  }
-  fl_num = (A_i+alpha)^rho - (A_j+alpha)^rho
-  fl_den = (A_i)^rho - (A_j)^rho
-  fl_rat = fl_num/fl_den
-  cat('it_set:', it_set, ', fl_num:', fl_num, ', fl_den:', fl_den, ', fl_rat:', fl_rat, '\n')
-}
-```
-
-## Testing Formula
-```{r Formula Parameter Testing Basic TWo }
-alpha = 1
-A_j_l = 0.3
-A_i_l = 0.4
-A_j_h = 1.3
-A_i_h = 1.4
-for (it_set in 1:4) {
-  if(it_set == 1 || it_set == 2) {
-    rho = 0.75
-    if (it_set==1){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 2) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  } else if(it_set == 3 || it_set == 4) {
-    rho = -1
-    if (it_set==3){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 4) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  }
-  fl_num = (A_j+alpha)^rho - (A_j)^rho
-  fl_den = (A_i+alpha)^rho - (A_i)^rho
-  fl_rat = fl_num/fl_den
-  cat('it_set:', it_set, ', fl_num:', fl_num, ', fl_den:', fl_den, ', fl_rat:', fl_rat, '\n')
-}
-```
-```{r Formula Parameter Testing Common Params}
-alpha = 0.1
-A_j_l = 0.4
-A_i_l = 0.5
-A_j_h = 1.4
-A_i_h = 1.5
-for (it_set in 1:4) {
-  if(it_set == 1 || it_set == 2) {
-    rho = 0.75
-    if (it_set==1){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 2) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  } else if(it_set == 3 || it_set == 4) {
-    alpha = 0.5
-    rho = -10
-    if (it_set==3){
-      A_j = A_j_l
-      A_i = A_i_l
-    } else if(it_set == 4) {
-      A_j = A_j_h
-      A_i = A_i_h
-    }
-  }
-  fl_num = (A_j+alpha)^rho - (A_i+alpha)^rho
-  fl_den = (A_j)^rho - (A_i)^rho
-  fl_rat = fl_num/fl_den
-  cat('it_set:', it_set, ', fl_num:', fl_num, ', fl_den:', fl_den, ', fl_rat:', fl_rat, '\n')
-}
 ```
 
 # Regression with Data and Construct Input Arrays
@@ -422,44 +313,6 @@ tb_opti_alloc_all_rho_long <- tb_opti_alloc_all_rho %>%
 
 ### Bump Plot for Optimal Binary Allocations
 
-```{r custom theme online}
-# custom theme by Dominik Koch
-my_theme <- function() {
-
-  # Colors
-  color.background = "white"
-  color.text = "#22211d"
-
-  # Begin construction of chart
-  theme_bw(base_size=15) +
-
-    # Format background colors
-    theme(panel.background = element_rect(fill=color.background, color=color.background)) +
-    theme(plot.background  = element_rect(fill=color.background, color=color.background)) +
-    theme(panel.border     = element_rect(color=color.background)) +
-    theme(strip.background = element_rect(fill=color.background, color=color.background)) +
-
-    # Format the grid
-    theme(panel.grid.major.y = element_blank()) +
-    theme(panel.grid.minor.y = element_blank()) +
-    theme(axis.ticks       = element_blank()) +
-
-    # Format the legend
-    theme(legend.position = "none") +
-
-    # Format title and axis labels
-    theme(plot.title       = element_text(color=color.text, size=20, face = "bold")) +
-    theme(axis.title.x     = element_text(size=14, color="black", face = "bold")) +
-    theme(axis.title.y     = element_text(size=14, color="black", face = "bold", vjust=1.25)) +
-    theme(axis.text.x      = element_text(size=10, vjust=0.5, hjust=0.5, color = color.text)) +
-    theme(axis.text.y      = element_text(size=10, color = color.text)) +
-    theme(strip.text       = element_text(face = "bold")) +
-
-    # Plot margins
-    theme(plot.margin = unit(c(0.35, 0.2, 0.3, 0.35), "cm"))
-}
-```
-
 ```{r binary allocation bump plot, fig.height = 10, fig.width = 10, fig.align = "center"}
 
 tb_opti_alloc_all_rho_long %>%
@@ -471,8 +324,8 @@ tb_opti_alloc_all_rho_long %>%
     theme(legend.position = "none") +
     labs(x = "Equality vs Efficiency",
          y = "Rank",
-         title = "Binary Allocation Rank") +
-    my_theme() +
+         title = "Binary Allocation Rank, Convert to Automatic and MPG") +
+    ffy_opt_ghthm_dk() +
     geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=carname),hjust="right")
 
 ```

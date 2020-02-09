@@ -12,41 +12,7 @@ Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage 
 
 # Objective
 
-The objective of this file is to solve the linear $N_i\in{0,1}$ and $H_i$ problem without invoking any functions.
-
-File name *ffv_opt_sobin_rkone_allrw*:
-
-- *opt*: optimal allocation project
-- *sobin*: binary provision solution
-- *rkone*: rank at one
-- *allrw*: all code line by line raw original file
-
-## Algorithm Outline
-
-Given $N$ individuals, if each individual could or could not receive the provision, given finite resource, and common cost, if total resource avaible could finance input for $M$ individuals, there would be $\frac{N!}{(M-N)!\cdot N!)}$ number of possible choices. Even with 10 individuals,
-
-1. Solve unconstrained relative optimal allocation solutions from the continuous optimal allocation problem.
-2. Evaluate relative allocations when allocation for $q$ is equal to $1$
-3. This generates a new function where the y-axis values show outcomes for each other individual when individual $q$ allocation is at $1$.
-4. Treat the $m$ components of the function as slope and intercept, the $q$ remaining component is the $x$, for each individual, there is a unique $x$
-5. The randk order fully determin the sequence of provisions. This is similar to how rank order is determined in the continuous problem, with just a tiny difference of $\alpha$ added in the numerator.
-
-## Input and Output
-
-There is a dataset with child attributes, nutritional inputs and outputs. Run regression to estimate some input output relationship first. Then generate required inputs for code.
-
-1. Required Input
-  + @param df tibble data table including variables using svr names below each row is potentially an individual who will receive alternative allocations
-  + @param svr_A_i string name of the A_i variable, dot product of covariates and coefficients
-  + @param svr_alpha_i string name of the alpha_i variable, individual specific elasticity information
-  + @param svr_beta_i string name of the beta_i variable, relative preference weight for each child
-  + @param svr_N_i string name of the vector of existing inputs, based on which to compute aggregate resource
-  + @param fl_N_hat float total resource avaible for allocation, if not specific, sum by svr_N_i
-  + @param fl_rho float preference for equality for the planner
-  + @return a dataframe that expands the df inputs with additional results.
-2. The structure assumes some regression has already taken place to generate the i specific variables listed. and
-
-Doing this allows for lagged intereaction that are time specific in an arbitrary way.
+The california school dataset, the effect of teacher ratio on student scores. 
 
 # Load Packages and Data
 
@@ -77,24 +43,74 @@ Generate four categories by initial height and mother's education levels combina
 
 ```{r Load Packages and Process Data}
 # Load Data
-data(df_opt_birthwt)
+data(df_opt_caschool)
 
 # Summarize
-str(df_opt_birthwt)
-summary(df_opt_birthwt)
+str(df_opt_caschool)
+summary(df_opt_caschool)
+df_opt_caschool %>% group_by(county) %>%
+  summarise_if(is.numeric, funs(mean = mean), na.rm = TRUE)
+
+# Modifying and labeling etc. 
+df_opt_caschool <- df_opt_caschool %>%
+                      mutate(id = X)
 
 # Generate Discrete Version of continuous variables
-df_opt_birthwt <- df_opt_birthwt %>%
-    mutate(momwgtLowHigh = cut(lwt,
-                               breaks=c(-Inf, 129, Inf),
-                               labels=c("LW","HW"))) %>%
-    mutate(mombirthage = cut(age,
-                               breaks=c(-Inf, 24, Inf),
-                               labels=c("young","older"))) %>%
-    mutate(ftvm3 = cut(ftv,
-                               breaks=c(-Inf, 1, 2, Inf),
-                               labels=c("novisit","1visit","morevisit")))
+# df_opt_birthwt <- df_opt_birthwt %>%
+#     mutate(momwgtLowHigh = cut(lwt,
+#                                breaks=c(-Inf, 129, Inf),
+#                                labels=c("LW","HW"))) %>%
+#     mutate(mombirthage = cut(age,
+#                                breaks=c(-Inf, 24, Inf),
+#                                labels=c("young","older"))) %>%
+#     mutate(ftvm3 = cut(ftv,
+#                                breaks=c(-Inf, 1, 2, Inf),
+#                                labels=c("novisit","1visit","morevisit")))
+```
 
+# Regression with Data and Construct Input Arrays
+
+## Tabulate 
+
+```{r tabulate groups}
+# Tabulate groups, how many in each group, enough for group heterogeneity in effects?
+df_opt_caschool %>%
+  group_by(county, grspan) %>%
+  summarize(freq = n()) %>%
+  pivot_wider(names_from = grspan, values_from = freq)
+```
+
+## Regression Testing
+
+The allocation policy is in terms of teachers. How many teachers to add. Given the current number of teachers in the school, suppose there is some capacity limit at each school, so the number of additional teachers at each school can not exceed 35 percent of the teachers that are already there. 
+
+Our estimation is based on regressing thest score on the student teacher ratio, from which we obtain a single estimate $\alpha$. 
+
+$$
+Y = A_i + \theta \cdot \frac{S_i}{T_i} + \epsilon
+$$
+
+What is the effect of adding an additional teacher?
+
+We need to translate the estimate $\theta$ here into our equation's allocation scale
+
+```{r Regression Testing}
+attach(df_opt_caschool)
+
+# Math, English, and Overall and str = student teacher ratio
+summary(lm(mathscr ~ str))
+summary(lm(readscr ~ str))
+summary(lm(testscr ~ str))
+
+# Regress test score on str with student and teacher counts
+summary(lm(testscr ~ enrltot + teachers + str))
+
+# Regress test score on str with covariates and county fe
+summary(lm(testscr ~ factor(county) + calwpct + mealpct + computer
+                     + str - 1))
+```
+
+```{r}
 attach(df_opt_birthwt)
 summary(df_opt_birthwt)
 
@@ -111,7 +127,6 @@ summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1))
 summary(lm(bwt ~ factor(ftv) - 1))
 summary(lm(bwt ~ factor(ftv) + factor(ht) + factor(ui) + factor(ptl) - 1))
 
-summary(lm(bwt ~ ftvm2))
 summary(lm(bwt ~ lwt + factor(race) + (ftv) - 1))
 ```
 
@@ -193,9 +208,9 @@ df_esti_alpha_A_beta <- as_tibble(mt_opti) %>% rename_all(~c(ar_st_varnames))
 tb_key_alpha_A_beta <- bind_cols(df_opt_birthwt, df_esti_alpha_A_beta) %>%
               select(one_of(c('Index', 'age', 'lwt', 'race', 'smoke', 'ptl', 'ht', 'ui', ar_st_varnames)))
 
-# Need to only include the smokers here 
+# Need to only include the smokers here
 tb_key_alpha_A_beta <- tb_key_alpha_A_beta %>% filter(smoke == 1)
-  
+
 # Unique beta, A, and alpha check
 tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
                     arrange(!!!syms(ar_st_varnames)) %>%
@@ -325,47 +340,9 @@ tb_opti_alloc_all_rho_long <- tb_opti_alloc_all_rho %>%
 
 ### Bump Plot for Optimal Binary Allocations
 
-```{r custom theme online}
-# custom theme by Dominik Koch
-my_theme <- function() {
-
-  # Colors
-  color.background = "white"
-  color.text = "#22211d"
-
-  # Begin construction of chart
-  theme_bw(base_size=15) +
-
-    # Format background colors
-    theme(panel.background = element_rect(fill=color.background, color=color.background)) +
-    theme(plot.background  = element_rect(fill=color.background, color=color.background)) +
-    theme(panel.border     = element_rect(color=color.background)) +
-    theme(strip.background = element_rect(fill=color.background, color=color.background)) +
-
-    # Format the grid
-    theme(panel.grid.major.y = element_blank()) +
-    theme(panel.grid.minor.y = element_blank()) +
-    theme(axis.ticks       = element_blank()) +
-
-    # Format the legend
-    theme(legend.position = "none") +
-
-    # Format title and axis labels
-    theme(plot.title       = element_text(color=color.text, size=20, face = "bold")) +
-    theme(axis.title.x     = element_text(size=14, color="black", face = "bold")) +
-    theme(axis.title.y     = element_text(size=14, color="black", face = "bold", vjust=1.25)) +
-    theme(axis.text.x      = element_text(size=10, vjust=0.5, hjust=0.5, color = color.text)) +
-    theme(axis.text.y      = element_text(size=10, color = color.text)) +
-    theme(strip.text       = element_text(face = "bold")) +
-
-    # Plot margins
-    theme(plot.margin = unit(c(0.35, 0.2, 0.3, 0.35), "cm"))
-}
-```
-
 ```{r binary allocation bump plot, fig.height = 10, fig.width = 10, fig.align = "center"}
 
-tb_opti_alloc_all_rho_long %>% 
+tb_opti_alloc_all_rho_long %>%
   ggplot(aes(x = rho, y = rank, group = Index)) +
     geom_line(aes(color = race, alpha = 1), size = 2) +
     geom_point(aes(color = race, alpha = 1), size = 4) +
@@ -374,8 +351,8 @@ tb_opti_alloc_all_rho_long %>%
     theme(legend.position = "none") +
     labs(x = "Equality vs Efficiency",
          y = "Rank",
-         title = "Binary Allocation Rank") +
-    my_theme() +
+         title = "Binary Deallocation Rank, Weight and Smokng") +
+    ffy_opt_ghthm_dk() +
     geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=Index),hjust="right")
 
 ```
