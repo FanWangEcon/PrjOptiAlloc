@@ -62,7 +62,13 @@ df_opt_lalonde_training <- df_opt_lalonde_training %>%
     mutate(race =
              case_when(black == 1 ~ 1,
                        hisp == 1 ~ 2,
-                       TRUE ~ 0))
+                       TRUE ~ 0)) %>%
+    mutate(re78_log = log(re78+1))
+
+# Exclude zeros
+# when this is on, both linear and log linear results exclude wage = 0
+# df_opt_lalonde_training <- df_opt_lalonde_training %>%
+#     filter(re78 > 0)
 
 # Generate Discrete Version of continuous variables
 # df_opt_lalonde_training <- df_opt_lalonde_training %>%
@@ -95,48 +101,79 @@ df_opt_lalonde_training %>%
 ## Regression Testing
 
 ```{r Regression Testing}
-attach(df_opt_lalonde_training)
+
 
 # Basic Regressions, treatment effects, include all variables
 summary(lm(re78 ~ factor(age) + factor(educ)
                   + factor(race)
                   + factor(marr) + factor(nodeg)
-                  + factor(trt) - 1))
+                  + factor(trt) - 1,
+                  data = df_opt_lalonde_training))
+
+# Log Regression
+summary(lm(re78_log ~ factor(age) + factor(educ)
+                  + factor(race)
+                  + factor(marr) + factor(nodeg)
+                  + factor(trt) - 1,
+                  data = df_opt_lalonde_training))
+# %>% filter(re78 > 0 )
 
 # Basic Regressions, Heterogeneous treatment effects
 # More effects for married
 summary(lm(re78 ~ factor(marr)
-                  + factor(marr):factor(trt) - 1))
+                  + factor(marr):factor(trt) - 1,
+                  data = df_opt_lalonde_training))
+summary(lm(re78_log ~ factor(marr)
+                  + factor(marr):factor(trt) - 1,
+                  data = df_opt_lalonde_training))
 
 # Basic Regressions, covar and heter treatment
 summary(lm(re78 ~  age + I(age^2) +
                    educ + I(educ^2) +
                   + factor(race)
                   + factor(marr) + factor(nodeg)
-                  + factor(marr):factor(trt) - 1))
+                  + factor(marr):factor(trt) - 1,
+                  data = df_opt_lalonde_training))
+summary(lm(re78_log ~  age + I(age^2) +
+                   educ + I(educ^2) +
+                  + factor(race)
+                  + factor(marr) + factor(nodeg)
+                  + factor(marr):factor(trt) - 1,
+                  data = df_opt_lalonde_training))
 ```
 
-## Binary Problem Regress Wage on Training Status
+## Regress Wage on Training Status
+
+### Linear Binary Problem
 
 ```{r Binary Linear Regression}
-# Preferred way of appearing, in the following regression we can se:
-# 1. more more power less MPG, Straight engine slightly higher MPG
-# 2. V-shape engine car, going from auto to manual trans gain 4.1 MPG
-# 2. straight shape engine, going from auto to manual trans gain 6.67 MPG
-
 # Store Regression Results
 mt_model <- model.matrix( ~ age + I(age^2) +
                             educ + I(educ^2) +
                           + factor(race)
                           + factor(marr) + factor(nodeg)
                           + factor(marr):factor(trt))
-rs_wage_on_trt = lm(re78 ~ mt_model - 1)
+rs_wage_on_trt = lm(re78 ~ mt_model - 1, data = df_opt_lalonde_training)
 print(summary(rs_wage_on_trt))
 rs_wage_on_trt_tidy = tidy(rs_wage_on_trt)
 rs_wage_on_trt_tidy
 ```
 
+### Log-Linear Binary Problem
+
+Using the same right-hand-side as for the lineary binary problem, just change the left hand side, note we added 1 to all wage. So zero wage has been included.
+
+```{r Binary Log Linear Regression}
+# Store Regression Results
+rs_wage_on_trt_log = lm(re78_log ~ mt_model - 1, data = df_opt_lalonde_training)
+print(summary(rs_wage_on_trt_log))
+rs_wage_on_trt_tidy_log = tidy(rs_wage_on_trt_log)
+rs_wage_on_trt_tidy_log
+```
+
 ## Construct Input Arrays $A_i$ and $\alpha_i$
+
+### Linear Binary Regression 
 
 Multiply coefficient vector by covariate matrix to generate *A* vector that is child/individual specific.
 
@@ -164,6 +201,34 @@ head(ar_A_m, 5)
 ar_alpha_m <- mt_intr %*% ar_fl_main_esti
 head(ar_alpha_m, 5)
 ```
+
+### Log Linear Binary Regression 
+
+This show the general applicability of the solution. 
+
+```{r Post Regression Input Processing}
+# Estimates Table
+head(rs_wage_on_trt_tidy_log, 6)
+# Covariates
+head(mt_model, 5)
+
+# Covariates coefficients from regression (including constant)
+ar_fl_cova_esti_log <- as.matrix(rs_wage_on_trt_tidy_log %>% filter(!str_detect(term, 'trt')) %>% select(estimate))
+ar_fl_main_esti_log <- as.matrix(rs_wage_on_trt_tidy_log %>% filter(str_detect(term, 'trt')) %>% select(estimate))
+head(ar_fl_cova_esti_log, 5)
+head(ar_fl_main_esti_log, 5)
+
+# Generate A_i_pre, use mt_cova_wth_const, same mt_cova as before
+# Need to be transformed before can be used as A_i
+ar_A_m_log_pre <- mt_cova %*% ar_fl_cova_esti_log
+head(ar_A_m, 5)
+
+# Generate alpha_i_pre, same mt_intr as before
+# Need to be transformed before can be used as alpha_i
+ar_alpha_m_log_pre <- mt_intr %*% ar_fl_main_esti_log
+head(ar_alpha_m, 5)
+```
+
 
 ## Individual Weight
 
