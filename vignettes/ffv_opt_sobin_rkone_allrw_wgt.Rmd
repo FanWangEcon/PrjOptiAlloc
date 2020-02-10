@@ -12,7 +12,7 @@ Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage 
 
 # Objective
 
-The effects of mother's smoking status on birth weight. If we aim to improve health outcomes, what is the priority sequence of mothers whom we would want to discourage from smoking. 
+The effects of mother's smoking status on birth weight. If we aim to improve health outcomes, what is the priority sequence of mothers whom we would want to discourage from smoking.
 
 # Load Packages and Data
 
@@ -104,10 +104,10 @@ print(summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1
 
 # Store Regression Results
 mt_model <- model.matrix(~ lwt + age + factor(ht) + factor(ui) + factor(ptl) + factor(race) + factor(smoke):factor(race))
-rs_mpg_on_auto = lm(bwt ~ mt_model - 1)
-print(summary(rs_mpg_on_auto))
-rs_mpg_on_auto_tidy = tidy(rs_mpg_on_auto)
-rs_mpg_on_auto_tidy
+rs_wgt_on_smke = lm(bwt ~ mt_model - 1)
+print(summary(rs_wgt_on_smke))
+rs_wgt_on_smke_tidy = tidy(rs_wgt_on_smke)
+rs_wgt_on_smke_tidy
 ```
 
 ## Construct Input Arrays $A_i$ and $\alpha_i$
@@ -116,13 +116,13 @@ Multiply coefficient vector by covariate matrix to generate *A* vector that is c
 
 ```{r Post Regression Input Processing}
 # Estimates Table
-head(rs_mpg_on_auto_tidy, 6)
+head(rs_wgt_on_smke_tidy, 6)
 # Covariates
 head(mt_model, 5)
 
 # Covariates coefficients from regression (including constant)
-ar_fl_cova_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(!str_detect(term, 'smoke')) %>% select(estimate))
-ar_fl_main_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(str_detect(term, 'smoke')) %>% select(estimate))
+ar_fl_cova_esti <- as.matrix(rs_wgt_on_smke_tidy %>% filter(!str_detect(term, 'smoke')) %>% select(estimate))
+ar_fl_main_esti <- as.matrix(rs_wgt_on_smke_tidy %>% filter(str_detect(term, 'smoke')) %>% select(estimate))
 head(ar_fl_cova_esti, 5)
 head(ar_fl_main_esti, 5)
 
@@ -158,9 +158,9 @@ df_esti_alpha_A_beta <- as_tibble(mt_opti) %>% rename_all(~c(ar_st_varnames))
 tb_key_alpha_A_beta <- bind_cols(df_opt_birthwt, df_esti_alpha_A_beta) %>%
               select(one_of(c('Index', 'age', 'lwt', 'race', 'smoke', 'ptl', 'ht', 'ui', ar_st_varnames)))
 
-# Need to only include the smokers here 
+# Need to only include the smokers here
 tb_key_alpha_A_beta <- tb_key_alpha_A_beta %>% filter(smoke == 1)
-  
+
 # Unique beta, A, and alpha check
 tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
                     arrange(!!!syms(ar_st_varnames)) %>%
@@ -292,7 +292,7 @@ tb_opti_alloc_all_rho_long <- tb_opti_alloc_all_rho %>%
 
 ```{r binary allocation bump plot, fig.height = 10, fig.width = 10, fig.align = "center"}
 
-tb_opti_alloc_all_rho_long %>% 
+tb_opti_alloc_all_rho_long %>%
   ggplot(aes(x = rho, y = rank, group = Index)) +
     geom_line(aes(color = race, alpha = 1), size = 2) +
     geom_point(aes(color = race, alpha = 1), size = 4) +

@@ -44,7 +44,7 @@ Generate four categories by initial height and mother's education levels combina
 ```{r Load Packages and Process Data}
 # Load Data
 data(df_opt_lalonde_training)
-df_opt_lalonde_training <- df_opt_lalonde_training %>% 
+df_opt_lalonde_training <- df_opt_lalonde_training %>%
   mutate(id = X)
 
 # Summarize
@@ -58,7 +58,7 @@ df_opt_lalonde_training %>% group_by(trt) %>%
 
 # Generate combine black + hispanic status
 # 0 = white, 1 = black, 2 = hispanics
-df_opt_lalonde_training <- df_opt_lalonde_training %>% 
+df_opt_lalonde_training <- df_opt_lalonde_training %>%
     mutate(race =
              case_when(black == 1 ~ 1,
                        hisp == 1 ~ 2,
@@ -76,7 +76,7 @@ df_opt_lalonde_training <- df_opt_lalonde_training %>%
 
 # Regression with Data and Construct Input Arrays
 
-## Tabulate 
+## Tabulate
 
 ```{r tabulate groups}
 # Tabulate groups, how many in each group, enough for group heterogeneity in effects?
@@ -109,8 +109,8 @@ summary(lm(re78 ~ factor(marr)
                   + factor(marr):factor(trt) - 1))
 
 # Basic Regressions, covar and heter treatment
-summary(lm(re78 ~  age + I(age^2) + 
-                   educ + I(educ^2) + 
+summary(lm(re78 ~  age + I(age^2) +
+                   educ + I(educ^2) +
                   + factor(race)
                   + factor(marr) + factor(nodeg)
                   + factor(marr):factor(trt) - 1))
@@ -125,15 +125,15 @@ summary(lm(re78 ~  age + I(age^2) +
 # 2. straight shape engine, going from auto to manual trans gain 6.67 MPG
 
 # Store Regression Results
-mt_model <- model.matrix( ~ age + I(age^2) + 
-                            educ + I(educ^2) + 
+mt_model <- model.matrix( ~ age + I(age^2) +
+                            educ + I(educ^2) +
                           + factor(race)
                           + factor(marr) + factor(nodeg)
                           + factor(marr):factor(trt))
-rs_mpg_on_auto = lm(re78 ~ mt_model - 1)
-print(summary(rs_mpg_on_auto))
-rs_mpg_on_auto_tidy = tidy(rs_mpg_on_auto)
-rs_mpg_on_auto_tidy
+rs_wage_on_trt = lm(re78 ~ mt_model - 1)
+print(summary(rs_wage_on_trt))
+rs_wage_on_trt_tidy = tidy(rs_wage_on_trt)
+rs_wage_on_trt_tidy
 ```
 
 ## Construct Input Arrays $A_i$ and $\alpha_i$
@@ -142,13 +142,13 @@ Multiply coefficient vector by covariate matrix to generate *A* vector that is c
 
 ```{r Post Regression Input Processing}
 # Estimates Table
-head(rs_mpg_on_auto_tidy, 6)
+head(rs_wage_on_trt_tidy, 6)
 # Covariates
 head(mt_model, 5)
 
 # Covariates coefficients from regression (including constant)
-ar_fl_cova_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(!str_detect(term, 'trt')) %>% select(estimate))
-ar_fl_main_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(str_detect(term, 'trt')) %>% select(estimate))
+ar_fl_cova_esti <- as.matrix(rs_wage_on_trt_tidy %>% filter(!str_detect(term, 'trt')) %>% select(estimate))
+ar_fl_main_esti <- as.matrix(rs_wage_on_trt_tidy %>% filter(str_detect(term, 'trt')) %>% select(estimate))
 head(ar_fl_cova_esti, 5)
 head(ar_fl_main_esti, 5)
 
@@ -182,7 +182,7 @@ mt_opti <- cbind(ar_alpha_m, ar_A_m, ar_beta_m)
 ar_st_varnames <- c('alpha', 'A', 'beta')
 df_esti_alpha_A_beta <- as_tibble(mt_opti) %>% rename_all(~c(ar_st_varnames))
 tb_key_alpha_A_beta <- bind_cols(df_opt_lalonde_training, df_esti_alpha_A_beta) %>%
-              select(one_of(c('id', 'trt', 'age', 'educ', 'race', 'marr', 'nodeg', 're78', 
+              select(one_of(c('id', 'trt', 'age', 'educ', 'race', 'marr', 'nodeg', 're78',
                               ar_st_varnames)))
 
 # Need to only include the smokers here

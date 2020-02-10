@@ -12,7 +12,7 @@ Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage 
 
 # Objective
 
-The california school dataset, the effect of teacher ratio on student scores. 
+The california school dataset, the effect of teacher ratio on student scores.
 
 # Load Packages and Data
 
@@ -51,9 +51,13 @@ summary(df_opt_caschool)
 df_opt_caschool %>% group_by(county) %>%
   summarise_if(is.numeric, funs(mean = mean), na.rm = TRUE)
 
-# Modifying and labeling etc. 
+# Modifying and labeling etc.
+# School characteristics are averaged across the district, don't know school count per district, implicitly assume the number of schools per district is the same. 
+# Some districts have larger and others smaller sized schools, ignoring within district variations. 
 df_opt_caschool <- df_opt_caschool %>%
-                      mutate(id = X)
+                      mutate(id = X) %>%
+                      mutate(teachers = round(teachers), 
+                             enrltot = round(enrltot))
 
 # Generate Discrete Version of continuous variables
 # df_opt_birthwt <- df_opt_birthwt %>%
@@ -70,7 +74,7 @@ df_opt_caschool <- df_opt_caschool %>%
 
 # Regression with Data and Construct Input Arrays
 
-## Tabulate 
+## Tabulate
 
 ```{r tabulate groups}
 # Tabulate groups, how many in each group, enough for group heterogeneity in effects?
@@ -82,17 +86,25 @@ df_opt_caschool %>%
 
 ## Regression Testing
 
-The allocation policy is in terms of teachers. How many teachers to add. Given the current number of teachers in the school, suppose there is some capacity limit at each school, so the number of additional teachers at each school can not exceed 35 percent of the teachers that are already there. 
+The allocation policy is in terms of teachers. How many teachers to add. Given the current number of teachers in the school, suppose there is some capacity limit at each school, so the number of additional teachers at each school can not exceed 35 percent of the teachers that are already there.
 
-Our estimation is based on regressing thest score on the student teacher ratio, from which we obtain a single estimate $\alpha$. 
+Our estimation is based on regressing thest score on the student teacher ratio, from which we obtain a single estimate $\alpha$.
 
 $$
-Y = A_i + \theta \cdot \frac{S_i}{T_i} + \epsilon
+Y_i = A_i + \theta \cdot \frac{S_i}{T_i} + \epsilon
 $$
+
+What is the marginal effect of adding one more unit?
 
 What is the effect of adding an additional teacher?
 
 We need to translate the estimate $\theta$ here into our equation's allocation scale
+
+$$
+Y_i \left(T_i\right) = A_i + \theta \cdot \frac{S_i}{T_i} + \epsilon\\
+Y_i \left(T_i + 1\right) = A_i + \theta \cdot \frac{S_i}{T_i + 1} + \epsilon\\
+EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left( \frac{1}{T_i + 1} - \frac{1}{T_i} \right)
+$$
 
 ```{r Regression Testing}
 attach(df_opt_caschool)
@@ -110,86 +122,74 @@ summary(lm(testscr ~ factor(county) + calwpct + mealpct + computer
                      + str - 1))
 ```
 
+## Discrete Regression
+
+Need to convert regression results to increment effect.
+
 ```{r}
-attach(df_opt_birthwt)
-summary(df_opt_birthwt)
-
-# tabulate
-df_opt_birthwt %>%
-  group_by(race, smoke, ftv) %>%
-  summarize(freq = n()) %>%
-  pivot_wider(names_from = race, values_from = freq)
-
-summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race) + factor(ht) + factor(ui)))
-summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1))
-summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1))
-
-summary(lm(bwt ~ factor(ftv) - 1))
-summary(lm(bwt ~ factor(ftv) + factor(ht) + factor(ui) + factor(ptl) - 1))
-
-summary(lm(bwt ~ lwt + factor(race) + (ftv) - 1))
-```
-
-# Regression with Data and Construct Input Arrays
-
-## Binary Problem Regress Birth Weight on Mother's Smoking Status
-
-```{r Linear Regression Testing}
-# A. Regress child birth weight on mother's age, race and mother's weight
-print(summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race))))
-print(summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race) + factor(ht) + factor(ui))))
-print(summary(lm(bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) + factor(ptl))))
-
-print(summary(lm(bwt ~ lwt + age + factor(race) + factor(smoke))))
-print(summary(lm(bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) +  factor(smoke))))
-
-print(summary(lm(bwt ~ lwt + age + factor(momwgtLowHigh):factor(smoke) - 1)))
-print(summary(lm(bwt ~ lwt + age + factor(ht) + factor(ui) + factor(race) + factor(race):factor(smoke))))
-print(summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1)))
-
-# Preferred way of appearing, in the following regression we can se:
-# 1. more more power less MPG, Straight engine slightly higher MPG
-# 2. V-shape engine car, going from auto to manual trans gain 4.1 MPG
-# 2. straight shape engine, going from auto to manual trans gain 6.67 MPG
-
 # Store Regression Results
-mt_model <- model.matrix(~ lwt + age + factor(ht) + factor(ui) + factor(ptl) + factor(race) + factor(smoke):factor(race))
-rs_mpg_on_auto = lm(bwt ~ mt_model - 1)
-print(summary(rs_mpg_on_auto))
-rs_mpg_on_auto_tidy = tidy(rs_mpg_on_auto)
-rs_mpg_on_auto_tidy
+mt_model <- model.matrix( ~ factor(county) + calwpct + mealpct + computer + str)
+rs_scr_on_str = lm(testscr ~ mt_model - 1)
+print(summary(rs_scr_on_str))
+rs_scr_on_str_tidy = tidy(rs_scr_on_str)
+rs_scr_on_str_tidy
 ```
 
-## Construct Input Arrays $A_i$ and $\alpha_i$
+## Construct Input Arrays $A_i$ 
 
 Multiply coefficient vector by covariate matrix to generate *A* vector that is child/individual specific.
 
 ```{r Post Regression Input Processing}
 # Estimates Table
-head(rs_mpg_on_auto_tidy, 6)
+head(rs_scr_on_str_tidy, 6)
 # Covariates
 head(mt_model, 5)
 
 # Covariates coefficients from regression (including constant)
-ar_fl_cova_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(!str_detect(term, 'smoke')) %>% select(estimate))
-ar_fl_main_esti <- as.matrix(rs_mpg_on_auto_tidy %>% filter(str_detect(term, 'smoke')) %>% select(estimate))
+ar_fl_cova_esti <- as.matrix(rs_scr_on_str_tidy %>% filter(!str_detect(term, 'str')) %>% select(estimate))
+ar_fl_main_esti <- as.matrix(rs_scr_on_str_tidy %>% filter(str_detect(term, 'str')) %>% select(estimate))
 head(ar_fl_cova_esti, 5)
 head(ar_fl_main_esti, 5)
 
 # Select Matrix subcomponents
-mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("smoke")))
-mt_intr <- model.matrix(~ factor(race) - 1)
+mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("str")))
 
 # Generate A_i, use mt_cova_wth_const
 ar_A_m <- mt_cova %*% ar_fl_cova_esti
 head(ar_A_m, 5)
 
-# Generate alpha_i
-ar_alpha_m <- mt_intr %*% ar_fl_main_esti
-head(ar_alpha_m, 5)
+# Generate alpha_i, in this problem, the alpha_i is generated differently. 
 ```
 
-## Individual Weight
+## Individual alpha_i
+
+So this task is less trivial to do here. The procedure will be the following, 
+
+**Step 0**
+
+*mt_ori*: this is the original dataframe with all variables, each row is a different observation
+
+**Step 1**
+
+*mt_a*: Five column matrix: col 1, district index, col 2, max number of additional teachers each district could acquire (which is determined by the number of existing teachers). There could be a maximum and minimum overall, 0 and say 100 additional teacers per district at most regardless. And each district gets up to potentially 25 percent or 30 percent additional teachers. Col 3, the number of current level of teachers in the district. Col 4, the number of current number of students. Col 5, the A_i without the addition of teacher student ratio. 
+
+**Step 2**
+
+*mt_b*: expand *mt_a*. Each row is a feasible additional teacher for a district, each there are now five variables, ID, previous level of teachers, and new level of teachers, and the existing level of students, and original A_i. 
+
+**Step 3**
+
+*mt_b*: add a alpha_i column, generate the marginal productivity value, and also generate actual updated A_i.
+
+**Step 4**
+
+*mt_c*: merge together the matrix now has alpha_i with also the already existing A_i.
+
+**Step 5**
+
+Sort, and select top given total resource avaiable, The count the total allocation for each.
+
+Back to dataframe mt_ori, incorporate into that, but do and shift for each rho. 
 
 ```{r}
 # Child Weight
