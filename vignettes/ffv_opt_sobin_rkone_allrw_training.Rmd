@@ -63,7 +63,8 @@ df_opt_lalonde_training <- df_opt_lalonde_training %>%
              case_when(black == 1 ~ 1,
                        hisp == 1 ~ 2,
                        TRUE ~ 0)) %>%
-    mutate(re78_log = log(re78+1))
+    filter(re78 != 0) %>%
+    mutate(re78_log = log(re78))
 
 # Exclude zeros
 # when this is on, both linear and log linear results exclude wage = 0
@@ -152,7 +153,8 @@ mt_model <- model.matrix( ~ age + I(age^2) +
                             educ + I(educ^2) +
                           + factor(race)
                           + factor(marr) + factor(nodeg)
-                          + factor(marr):factor(trt))
+                          + factor(marr):factor(trt), 
+                          data = df_opt_lalonde_training)
 rs_wage_on_trt = lm(re78 ~ mt_model - 1, data = df_opt_lalonde_training)
 print(summary(rs_wage_on_trt))
 rs_wage_on_trt_tidy = tidy(rs_wage_on_trt)
@@ -165,7 +167,13 @@ Using the same right-hand-side as for the lineary binary problem, just change th
 
 ```{r Binary Log Linear Regression}
 # Store Regression Results
-rs_wage_on_trt_log = lm(re78_log ~ mt_model - 1, data = df_opt_lalonde_training)
+mt_model_log <- model.matrix( ~ age + I(age^2) +
+                            educ + I(educ^2) +
+                          + factor(race)
+                          + factor(marr) + factor(nodeg)
+                          + factor(trt), 
+                          data = df_opt_lalonde_training)
+rs_wage_on_trt_log = lm(re78_log ~ mt_model_log - 1, data = df_opt_lalonde_training)
 print(summary(rs_wage_on_trt_log))
 rs_wage_on_trt_tidy_log = tidy(rs_wage_on_trt_log)
 rs_wage_on_trt_tidy_log
@@ -177,7 +185,7 @@ rs_wage_on_trt_tidy_log
 
 Multiply coefficient vector by covariate matrix to generate *A* vector that is child/individual specific.
 
-```{r Post Regression Input Processing}
+```{r Linear Binary Post Regression Input Processing}
 # Estimates Table
 head(rs_wage_on_trt_tidy, 6)
 # Covariates
@@ -191,7 +199,7 @@ head(ar_fl_main_esti, 5)
 
 # Select Matrix subcomponents
 mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("trt")))
-mt_intr <- model.matrix(~ factor(marr) - 1)
+mt_intr <- model.matrix(~ factor(marr) - 1, data = df_opt_lalonde_training)
 
 # Generate A_i, use mt_cova_wth_const
 ar_A_m <- mt_cova %*% ar_fl_cova_esti
@@ -206,7 +214,13 @@ head(ar_alpha_m, 5)
 
 This show the general applicability of the solution. 
 
-```{r Post Regression Input Processing}
+$$
+A_i = \exp(\theta_0 + \theta_1 \cdot X_i ) \cdot \frac{\sigma^2_\epsilon}{2}
+\\
+\alpha_i = \left(\exp(\theta_0 + \theta_1 \cdot X_i + \theta_2 \cdot B_i) - \exp(\theta_0 + \theta_1 \cdot X_i )\right)\cdot \frac{\sigma^2_\epsilon}{2}
+$$ 
+
+```{r Log Linear Post Regression Input Processing}
 # Estimates Table
 head(rs_wage_on_trt_tidy_log, 6)
 # Covariates
@@ -221,12 +235,22 @@ head(ar_fl_main_esti_log, 5)
 # Generate A_i_pre, use mt_cova_wth_const, same mt_cova as before
 # Need to be transformed before can be used as A_i
 ar_A_m_log_pre <- mt_cova %*% ar_fl_cova_esti_log
-head(ar_A_m, 5)
 
 # Generate alpha_i_pre, same mt_intr as before
 # Need to be transformed before can be used as alpha_i
 ar_alpha_m_log_pre <- mt_intr %*% ar_fl_main_esti_log
-head(ar_alpha_m, 5)
+
+# Standard Deviation of the error ter, what I am doing here is not exactly correct at all
+# the error distribution can not be normal due to doing log(x+1) earlier, but this is just a test of principle
+error <- df_opt_lalonde_training$re78_log - (ar_A_m_log_pre + ar_alpha_m_log_pre)
+error <- error[df_opt_lalonde_training$re78 > 0 ]
+fl_z_sd = sd(error)
+
+# What is the expecation ?
+ar_A_m_log <- exp(ar_A_m_log_pre + (fl_z_sd^2/2))
+head(ar_A_m_log, 5)
+ar_alpha_m_log <- exp(ar_A_m_log_pre + ar_alpha_m_log_pre + (fl_z_sd^2/2)) - ar_A_m_log
+head(ar_alpha_m_log, 5)
 ```
 
 
@@ -239,7 +263,9 @@ ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
 
 ## Matrix with Required Inputs for Allocation
 
-```{r}
+### Linear Binary Matrix 
+
+```{r Linear Allocattion Space Matrix}
 # Initate Dataframe that will store all estimates and optimal allocation relevant information
 # combine identifying key information along with estimation A, alpha results
 # note that we only need indi.id as key
@@ -260,6 +286,28 @@ tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
 
 # Show cars
 head(tb_key_alpha_A_beta, 32)
+```
+
+### Log Linear Binary Matrix 
+
+```{r Log Linear Allocattion Space Matrix}
+mt_opti_log <- cbind(ar_alpha_m_log, ar_A_m_log, ar_beta_m)
+ar_st_varnames_log <- c('alpha', 'A', 'beta')
+df_esti_alpha_A_beta_log <- as_tibble(mt_opti_log) %>% rename_all(~c(ar_st_varnames_log))
+tb_key_alpha_A_beta_log <- bind_cols(df_opt_lalonde_training, df_esti_alpha_A_beta_log) %>%
+              select(one_of(c('id', 'trt', 'age', 'educ', 'race', 'marr', 'nodeg', 're78',
+                              ar_st_varnames)))
+
+# Need to only include the smokers here
+tb_key_alpha_A_beta_log <- tb_key_alpha_A_beta_log %>% filter(trt == 0)
+
+# Unique beta, A, and alpha check
+tb_opti_unique_log <- tb_key_alpha_A_beta_log %>% group_by(!!!syms(ar_st_varnames)) %>%
+                    arrange(!!!syms(ar_st_varnames)) %>%
+                    summarise(n_obs_group=n())
+
+# Show cars
+head(tb_key_alpha_A_beta_log, 32)
 ```
 
 # Optimal Linear Allocations
