@@ -189,6 +189,10 @@ tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
                     arrange(!!!syms(ar_st_varnames)) %>%
                     summarise(n_obs_group=n())
 
+
+# Only include currently automatic cars
+tb_key_alpha_A_beta <-tb_key_alpha_A_beta %>% filter(am == 'automatic')
+
 # Show cars
 head(tb_key_alpha_A_beta, 32)
 ```
@@ -207,7 +211,7 @@ ar_rho <- c(-50, -25, -10)
 ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.8)
 ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))
 ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.99)
-ar_rho <- c(-100, -10, -1, 0.05, 0.9)
+ar_rho <- c(-100, -10, -1, -0.5, -0.1, 0.01, 0.05, 0.10, 0.20,  0.9)
 ar_rho <- unique(ar_rho)
 ```
 
@@ -309,14 +313,20 @@ tb_opti_alloc_all_rho_long <- tb_opti_alloc_all_rho %>%
     names_pattern = paste0(st_bisec_prefix, "(.*)_(.*)"),
     values_to = svr_number_col
   )
+
+
+# rho as numeric
+tb_opti_alloc_all_rho_long <- tb_opti_alloc_all_rho_long %>% mutate(rho_num = as.numeric(rho))
+print(summary(tb_opti_alloc_all_rho_long))
+str(tb_opti_alloc_all_rho_long)
 ```
 
 ### Bump Plot for Optimal Binary Allocations
 
-```{r binary allocation bump plot, fig.height = 10, fig.width = 10, fig.align = "center"}
+```{r binary allocation bump plot, fig.height = 5, fig.width = 12, fig.align = "center"}
 
-tb_opti_alloc_all_rho_long %>%
-  ggplot(aes(x = rho, y = rank, group = carname)) +
+tb_opti_alloc_all_rho_long %>% 
+  ggplot(aes(x = rho_num, y = rank, group = carname)) +
     geom_line(aes(color = carname, alpha = 1), size = 2) +
     geom_point(aes(color = carname, alpha = 1), size = 4) +
     scale_x_discrete(expand = c(0.85,0))+
@@ -326,6 +336,6 @@ tb_opti_alloc_all_rho_long %>%
          y = "Rank",
          title = "Binary Allocation Rank, Convert to Automatic and MPG") +
     ffy_opt_ghthm_dk() +
-    geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=carname),hjust="right")
+    geom_text(data = tb_opti_alloc_all_rho, aes(y=rho_c1_rk, x=0.6, label=carname),hjust="right")
 
 ```
