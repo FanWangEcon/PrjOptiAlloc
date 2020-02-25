@@ -168,11 +168,11 @@ Using the same right-hand-side as for the lineary binary problem, just change th
 ```{r Binary Log Linear Regression}
 # Store Regression Results
 mt_model_log <- model.matrix( ~ age + I(age^2) +
-                            educ + I(educ^2) +
-                          + factor(race)
-                          + factor(marr) + factor(nodeg)
-                          + factor(trt), 
-                          data = df_opt_lalonde_training)
+                                educ + I(educ^2) +
+                              + factor(race)
+                              + factor(marr) + factor(nodeg)
+                              + factor(black):factor(trt), 
+                              data = df_opt_lalonde_training)
 rs_wage_on_trt_log = lm(re78_log ~ mt_model_log - 1, data = df_opt_lalonde_training)
 print(summary(rs_wage_on_trt_log))
 rs_wage_on_trt_tidy_log = tidy(rs_wage_on_trt_log)
