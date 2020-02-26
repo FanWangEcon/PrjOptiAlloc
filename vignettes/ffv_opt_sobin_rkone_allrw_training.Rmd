@@ -1,8 +1,8 @@
 ---
-title: BINARY--Wage and Training Optimal Allocation Solution (Line by Line)
+title: BINARY--NSW Training WAGE Optimal Allocation Solution (Line by Line)
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--Wage and Training Optimal Allocation Solution (Line by Line)}
+  %\VignetteIndexEntry{BINARY--NSW Training WAGE Optimal Allocation Solution (Line by Line)}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
@@ -79,7 +79,7 @@ df_opt_lalonde_training <- df_opt_lalonde_training %>%
 #     mutate(mombirthage = cut(age,
 #                                breaks=c(-Inf, 24, Inf),
 #                                labels=c("young","older")))
-```            
+```
 
 # Regression with Data and Construct Input Arrays
 
@@ -153,7 +153,7 @@ mt_model <- model.matrix( ~ age + I(age^2) +
                             educ + I(educ^2) +
                           + factor(race)
                           + factor(marr) + factor(nodeg)
-                          + factor(marr):factor(trt), 
+                          + factor(marr):factor(trt),
                           data = df_opt_lalonde_training)
 rs_wage_on_trt = lm(re78 ~ mt_model - 1, data = df_opt_lalonde_training)
 print(summary(rs_wage_on_trt))
@@ -171,7 +171,7 @@ mt_model_log <- model.matrix( ~ age + I(age^2) +
                                 educ + I(educ^2) +
                               + factor(race)
                               + factor(marr) + factor(nodeg)
-                              + factor(black):factor(trt), 
+                              + factor(black):factor(trt),
                               data = df_opt_lalonde_training)
 rs_wage_on_trt_log = lm(re78_log ~ mt_model_log - 1, data = df_opt_lalonde_training)
 print(summary(rs_wage_on_trt_log))
@@ -181,7 +181,7 @@ rs_wage_on_trt_tidy_log
 
 ## Construct Input Arrays $A_i$ and $\alpha_i$
 
-### Linear Binary Regression 
+### Linear Binary Regression
 
 Multiply coefficient vector by covariate matrix to generate *A* vector that is child/individual specific.
 
@@ -210,15 +210,15 @@ ar_alpha_m <- mt_intr %*% ar_fl_main_esti
 head(ar_alpha_m, 5)
 ```
 
-### Log Linear Binary Regression 
+### Log Linear Binary Regression
 
-This show the general applicability of the solution. 
+This show the general applicability of the solution.
 
 $$
 A_i = \exp(\theta_0 + \theta_1 \cdot X_i ) \cdot \frac{\sigma^2_\epsilon}{2}
 \\
 \alpha_i = \left(\exp(\theta_0 + \theta_1 \cdot X_i + \theta_2 \cdot B_i) - \exp(\theta_0 + \theta_1 \cdot X_i )\right)\cdot \frac{\sigma^2_\epsilon}{2}
-$$ 
+$$
 
 ```{r Log Linear Post Regression Input Processing}
 # Estimates Table
@@ -263,7 +263,7 @@ ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
 
 ## Matrix with Required Inputs for Allocation
 
-### Linear Binary Matrix 
+### Linear Binary Matrix
 
 ```{r Linear Allocattion Space Matrix}
 # Initate Dataframe that will store all estimates and optimal allocation relevant information
@@ -288,7 +288,7 @@ tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
 head(tb_key_alpha_A_beta, 32)
 ```
 
-### Log Linear Binary Matrix 
+### Log Linear Binary Matrix
 
 ```{r Log Linear Allocattion Space Matrix}
 mt_opti_log <- cbind(ar_alpha_m_log, ar_A_m_log, ar_beta_m)

@@ -1,0 +1,200 @@
+---
+title: BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution (Line by Line)
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{BINARY--LOGIT Demonstration, X, A and alpha (Line by Line)}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+urlcolor: blue
+---
+
+Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAlloc/)**
+
+# Objective
+
+There are three broad set of objectives here:
+
+**Objective One**:
+
+estimate a logit regression using the [Lalonde (1986)](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_lalonde_training.html) dataset. Include age, education, and race as controls.
+
+**Generate and Analyze $A_i$ and $\alpha_i$**
+
+1. Generate and show how to generate $A_i$ and $\alpha_i$ in the binary allocation Space
+2. What is the correlation between $A$ and $\alpha$
+3. What is the relationship between $x$ and $A$ and $\alpha$, when there is one x covariate, when there are multiple?
+
+**Solve for Optimal Allocations**
+
+Uses the binary allocation function as well as the planner iterator to solve for optimal binary targeting queue. These queue tell the planner, given the planner's preferences, who should optimally receive allocations.
+
+## Set Up
+
+```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
+rm(list = ls(all.names = TRUE))
+options(knitr.duplicate.label = 'allow')
+```
+```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(REconTools)
+library(PrjOptiAlloc)
+```
+
+## Get Data
+
+```{r data set up}
+data(df_opt_lalonde_training)
+# dft stands for dataframe training
+dft <- df_opt_lalonde_training %>% mutate(id = X) %>%
+           mutate(emp78 =
+                    case_when(re78 <= 0 ~ 0,
+                              TRUE ~ 1)) %>%
+           mutate(emp75 =
+                    case_when(re75 <= 0 ~ 0,
+                              TRUE ~ 1))
+
+dft$trt <- factor(dft$trt, levels = c(0,1), labels = c("ntran", "train"))
+
+summary(dft)
+
+# X-variables to use on RHS
+ls_st_xs <- c('age', 'educ',
+              'black','hisp','marr', 'nodeg')
+svr_binary <- 'trt'
+svr_binary_lb0 <- 'ntran'
+svr_binary_lb1 <- 'train'
+svr_outcome <- 'emp78'
+sdt_name <- 'NSW Lalonde Training'
+```
+
+# Logit Regression
+
+## Prediction with Observed Binary Input
+
+Logit regression with a continuous variable and a binary variable. Predict outcome with observed continuous variable as well as observed binary input variable.
+
+```{r logit with binary and continuous RHS, fig.height = 4, fig.width = 6, fig.align = "center"}
+# Regress No bivariate
+rs_logit <- glm(as.formula(paste(svr_outcome,
+                                 "~", paste(ls_st_xs, collapse="+")))
+                ,data = dft, family = "binomial")
+summary(rs_logit)
+dft$p_mpg <- predict(rs_logit, newdata = dft, type = "response")
+
+# Regress with bivariate
+rs_logit_bi <- glm(as.formula(paste(svr_outcome,
+                                    "~ factor(", svr_binary,") + ",
+                                    paste(ls_st_xs, collapse="+")))
+                   , data = dft, family = "binomial")
+summary(rs_logit_bi)
+
+# Predcit Using Regresion Data
+dft$p_mpg_hp <- predict(rs_logit_bi, newdata = dft, type = "response")
+
+# Predicted Probabilities am on mgp with or without hp binary
+scatter <- ggplot(dft, aes(x=p_mpg_hp, y=p_mpg)) +
+      geom_point(size=1) +
+      # geom_smooth(method=lm) + # Trend line
+      geom_abline(intercept = 0, slope = 1) + # 45 degree line
+      labs(title = paste0('Predicted Probabilities ', svr_outcome, ' on ', ls_st_xs, ' with or without hp binary'),
+           x = paste0('prediction with ', ls_st_xs, ' and binary ', svr_binary, ' indicator, 1 is high'),
+           y = paste0('prediction with only ', ls_st_xs),
+           caption = paste0(sdt_name, ' simulated prediction')) +
+      theme_bw()
+print(scatter)
+```
+
+## Prediction with Binary set to 0 and 1
+
+Now generate two predictions. One set where binary input is equal to 0, and another where the binary inputs are equal to 1. Ignore whether in data binary input is equal to 0 or 1. Use the same regression results as what was just derived.
+
+Note that given the example here, the probability changes a lot when we
+
+```{r logit prediction 0 vs 1, fig.height = 4, fig.width = 6, fig.align = "center"}
+# Previous regression results
+summary(rs_logit_bi)
+
+# Two different dataframes, mutate the binary regressor
+dft_bi0 <- dft %>% mutate(!!sym(svr_binary) := svr_binary_lb0)
+dft_bi1 <- dft %>% mutate(!!sym(svr_binary) := svr_binary_lb1)
+
+# Predcit Using Regresion Data
+dft$p_mpg_hp_bi0 <- predict(rs_logit_bi, newdata = dft_bi0, type = "response")
+dft$p_mpg_hp_bi1 <- predict(rs_logit_bi, newdata = dft_bi1, type = "response")
+
+# Predicted Probabilities and Binary Input
+scatter <- ggplot(dft, aes(x=p_mpg_hp_bi0)) +
+      geom_point(aes(y=p_mpg_hp), size=4, shape=4, color="red") +
+      geom_point(aes(y=p_mpg_hp_bi1), size=2, shape=8) +
+      # geom_smooth(method=lm) + # Trend line
+      geom_abline(intercept = 0, slope = 1) + # 45 degree line
+      labs(title = paste0('Predicted Probabilities and Binary Input',
+                          '\ncross(shape=4)/red is predict actual binary data',
+                          '\nstar(shape=8)/black is predict set binary = 1 for all'),
+           x = paste0('prediction with ', ls_st_xs, ' and binary ', svr_binary, ' = 0 for all'),
+           y = paste0('prediction with ', ls_st_xs, ' and binary ', svr_binary, ' = 1'),
+           caption = paste0(sdt_name, ' simulated prediction')) +
+      theme_bw()
+print(scatter)
+```
+
+# Generate and Analyze A and alpha
+
+## Prediction with Binary set to 0 and 1 Difference
+
+What is the difference in probability between binary = 0 vs binary = 1. How does that relate to the probability of outcome of interest when binary = 0 for all.
+
+In the binary logit case, the relationship will be hump--shaped by construction between $A_i$ and $\alpha_i$. In the exponential wage cases, the relationship is convex upwards.
+
+```{r logit prediction marginal vs base, fig.height = 4, fig.width = 6, fig.align = "center"}
+# Generate Gap Variable
+dft <- dft %>% mutate(alpha_i = p_mpg_hp_bi1 - p_mpg_hp_bi0) %>%
+                mutate(A_i = p_mpg_hp_bi0)
+
+# Binary Marginal Effects and Prediction without Binary
+scatter <- ggplot(dft, aes(x=A_i)) +
+      geom_point(aes(y=alpha_i), size=4, shape=4, color="red") +
+      geom_abline(intercept = 0, slope = 1) + # 45 degree line
+      labs(title = paste0('The Relationship between A and alpha'),
+           x = 'A = P(train=0) for all',
+           y = 'alpha = P(train=1) - P(train=0)',
+           caption = paste0(sdt_name)) +
+      theme_bw()
+print(scatter)
+```
+
+## X variables and A and alpha
+
+Given the x-variables included in the logit regression, how do they relate to A_i and alpha_i
+
+```{r logit prediction marginal vs base along covariate x, fig.height = 4, fig.width = 6, fig.align = "center"}
+# Generate Gap Variable
+dft <- dft %>% mutate(alpha_i = p_mpg_hp_bi1 - p_mpg_hp_bi0) %>%
+                mutate(A_i = p_mpg_hp_bi0)
+
+# Binary Marginal Effects and Prediction without Binary
+ggplot.A.alpha.x <- function(svr_x, df,
+                             svr_alpha = 'alpha_i', svr_A = "A_i"){
+
+  scatter <- ggplot(df, aes(x=!!sym(svr_x))) +
+        geom_point(aes(y=alpha_i), size=4, shape=4, color="red") +
+        geom_point(aes(y=A_i), size=2, shape=8, color="blue") +
+        geom_abline(intercept = 0, slope = 1) + # 45 degree line
+        labs(title = paste0('A (blue) and alpha (red) vs x variables=', svr_x),
+             x = svr_x,
+             y = 'Probabilities',
+             caption = paste0(sdt_name, ' simulated prediction')) +
+        theme_bw()
+
+return(scatter)
+}
+
+# Plot over multiple
+lapply(ls_st_xs,
+       ggplot.A.alpha.x,
+       df = dft)
+```
+
+# Optimal Binary Allocation

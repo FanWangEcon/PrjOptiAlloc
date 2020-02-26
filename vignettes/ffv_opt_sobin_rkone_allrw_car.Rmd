@@ -228,7 +228,11 @@ ar_alpha <- tb_key_alpha_A_beta %>% pull(alpha)
 ar_beta <- tb_key_alpha_A_beta %>% pull(beta)
 
 # Define Function for each individual m, with hard coded arrays
-ffi_binary_dplyrdo_func <- function(ls_row, fl_rho, bl_old=FALSE){
+# This function is a function in the R folder's ffp_opt_sobin.R file as well
+ffi_binary_dplyrdo_func <- function(ls_row, fl_rho,
+                                    ar_A, ar_alpha, ar_beta, 
+                                    svr_A_i = 'A', svr_alpha_i = 'alpha', svr_beta_i = 'beta',
+                                    bl_old=FALSE){
   # @param bl_old, weather to use old incorrect solution
   # hard coded inputs are:
   # 1, ar_A
@@ -236,36 +240,18 @@ ffi_binary_dplyrdo_func <- function(ls_row, fl_rho, bl_old=FALSE){
   # 3, ar_beta
   # note follow https://fanwangecon.github.io/R4Econ/support/function/fs_applysapplymutate.html
 
-  fl_alpha <- ls_row$alpha
-  fl_A <- ls_row$A
-  fl_beta <- ls_row$beta
+  fl_alpha <- ls_row[[svr_alpha_i]]
+  fl_A <- ls_row[[svr_A_i]]
+  fl_beta <- ls_row[[svr_beta_i]]
 
-  if (bl_old) {
-
-    # the equation below is like doubly wrong I think, should be 1/(fl_rho-1)
-    bl_old_wrong = TRUE
-    if (bl_old_wrong) {
-      ar_left <- ((ar_A + ar_alpha)/(fl_A + fl_alpha))
-      ar_right <- ((ar_alpha*ar_beta)/(fl_alpha*fl_beta))^(1/(1-fl_rho))
-      ar_full <- ar_left*ar_right
-      ar_indicator <- (ar_full <= 1)
-    } else {
-      ar_left <- ((ar_A + ar_alpha)/(fl_A + fl_alpha))
-      ar_right <- ((ar_alpha*ar_beta)/(fl_alpha*fl_beta))^(1/(fl_rho-1))
-      ar_full <- ar_left*ar_right
-      ar_indicator <- (ar_full <= 1)
-    }
-
-  } else {
-      ar_left <- (
-                  ((ar_A + ar_alpha)^fl_rho - (ar_A)^fl_rho)
-                  /
-                  ((fl_A + fl_alpha)^fl_rho - (fl_A)^fl_rho)
-                 )
-      ar_right <- ((ar_beta)/(fl_beta))
-      ar_full <- ar_left*ar_right
-      ar_indicator <- (ar_full >= 1)
-  }
+  ar_left <- (
+              ((ar_A + ar_alpha)^fl_rho - (ar_A)^fl_rho)
+              /
+              ((fl_A + fl_alpha)^fl_rho - (fl_A)^fl_rho)
+             )
+  ar_right <- ((ar_beta)/(fl_beta))
+  ar_full <- ar_left*ar_right
+  ar_indicator <- (ar_full >= 1)
 
   it_rank <- sum(ar_indicator)
   return(it_rank)
@@ -314,7 +300,6 @@ tb_opti_alloc_all_rho_long <- tb_opti_alloc_all_rho %>%
     values_to = svr_number_col
   )
 
-
 # rho as numeric
 tb_opti_alloc_all_rho_long <- tb_opti_alloc_all_rho_long %>% mutate(rho_num = as.numeric(rho))
 print(summary(tb_opti_alloc_all_rho_long))
@@ -325,7 +310,7 @@ str(tb_opti_alloc_all_rho_long)
 
 ```{r binary allocation bump plot, fig.height = 5, fig.width = 12, fig.align = "center"}
 
-tb_opti_alloc_all_rho_long %>% 
+tb_opti_alloc_all_rho_long %>%
   ggplot(aes(x = rho_num, y = rank, group = carname)) +
     geom_line(aes(color = carname, alpha = 1), size = 2) +
     geom_point(aes(color = carname, alpha = 1), size = 4) +
