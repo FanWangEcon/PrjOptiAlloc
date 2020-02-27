@@ -1,12 +1,12 @@
 ffp_opt_anlyz_rhgin <- function(df, svr_id_i,
-                                svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg,
-                                ar_rho,
+                                svr_A_i, svr_alpha_i, svr_beta_i,
+                                fl_N_agg, ar_rho,
                                 svr_inpalc = 'optiallocate',
                                 svr_expout = 'opti_exp_outcome') {
-#' Solves for optimal allocation problem over many rhos, and computes gini
+#' Solves for optimal allocation problem over many rhos, and computes gini, this is for the continuous lower bounded problem
 #'
 #' @description
-#' Works with linear, log linear and discrete allocation problems. The function
+#' Works with linear allocation problems. The function
 #' invokes ffp_opt_solin_relow, has parameters that are also required for that function.
 #' The addition here is *fl_rho* becomes *ar_rho*
 #'
@@ -113,5 +113,125 @@ return(list(df_opti_alloc_all_rho = df_opti_alloc_all_rho,
             mt_opti_alloc_all_rho = mt_opti_alloc_all_rho,
             mt_expc_outcm_all_rho = mt_expc_outcm_all_rho,
             mt_gini = mt_gini))
+}
+
+ffp_opt_anlyz_rhgin_bin <- function(df, svr_id_i,
+                                    svr_A_i = 'A', svr_alpha_i = 'alpha', svr_beta_i = 'beta',
+                                    ar_rho = 0.5,
+                                    svr_inpalc = 'opti_alloc_queue',
+                                    svr_expout = 'opti_exp_outcome') {
+#' Solves for optimal targeting queue for binary problems over many rhos, this is for the binary problems
+#'
+#' @description
+#' Works with binary allocation problems. The function
+#' invokes ffp_opt_sobin_target_row. The example tests think of as bottled protein.
+#'
+#' @param df tibble data table including variables using svr names below each row is potentially an individual who will receive alternative allocations
+#' @param svr_id_i string name of the identify key for each i, to make sure merging happens properly
+#' @param svr_A_i string name of the A_i variable, dot product of covariates and coefficients
+#' @param svr_alpha_i string name of the alpha_i variable, individual specific elasticity information
+#' @param svr_beta_i string name of the beta_i variable, relative preference weight for each child
+#' @param ar_rho array preferences for equality for the planner
+#' @param svr_inpalc string variable name for newly generated input optimal allocation
+#' @param svr_expout string variable name for newly generated expected outcome
+#' @return a list with a dataframe and an array
+#' \itemize{
+#'   \item df_all_rho - table where optimal targets given rhos are additional columns
+#'   \item df_all_rho_long - long version of df_all_rho, single column all targets another column rho values
+#' }
+#' @author Fan Wang, \url{http://fanwangecon.github.io}
+#' @references
+#' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin_bin.html}
+#' \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_car.html}
+#' @export
+#' @import dplyr tidyr tibble stringr broom REconTools
+#' @examples
+#' library(dplyr)
+#' data(df_opt_dtgch_cbem4)
+#' df <- df_opt_dtgch_cbem4
+#' svr_id_i <- 'indi.id'
+#' svr_A_i <- 'A_lin'
+#' svr_alpha_i <- 'alpha_lin'
+#' svr_beta_i <- 'beta'
+#' ar_rho = c(-50, -10, -0.1, 0.1, 0.5, 0.7)
+#' ls_bin_solu_all_rhos <- ffp_opt_anlyz_rhgin_bin(df, svr_id_i, svr_A_i, svr_alpha_i, svr_beta_i, ar_rho)
+#' df_all_rho <- ls_bin_solu_all_rhos$df_all_rho
+#' head(df_all_rho %>% select(svr_id_i, svr_A_i, svr_alpha_i, starts_with("rho")), 30)
+#' head(df_all_rho, 15)
+#' summary(df_all_rho)
+#' df_all_rho_long <- ls_bin_solu_all_rhos$df_all_rho_long
+#' head(df_all_rho_long, 15)
+#' summary(df_all_rho_long)
+
+
+
+ar_A <- df %>% pull(!!sym(svr_A_i))
+ar_alpha <- df %>% pull(!!sym(svr_alpha_i))
+ar_beta <- df %>% pull(!!sym(svr_beta_i))
+
+df_all_rho <- df
+
+# A. First Loop over Planner Preference
+# Generate Rank Order
+for (it_rho_ctr in seq(1,length(ar_rho))) {
+  rho = ar_rho[it_rho_ctr]
+
+  queue_rank <- df %>% rowwise() %>%
+                              do(rk = ffp_opt_sobin_target_row(.,
+                                 rho, ar_A, ar_alpha, ar_beta,
+                                 svr_A_i, svr_alpha_i, svr_beta_i)) %>%
+                              unnest(rk) %>% pull(rk)
+
+  tb_with_rank <- df %>% add_column(queue_rank)
+
+  # m. Keep for df collection individual key + optimal allocation
+  # _on stands for optimal nutritional choices
+  # _eh stands for expected height
+  tb_opti_allocate_wth_key <- tb_with_rank %>% select(one_of(svr_id_i,'queue_rank')) %>%
+                                rename(!!paste0('rho_c', it_rho_ctr, '_rk') := !!sym('queue_rank'))
+
+  # n. merge optimal allocaiton results from different planner preference
+  df_all_rho <- df_all_rho %>% left_join(tb_opti_allocate_wth_key, by=svr_id_i)
+}
+
+# o. print results
+print(summary(df_all_rho))
+str(df_all_rho)
+
+# Make Longer
+st_bisec_prefix <- 'rho_c'
+svr_abfafb_long_name <- 'rho'
+svr_bisect_iter <- 'nothing'
+svr_number_col <- 'rank'
+df_all_rho_long <- df_all_rho %>%
+  pivot_longer(
+    cols = starts_with(st_bisec_prefix),
+    names_to = c(svr_abfafb_long_name, svr_bisect_iter),
+    names_pattern = paste0(st_bisec_prefix, "(.*)_(.*)"),
+    values_to = svr_number_col
+  )
+
+# Generate min and max rank for each given the specturm of rho
+df_rank_min_max <- df_all_rho_long %>% group_by(!!sym(svr_id_i)) %>%
+      summarise(rank_min = min(rank), rank_max = max(rank), avg_rank = mean(rank))
+
+# Join min and max rank info to wide dataframe
+df_all_rho <- df_all_rho %>% inner_join(df_rank_min_max)
+
+# Variables Ordering
+df_all_rho <- df_all_rho %>%
+      select(!!sym(svr_id_i), !!sym(svr_A_i), !!sym(svr_alpha_i), !!sym(svr_beta_i), rank_min, rank_max, avg_rank, everything())
+
+df_all_rho_long <- df_all_rho_long %>%
+      select(!!sym(svr_id_i), !!sym(svr_A_i), !!sym(svr_alpha_i), !!sym(svr_beta_i), rho, rank)
+
+# Rank Variations
+# in case cases, if A and alpha are perfectly negatively correlated, there could be common ranking across rho.
+it_how_many_vary_rank <- sum(df_all_rho$rank_max - df_all_rho$rank_min)
+
+# Returns----
+return(list(df_all_rho = df_all_rho,
+            df_all_rho_long = df_all_rho_long,
+            it_how_many_vary_rank = it_how_many_vary_rank))
 
 }

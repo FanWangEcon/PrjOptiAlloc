@@ -2,7 +2,7 @@
 % Please edit documentation in R/ffp_opt_anlyz.R
 \name{ffp_opt_anlyz_rhgin}
 \alias{ffp_opt_anlyz_rhgin}
-\title{Solves for optimal allocation problem over many rhos, and computes gini}
+\title{Solves for optimal allocation problem over many rhos, and computes gini, this is for the continuous lower bounded problem}
 \usage{
 ffp_opt_anlyz_rhgin(
   df,
@@ -47,7 +47,7 @@ a list with a dataframe and an array
 }
 }
 \description{
-Works with linear, log linear and discrete allocation problems. The function
+Works with linear allocation problems. The function
 invokes ffp_opt_solin_relow, has parameters that are also required for that function.
 The addition here is *fl_rho* becomes *ar_rho*
 }

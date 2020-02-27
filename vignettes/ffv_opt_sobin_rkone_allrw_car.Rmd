@@ -64,6 +64,9 @@ library(stringr)
 library(broom)
 library(ggplot2)
 library(REconTools)
+
+library(PrjOptiAlloc)
+
 library(knitr)
 library(kableExtra)
 ```
@@ -230,8 +233,6 @@ ar_beta <- tb_key_alpha_A_beta %>% pull(beta)
 # Define Function for each individual m, with hard coded arrays
 # This function is a function in the R folder's ffp_opt_sobin.R file as well
 ffi_binary_dplyrdo_func <- function(ls_row, fl_rho,
-                                    ar_A, ar_alpha, ar_beta, 
-                                    svr_A_i = 'A', svr_alpha_i = 'alpha', svr_beta_i = 'beta',
                                     bl_old=FALSE){
   # @param bl_old, weather to use old incorrect solution
   # hard coded inputs are:
@@ -239,6 +240,10 @@ ffi_binary_dplyrdo_func <- function(ls_row, fl_rho,
   # 2, ar_alpha
   # 3, ar_beta
   # note follow https://fanwangecon.github.io/R4Econ/support/function/fs_applysapplymutate.html
+
+  svr_A_i = 'A'
+  svr_alpha_i = 'alpha'
+  svr_beta_i = 'beta'
 
   fl_alpha <- ls_row[[svr_alpha_i]]
   fl_A <- ls_row[[svr_A_i]]

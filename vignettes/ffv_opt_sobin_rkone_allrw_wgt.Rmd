@@ -1,8 +1,8 @@
 ---
-title: DISCRETE--Discrete Provision Optimal Allocation Solution (Line by Line)
+title: BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--Binary Provision Optimal Allocation Solution (Line by Line)}
+  %\VignetteIndexEntry{BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue

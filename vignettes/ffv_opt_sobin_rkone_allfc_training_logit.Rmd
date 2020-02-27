@@ -2,7 +2,7 @@
 title: BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution (Line by Line)
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--LOGIT Demonstration, X, A and alpha (Line by Line)}
+  %\VignetteIndexEntry{BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution (Line by Line)}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
@@ -12,7 +12,7 @@ Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage 
 
 # Objective
 
-There are three broad set of objectives here:
+Test binary allocation queue with Lalonde training dataset. There are 722 observations, 297 in the treatment group, 425 in the control group.
 
 **Objective One**:
 
@@ -31,6 +31,7 @@ Uses the binary allocation function as well as the planner iterator to solve for
 ## Set Up
 
 ```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
+# dev.off(dev.list()["RStudioGD"])
 rm(list = ls(all.names = TRUE))
 options(knitr.duplicate.label = 'allow')
 ```
@@ -39,6 +40,7 @@ library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(REconTools)
+
 library(PrjOptiAlloc)
 ```
 
@@ -47,7 +49,9 @@ library(PrjOptiAlloc)
 ```{r data set up}
 data(df_opt_lalonde_training)
 # dft stands for dataframe training
-dft <- df_opt_lalonde_training %>% mutate(id = X) %>%
+dft <- df_opt_lalonde_training %>% mutate(id = X) %>% 
+           select(-X) %>%
+           select(id, everything()) %>% 
            mutate(emp78 =
                     case_when(re78 <= 0 ~ 0,
                               TRUE ~ 1)) %>%
@@ -84,9 +88,13 @@ summary(rs_logit)
 dft$p_mpg <- predict(rs_logit, newdata = dft, type = "response")
 
 # Regress with bivariate
-rs_logit_bi <- glm(as.formula(paste(svr_outcome,
-                                    "~ factor(", svr_binary,") + ",
-                                    paste(ls_st_xs, collapse="+")))
+# rs_logit_bi <- glm(as.formula(paste(svr_outcome,
+#                                     "~ factor(", svr_binary,") + ",
+#                                     paste(ls_st_xs, collapse="+")))
+#                    , data = dft, family = "binomial")
+rs_logit_bi <- glm(emp78 ~ age + educ + black + hisp + marr + nodeg 
+                   + factor(trt)
+                   + factor(black)*factor(trt)
                    , data = dft, family = "binomial")
 summary(rs_logit_bi)
 
@@ -198,3 +206,49 @@ lapply(ls_st_xs,
 ```
 
 # Optimal Binary Allocation
+
+## Solve for Optimal Allocaions Across Preference Parameters
+
+Invoke the binary optimal allocation function *ffp_opt_anlyz_rhgin_bin* that loops over rhos.
+
+```{r}
+beta_i <- rep(1/dim(dft)[1], times=dim(dft)[1])
+dft <- cbind(dft, beta_i)
+ar_rho = c(-100, -0.001,  0.95)
+
+ls_bin_solu_all_rhos <- 
+  ffp_opt_anlyz_rhgin_bin(dft, svr_id_i = 'id',
+                          svr_A_i = 'A_i', svr_alpha_i = 'alpha_i', svr_beta_i = 'beta_i',
+                          ar_rho = ar_rho,
+                          svr_inpalc = 'opti_alloc_queue',
+                          svr_expout = 'opti_exp_outcome')
+
+df_all_rho <- ls_bin_solu_all_rhos$df_all_rho
+df_all_rho_long <- ls_bin_solu_all_rhos$df_all_rho_long
+
+# How many people have different ranks across rhos
+it_how_many_vary_rank <- sum(df_all_rho$rank_max - df_all_rho$rank_min)
+it_how_many_vary_rank
+```
+
+## Binary Marginal Effects and Prediction without Binary
+
+What is the relationship between ranking, 
+
+```{r}
+# ggplot.A.alpha.x <- function(svr_x, df,
+#                              svr_alpha = 'alpha_i', svr_A = "A_i"){
+# 
+#   scatter <- ggplot(df, aes(x=!!sym(svr_x))) +
+#         geom_point(aes(y=alpha_i), size=4, shape=4, color="red") +
+#         geom_point(aes(y=A_i), size=2, shape=8, color="blue") +
+#         geom_abline(intercept = 0, slope = 1) + # 45 degree line
+#         labs(title = paste0('A (blue) and alpha (red) vs x variables=', svr_x),
+#              x = svr_x,
+#              y = 'Probabilities',
+#              caption = paste0(sdt_name, ' simulated prediction')) +
+#         theme_bw()
+# 
+# return(scatter)
+# }
+```

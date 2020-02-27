@@ -23,4 +23,5 @@ Imports:
     stringr,
     dplyr,
     broom,
-    ggplot2
+    ggplot2,
+    tibble

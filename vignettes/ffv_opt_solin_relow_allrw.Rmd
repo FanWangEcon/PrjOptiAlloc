@@ -339,8 +339,8 @@ scatter <- tb_gini_long %>%
 print(scatter)
 ```
 
-
 ## Graphs Based on Individual Allocations
+
 ```{r Individal Allocation Plots}
 # p. graph scatter of opposing preference correlation
 svr_lowrho_ctr <- 1
