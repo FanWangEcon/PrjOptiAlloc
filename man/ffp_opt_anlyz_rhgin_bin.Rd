@@ -35,7 +35,7 @@ ffp_opt_anlyz_rhgin_bin(
 \value{
 a list with a dataframe and an array
 \itemize{
-  \item df_all_rho - table where optimal targets given rhos are additional columns
+  \item df_all_rho - table where optimal targets given rhos are additional columns, note rank_max = highest rank reachest, lowest number
   \item df_all_rho_long - long version of df_all_rho, single column all targets another column rho values
 }
 }

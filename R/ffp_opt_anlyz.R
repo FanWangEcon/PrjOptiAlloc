@@ -136,7 +136,7 @@ ffp_opt_anlyz_rhgin_bin <- function(df, svr_id_i,
 #' @param svr_expout string variable name for newly generated expected outcome
 #' @return a list with a dataframe and an array
 #' \itemize{
-#'   \item df_all_rho - table where optimal targets given rhos are additional columns
+#'   \item df_all_rho - table where optimal targets given rhos are additional columns, note rank_max = highest rank reachest, lowest number
 #'   \item df_all_rho_long - long version of df_all_rho, single column all targets another column rho values
 #' }
 #' @author Fan Wang, \url{http://fanwangecon.github.io}
@@ -212,8 +212,9 @@ df_all_rho_long <- df_all_rho %>%
   )
 
 # Generate min and max rank for each given the specturm of rho
+# note rank_max = highest rank reachest, lowest number
 df_rank_min_max <- df_all_rho_long %>% group_by(!!sym(svr_id_i)) %>%
-      summarise(rank_min = min(rank), rank_max = max(rank), avg_rank = mean(rank))
+      summarise(rank_max = min(rank), rank_min = max(rank), avg_rank = mean(rank))
 
 # Join min and max rank info to wide dataframe
 df_all_rho <- df_all_rho %>% inner_join(df_rank_min_max)

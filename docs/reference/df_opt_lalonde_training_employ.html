@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Test Dataset North Carolina Crimes — df_opt_nccrimes • PrjOptiAlloc</title>
+<title>Lalonde AER 1986 with Wage Regression Allocation Queue Queue — df_opt_lalonde_training_employ • PrjOptiAlloc</title>
 
 
 <!-- jquery -->
@@ -35,32 +35,9 @@
 
 
 
-<meta property="og:title" content="Test Dataset North Carolina Crimes — df_opt_nccrimes" />
-<meta property="og:description" content="A panel of 90 observations from 1981 to 1987
-county, county identifier
-year, year from 1981 to 1987
-crmrte, crimes committed per person
-prbarr, 'probability' of arrest
-prbconv, 'probability' of conviction
-prbpris, 'probability' of prison sentence
-avgsen, average sentence, days
-polpc, police per capita
-density, people per square mile
-taxpc, tax revenue per capita
-region, one of 'other', 'west' or 'central'
-smsa, 'yes' or 'no' if in SMSA
-pctmin, percentage minority in 1980
-wcon, weekly wage in construction
-wtuc, weekly wage in trns, util, commun
-wtrd, weekly wage in whole sales and retail trade
-wfir, weekly wage in finance, insurance and real estate
-wser, weekly wage in service industry
-wmfg, weekly wage in manufacturing
-wfed, weekly wage of federal employees
-wsta, weekly wage of state employees
-wloc, weekly wage of local governments employees
-mix, offence mix: face-to-face/other
-pctymle, percentage of young males" />
+<meta property="og:title" content="Lalonde AER 1986 with Wage Regression Allocation Queue Queue — df_opt_lalonde_training_employ" />
+<meta property="og:description" content="appended onto the raw Lalonde binary targeting queue rank info based on different planner inequality aversion.
+includes min and max rank. Based on training logit regressin." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -166,40 +143,17 @@ pctymle, percentage of young males" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Test Dataset North Carolina Crimes</h1>
+    <h1>Lalonde AER 1986 with Wage Regression Allocation Queue Queue</h1>
     
-    <div class="hidden name"><code>df_opt_nccrimes.Rd</code></div>
+    <div class="hidden name"><code>df_opt_lalonde_training_employ.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A panel of 90 observations from 1981 to 1987
-county, county identifier
-year, year from 1981 to 1987
-crmrte, crimes committed per person
-prbarr, 'probability' of arrest
-prbconv, 'probability' of conviction
-prbpris, 'probability' of prison sentence
-avgsen, average sentence, days
-polpc, police per capita
-density, people per square mile
-taxpc, tax revenue per capita
-region, one of 'other', 'west' or 'central'
-smsa, 'yes' or 'no' if in SMSA
-pctmin, percentage minority in 1980
-wcon, weekly wage in construction
-wtuc, weekly wage in trns, util, commun
-wtrd, weekly wage in whole sales and retail trade
-wfir, weekly wage in finance, insurance and real estate
-wser, weekly wage in service industry
-wmfg, weekly wage in manufacturing
-wfed, weekly wage of federal employees
-wsta, weekly wage of state employees
-wloc, weekly wage of local governments employees
-mix, offence mix: face-to-face/other
-pctymle, percentage of young males</p>
+    <p>appended onto the raw Lalonde binary targeting queue rank info based on different planner inequality aversion.
+includes min and max rank. Based on training logit regressin.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_nccrimes</span>)</pre>
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_lalonde_training_employ</span>)</pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
@@ -207,46 +161,57 @@ pctymle, percentage of young males</p>
     <p>csv</p>
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='https://www.jstor.org/stable/2109893?'>https://www.jstor.org/stable/2109893?</a></p>
+    <p><a href='https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allfc_training_logit.html'>https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allfc_training_logit.html</a></p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Cornwell, C. and W.N. Trumbull (1994) “Estimating the economic model of crime with panel data”, Review of Economics and Statistics, 76, 360–366.</p>
+    <p>Lalonde, R. (1986) "Evaluating the Econometric Evaluations of Training Programs with Experimental Data", American Economic Review, 604–620.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_nccrimes</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_opt_nccrimes</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt;     X county year    crmrte   prbarr  prbconv  prbpris avgsen     polpc
-#&gt; 1   1      1   81 0.0398849 0.289696 0.402062 0.472222   5.61 0.0017868
-#&gt; 2   2      1   82 0.0383449 0.338111 0.433005 0.506993   5.59 0.0017666
-#&gt; 3   3      1   83 0.0303048 0.330449 0.525703 0.479705   5.80 0.0018358
-#&gt; 4   4      1   84 0.0347259 0.362525 0.604706 0.520104   6.89 0.0018859
-#&gt; 5   5      1   85 0.0365730 0.325395 0.578723 0.497059   6.55 0.0019244
-#&gt; 6   6      1   86 0.0347524 0.326062 0.512324 0.439863   6.90 0.0018952
-#&gt; 7   7      1   87 0.0356036 0.298270 0.527596 0.436170   6.71 0.0018279
-#&gt; 8   8      3   81 0.0163921 0.202899 0.869048 0.465753   8.45 0.0005939
-#&gt; 9   9      3   82 0.0190651 0.162218 0.772152 0.377049   5.71 0.0007047
-#&gt; 10 10      3   83 0.0151492 0.181586 1.028170 0.438356   8.69 0.0006587
-#&gt;     density    taxpc  region smsa   pctmin     wcon      wtuc     wtrd     wfir
-#&gt; 1  2.307159 25.69763 central   no 20.21870 206.4803  333.6209 182.3330 272.4492
-#&gt; 2  2.330254 24.87425 central   no 20.21870 212.7542  369.2964 189.5414 300.8788
-#&gt; 3  2.341801 26.45144 central   no 20.21870 219.7802 1394.8030 196.6395 309.9696
-#&gt; 4  2.346420 26.84235 central   no 20.21870 223.4238  398.8604 200.5629 350.0863
-#&gt; 5  2.364896 28.14034 central   no 20.21870 243.7562  358.7830 206.8827 383.0707
-#&gt; 6  2.385681 29.74098 central   no 20.21870 257.9139  369.5465 218.5165 409.8842
-#&gt; 7  2.422633 30.99368 central   no 20.21870 281.4259  408.7245 221.2701 453.1722
-#&gt; 8  0.976834 14.56088 central   no  7.91632 188.7683  292.6422 151.4234 202.4292
-#&gt; 9  0.992278 35.64073 central   no  7.91632 186.9658  345.7217 156.8826 225.0409
-#&gt; 10 1.003861 19.26188 central   no  7.91632 193.5983  604.9115 157.1295 248.1390
-#&gt;        wser   wmfg   wfed   wsta   wloc       mix   pctymle
-#&gt; 1  215.7335 229.12 409.37 236.24 231.47 0.0999179 0.0876968
-#&gt; 2  231.5767 240.33 419.70 253.88 236.79 0.1030491 0.0863767
-#&gt; 3  240.1568 269.70 438.85 250.36 248.58 0.0806787 0.0850909
-#&gt; 4  252.4477 281.74 459.17 261.93 264.38 0.0785035 0.0838333
-#&gt; 5  261.0861 298.88 490.43 281.44 288.58 0.0932486 0.0823065
-#&gt; 6  269.6129 322.65 478.67 286.91 306.70 0.0973228 0.0800806
-#&gt; 7  274.1775 334.54 477.58 292.09 311.91 0.0801688 0.0778710
-#&gt; 8  191.3742 210.75 381.72 247.38 213.17 0.0561224 0.0870046
-#&gt; 9  208.8190 217.77 386.42 374.07 219.18 0.0473118 0.0864722
-#&gt; 10 219.0847 236.64 382.65 268.90 223.06 0.0596206 0.0859426</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_lalonde_training_employ</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_opt_lalonde_training_employ</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt;    id  A_i_wage alpha_i_wage beta_i_wage rank_min_wage rank_max_wage
+#&gt; 1   1 0.6483406   0.07878288 0.001385042           180           187
+#&gt; 2   2 0.8577941   0.06358309 0.001385042           685           688
+#&gt; 3   3 0.6582975   0.07746136 0.001385042           235           246
+#&gt; 4   4 0.6062724   0.08370079 0.001385042            40            43
+#&gt; 5   5 0.6748927   0.07512792 0.001385042           406           423
+#&gt; 6   6 0.5438145   0.08893549 0.001385042             2             3
+#&gt; 7   7 0.6748927   0.07512792 0.001385042           406           423
+#&gt; 8   8 0.6744480   0.07519257 0.001385042           389           406
+#&gt; 9   9 0.8447118   0.06884295 0.001385042           622           640
+#&gt; 10 10 0.6630602   0.07680834 0.001385042           281           294
+#&gt;    avg_rank_wage   trt age educ black hisp marr nodeg re74     re75      re78
+#&gt; 1     182.666667 ntran  23   10     1    0    0     1    0    0.000     0.000
+#&gt; 2     687.000000 ntran  26   12     0    0    0     0    0    0.000 12383.680
+#&gt; 3     239.000000 ntran  22    9     1    0    0     1    0    0.000     0.000
+#&gt; 4      41.333333 ntran  34    9     1    0    0     1   NA 4368.413 14051.160
+#&gt; 5     412.333333 ntran  18    9     1    0    0     1    0    0.000 10740.080
+#&gt; 6       2.333333 ntran  45   11     1    0    0     1    0    0.000 11796.470
+#&gt; 7     412.333333 ntran  18    9     1    0    0     1    0    0.000  9227.052
+#&gt; 8     395.333333 ntran  27   12     1    0    0     0   NA 2483.851  3552.268
+#&gt; 9     634.000000 ntran  24    8     0    0    0     1    0    0.000 10569.270
+#&gt; 10    285.666667 ntran  34   11     1    0    1     1    0    0.000  6040.335
+#&gt;    emp78 emp75     p_mpg  p_mpg_hp p_mpg_hp_bi0 p_mpg_hp_bi1 rho_c1_rk
+#&gt; 1      0     0 0.6783821 0.6483406    0.6483406    0.7271235       180
+#&gt; 2      1     0 0.8897568 0.8577941    0.8577941    0.9213772       688
+#&gt; 3      0     0 0.6883859 0.6582975    0.6582975    0.7357589       235
+#&gt; 4      1     1 0.6383402 0.6062724    0.6062724    0.6899732        40
+#&gt; 5      1     0 0.7042022 0.6748927    0.6748927    0.7500207       406
+#&gt; 6      1     0 0.5762456 0.5438145    0.5438145    0.6327500         2
+#&gt; 7      1     0 0.7042022 0.6748927    0.6748927    0.7500207       406
+#&gt; 8      1     1 0.7123512 0.6744480    0.6744480    0.7496406       389
+#&gt; 9      1     0 0.8749490 0.8447118    0.8447118    0.9135548       640
+#&gt; 10     1     0 0.6934077 0.6630602    0.6630602    0.7398685       281
+#&gt;    rho_c2_rk rho_c3_rk
+#&gt; 1        181       187
+#&gt; 2        688       685
+#&gt; 3        236       246
+#&gt; 4         41        43
+#&gt; 5        408       423
+#&gt; 6          2         3
+#&gt; 7        408       423
+#&gt; 8        391       406
+#&gt; 9        640       622
+#&gt; 10       282       294</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

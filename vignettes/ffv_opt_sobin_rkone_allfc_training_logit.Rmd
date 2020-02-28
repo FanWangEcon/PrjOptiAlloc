@@ -1,8 +1,8 @@
 ---
-title: BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution (Line by Line)
+title: BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution (Line by Line)}
+  %\VignetteIndexEntry{BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
@@ -49,15 +49,34 @@ library(PrjOptiAlloc)
 ```{r data set up}
 data(df_opt_lalonde_training)
 # dft stands for dataframe training
-dft <- df_opt_lalonde_training %>% mutate(id = X) %>% 
+dft <- df_opt_lalonde_training %>% mutate(id = X) %>%
            select(-X) %>%
-           select(id, everything()) %>% 
+           select(id, everything()) %>%
            mutate(emp78 =
                     case_when(re78 <= 0 ~ 0,
                               TRUE ~ 1)) %>%
            mutate(emp75 =
                     case_when(re75 <= 0 ~ 0,
                               TRUE ~ 1))
+
+# Generate combine black + hispanic status
+# 0 = white, 1 = black, 2 = hispanics
+dft <- dft %>%
+    mutate(race =
+             case_when(black == 1 ~ 1,
+                       hisp == 1 ~ 2,
+                       TRUE ~ 0))
+
+dft <- dft %>%
+    mutate(age_m2 =
+             case_when(age <= 23 ~ 1,
+                       age >  23~ 2)) %>%
+    mutate(age_m3 =
+             case_when(age <= 20 ~ 1,
+                       age > 20 & age <= 26 ~ 2,
+                       age > 26 ~ 3))
+
+
 
 dft$trt <- factor(dft$trt, levels = c(0,1), labels = c("ntran", "train"))
 
@@ -92,7 +111,7 @@ dft$p_mpg <- predict(rs_logit, newdata = dft, type = "response")
 #                                     "~ factor(", svr_binary,") + ",
 #                                     paste(ls_st_xs, collapse="+")))
 #                    , data = dft, family = "binomial")
-rs_logit_bi <- glm(emp78 ~ age + educ + black + hisp + marr + nodeg 
+rs_logit_bi <- glm(emp78 ~ age + educ + black + hisp + marr + nodeg
                    + factor(trt)
                    + factor(black)*factor(trt)
                    , data = dft, family = "binomial")
@@ -216,7 +235,7 @@ beta_i <- rep(1/dim(dft)[1], times=dim(dft)[1])
 dft <- cbind(dft, beta_i)
 ar_rho = c(-100, -0.001,  0.95)
 
-ls_bin_solu_all_rhos <- 
+ls_bin_solu_all_rhos <-
   ffp_opt_anlyz_rhgin_bin(dft, svr_id_i = 'id',
                           svr_A_i = 'A_i', svr_alpha_i = 'alpha_i', svr_beta_i = 'beta_i',
                           ar_rho = ar_rho,
@@ -231,14 +250,30 @@ it_how_many_vary_rank <- sum(df_all_rho$rank_max - df_all_rho$rank_min)
 it_how_many_vary_rank
 ```
 
+## Save Results
+
+```{r saving file}
+
+# Change Variable names so that this can becombined with logit file later
+df_all_rho <- df_all_rho %>% rename_at(vars(starts_with("rho_")), funs(str_replace(., "rk", "rk_employ")))
+df_all_rho <- df_all_rho %>% 
+        rename(A_i_employ = A_i, alpha_i_employ = alpha_i, beta_i_employ = beta_i,
+               rank_min_employ = rank_min, rank_max_employ = rank_max, avg_rank_employ = avg_rank)
+
+# Save File
+df_opt_lalonde_training_employ <- df_all_rho
+usethis::use_data(df_opt_lalonde_training_employ, df_opt_lalonde_training_employ, overwrite = TRUE)
+```
+
+
 ## Binary Marginal Effects and Prediction without Binary
 
-What is the relationship between ranking, 
+What is the relationship between ranking,
 
 ```{r}
 # ggplot.A.alpha.x <- function(svr_x, df,
 #                              svr_alpha = 'alpha_i', svr_A = "A_i"){
-# 
+#
 #   scatter <- ggplot(df, aes(x=!!sym(svr_x))) +
 #         geom_point(aes(y=alpha_i), size=4, shape=4, color="red") +
 #         geom_point(aes(y=A_i), size=2, shape=8, color="blue") +
@@ -248,7 +283,7 @@ What is the relationship between ranking,
 #              y = 'Probabilities',
 #              caption = paste0(sdt_name, ' simulated prediction')) +
 #         theme_bw()
-# 
+#
 # return(scatter)
 # }
 ```

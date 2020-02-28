@@ -1,8 +1,8 @@
 ---
-title: BINARY--NSW Training WAGE Optimal Allocation Solution (Line by Line)
+title: BINARY--NSW Training WAGE and EMPLOYMENT Optimal Allocation Analysis
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--NSW Training WAGE Optimal Allocation Solution (Line by Line)}
+  %\VignetteIndexEntry{BINARY--NSW Training WAGE and EMPLOYMENT Optimal Allocation Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
@@ -14,7 +14,12 @@ Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage 
 
 Test binary allocation queue with Lalonde training dataset. There are 722 observations, 297 in the treatment group, 425 in the control group.
 
-Following Lalonda, regressions are in terms of wage levels (not log wage)
+Already completed optimal ranking analysis and regressions for [wage](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allfc_training_wage.html) and [employment](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allfc_training_logit.html). Here, I combine the results together and generate some joint graphs analyzing:
+
+1. The relationship between expected probability of employment and wage ($A_i$) without training, and the expected return to training for employment and wage ($\alpha_i$).
+2. For each individual, does their optimal allocation ranking change under the Rawlsian to Utilitarian planner? For wage vs employment based rankings
+3. Who are those ranked in top 10 to receive? Along the spectrum
+4. Resource Equivalent Variation along the spectrum
 
 # Load Packages and Data
 
@@ -28,6 +33,7 @@ options(knitr.duplicate.label = 'allow')
 library(dplyr)
 library(tidyr)
 library(tibble)
+library(purrr)
 library(stringr)
 library(broom)
 library(ggplot2)
@@ -39,307 +45,202 @@ library(knitr)
 library(kableExtra)
 ```
 
-## Load Data and Generate New Variables
+## Merge the Wage and Employmennt Rsults
 
 Generate four categories by initial height and mother's education levels combinations.
 
 ```{r Load Packages and Process Data}
 # Load Data
-data(df_opt_lalonde_training)
-dft <- df_opt_lalonde_training %>% mutate(id = X) %>% 
-           select(-X) %>%
-           select(id, everything()) 
+data(df_opt_lalonde_training_employ)
+data(df_opt_lalonde_training_wage)
+
+# dfj, dataframe joint
+dfj <- df_opt_lalonde_training_employ %>% left_join(df_opt_lalonde_training_wage, by = 'id')
+
+# drop the .y variables, clean the .x out
+dfj <- dfj %>% select(-contains(".y")) %>% 
+          rename_at(vars(ends_with(".x")), funs(str_replace(., ".x", "")))
+
+# order and organize variables
+dfj <- dfj %>% select(id, 
+                      starts_with("A_"), starts_with("alpha_"), starts_with("beta_"),
+                      contains("rank"), contains("rho"), 
+                      everything())
+
 # Summarize
-str(dft)
-summary(dft)
-
-# Generate Employment 0 or 1 status Variable, and non-zero wages variable
-dft <- dft %>% mutate(emp78 =
-                      case_when(re78 <= 0 ~ 0,
-                                TRUE ~ 1)) %>%
-               mutate(emp75 =
-                      case_when(re75 <= 0 ~ 0,
-                                TRUE ~ 1)) %>%
-               mutate(emp74 =
-                      case_when(re74 <= 0 ~ 0,
-                                TRUE ~ 1))
-
-# Generate combine black + hispanic status
-# 0 = white, 1 = black, 2 = hispanics
-dft <- dft %>%
-    mutate(race =
-             case_when(black == 1 ~ 1,
-                       hisp == 1 ~ 2,
-                       TRUE ~ 0)) 
-
-dft <- dft %>%
-    mutate(age_m2 =
-             case_when(age <= 23 ~ 1,
-                       age >  23~ 2)) %>% 
-    mutate(age_m3 =
-             case_when(age <= 20 ~ 1,
-                       age > 20 & age <= 26 ~ 2,
-                       age > 26 ~ 3))
- 
-
-
-# filter(re78 != 0) %>%
-# mutate(re78_log = log(re78))
-
-# Exclude zeros
-# when this is on, both linear and log linear results exclude wage = 0
-# dft <- dft %>%
-#     filter(re78 > 0)
-
-# Generate Discrete Version of continuous variables
-# dft <- dft %>%
-#     mutate(momwgtLowHigh = cut(lwt,
-#                                breaks=c(-Inf, 129, Inf),
-#                                labels=c("LW","HW"))) %>%
-#     mutate(mombirthage = cut(age,
-#                                breaks=c(-Inf, 24, Inf),
-#                                labels=c("young","older")))
+str(dfj)
+summary(dfj)
 ```
 
-# Regression with Data and Construct Input Arrays
+# Analysis of A and alpha
 
-## Tabulate and Summarize Averages
+Generate some tables where the distributions of $A$ and $\alpha$ are compared. 
 
-What is the average difference in wage between treatment and control, do they match what is reported in Lalonda (1986)?
+## Scatter Plots
 
-```{r wage treatment effects}
-
-# Summarize average for all variables grouping by treatment status
-# re78 is significantly different
-round(t(dft %>% group_by(trt) %>%
-        summarise_if(is.numeric, funs(mean = mean), na.rm = TRUE)), digits=3)
-round(t(dft %>% group_by(marr, age_m2) %>%
-        summarise_if(is.numeric, funs(mean = mean), na.rm = TRUE)), digits=3)
-
-# Summarize by finer sub groups: RACE
-# big increase for black, but not for other group
-round(t(dft %>% group_by(trt, race) %>%
-        summarise_if(is.numeric, funs(mean = mean), na.rm = TRUE)), digits=3)
-
-# Summarize by finer sub groups: MARRIAGE
-# big increase for black, but not for other group
-round(t(dft %>% group_by(trt, marr) %>%
-        summarise_if(is.numeric, funs(mean = mean), na.rm = TRUE)), digits=3)
-
-# Summarize by finer sub groups: AGE GROUPS
-round(t(dft %>% group_by(trt, age_m2) %>%
-        summarise_if(is.numeric, funs(mean = mean), na.rm = TRUE)), digits=3)
-
-round(t(dft %>% group_by(trt, age_m3) %>%
-        summarise_if(is.numeric, funs(mean = mean), na.rm = TRUE)), digits=3)
-
-round(t(dft %>% group_by(trt, marr, age_m2) %>%
-        summarise_if(is.numeric, funs(mean = mean), na.rm = TRUE)), digits=3)
-
-```
-
-## Tabulate
-
-```{r tabulate groups}
-# Tabulate groups, how many in each group, enough for group heterogeneity in effects?
-dft %>%
-  group_by(trt, marr) %>%
-  summarize(freq = n()) %>%
-  pivot_wider(names_from = trt, values_from = freq)
-
-# Tabulate groups, how many in each group, enough for group heterogeneity in effects?
-dft %>%
-  group_by(trt, age_m2, marr) %>%
-  summarize(freq = n()) %>%
-  pivot_wider(names_from = trt, values_from = freq)
-```
-
-## Regression Testing
-
-```{r Regression Testing}
-
-# As noted in Lalonda (1986), functional form assumptions do not matter much
-# Dummies, treatment effect average about 801 dollars
-summary(lm(re78 ~ factor(age) 
-                  + factor(educ)
-                  + factor(race)
-                  + factor(marr) 
-                  + factor(nodeg)
-                  + factor(trt) - 1,
-                  data = dft))
-
-# cts Controls and treatment effects about 761 dollars
-summary(lm(re78 ~  age + I(age^2) +
-                   educ + I(educ^2) +
-                  + factor(race)
-                  + factor(marr) 
-                  + factor(nodeg)
-                  + factor(trt) - 1,
-                  data = dft))
-
-# Treatment interactions by marriage status, 476 unmarried, vs 2216 for married
-summary(lm(re78 ~  age + I(age^2) +
-                   educ + I(educ^2) +
-                  + factor(race)
-                  + factor(marr) 
-                  + factor(nodeg)
-                  + factor(marr):factor(trt) - 1,
-                  data = dft))
-
-# Treatment interactions by marriage status, 453 vs 1070 each age group
-summary(lm(re78 ~  age + I(age^2) + factor(age_m2) +
-                   educ + I(educ^2) +
-                  + factor(race)
-                  + factor(marr) 
-                  + factor(nodeg)
-                  + factor(age_m2):factor(trt) - 1,
-                  data = dft))
-
-# Treatment interactions by marriage status, greater effect for older married + younger married
-summary(lm(re78 ~  age + I(age^2) + factor(age_m2) +
-                   educ + I(educ^2) +
-                  + factor(race)
-                  + factor(marr) 
-                  + factor(nodeg)
-                  + factor(marr):factor(age_m2):factor(trt) - 1,
-                  data = dft))
-
-```
-
-## Regress Wage on Training Status
-
-### Linear Binary Problem
-
-```{r Binary Linear Regression}
-# Store Regression Results
-mt_model <- model.matrix( ~ age + I(age^2) + factor(age_m2) +
-                            educ + I(educ^2) +
-                          + factor(race)
-                          + factor(marr) 
-                          + factor(nodeg)
-                          + factor(age_m2):factor(trt),
-                          data = dft)
-rs_wage_on_trt = lm(re78 ~ mt_model - 1, data = dft)
-print(summary(rs_wage_on_trt))
-rs_wage_on_trt_tidy = tidy(rs_wage_on_trt)
-rs_wage_on_trt_tidy
-```
-
-## Construct Input Arrays $A_i$ and $\alpha_i$
-
-### Linear Binary Regression
-
-Multiply coefficient vector by covariate matrix to generate *A* vector that is child/individual specific.
-
-```{r Linear Binary Post Regression Input Processing}
-# Estimates Table
-head(rs_wage_on_trt_tidy, 6)
-# Covariates
-head(mt_model, 5)
-
-# Covariates coefficients from regression (including constant)
-ar_fl_cova_esti <- as.matrix(rs_wage_on_trt_tidy %>% filter(!str_detect(term, 'trt')) %>% select(estimate))
-ar_fl_main_esti <- as.matrix(rs_wage_on_trt_tidy %>% filter(str_detect(term, 'trt')) %>% select(estimate))
-head(ar_fl_cova_esti, 5)
-head(ar_fl_main_esti, 5)
-
-# Select Matrix subcomponents
-mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("trt")))
-mt_intr <- model.matrix(~ factor(marr) - 1, data = dft)
-
-# Generate A_i, use mt_cova_wth_const
-ar_A_m <- mt_cova %*% ar_fl_cova_esti
-head(ar_A_m, 5)
-
-# Generate alpha_i
-ar_alpha_m <- mt_intr %*% ar_fl_main_esti
-head(ar_alpha_m, 5)
-```
-
-## Individual Weight
 ```{r}
-# Child Weight
-ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
+# Binary Marginal Effects and Prediction without Binary
+ggplot.A.alpha <- function(df, svr_alpha = 'alpha_i', svr_A = "A_i",
+                             slb_title = 'A_i and alpha_i (red)'){
+  scatter <- ggplot(df, aes(x=!!sym(svr_A))) +
+        geom_point(aes(y=!!sym(svr_alpha)), size=4, shape=4, color="red") +
+        labs(title = paste0(slb_title),
+             x = 'A_i',
+             y = 'alpha_i',
+             caption = paste0('sdt_name')) +
+        theme_bw()
+return(scatter)
+}
+
+# Plot over multiple
+ggplot.A.alpha(df = dfj, 
+               svr_alpha = 'alpha_i_wage', svr_A = "A_i_wage",
+               slb_title = 'A_i and alpha_i, wage')
+
+ggplot.A.alpha(df = dfj, 
+               svr_alpha = 'alpha_i_employ', svr_A = "A_i_employ",
+               slb_title = 'A_i and alpha_i, employment')
+
 ```
 
-## Matrix with Required Inputs for Allocation
+## Histogram Plots
 
-### Linear Binary Matrix
+What is the distribution of A given alpha. This is relevant in the linear regression case
+```{r}
+# Keep only relevant columns, and reshape data
+dfj_hist <- dfj %>% select(id, A_i_wage, alpha_i_wage)
+dfj_hist$alpha_i_wage <- factor(dfj_hist$alpha_i_wage) 
+# dfj_hist$alpha_i_wage <- factor(dfj_hist$alpha_i_wage, labels = c('ECON', 'Not.Econ'))
 
-```{r Linear Allocattion Space Matrix}
-# Initate Dataframe that will store all estimates and optimal allocation relevant information
-# combine identifying key information along with estimation A, alpha results
-# note that we only need indi.id as key
-mt_opti <- cbind(ar_alpha_m, ar_A_m, ar_beta_m)
-ar_st_varnames <- c('alpha', 'A', 'beta')
-df_esti_alpha_A_beta <- as_tibble(mt_opti) %>% rename_all(~c(ar_st_varnames))
-tb_key_alpha_A_beta <- bind_cols(dft, df_esti_alpha_A_beta) %>%
-              select(one_of(c('id', 'trt', 'age', 'educ', 'race', 'marr', 'nodeg', 're78',
-                              ar_st_varnames)))
-
-# Rescale A and alpha to deal more easily with large powers
-tb_key_alpha_A_beta <- tb_key_alpha_A_beta %>%
-                          mutate(alpha = alpha/1000, A = A/1000)
-
-# Need to only include the smokers here
-# tb_key_alpha_A_beta <- tb_key_alpha_A_beta %>% filter(trt == 0)
-
-# Unique beta, A, and alpha check
-tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
-                    arrange(!!!syms(ar_st_varnames)) %>%
-                    summarise(n_obs_group=n())
-
-# Show cars
-head(tb_key_alpha_A_beta, 32)
+# Graph 
+dfj_hist %>% ggplot(aes(x=A_i_wage, fill=alpha_i_wage)) +
+      geom_density( color="#e9ecef", alpha=0.6, position = 'identity') +
+      scale_fill_manual(values=c("#69b3a2", "#404080")) +
+      labs(fill="")
 ```
 
-# Optimal Linear Allocations
 
-```{r Set Allocation Parameters}
-# Child Count
-it_obs = dim(tb_opti_unique)[1]
+# Min and Max Rank Change Across Lambda
 
-# Vector of Planner Preference
-ar_rho <- c(-100, 0.8)
-ar_rho <- c(-50, -25, -10)
-ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.8)
-ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))
-# ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.99)
-# ar_rho <- c(-20, -1, 0.05, 0.9)
-# ar_rho <- c(-50, -40, -30, -20, -15, -10, -7.5, -5,-3,-2,-1)
-# ar_rho = c(-100, -0.001,  0.95)
-ar_rho <- unique(ar_rho)
+The max calculated by ffp_opt_anlyz_rhgin_bin is the top rank, small in number. The min calculated by the function is the lowest ranked, largest number. 
 
-ls_bin_solu_all_rhos <- 
-  ffp_opt_anlyz_rhgin_bin(tb_key_alpha_A_beta, svr_id_i = 'id',
-                          svr_A_i = 'A', svr_alpha_i = 'alpha', svr_beta_i = 'beta',
-                          ar_rho = ar_rho,
-                          svr_inpalc = 'opti_alloc_queue',
-                          svr_expout = 'opti_exp_outcome')
+## Histogram Plots and Table highest Rank Reached
 
-df_all_rho <- ls_bin_solu_all_rhos$df_all_rho
-df_all_rho_long <- ls_bin_solu_all_rhos$df_all_rho_long
+Looked highest rank reached for each (highest rank (smallest number ever reached)).
 
-# How many people have different ranks across rhos
-it_how_many_vary_rank <- sum(df_all_rho$rank_max - df_all_rho$rank_min)
-it_how_many_vary_rank
+```{r}
+# Generate min and max gaps
+dfj_highest <- dfj %>% select(id, rank_max_wage, rank_max_employ)
+
+# Wide to long
+st_gap_prefix <- 'rank_max'
+dfj_highest_long <- dfj_highest %>%
+  pivot_longer(
+    cols = starts_with(st_gap_prefix),
+    names_to = c('employvswwage'),
+    names_pattern = paste0(st_gap_prefix, "_(.*)"),
+    values_to = 'highestrank'
+  )
+
+# Rank change to categories
+dfj_highest_long <- dfj_highest_long %>%
+           mutate(highestrank_grp =
+                    case_when(highestrank == 1 ~ "Top A 1",
+                              highestrank <= 10  & highestrank > 1 ~ "Top B 10",
+                              highestrank <= 50 & highestrank > 10 ~ "Top C 11 to 50",
+                              highestrank <= 100 & highestrank > 50 ~ "Top D 51 to 100",
+                              highestrank <= 297 & highestrank > 100 ~ "Top E 101 to 297",
+                              highestrank > 297 ~ "Top F > 297"))
+
+# Graph 
+dfj_highest_long %>% ggplot(aes(x=highestrank, fill=employvswwage)) +
+      geom_histogram(color="#e9ecef", alpha=0.6, position = 'identity') +
+      scale_fill_manual(values=c("#69b3a2", "#404080")) +
+      labs(fill="")
+
+# Table
+dfj_highest_long %>% group_by(employvswwage, highestrank_grp) %>% 
+                summarize(count = n())
 ```
 
-## Bump Plot for Optimal Binary Allocations
+## Histogram Plots and Table Mand and Max Change
 
-```{r binary allocation bump plot, fig.height = 10, fig.width = 20, fig.align = "center"}
+From the wage and employment analysis, each generates min and max rank
 
-# tb_opti_alloc_all_rho_long %>%
-#   ggplot(aes(x = rho, y = rank, group = id)) +
-#     geom_line(aes(color = race, alpha = 1), size = 2) +
-#     geom_point(aes(color = race, alpha = 1), size = 4) +
-#     scale_x_discrete(expand = c(0.85,0))+
-#     scale_y_reverse(breaks = 1:nrow(tb_opti_alloc_all_rho_long))+
-#     theme(legend.position = "none") +
-#     labs(x = "Equality vs Efficiency",
-#          y = "Rank",
-#          title = "Binary Allocation Rank, which untrained to receive training first") +
-#     ffy_opt_ghthm_dk() +
-#     geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=id),hjust="right")
+1. generate rank min max gap for wage and employment: min minus max because min number is actually the larger number (lower rank)
+2. reshape wide to long, gap one variable, wage vs employment categorical
+3. show table summary statistics differences
+4. show graph differences
 
+```{r}
+# Generate min and max gaps
+dfj_gap <- dfj %>% mutate(rank_gap_wage = rank_min_wage - rank_max_wage,
+                          rank_gap_employ = rank_min_employ - rank_max_employ) %>%
+                select(id, rank_gap_wage, rank_gap_employ)
+
+# Wide to long
+st_gap_prefix <- 'rank_gap'
+dfj_gap_long <- dfj_gap %>%
+  pivot_longer(
+    cols = starts_with(st_gap_prefix),
+    names_to = c('employvswwage'),
+    names_pattern = paste0(st_gap_prefix, "_(.*)"),
+    values_to = 'rank_gap'
+  )
+
+# Rank change to categories
+dfj_gap_long <- dfj_gap_long %>%
+           mutate(rank_gap_grp =
+                    case_when(rank_gap == 0 ~ "change A no change",
+                              rank_gap <= 50  & rank_gap > 0 ~ "change B 50 positions",
+                              rank_gap <= 100 & rank_gap > 50 ~ "change C 51 to 100",
+                              rank_gap <= 200 & rank_gap > 100 ~ "change D 101 to 200",
+                              rank_gap <= 400 & rank_gap > 200 ~ "change E 201 to 400",
+                              rank_gap > 400 ~ "change F more than 401"))
+
+# Graph 
+dfj_gap_long %>% ggplot(aes(x=rank_gap, fill=employvswwage)) +
+      geom_histogram(color="#e9ecef", alpha=0.6, position = 'identity') +
+      scale_fill_manual(values=c("#69b3a2", "#404080")) +
+      labs(fill="")
+
+# Table
+dfj_gap_long %>% group_by(employvswwage, rank_gap_grp) %>% 
+                summarize(count = n())
+```
+
+
+# Table of Top 10 Individuals
+
+```{r top 10 ranked at least once}
+
+# Calculat the maximum rank reached by each from all the rhos we have
+# The difference between this and the other max, this computes across all rhos, employment and wage
+
+dfj_top10 <- dfj %>%
+    select(contains("rho_")) %>%
+    reduce(pmin) %>%
+    mutate(dfj, max_rank_rhos = .)
+
+dfj_top10 <- dfj_top10 %>% filter(max_rank_rhos <= 10) %>%
+  select(id, age, educ, black, hisp, marr, re74, re78, contains("rho_")) %>%
+  arrange(age, educ, black, hisp)
+
+# Graphing Library
+library(kableExtra)
+# Load Data
+dt <- mtcars[1:5, 1:6]
+# Generate latex string variable
+st_out_tex <- kable(dfj_top10, "latex")
+print(st_out_tex)
+# File out
+# fileConn <- file("./../../_file/tex/tex_sample_a_tab.tex")
+fileConn <- file("C:/users/fan/HgtOptiAlloDraft/_tab/lalonda_wage_employ_top10.tex")
+writeLines(st_out_tex, fileConn)
+close(fileConn)
+
+# Display results here
+dfj_top10 %>%
+    kable() %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "responsive"))
 ```
