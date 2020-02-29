@@ -176,12 +176,24 @@ head(ar_fl_main_esti, 5)
 
 # Select Matrix subcomponents
 mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("stravg")))
+# mt_intr <- model.matrix(~ factor(race) - 1)
+mt_intr <- t(t(rep(1, dim(mt_model)[1])))
 
 # Generate A_i, use mt_cova_wth_const
 ar_A_m <- mt_cova %*% ar_fl_cova_esti
 head(ar_A_m, 5)
 
-# Generate alpha_i, in this problem, the alpha_i is generated differently.
+# Generate temporary theta_i (alpha elswhere, but theta here, because how student count will enter
+ar_theta_m <- mt_intr %*% ar_fl_main_esti
+head(ar_theta_m, 5)
+
+# Beta
+ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
+
+# Dataframe of A and temporary theta
+mt_A_theta_beta <- cbind(ar_A_m, ar_theta_m, ar_beta_m)
+
+colnames(mt_A_theta_beta) <- c('A_i', 'theta_i', 'beta_i')
 ```
 
 # Construct Increment Specific Effect of Each Additional Teacher
@@ -198,19 +210,19 @@ So this task is less trivial to do here. The procedure will be the following,
 
 **Step 1**
 
-*mt_a*: Five column matrix: col 1, district index, col 2, max number of additional teachers each district could acquire (which is determined by the number of existing teachers). There could be a maximum and minimum overall, 0 and say 100 additional teacers per district at most regardless. And each district gets up to potentially 25 percent or 30 percent additional teachers. Col 3, the number of current level of teachers in the district. Col 4, the number of current number of students. Col 5, the A_i without the addition of teacher student ratio.
+*mt_a*: Six column matrix: col 1, district index, col 2, max number of additional teachers each district could acquire (which is determined by the number of existing teachers). There could be a maximum and minimum overall, 0 and say 100 additional teacers per district at most regardless. And each district gets up to potentially 25 percent or 30 percent additional teachers. Col 3, the number of current level of teachers in the district. Col 4, the number of current number of students. Col 5, the A_i without the addition of teacher student ratio. Col 6, not alpha_i, but just the coefficient theta that might be already individual specific due to earlier regression allowing for interaction, the alpha_i which is the $\theta_i$ possibly heterogeneous effects of str on outcomes of interest.
 
 **Step 2**
 
 *mt_b*: expand *mt_a*. Each row is a feasible additional teacher for a district, each there are now five variables, ID, previous level of teachers, and new level of teachers, and the existing level of students, and original A_i.
 
 ```{r generate longer dataframe}
-# dfca_exmain: dfca expand main fram5, five variables
+# dfca_exmain: dfca expand main frame, five variables
 dfca_exmain <- dfca %>%
                 mutate(D_i = floor(fl_max_add_teacher_percent*teachers)) %>%
-                select(id,D_i,teachers,enrltot)
+                select(id, D_i, teachers, enrltot)
 
-dfca_exmain <- cbind(dfca_exmain, ar_A_m) %>% rename( A_i = estimate)
+dfca_exmain <- cbind(dfca_exmain, mt_A_theta_beta)
 
 # following: https://fanwangecon.github.io/R4Econ/summarize/count/fs_count_basics.html
 # teachers is a count coloumn to expand by 
@@ -220,23 +232,71 @@ dfca_exmain <- dfca_exmain %>% uncount(D_i) %>%
                   group_by(id) %>% 
                   mutate(i_d_l = row_number()) %>% 
                   mutate(teachers_addl = teachers + i_d_l - 1)
+# display
+kable(dfca_exmain[0:25,]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
 **Step 3**
 
-*mt_b*: add a alpha_i column, generate the marginal productivity value, and also generate actual updated A_i.
+*mt_b*: add a alpha_i column, generate the marginal productivity value, and also generate actual updated A_i. Apply the formula stated earlier. 
 
 **Step 4**
 
 *mt_c*: merge together the matrix now has alpha_i with also the already existing A_i.
 
+```{r marginal effect of an additional teacher here, fig.height = 4, fig.width = 6, fig.align = "center"}
+# Generate alpha_i for each additional teacher
+dfca_exmain <- dfca_exmain %>% mutate(alpha_il = theta_i*enrltot*((1/teachers_addl) - (1/(teachers_addl-1)))) %>%
+                                   mutate(A_il = A_i + theta_i*(enrltot/(teachers_addl-1))) %>%
+                                   rowid_to_column(var = "IDil")
+
+# Graph of the Distribution of Alpha_i and A_i
+scatter <- dfca_exmain %>% ggplot(aes(x=A_il)) +
+      geom_point(aes(y=log(alpha_il)), size=4, shape=4, color="red") +
+      geom_abline(intercept = 0, slope = 1) + # 45 degree line
+      labs(title = paste0('Discrete Allocation\nCalifornia Test Score and Student Teacher Ratio\nThe Relationship between A_il and alpha_il'),
+           x = 'A_il = EXAM(teacher current + n)',
+           y = 'log(alpha_il = E(teacher + n + 1) - E(teacher + n))',
+           caption = paste0('Stock and Watson California Test and STR')) +
+      theme_bw()
+      
+print(scatter)
+
+
+# display
+kable(dfca_exmain[0:75,]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+
 **Step 5**
 
-Sort, and select top given total resource avaiable, The count the total allocation for each.
+Sort, and select top given total resource avaiable, The count the total allocation for each. This means to invoke the binary allocation function. 
+
+```{r invoke the optimal targeting function}
+# Optimal Targeting
+ar_rho = c(-100, -0.001,  0.95)
+ar_rho <- unique(ar_rho)
+ls_bin_solu_all_rhos <-
+  ffp_opt_anlyz_rhgin_bin(dfca_exmain, svr_id_i = 'IDil',
+                          svr_A_i = 'A_il', svr_alpha_i = 'alpha_il', svr_beta_i = 'beta_i',
+                          ar_rho = ar_rho,
+                          svr_inpalc = 'opti_alloc_queue',
+                          svr_expout = 'opti_exp_outcome')
+
+# Results from optimal targeting
+df_all_rho <- ls_bin_solu_all_rhos$df_all_rho
+df_all_rho_long <- ls_bin_solu_all_rhos$df_all_rho_long
+
+# display
+kable(df_all_rho[0:500,]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
 
 Back to dataframe mt_ori, incorporate into that, but do and shift for each rho.
 
 ```{r}
 # Child Weight
-ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
 ```
