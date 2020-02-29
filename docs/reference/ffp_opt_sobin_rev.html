@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Solves the binary targeting queue with Ai_i, alpha_i, and planner preferences, for one individual — ffp_opt_sobin_target_row • PrjOptiAlloc</title>
+<title>Theorem 1, Equation 6, Resource Equivalent Variation — ffp_opt_sobin_rev • PrjOptiAlloc</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,7 @@
 
 
 
-<meta property="og:title" content="Solves the binary targeting queue with Ai_i, alpha_i, and planner preferences, for one individual — ffp_opt_sobin_target_row" />
+<meta property="og:title" content="Theorem 1, Equation 6, Resource Equivalent Variation — ffp_opt_sobin_rev" />
 <meta property="og:description" content="This does not solve for the full solution, just the targeting queue, individual position on queue." />
 <meta name="twitter:card" content="summary" />
 
@@ -148,103 +148,90 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Solves the binary targeting queue with Ai_i, alpha_i, and planner preferences, for one individual</h1>
+    <h1>Theorem 1, Equation 6, Resource Equivalent Variation</h1>
     
-    <div class="hidden name"><code>ffp_opt_sobin_target_row.Rd</code></div>
+    <div class="hidden name"><code>ffp_opt_sobin_rev.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>This does not solve for the full solution, just the targeting queue, individual position on queue.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ffp_opt_sobin_target_row</span>(
-  <span class='no'>ls_row</span>,
-  <span class='no'>fl_rho</span>,
+    <pre class="usage"><span class='fu'>ffp_opt_sobin_rev</span>(
+  <span class='no'>ar_queue_optimal</span>,
+  <span class='no'>ar_bin_observed</span>,
   <span class='no'>ar_A</span>,
   <span class='no'>ar_alpha</span>,
   <span class='no'>ar_beta</span>,
-  <span class='kw'>svr_A_i</span> <span class='kw'>=</span> <span class='st'>"A"</span>,
-  <span class='kw'>svr_alpha_i</span> <span class='kw'>=</span> <span class='st'>"alpha"</span>,
-  <span class='kw'>svr_beta_i</span> <span class='kw'>=</span> <span class='st'>"beta"</span>
+  <span class='no'>fl_lambda</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>ls_row</th>
-      <td><p>list a row from dataframe tibble row where there are variables for A, alpha and beta</p></td>
+      <th>ar_queue_optimal</th>
+      <td><p>optimal targeting array index of ranking from 1 to N targetting queue</p></td>
     </tr>
     <tr>
-      <th>fl_rho</th>
-      <td><p>float preference for equality for the planner</p></td>
+      <th>ar_bin_observed</th>
+      <td><p>observed vector of binary zeros and ones</p></td>
     </tr>
     <tr>
       <th>ar_A</th>
-      <td><p>float array of expected outcome without provision for all N</p></td>
-    </tr>
-    <tr>
-      <th>ar_alpha</th>
       <td><p>float array of expected effect of provision for each i of N</p></td>
     </tr>
     <tr>
-      <th>ar_beta</th>
+      <th>ar_alpha</th>
       <td><p>float array of planner bias</p></td>
     </tr>
     <tr>
-      <th>svr_A_i</th>
+      <th>ar_beta</th>
       <td><p>string name of the A_i variable, any nonlinear or linear evaluated expected outcome</p></td>
-    </tr>
-    <tr>
-      <th>svr_alpha_i</th>
-      <td><p>string name of the alpha_i variable, individual specific effects of treatment</p></td>
-    </tr>
-    <tr>
-      <th>svr_beta_i</th>
-      <td><p>string name of the beta_i variable, relative preference weight for each child</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an integer equal to the person's rank on the optimal binary targeting queue, smaller number means higher ranking, 1 is ranked first to receive allocations</p>
+    <p>an float value for resource equivalent variation, see Theorem 1</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p><a href='https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sobin_target_row.html'>https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sobin_target_row.html</a>
-<a href='https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_car.html'>https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_car.html</a></p>
+    <p><a href='https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sobin_rev.html'>https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sobin_rev.html</a>
+<a href='https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rev.html'>https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rev.html</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tibble</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyr</span>)
-<span class='no'>ar_alpha</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.1</span>,<span class='fl'>1.5</span>,<span class='fl'>2.5</span>,<span class='fl'>4</span>)
-<span class='no'>ar_A</span> <span class='kw'>&lt;-</span>     <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.5</span>,<span class='fl'>1.5</span>,<span class='fl'>3.5</span>,<span class='fl'>6.5</span>)
-<span class='no'>ar_beta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.25</span>,<span class='fl'>0.25</span>,<span class='fl'>0.25</span>,<span class='fl'>0.25</span>)
+<span class='no'>fl_lambda</span> <span class='kw'>&lt;-</span> -<span class='fl'>1</span>
+<span class='no'>ar_alpha</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.1</span>,<span class='fl'>1.5</span>,<span class='fl'>2.5</span>,<span class='fl'>4</span>  ,<span class='fl'>9</span>,<span class='fl'>1.2</span>,<span class='fl'>3</span>,<span class='fl'>2</span>,<span class='fl'>8</span>)
+<span class='no'>ar_A</span> <span class='kw'>&lt;-</span>     <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.5</span>,<span class='fl'>1.5</span>,<span class='fl'>3.5</span>,<span class='fl'>6.5</span>,<span class='fl'>1.9</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>6</span>,<span class='fl'>4</span>)
+<span class='no'>ar_beta</span> <span class='kw'>&lt;-</span>  <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>ar_A</span>)) + <span class='fl'>1</span>/<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>ar_A</span>)
 <span class='no'>mt_alpha_A</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='no'>ar_alpha</span>, <span class='no'>ar_A</span>, <span class='no'>ar_beta</span>)
 <span class='no'>ar_st_varnames</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'alpha'</span>, <span class='st'>'A'</span>, <span class='st'>'beta'</span>)
 <span class='no'>tb_alpha_A</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/as_tibble.html'>as_tibble</a></span>(<span class='no'>mt_alpha_A</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select_all.html'>rename_all</a></span>(~<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>ar_st_varnames</span>))
-<span class='no'>tb_alpha_A</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 4 x 3</span><span>
+<span class='no'>tb_alpha_A</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 9 x 3</span><span>
 #&gt;   alpha     A  beta
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span>   0.1   0.5  0.25
-#&gt; </span><span style='color: #555555;'>2</span><span>   1.5   1.5  0.25
-#&gt; </span><span style='color: #555555;'>3</span><span>   2.5   3.5  0.25
-#&gt; </span><span style='color: #555555;'>4</span><span>   4     6.5  0.25</div><div class='input'>
-<span class='no'>ar_rho</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>100</span>, -<span class='fl'>1.1</span>, <span class='fl'>0.01</span>, <span class='fl'>0.10</span>, <span class='fl'>0.9</span>)
+#&gt; </span><span style='color: #555555;'>1</span><span>   0.1   0.5 0.111
+#&gt; </span><span style='color: #555555;'>2</span><span>   1.5   1.5 0.111
+#&gt; </span><span style='color: #555555;'>3</span><span>   2.5   3.5 0.111
+#&gt; </span><span style='color: #555555;'>4</span><span>   4     6.5 0.111
+#&gt; </span><span style='color: #555555;'>5</span><span>   9     1.9 0.111
+#&gt; </span><span style='color: #555555;'>6</span><span>   1.2   3   0.111
+#&gt; </span><span style='color: #555555;'>7</span><span>   3     4   0.111
+#&gt; </span><span style='color: #555555;'>8</span><span>   2     6   0.111
+#&gt; </span><span style='color: #555555;'>9</span><span>   8     4   0.111</div><div class='input'><span class='no'>ar_rho</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>1</span>)
 <span class='kw'>for</span> (<span class='no'>it_rho_ctr</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>1</span>,<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>ar_rho</span>))) {
   <span class='no'>fl_rho</span> <span class='kw'>&lt;-</span> <span class='no'>ar_rho</span>[<span class='no'>it_rho_ctr</span>]
-  <span class='no'>it_rank</span> <span class='kw'>&lt;-</span> <span class='no'>tb_alpha_A</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rowwise.html'>rowwise</a></span>() <span class='kw'>%&gt;%</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/do.html'>do</a></span>(<span class='kw'>rk</span> <span class='kw'>=</span> <span class='fu'>ffp_opt_sobin_target_row</span>(<span class='no'>.</span>, <span class='no'>fl_rho</span>,
+  <span class='no'>ar_it_rank</span> <span class='kw'>&lt;-</span> <span class='no'>tb_alpha_A</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rowwise.html'>rowwise</a></span>() <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/do.html'>do</a></span>(<span class='kw'>rk</span> <span class='kw'>=</span> <span class='fu'><a href='ffp_opt_sobin_target_row.html'>ffp_opt_sobin_target_row</a></span>(<span class='no'>.</span>, <span class='no'>fl_rho</span>,
                                      <span class='no'>ar_A</span>, <span class='no'>ar_alpha</span>, <span class='no'>ar_beta</span>)) <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='https://tidyr.tidyverse.org/reference/nest.html'>unnest</a></span>(<span class='no'>rk</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/pull.html'>pull</a></span>(<span class='no'>rk</span>)
-
-  <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span>(<span class='st'>'fl_rho:'</span>, <span class='no'>fl_rho</span>, <span class='st'>'it_rank:'</span>, <span class='no'>it_rank</span>, <span class='st'>'\n'</span>)
-}</div><div class='output co'>#&gt; fl_rho: -100 it_rank: 1 2 3 4 
-#&gt; fl_rho: -1.1 it_rank: 1 2 3 4 
-#&gt; fl_rho: 0.01 it_rank: 4 1 2 3 
-#&gt; fl_rho: 0.1 it_rank: 4 1 2 3 
-#&gt; fl_rho: 0.9 it_rank: 4 3 2 1 </div><div class='input'>
-</div></span></pre>
+  <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span>(<span class='st'>'fl_rho:'</span>, <span class='no'>fl_rho</span>, <span class='st'>'ar_it_rank:'</span>, <span class='no'>ar_it_rank</span>, <span class='st'>'\n'</span>)
+}</div><div class='output co'>#&gt; fl_rho: -1 ar_it_rank: 3 2 5 8 1 7 6 9 4 </div><div class='input'><span class='no'>ar_bin_observed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>0</span>)
+<span class='no'>ar_queue_optimal</span> <span class='kw'>&lt;-</span> <span class='no'>ar_it_rank</span>
+<span class='fu'>ffp_opt_sobin_rev</span>(<span class='no'>ar_queue_optimal</span>, <span class='no'>ar_bin_observed</span>, <span class='no'>ar_A</span>, <span class='no'>ar_alpha</span>, <span class='no'>ar_beta</span>, <span class='no'>fl_lambda</span>)</div><div class='output co'>#&gt; [1] 0.25</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

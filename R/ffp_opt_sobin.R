@@ -63,3 +63,90 @@ ffp_opt_sobin_target_row <- function(ls_row, fl_rho,
 
   return(it_rank)
 }
+
+ffp_opt_sobin_rev <- function(ar_queue_optimal, ar_bin_observed,
+                              ar_A, ar_alpha, ar_beta, fl_lambda){
+  #' Theorem 1, Equation 6, Resource Equivalent Variation
+  #'
+  #' @description
+  #' This does not solve for the full solution, just the targeting queue, individual position on queue.
+  #'
+  #' @param ar_queue_optimal optimal targeting array index of ranking from 1 to N targetting queue
+  #' @param ar_bin_observed observed vector of binary zeros and ones
+  #' @param ar_A float array of expected effect of provision for each i of N
+  #' @param ar_alpha float array of planner bias
+  #' @param ar_beta string name of the A_i variable, any nonlinear or linear evaluated expected outcome
+  #' @return an float value for resource equivalent variation, see Theorem 1
+  #' @author Fan Wang, \url{http://fanwangecon.github.io}
+  #' @references
+  #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sobin_rev.html}
+  #' \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rev.html}
+  #' @export
+  #' @examples
+  #' library(tibble)
+  #' library(dplyr)
+  #' library(tidyr)  
+  #' fl_lambda <- -1
+  #' ar_alpha <- c(0.1,1.5,2.5,4  ,9,1.2,3,2,8)
+  #' ar_A <-     c(0.5,1.5,3.5,6.5,1.9,3,4,6,4)
+  #' ar_beta <-  rep(0, length(ar_A)) + 1/length(ar_A)
+  #' mt_alpha_A <- cbind(ar_alpha, ar_A, ar_beta)
+  #' ar_st_varnames <- c('alpha', 'A', 'beta')
+  #' tb_alpha_A <- as_tibble(mt_alpha_A) %>% rename_all(~c(ar_st_varnames))
+  #' tb_alpha_A
+  #' ar_rho <- c(-1)
+  #' for (it_rho_ctr in seq(1,length(ar_rho))) {
+  #'   fl_rho <- ar_rho[it_rho_ctr]
+  #'   ar_it_rank <- tb_alpha_A %>% rowwise() %>%
+  #'     do(rk = ffp_opt_sobin_target_row(., fl_rho,
+  #'                                      ar_A, ar_alpha, ar_beta)) %>%
+  #'     unnest(rk) %>% pull(rk)
+  #'   cat('fl_rho:', fl_rho, 'ar_it_rank:', ar_it_rank, '\n')
+  #' }
+  #' ar_bin_observed <- c(0,1,0,1,0,0,1,1,0)
+  #' ar_queue_optimal <- ar_it_rank
+  #' ffp_opt_sobin_rev(ar_queue_optimal, ar_bin_observed, ar_A, ar_alpha, ar_beta, fl_lambda)
+
+  # Set up Data Struture
+  mt_rev <- cbind(seq(1,length(ar_queue_optimal)), ar_bin_observed, ar_queue_optimal,
+                  ar_A, ar_alpha, ar_beta)
+  ar_st_varnames <- c('id', 'observed', 'optimal', 'A', 'alpha', 'beta')
+  tb_onevar <- as_tibble(mt_rev) %>% rename_all(~c(ar_st_varnames)) %>%
+                  arrange(optimal)
+
+  # Generate util observed and util unobserved columns
+  tb_onevar <- tb_onevar %>% mutate(utility = beta*((alpha+A)^fl_lambda)) %>%
+                             mutate(util_ob = case_when(observed == 1 ~ utility,
+                                                        TRUE ~ 0 )) %>%
+                             mutate(util_notob = case_when(observed == 0 ~ utility,
+                                                           TRUE ~ 0 ))
+
+  # Generate directional cumulative sums
+  tb_onevar <- tb_onevar %>%
+                 arrange(-optimal) %>%
+                 mutate(util_ob_sum = cumsum(util_ob)) %>%
+                 arrange(optimal) %>%
+                 mutate(util_notob_sum = cumsum(util_notob))
+
+  # Following Theorem 1, simply compare util_ob_sum vs util_notob_sum
+  tb_onevar <- tb_onevar %>%
+        mutate(opti_better_obs =
+                 case_when(util_notob_sum > util_ob_sum ~ 1,
+                           TRUE ~ 0)
+               )
+
+   # Find the Rank number tha tmatches the First 1 in opti_better_obs
+   tb_onevar <- tb_onevar %>%
+     mutate(opti_better_obs_cumu = cumsum(opti_better_obs)) %>%
+     mutate(min_w_hat =
+              case_when(opti_better_obs_cumu == 1 ~ optimal,
+                        TRUE ~ 0))
+
+  # Compute REV
+  it_min_w_hat <- max(tb_onevar %>% pull(min_w_hat))
+  it_w_hat_obs <- sum(ar_bin_observed)
+  delta_rev <- 1-(it_min_w_hat/it_w_hat_obs)
+
+  # Return
+  return(delta_rev)
+}

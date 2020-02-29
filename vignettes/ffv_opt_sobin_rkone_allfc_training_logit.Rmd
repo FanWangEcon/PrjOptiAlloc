@@ -265,7 +265,6 @@ df_opt_lalonde_training_employ <- df_all_rho
 usethis::use_data(df_opt_lalonde_training_employ, df_opt_lalonde_training_employ, overwrite = TRUE)
 ```
 
-
 ## Binary Marginal Effects and Prediction without Binary
 
 What is the relationship between ranking,

@@ -67,9 +67,57 @@ dfj <- dfj %>% select(id,
                       contains("rank"), contains("rho"), 
                       everything())
 
+# treatment column to numeric
+dfj$trt <- as.numeric(dfj$trt) - 1
+
 # Summarize
 str(dfj)
 summary(dfj)
+```
+
+# Compute REV
+
+Compute Resource Equivalent Variations. Assume here that i use here the same ar_rho vector as used in [emloyment](C:\Users\fan\PrjOptiAlloc\vignettes\ffv_opt_sobin_rkone_allfc_training_logit.Rmd) and [wage](C:\Users\fan\PrjOptiAlloc\vignettes\ffv_opt_sobin_rkone_allrw_training_wage.Rmd) regressions.
+
+Note that for each rho, the optimal ranking is different, and there are different optimal rankings for wage and employment outcomes.
+
+```{r compute rev}
+ar_rho = c(-100, -0.001,  0.95)
+ar_rho <- unique(ar_rho)
+
+ar_bin_observed <- dfj %>% pull(trt)
+ar_A_wage <- dfj %>% pull(A_i_wage)
+ar_A_employ <- dfj %>% pull(A_i_employ)
+
+ar_alpha_wage <- dfj %>% pull(alpha_i_wage)
+ar_alpha_employ <- dfj %>% pull(alpha_i_employ)
+
+ar_beta_wage <- dfj %>% pull(beta_i_wage)
+ar_beta_employ <- dfj %>% pull(beta_i_employ)
+
+ar_rev_wage <- rep(0, length(ar_rho))
+ar_rev_employ <- rep(0, length(ar_rho))
+  
+for (it_rho_ctr in seq(1, length(ar_rho))) {
+  
+  fl_rho <- ar_rho[it_rho_ctr]
+  
+  svr_rho_wage  <- paste0('rho_c', it_rho_ctr, '_rk_employ')
+  svr_rho_employ <- paste0('rho_c', it_rho_ctr, '_rk_wage')
+  
+  ar_queue_optimal_wage <- dfj %>% pull(svr_rho_wage)
+  ar_queue_optimal_employ <- dfj %>% pull(svr_rho_employ)
+  
+  ar_rev_wage[it_rho_ctr] <- ffp_opt_sobin_rev(ar_queue_optimal_wage, ar_bin_observed,
+                                               ar_A_wage, ar_alpha_wage, ar_beta_wage,
+                                               fl_rho)
+  
+  ar_rev_employ[it_rho_ctr] <- ffp_opt_sobin_rev(ar_queue_optimal_employ, ar_bin_observed,
+                                                 ar_A_employ, ar_alpha_employ, ar_beta_employ,
+                                                 fl_rho)
+}
+print(ar_rev_wage)
+print(ar_rev_employ)
 ```
 
 # Analysis of A and alpha
@@ -163,7 +211,7 @@ dfj_highest_long %>% group_by(employvswwage, highestrank_grp) %>%
                 summarize(count = n())
 ```
 
-## Histogram Plots and Table Mand and Max Change
+## Histogram Plots and Table Min and Max Change
 
 From the wage and employment analysis, each generates min and max rank
 

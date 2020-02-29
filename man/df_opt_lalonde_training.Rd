@@ -12,7 +12,7 @@
 data(df_opt_lalonde_training)
 }
 \description{
-trt, a numeric vector identifying the study in which the subjects were enrolled (0 = Control, 1 = treated). Male module.
+trt, a numeric vector identifying the study in which the subjects were enrolled (0 = Control, 1 = treated). Male module, 297 treated. 425 untreated.
 age, age (in years).
 educ, years of education.
 black, (0 = not black, 1 = black).

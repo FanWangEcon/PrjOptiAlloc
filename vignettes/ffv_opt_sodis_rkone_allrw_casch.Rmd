@@ -37,27 +37,48 @@ library(knitr)
 library(kableExtra)
 ```
 
+## Policy Parameters
+
+
+```{r control policy}
+# 30 percent teacher at most per school, discretize floor as needed
+fl_max_add_teacher_percent = 0.30
+# 15 percent total additional of all teachers
+fl_teacher_increase_percent = 0.15
+```
+
 ## Load Data
 
-Generate four categories by initial height and mother's education levels combinations.
+Generate four categories by initial height and mother's education levels combinations. Note the dataset does not provide all the details we want, so we will make some assumptions. Importantly, we only have averages within district. 
+
+1. *teachers*: is full-time-equivalent average number of teacher per district. 
+2. *enrl_tot*: is the enrollment average per district
+
 
 ```{r Load Packages and Process Data}
 # Load Data
 data(df_opt_caschool)
+dfca <- df_opt_caschool
 
 # Summarize
-str(df_opt_caschool)
-summary(df_opt_caschool)
-df_opt_caschool %>% group_by(county) %>%
+str(dfca)
+summary(dfca)
+dfca %>% group_by(county) %>%
   summarise_if(is.numeric, funs(mean = mean), na.rm = TRUE)
 
 # Modifying and labeling etc.
 # School characteristics are averaged across the district, don't know school count per district, implicitly assume the number of schools per district is the same.
 # Some districts have larger and others smaller sized schools, ignoring within district variations.
-df_opt_caschool <- df_opt_caschool %>%
-                      mutate(id = X) %>%
-                      mutate(teachers = round(teachers),
-                             enrltot = round(enrltot))
+dfca <- dfca %>%
+          mutate(id = X) %>% select(-X) %>%
+          select(id, everything()) %>%
+          mutate(teachers = round(teachers),
+                 enrltot = round(enrltot))
+
+# Student and Teacher Ratio, str and stravg are almost identical
+# use stravg because need to use enrltot and teachers variables later
+dfca <- dfca %>% mutate(stravg = enrltot/teachers)
+# view(dfca %>% select(stravg, str))
 
 # Generate Discrete Version of continuous variables
 # df_opt_birthwt <- df_opt_birthwt %>%
@@ -72,13 +93,13 @@ df_opt_caschool <- df_opt_caschool %>%
 #                                labels=c("novisit","1visit","morevisit")))
 ```
 
-# Regression with Data and Construct Input Arrays
+# Regression with Data
 
 ## Tabulate
 
 ```{r tabulate groups}
 # Tabulate groups, how many in each group, enough for group heterogeneity in effects?
-df_opt_caschool %>%
+dfca %>%
   group_by(county, grspan) %>%
   summarize(freq = n()) %>%
   pivot_wider(names_from = grspan, values_from = freq)
@@ -107,19 +128,21 @@ EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left
 $$
 
 ```{r Regression Testing}
-attach(df_opt_caschool)
+attach(dfca)
 
 # Math, English, and Overall and str = student teacher ratio
 summary(lm(mathscr ~ str))
 summary(lm(readscr ~ str))
 summary(lm(testscr ~ str))
+summary(lm(testscr ~ stravg))
 
 # Regress test score on str with student and teacher counts
 summary(lm(testscr ~ enrltot + teachers + str))
+summary(lm(testscr ~ enrltot + teachers + stravg))
 
 # Regress test score on str with covariates and county fe
-summary(lm(testscr ~ factor(county) + calwpct + mealpct + computer
-                     + str - 1))
+summary(lm(testscr ~ factor(county) + calwpct + mealpct + computer + str - 1))
+summary(lm(testscr ~ factor(county) + calwpct + mealpct + computer + stravg - 1))
 ```
 
 ## Discrete Regression
@@ -128,7 +151,7 @@ Need to convert regression results to increment effect.
 
 ```{r}
 # Store Regression Results
-mt_model <- model.matrix( ~ factor(county) + calwpct + mealpct + computer + str)
+mt_model <- model.matrix( ~ factor(county) + calwpct + mealpct + computer + stravg)
 rs_scr_on_str = lm(testscr ~ mt_model - 1)
 print(summary(rs_scr_on_str))
 rs_scr_on_str_tidy = tidy(rs_scr_on_str)
@@ -146,13 +169,13 @@ head(rs_scr_on_str_tidy, 6)
 head(mt_model, 5)
 
 # Covariates coefficients from regression (including constant)
-ar_fl_cova_esti <- as.matrix(rs_scr_on_str_tidy %>% filter(!str_detect(term, 'str')) %>% select(estimate))
-ar_fl_main_esti <- as.matrix(rs_scr_on_str_tidy %>% filter(str_detect(term, 'str')) %>% select(estimate))
+ar_fl_cova_esti <- as.matrix(rs_scr_on_str_tidy %>% filter(!str_detect(term, 'stravg')) %>% select(estimate))
+ar_fl_main_esti <- as.matrix(rs_scr_on_str_tidy %>% filter(str_detect(term, 'stravg')) %>% select(estimate))
 head(ar_fl_cova_esti, 5)
 head(ar_fl_main_esti, 5)
 
 # Select Matrix subcomponents
-mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("str")))
+mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("stravg")))
 
 # Generate A_i, use mt_cova_wth_const
 ar_A_m <- mt_cova %*% ar_fl_cova_esti
@@ -161,9 +184,13 @@ head(ar_A_m, 5)
 # Generate alpha_i, in this problem, the alpha_i is generated differently.
 ```
 
+# Construct Increment Specific Effect of Each Additional Teacher
+
 ## Individual alpha_i
 
 So this task is less trivial to do here. The procedure will be the following,
+
+### Generate Expanded Long Frame
 
 **Step 0**
 
@@ -176,6 +203,24 @@ So this task is less trivial to do here. The procedure will be the following,
 **Step 2**
 
 *mt_b*: expand *mt_a*. Each row is a feasible additional teacher for a district, each there are now five variables, ID, previous level of teachers, and new level of teachers, and the existing level of students, and original A_i.
+
+```{r generate longer dataframe}
+# dfca_exmain: dfca expand main fram5, five variables
+dfca_exmain <- dfca %>%
+                mutate(D_i = floor(fl_max_add_teacher_percent*teachers)) %>%
+                select(id,D_i,teachers,enrltot)
+
+dfca_exmain <- cbind(dfca_exmain, ar_A_m) %>% rename( A_i = estimate)
+
+# following: https://fanwangecon.github.io/R4Econ/summarize/count/fs_count_basics.html
+# teachers is a count coloumn to expand by 
+# i_d_l is each incremental teacher
+# teachers_addl is existing teacher level added up to current l
+dfca_exmain <- dfca_exmain %>% uncount(D_i) %>% 
+                  group_by(id) %>% 
+                  mutate(i_d_l = row_number()) %>% 
+                  mutate(teachers_addl = teachers + i_d_l - 1)
+```
 
 **Step 3**
 

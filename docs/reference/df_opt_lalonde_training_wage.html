@@ -99,13 +99,19 @@ includes min and max rank. Based on wage regression." />
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rkone_allfc_training_logit.html">BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_sobin_rkone_allfc_training_logit.html">BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_sobin_rkone_allrw_car.html">BINARY--MPG and Shift Optimal Allocation Solution (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rkone_allrw_training_wage.html">BINARY--NSW Training WAGE Optimal Allocation Solution (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rkone_allrw_training.html">BINARY--NSW Training WAGE and EMPLOYMENT Optimal Allocation Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_sobin_rkone_allrw_training_wage.html">BINARY--NSW Training WAGE Optimal Allocation Solution</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_sobin_rkone_allrw_wgt.html">BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)</a>
@@ -169,71 +175,38 @@ includes min and max rank. Based on wage regression.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_lalonde_training_wage</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_opt_lalonde_training_wage</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt;    id A_i_wage alpha_i_wage beta_i_wage rank_min_wage rank_max_wage
-#&gt; 1   1 4.705623    0.4537963 0.001385042           284           392
-#&gt; 2   2 6.842885    0.4537963 0.001385042           673           689
-#&gt; 3   3 4.373738    0.4537963 0.001385042           163           278
-#&gt; 4   4 4.129823    0.4537963 0.001385042            61           178
-#&gt; 5   5 4.192084    0.4537963 0.001385042           106           223
-#&gt; 6   6 5.057681    0.4537963 0.001385042           399           483
-#&gt; 7   7 4.192084    0.4537963 0.001385042           106           223
-#&gt; 8   8 5.096506    0.4537963 0.001385042           416           499
-#&gt; 9   9 5.445291    0.4537963 0.001385042           495           545
-#&gt; 10 10 5.450645    1.0708127 0.001385042            68           496
-#&gt;    avg_rank_wage trt age educ race marr nodeg      re78 rho_c1_rk rho_c2_rk
-#&gt; 1       342.5667   0  23   10    1    0     1     0.000       284       284
-#&gt; 2       682.5333   0  26   12    0    0     0 12383.680       673       673
-#&gt; 3       220.7667   0  22    9    1    0     1     0.000       163       163
-#&gt; 4       116.7000   0  34    9    1    0     1 14051.160        61        61
-#&gt; 5       162.9000   0  18    9    1    0     1 10740.080       106       106
-#&gt; 6       445.5333   0  45   11    1    0     1 11796.470       399       399
-#&gt; 7       162.9000   0  18    9    1    0     1  9227.052       106       106
-#&gt; 8       462.3000   0  27   12    1    0     0  3552.268       416       416
-#&gt; 9       522.3333   0  24    8    0    0     1 10569.270       495       495
-#&gt; 10      270.3333   0  34   11    1    1     1  6040.335       496       496
-#&gt;    rho_c3_rk rho_c4_rk rho_c5_rk rho_c6_rk rho_c7_rk rho_c8_rk rho_c9_rk
-#&gt; 1        284       284       284       284       284       284       289
-#&gt; 2        673       673       673       673       673       673       673
-#&gt; 3        163       163       163       163       163       163       164
-#&gt; 4         61        61        61        61        61        61        61
-#&gt; 5        106       106       106       106       106       106       106
-#&gt; 6        399       399       399       399       399       399       400
-#&gt; 7        106       106       106       106       106       106       106
-#&gt; 8        416       416       416       416       416       416       418
-#&gt; 9        495       495       495       495       495       495       496
-#&gt; 10       496       496       496       496       496       496       494
-#&gt;    rho_c10_rk rho_c11_rk rho_c12_rk rho_c13_rk rho_c14_rk rho_c15_rk rho_c16_rk
-#&gt; 1         289        294        303        316        339        345        362
-#&gt; 2         674        674        675        684        688        689        689
-#&gt; 3         164        166        167        184        192        202        231
-#&gt; 4          61         61         61         68         69         90        115
-#&gt; 5         106        106        108        114        121        137        172
-#&gt; 6         401        403        415        436        450        453        460
-#&gt; 7         106        106        108        114        121        137        172
-#&gt; 8         419        423        436        453        466        469        477
-#&gt; 9         497        498        504        515        519        522        530
-#&gt; 10        491        485        481        380        351        309        199
-#&gt;    rho_c17_rk rho_c18_rk rho_c19_rk rho_c20_rk rho_c21_rk rho_c22_rk rho_c23_rk
-#&gt; 1         378        387        391        392        392        392        392
-#&gt; 2         689        689        689        689        689        689        689
-#&gt; 3         255        263        273        278        278        278        278
-#&gt; 4         150        156        164        177        178        178        178
-#&gt; 5         197        205        214        223        223        223        223
-#&gt; 6         478        482        483        483        483        483        483
-#&gt; 7         197        205        214        223        223        223        223
-#&gt; 8         494        498        499        499        499        499        499
-#&gt; 9         544        545        545        545        545        545        545
-#&gt; 10         68         68         68         68         68         68         68
-#&gt;    rho_c24_rk rho_c25_rk rho_c26_rk rho_c27_rk rho_c28_rk rho_c29_rk rho_c30_rk
-#&gt; 1         392        392        392        392        392        392        392
-#&gt; 2         689        689        689        689        689        689        689
-#&gt; 3         278        278        278        278        278        278        278
-#&gt; 4         178        178        178        178        178        178        178
-#&gt; 5         223        223        223        223        223        223        223
-#&gt; 6         483        483        483        483        483        483        483
-#&gt; 7         223        223        223        223        223        223        223
-#&gt; 8         499        499        499        499        499        499        499
-#&gt; 9         545        545        545        545        545        545        545
-#&gt; 10         68         68         68         68         68         68         68</div></pre>
+#&gt; 1   1 4.705623    0.4537963 0.001385042           392           284
+#&gt; 2   2 6.842885    0.4537963 0.001385042           689           673
+#&gt; 3   3 4.373738    0.4537963 0.001385042           278           163
+#&gt; 4   4 4.129823    0.4537963 0.001385042           178            61
+#&gt; 5   5 4.192084    0.4537963 0.001385042           223           106
+#&gt; 6   6 5.057681    0.4537963 0.001385042           483           399
+#&gt; 7   7 4.192084    0.4537963 0.001385042           223           106
+#&gt; 8   8 5.096506    0.4537963 0.001385042           499           416
+#&gt; 9   9 5.445291    0.4537963 0.001385042           545           495
+#&gt; 10 10 5.450645    1.0708127 0.001385042           496            68
+#&gt;    avg_rank_wage trt age educ race marr nodeg      re78 rho_c1_rk_wage
+#&gt; 1       356.0000   0  23   10    1    0     1     0.000            284
+#&gt; 2       683.6667   0  26   12    0    0     0 12383.680            673
+#&gt; 3       239.6667   0  22    9    1    0     1     0.000            163
+#&gt; 4       139.0000   0  34    9    1    0     1 14051.160             61
+#&gt; 5       184.0000   0  18    9    1    0     1 10740.080            106
+#&gt; 6       455.0000   0  45   11    1    0     1 11796.470            399
+#&gt; 7       184.0000   0  18    9    1    0     1  9227.052            106
+#&gt; 8       471.3333   0  27   12    1    0     0  3552.268            416
+#&gt; 9       528.3333   0  24    8    0    0     1 10569.270            495
+#&gt; 10      210.6667   0  34   11    1    1     1  6040.335            496
+#&gt;    rho_c2_rk_wage rho_c3_rk_wage
+#&gt; 1             392            392
+#&gt; 2             689            689
+#&gt; 3             278            278
+#&gt; 4             178            178
+#&gt; 5             223            223
+#&gt; 6             483            483
+#&gt; 7             223            223
+#&gt; 8             499            499
+#&gt; 9             545            545
+#&gt; 10             68             68</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -1,0 +1,230 @@
+---
+title: BINARY--REV Resource Equivalent Variation Computation (Line by Line)
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{BINARY--REV Resource Equivalent Variation Computation (Line by Line)}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+urlcolor: blue
+---
+
+Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAllo==c/)**
+
+# Objective
+
+Calculate Resource Equivalent Variation for the Binary Problem based on Theorem 1. Theorem 1's Equation 6 offers a path for computing an efficient solution to calculating REV.
+
+# Load Dependencies
+
+```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
+rm(list = ls(all.names = TRUE))
+options(knitr.duplicate.label = 'allow')
+```
+```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
+library(dplyr)
+library(tidyr)
+library(tibble)
+library(stringr)
+
+library(broom)
+library(ggplot2)
+library(REconTools)
+
+library(PrjOptiAlloc)
+
+library(knitr)
+library(kableExtra)
+```
+
+# Implement Algorithm Line by Line
+
+## Generate Testing Rank Data
+
+Generate data needed.
+
+```{r rank generate}
+data(df_opt_lalonde_training_employ)
+data(df_opt_lalonde_training_wage)
+
+# dfj, dataframe joint
+dfj <- df_opt_lalonde_training_employ %>% left_join(df_opt_lalonde_training_wage, by = 'id')
+
+# drop the .y variables, clean the .x out
+dfj <- dfj %>% select(-contains(".y")) %>% 
+          rename_at(vars(ends_with(".x")), funs(str_replace(., ".x", "")))
+
+# order and organize variables
+dfj <- dfj %>% select(id, 
+                      starts_with("A_"), starts_with("alpha_"), starts_with("beta_"),
+                      contains("rank"), contains("rho"), 
+                      everything())
+
+# treatment column to numeric
+dfj$trt <- as.numeric(dfj$trt) - 1
+
+# ar_rho = c(-100, -0.001,  0.95)
+ar_rho = c(-100)
+ar_rho <- unique(ar_rho)
+
+ar_bin_observed <- dfj %>% pull(trt)
+ar_A_wage <- dfj %>% pull(A_i_wage)
+ar_A_employ <- dfj %>% pull(A_i_employ)
+
+ar_alpha_wage <- dfj %>% pull(alpha_i_wage)
+ar_alpha_employ <- dfj %>% pull(alpha_i_employ)
+
+ar_beta_wage <- dfj %>% pull(beta_i_wage)
+ar_beta_employ <- dfj %>% pull(beta_i_employ)
+
+ar_rev_wage <- rep(0, length(ar_rho))
+ar_rev_employ <- rep(0, length(ar_rho))
+  
+for (it_rho_ctr in seq(1, length(ar_rho))) {
+  
+  fl_rho <- ar_rho[it_rho_ctr]
+  
+  svr_rho_wage  <- paste0('rho_c', it_rho_ctr, '_rk_employ')
+  svr_rho_employ <- paste0('rho_c', it_rho_ctr, '_rk_wage')
+  
+  ar_queue_optimal_wage <- dfj %>% pull(svr_rho_wage)
+  ar_queue_optimal_employ <- dfj %>% pull(svr_rho_employ)
+  
+  ar_rev_wage[it_rho_ctr] <- ffp_opt_sobin_rev(ar_queue_optimal_wage, ar_bin_observed,
+                                               ar_A_wage, ar_alpha_wage, ar_beta_wage,
+                                               fl_rho)
+  
+  ar_rev_employ[it_rho_ctr] <- ffp_opt_sobin_rev(ar_queue_optimal_employ, ar_bin_observed,
+                                                 ar_A_employ, ar_alpha_employ, ar_beta_employ,
+                                                 fl_rho)
+}
+print(ar_rev_wage)
+print(ar_rev_employ)
+```
+
+## Compute REV
+
+Compute REV giving observable and ranking
+
+```{r }
+# Use the just generated optimal ranking above
+fl_lambda <- fl_rho
+
+ar_it_obs <- ar_bin_observed
+ar_opti_r <- ar_queue_optimal_employ
+
+ar_A <- ar_A_employ
+ar_alpha <- ar_alpha_employ
+ar_beta <- ar_beta_employ
+
+mt_rev <- cbind(seq(1,length(ar_opti_r)), ar_it_obs, ar_opti_r, ar_A, ar_alpha, ar_beta)
+ar_st_varnames <- c('id', 'observed', 'optimal', 'A', 'alpha', 'beta')
+tb_onevar <- as_tibble(mt_rev) %>% rename_all(~c(ar_st_varnames)) %>%
+                arrange(optimal)
+
+it_w_res <- sum(ar_it_obs)
+
+# Generate util observed and util unobserved columns
+tb_onevar <- tb_onevar %>% mutate(utility = beta*((alpha+A)^fl_lambda)) %>%
+                           mutate(util_ob = case_when(observed == 1 ~ utility,
+                                                      TRUE ~ 0 )) %>%
+                           mutate(util_notob = case_when(observed == 0 ~ utility,
+                                                         TRUE ~ 0 ))
+
+# Display
+kable(tb_onevar) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+## Generate Util observed um and not observed Reverse Sum
+
+```{r}
+# Generate directional cumulative sums
+tb_onevar <- tb_onevar %>%
+                arrange(-optimal) %>%
+                mutate(util_ob_sum = cumsum(util_ob)) %>%
+                arrange(optimal) %>%
+                mutate(util_notob_sum = cumsum(util_notob)) %>%
+                select(id, observed, optimal, alpha, A, beta,
+                       utility,
+                       util_ob, util_ob_sum,
+                       util_notob, util_notob_sum)
+
+# Display
+kable(tb_onevar) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+```{r}
+# Following Theorem 1, simply compare util_ob_sum vs util_notob_sum
+tb_onevar <- tb_onevar %>%
+      mutate(opti_better_obs =
+               case_when(util_notob_sum > util_ob_sum ~ 1,
+                         TRUE ~ 0)
+             ) %>%
+      select(id, observed, optimal,
+             utility,
+             util_ob, util_ob_sum,
+             util_notob, util_notob_sum,
+             opti_better_obs,
+             alpha, A, beta)
+
+# Display
+kable(tb_onevar) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+```{r}
+# Find the Rank number tha tmatches the First 1 in opti_better_obs
+tb_onevar <- tb_onevar %>%
+  mutate(opti_better_obs_cumu = cumsum(opti_better_obs)) %>%
+  mutate(min_w_hat =
+           case_when(opti_better_obs_cumu == 1 ~ optimal,
+                     TRUE ~ 0)) %>%
+      select(id, observed, optimal,
+             utility,
+             util_ob, util_ob_sum,
+             util_notob, util_notob_sum,
+             opti_better_obs,
+             min_w_hat,
+             alpha, A, beta)
+
+# Display
+  kable(tb_onevar) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+# Compute REV
+it_min_w_hat <- max(tb_onevar %>% pull(min_w_hat))
+it_w_hat_obs <- sum(ar_it_obs)
+delta_rev <- 1-(it_min_w_hat/it_w_hat_obs)
+
+cat('it_min_w_hat:', it_min_w_hat, '\n')
+cat('it_w_hat_obs:', it_w_hat_obs, '\n')
+cat('delta_rev:', delta_rev, '\n')
+```
+
+# Function test
+
+Test the function written based on the details above.
+
+```{r function test}
+fl_lambda <- -1
+ar_alpha <- c(0.1,1.5,2.5,4  ,9,1.2,3,2,8)
+ar_A <-     c(0.5,1.5,3.5,6.5,1.9,3,4,6,4)
+ar_beta <-  rep(0, length(ar_A)) + 1/length(ar_A)
+mt_alpha_A <- cbind(ar_alpha, ar_A, ar_beta)
+ar_st_varnames <- c('alpha', 'A', 'beta')
+tb_alpha_A <- as_tibble(mt_alpha_A) %>% rename_all(~c(ar_st_varnames))
+tb_alpha_A
+ar_rho <- c(-1)
+for (it_rho_ctr in seq(1,length(ar_rho))) {
+  fl_rho <- ar_rho[it_rho_ctr]
+  ar_it_rank <- tb_alpha_A %>% rowwise() %>%
+    do(rk = ffp_opt_sobin_target_row(., fl_rho,
+                                     ar_A, ar_alpha, ar_beta)) %>%
+    unnest(rk) %>% pull(rk)
+  cat('fl_rho:', fl_rho, 'ar_it_rank:', ar_it_rank, '\n')
+}
+ar_bin_observed <- c(0,1,0,1,0,0,1,1,0)
+ar_queue_optimal <- ar_it_rank
+ffp_opt_sobin_rev(ar_queue_optimal, ar_bin_observed, ar_A, ar_alpha, ar_beta, fl_lambda)
+```

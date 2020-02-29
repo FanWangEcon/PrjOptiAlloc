@@ -60,13 +60,19 @@
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rkone_allfc_training_logit.html">BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_sobin_rkone_allfc_training_logit.html">BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_sobin_rkone_allrw_car.html">BINARY--MPG and Shift Optimal Allocation Solution (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rkone_allrw_training_wage.html">BINARY--NSW Training WAGE Optimal Allocation Solution (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rkone_allrw_training.html">BINARY--NSW Training WAGE and EMPLOYMENT Optimal Allocation Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_sobin_rkone_allrw_training_wage.html">BINARY--NSW Training WAGE Optimal Allocation Solution</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_sobin_rkone_allrw_wgt.html">BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)</a>
@@ -139,15 +145,30 @@
 <a class="sourceLine" id="cb2-11" title="11"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(knitr)</a>
 <a class="sourceLine" id="cb2-12" title="12"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(kableExtra)</a></code></pre></div>
 </div>
+<div id="policy-parameters" class="section level2">
+<h2 class="hasAnchor">
+<a href="#policy-parameters" class="anchor"></a>Policy Parameters</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># 30 percent teacher at most per school, discretize floor as needed</span></a>
+<a class="sourceLine" id="cb3-2" title="2">fl_max_add_teacher_percent =<span class="st"> </span><span class="fl">0.30</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co"># 15 percent total additional of all teachers</span></a>
+<a class="sourceLine" id="cb3-4" title="4">fl_teacher_increase_percent =<span class="st"> </span><span class="fl">0.15</span></a></code></pre></div>
+</div>
 <div id="load-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-data" class="anchor"></a>Load Data</h2>
-<p>Generate four categories by initial height and mother’s education levels combinations.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># Load Data</span></a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(df_opt_caschool)</a>
-<a class="sourceLine" id="cb3-3" title="3"></a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="co"># Summarize</span></a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(df_opt_caschool)</a></code></pre></div>
+<p>Generate four categories by initial height and mother’s education levels combinations. Note the dataset does not provide all the details we want, so we will make some assumptions. Importantly, we only have averages within district.</p>
+<ol style="list-style-type: decimal">
+<li>
+<em>teachers</em>: is full-time-equivalent average number of teacher per district.</li>
+<li>
+<em>enrl_tot</em>: is the enrollment average per district</li>
+</ol>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co"># Load Data</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(df_opt_caschool)</a>
+<a class="sourceLine" id="cb4-3" title="3">dfca &lt;-<span class="st"> </span>df_opt_caschool</a>
+<a class="sourceLine" id="cb4-4" title="4"></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co"># Summarize</span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(dfca)</a></code></pre></div>
 <pre><code>## 'data.frame':    420 obs. of  18 variables:
 ##  $ X       : int  1 2 3 4 5 6 7 8 9 10 ...
 ##  $ distcod : int  75119 61499 61549 61457 61523 62042 68536 63834 62331 67306 ...
@@ -167,7 +188,7 @@
 ##  $ elpct   : num  0 4.58 30 0 13.86 ...
 ##  $ readscr : num  692 660 636 652 642 ...
 ##  $ mathscr : num  690 662 651 644 640 ...</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(df_opt_caschool)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(dfca)</a></code></pre></div>
 <pre><code>##        X            distcod              county   
 ##  Min.   :  1.0   Min.   :61382   Sonoma     : 29  
 ##  1st Qu.:105.8   1st Qu.:64308   Kern       : 27  
@@ -208,8 +229,8 @@
 ##  3rd Qu.:17.629   3rd Qu.:22.970   3rd Qu.:668.7   3rd Qu.:665.9  
 ##  Max.   :55.328   Max.   :85.540   Max.   :704.0   Max.   :709.5  
 ## </code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">df_opt_caschool <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(county) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="st">  </span><span class="kw">summarise_if</span>(is.numeric, <span class="kw">funs</span>(<span class="dt">mean =</span> mean), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">dfca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(county) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="st">  </span><span class="kw">summarise_if</span>(is.numeric, <span class="kw">funs</span>(<span class="dt">mean =</span> mean), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## Warning: funs() is soft deprecated as of dplyr 0.8.0
 ## Please use a list of either functions or lambdas: 
 ## 
@@ -239,38 +260,44 @@
 ## #   computer_mean &lt;dbl&gt;, testscr_mean &lt;dbl&gt;, compstu_mean &lt;dbl&gt;,
 ## #   expnstu_mean &lt;dbl&gt;, str_mean &lt;dbl&gt;, avginc_mean &lt;dbl&gt;, elpct_mean &lt;dbl&gt;,
 ## #   readscr_mean &lt;dbl&gt;, mathscr_mean &lt;dbl&gt;</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="co"># Modifying and labeling etc.</span></a>
-<a class="sourceLine" id="cb10-2" title="2"><span class="co"># School characteristics are averaged across the district, don't know school count per district, implicitly assume the number of schools per district is the same.</span></a>
-<a class="sourceLine" id="cb10-3" title="3"><span class="co"># Some districts have larger and others smaller sized schools, ignoring within district variations.</span></a>
-<a class="sourceLine" id="cb10-4" title="4">df_opt_caschool &lt;-<span class="st"> </span>df_opt_caschool <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-5" title="5"><span class="st">                      </span><span class="kw">mutate</span>(<span class="dt">id =</span> X) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-6" title="6"><span class="st">                      </span><span class="kw">mutate</span>(<span class="dt">teachers =</span> <span class="kw"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(teachers),</a>
-<a class="sourceLine" id="cb10-7" title="7">                             <span class="dt">enrltot =</span> <span class="kw"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(enrltot))</a>
-<a class="sourceLine" id="cb10-8" title="8"></a>
-<a class="sourceLine" id="cb10-9" title="9"><span class="co"># Generate Discrete Version of continuous variables</span></a>
-<a class="sourceLine" id="cb10-10" title="10"><span class="co"># df_opt_birthwt &lt;- df_opt_birthwt %&gt;%</span></a>
-<a class="sourceLine" id="cb10-11" title="11"><span class="co">#     mutate(momwgtLowHigh = cut(lwt,</span></a>
-<a class="sourceLine" id="cb10-12" title="12"><span class="co">#                                breaks=c(-Inf, 129, Inf),</span></a>
-<a class="sourceLine" id="cb10-13" title="13"><span class="co">#                                labels=c("LW","HW"))) %&gt;%</span></a>
-<a class="sourceLine" id="cb10-14" title="14"><span class="co">#     mutate(mombirthage = cut(age,</span></a>
-<a class="sourceLine" id="cb10-15" title="15"><span class="co">#                                breaks=c(-Inf, 24, Inf),</span></a>
-<a class="sourceLine" id="cb10-16" title="16"><span class="co">#                                labels=c("young","older"))) %&gt;%</span></a>
-<a class="sourceLine" id="cb10-17" title="17"><span class="co">#     mutate(ftvm3 = cut(ftv,</span></a>
-<a class="sourceLine" id="cb10-18" title="18"><span class="co">#                                breaks=c(-Inf, 1, 2, Inf),</span></a>
-<a class="sourceLine" id="cb10-19" title="19"><span class="co">#                                labels=c("novisit","1visit","morevisit")))</span></a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co"># Modifying and labeling etc.</span></a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="co"># School characteristics are averaged across the district, don't know school count per district, implicitly assume the number of schools per district is the same.</span></a>
+<a class="sourceLine" id="cb11-3" title="3"><span class="co"># Some districts have larger and others smaller sized schools, ignoring within district variations.</span></a>
+<a class="sourceLine" id="cb11-4" title="4">dfca &lt;-<span class="st"> </span>dfca <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb11-5" title="5"><span class="st">          </span><span class="kw">mutate</span>(<span class="dt">id =</span> X) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>X) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb11-6" title="6"><span class="st">          </span><span class="kw">select</span>(id, <span class="kw">everything</span>()) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb11-7" title="7"><span class="st">          </span><span class="kw">mutate</span>(<span class="dt">teachers =</span> <span class="kw"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(teachers),</a>
+<a class="sourceLine" id="cb11-8" title="8">                 <span class="dt">enrltot =</span> <span class="kw"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(enrltot))</a>
+<a class="sourceLine" id="cb11-9" title="9"></a>
+<a class="sourceLine" id="cb11-10" title="10"><span class="co"># Student and Teacher Ratio, str and stravg are almost identical</span></a>
+<a class="sourceLine" id="cb11-11" title="11"><span class="co"># use stravg because need to use enrltot and teachers variables later</span></a>
+<a class="sourceLine" id="cb11-12" title="12">dfca &lt;-<span class="st"> </span>dfca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">stravg =</span> enrltot<span class="op">/</span>teachers)</a>
+<a class="sourceLine" id="cb11-13" title="13"><span class="co"># view(dfca %&gt;% select(stravg, str))</span></a>
+<a class="sourceLine" id="cb11-14" title="14"></a>
+<a class="sourceLine" id="cb11-15" title="15"><span class="co"># Generate Discrete Version of continuous variables</span></a>
+<a class="sourceLine" id="cb11-16" title="16"><span class="co"># df_opt_birthwt &lt;- df_opt_birthwt %&gt;%</span></a>
+<a class="sourceLine" id="cb11-17" title="17"><span class="co">#     mutate(momwgtLowHigh = cut(lwt,</span></a>
+<a class="sourceLine" id="cb11-18" title="18"><span class="co">#                                breaks=c(-Inf, 129, Inf),</span></a>
+<a class="sourceLine" id="cb11-19" title="19"><span class="co">#                                labels=c("LW","HW"))) %&gt;%</span></a>
+<a class="sourceLine" id="cb11-20" title="20"><span class="co">#     mutate(mombirthage = cut(age,</span></a>
+<a class="sourceLine" id="cb11-21" title="21"><span class="co">#                                breaks=c(-Inf, 24, Inf),</span></a>
+<a class="sourceLine" id="cb11-22" title="22"><span class="co">#                                labels=c("young","older"))) %&gt;%</span></a>
+<a class="sourceLine" id="cb11-23" title="23"><span class="co">#     mutate(ftvm3 = cut(ftv,</span></a>
+<a class="sourceLine" id="cb11-24" title="24"><span class="co">#                                breaks=c(-Inf, 1, 2, Inf),</span></a>
+<a class="sourceLine" id="cb11-25" title="25"><span class="co">#                                labels=c("novisit","1visit","morevisit")))</span></a></code></pre></div>
 </div>
 </div>
-<div id="regression-with-data-and-construct-input-arrays" class="section level1">
+<div id="regression-with-data" class="section level1">
 <h1 class="hasAnchor">
-<a href="#regression-with-data-and-construct-input-arrays" class="anchor"></a>Regression with Data and Construct Input Arrays</h1>
+<a href="#regression-with-data" class="anchor"></a>Regression with Data</h1>
 <div id="tabulate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#tabulate" class="anchor"></a>Tabulate</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co"># Tabulate groups, how many in each group, enough for group heterogeneity in effects?</span></a>
-<a class="sourceLine" id="cb11-2" title="2">df_opt_caschool <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb11-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(county, grspan) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb11-4" title="4"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">freq =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb11-5" title="5"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> grspan, <span class="dt">values_from =</span> freq)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co"># Tabulate groups, how many in each group, enough for group heterogeneity in effects?</span></a>
+<a class="sourceLine" id="cb12-2" title="2">dfca <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb12-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(county, grspan) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb12-4" title="4"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">freq =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb12-5" title="5"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> grspan, <span class="dt">values_from =</span> freq)</a></code></pre></div>
 <pre><code>## # A tibble: 45 x 3
 ## # Groups:   county [45]
 ##    county       `KK-08` `KK-06`
@@ -303,10 +330,10 @@ Y_i \left(T_i\right) = A_i + \theta \cdot \frac{S_i}{T_i} + \epsilon\\
 Y_i \left(T_i + 1\right) = A_i + \theta \cdot \frac{S_i}{T_i + 1} + \epsilon\\
 EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left( \frac{1}{T_i + 1} - \frac{1}{T_i} \right)
 \]</span></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/attach.html">attach</a></span>(df_opt_caschool)</a>
-<a class="sourceLine" id="cb13-2" title="2"></a>
-<a class="sourceLine" id="cb13-3" title="3"><span class="co"># Math, English, and Overall and str = student teacher ratio</span></a>
-<a class="sourceLine" id="cb13-4" title="4"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(mathscr <span class="op">~</span><span class="st"> </span>str))</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/attach.html">attach</a></span>(dfca)</a>
+<a class="sourceLine" id="cb14-2" title="2"></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co"># Math, English, and Overall and str = student teacher ratio</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(mathscr <span class="op">~</span><span class="st"> </span>str))</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = mathscr ~ str)
@@ -325,7 +352,7 @@ EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left
 ## Residual standard error: 18.41 on 418 degrees of freedom
 ## Multiple R-squared:  0.03824,    Adjusted R-squared:  0.03594 
 ## F-statistic: 16.62 on 1 and 418 DF,  p-value: 5.467e-05</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(readscr <span class="op">~</span><span class="st"> </span>str))</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(readscr <span class="op">~</span><span class="st"> </span>str))</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = readscr ~ str)
@@ -344,7 +371,7 @@ EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left
 ## Residual standard error: 19.51 on 418 degrees of freedom
 ## Multiple R-squared:  0.06081,    Adjusted R-squared:  0.05856 
 ## F-statistic: 27.06 on 1 and 418 DF,  p-value: 3.091e-07</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(testscr <span class="op">~</span><span class="st"> </span>str))</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(testscr <span class="op">~</span><span class="st"> </span>str))</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = testscr ~ str)
@@ -363,8 +390,27 @@ EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left
 ## Residual standard error: 18.58 on 418 degrees of freedom
 ## Multiple R-squared:  0.05124,    Adjusted R-squared:  0.04897 
 ## F-statistic: 22.58 on 1 and 418 DF,  p-value: 2.783e-06</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="co"># Regress test score on str with student and teacher counts</span></a>
-<a class="sourceLine" id="cb19-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(testscr <span class="op">~</span><span class="st"> </span>enrltot <span class="op">+</span><span class="st"> </span>teachers <span class="op">+</span><span class="st"> </span>str))</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(testscr <span class="op">~</span><span class="st"> </span>stravg))</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = testscr ~ stravg)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -47.719 -14.504   0.435  12.510  48.536 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 700.2132     9.3732  74.704  &lt; 2e-16 ***
+## stravg       -2.3458     0.4752  -4.937 1.15e-06 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 18.54 on 418 degrees of freedom
+## Multiple R-squared:  0.05509,    Adjusted R-squared:  0.05283 
+## F-statistic: 24.37 on 1 and 418 DF,  p-value: 1.15e-06</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co"># Regress test score on str with student and teacher counts</span></a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(testscr <span class="op">~</span><span class="st"> </span>enrltot <span class="op">+</span><span class="st"> </span>teachers <span class="op">+</span><span class="st"> </span>str))</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = testscr ~ enrltot + teachers + str)
@@ -385,9 +431,29 @@ EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left
 ## Residual standard error: 18.53 on 416 degrees of freedom
 ## Multiple R-squared:  0.06047,    Adjusted R-squared:  0.0537 
 ## F-statistic: 8.925 on 3 and 416 DF,  p-value: 9.632e-06</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="co"># Regress test score on str with covariates and county fe</span></a>
-<a class="sourceLine" id="cb21-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(testscr <span class="op">~</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(county) <span class="op">+</span><span class="st"> </span>calwpct <span class="op">+</span><span class="st"> </span>mealpct <span class="op">+</span><span class="st"> </span>computer</a>
-<a class="sourceLine" id="cb21-3" title="3">                     <span class="op">+</span><span class="st"> </span>str <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(testscr <span class="op">~</span><span class="st"> </span>enrltot <span class="op">+</span><span class="st"> </span>teachers <span class="op">+</span><span class="st"> </span>stravg))</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = testscr ~ enrltot + teachers + stravg)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -48.699 -13.748   0.399  12.380  48.667 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 692.964476  10.889054  63.639  &lt; 2e-16 ***
+## enrltot      -0.002493   0.003448  -0.723 0.470167    
+## teachers      0.042248   0.071067   0.594 0.552508    
+## stravg       -1.920592   0.557423  -3.445 0.000628 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 18.5 on 416 degrees of freedom
+## Multiple R-squared:  0.06359,    Adjusted R-squared:  0.05683 
+## F-statistic: 9.416 on 3 and 416 DF,  p-value: 4.942e-06</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="co"># Regress test score on str with covariates and county fe</span></a>
+<a class="sourceLine" id="cb26-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(testscr <span class="op">~</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(county) <span class="op">+</span><span class="st"> </span>calwpct <span class="op">+</span><span class="st"> </span>mealpct <span class="op">+</span><span class="st"> </span>computer <span class="op">+</span><span class="st"> </span>str <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = testscr ~ factor(county) + calwpct + mealpct + computer + 
@@ -454,74 +520,141 @@ EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left
 ## Residual standard error: 8.621 on 371 degrees of freedom
 ## Multiple R-squared:  0.9998, Adjusted R-squared:  0.9998 
 ## F-statistic: 4.938e+04 on 49 and 371 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(testscr <span class="op">~</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(county) <span class="op">+</span><span class="st"> </span>calwpct <span class="op">+</span><span class="st"> </span>mealpct <span class="op">+</span><span class="st"> </span>computer <span class="op">+</span><span class="st"> </span>stravg <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = testscr ~ factor(county) + calwpct + mealpct + computer + 
+##     stravg - 1)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -32.983  -4.907   0.122   4.895  23.816 
+## 
+## Coefficients:
+##                                 Estimate Std. Error t value Pr(&gt;|t|)    
+## factor(county)Alameda          7.074e+02  9.929e+00  71.249  &lt; 2e-16 ***
+## factor(county)Butte            7.013e+02  6.598e+00 106.285  &lt; 2e-16 ***
+## factor(county)Calaveras        6.984e+02  1.043e+01  66.943  &lt; 2e-16 ***
+## factor(county)Contra Costa     6.985e+02  6.297e+00 110.919  &lt; 2e-16 ***
+## factor(county)El Dorado        6.951e+02  6.053e+00 114.842  &lt; 2e-16 ***
+## factor(county)Fresno           6.965e+02  6.051e+00 115.100  &lt; 2e-16 ***
+## factor(county)Glenn            7.070e+02  7.793e+00  90.720  &lt; 2e-16 ***
+## factor(county)Humboldt         6.994e+02  5.572e+00 125.533  &lt; 2e-16 ***
+## factor(county)Imperial         6.965e+02  6.999e+00  99.518  &lt; 2e-16 ***
+## factor(county)Inyo             6.992e+02  1.038e+01  67.367  &lt; 2e-16 ***
+## factor(county)Kern             6.943e+02  5.882e+00 118.041  &lt; 2e-16 ***
+## factor(county)Kings            6.975e+02  6.324e+00 110.302  &lt; 2e-16 ***
+## factor(county)Lake             6.992e+02  8.305e+00  84.190  &lt; 2e-16 ***
+## factor(county)Lassen           6.992e+02  7.034e+00  99.402  &lt; 2e-16 ***
+## factor(county)Los Angeles      6.963e+02  6.201e+00 112.288  &lt; 2e-16 ***
+## factor(county)Madera           6.998e+02  6.695e+00 104.536  &lt; 2e-16 ***
+## factor(county)Marin            7.018e+02  5.803e+00 120.925  &lt; 2e-16 ***
+## factor(county)Mendocino        6.917e+02  1.031e+01  67.113  &lt; 2e-16 ***
+## factor(county)Merced           6.949e+02  6.250e+00 111.181  &lt; 2e-16 ***
+## factor(county)Monterey         6.891e+02  6.692e+00 102.973  &lt; 2e-16 ***
+## factor(county)Nevada           6.976e+02  5.923e+00 117.772  &lt; 2e-16 ***
+## factor(county)Orange           6.986e+02  6.457e+00 108.180  &lt; 2e-16 ***
+## factor(county)Placer           6.979e+02  6.178e+00 112.971  &lt; 2e-16 ***
+## factor(county)Riverside        6.950e+02  7.334e+00  94.766  &lt; 2e-16 ***
+## factor(county)Sacramento       6.904e+02  6.494e+00 106.314  &lt; 2e-16 ***
+## factor(county)San Benito       6.826e+02  7.182e+00  95.036  &lt; 2e-16 ***
+## factor(county)San Bernardino   6.939e+02  6.460e+00 107.421  &lt; 2e-16 ***
+## factor(county)San Diego        7.013e+02  5.823e+00 120.452  &lt; 2e-16 ***
+## factor(county)San Joaquin      6.855e+02  6.463e+00 106.062  &lt; 2e-16 ***
+## factor(county)San Luis Obispo  6.991e+02  8.235e+00  84.899  &lt; 2e-16 ***
+## factor(county)San Mateo        6.973e+02  5.492e+00 126.978  &lt; 2e-16 ***
+## factor(county)Santa Barbara    7.018e+02  6.105e+00 114.962  &lt; 2e-16 ***
+## factor(county)Santa Clara      6.994e+02  5.836e+00 119.849  &lt; 2e-16 ***
+## factor(county)Santa Cruz       7.034e+02  6.245e+00 112.635  &lt; 2e-16 ***
+## factor(county)Shasta           7.013e+02  5.998e+00 116.934  &lt; 2e-16 ***
+## factor(county)Siskiyou         6.991e+02  5.391e+00 129.679  &lt; 2e-16 ***
+## factor(county)Sonoma           6.970e+02  5.396e+00 129.168  &lt; 2e-16 ***
+## factor(county)Stanislaus       6.936e+02  6.446e+00 107.601  &lt; 2e-16 ***
+## factor(county)Sutter           6.856e+02  6.694e+00 102.430  &lt; 2e-16 ***
+## factor(county)Tehama           7.021e+02  6.297e+00 111.491  &lt; 2e-16 ***
+## factor(county)Trinity          7.265e+02  8.067e+00  90.061  &lt; 2e-16 ***
+## factor(county)Tulare           6.973e+02  6.128e+00 113.781  &lt; 2e-16 ***
+## factor(county)Tuolumne         6.974e+02  6.179e+00 112.866  &lt; 2e-16 ***
+## factor(county)Ventura          6.958e+02  6.678e+00 104.196  &lt; 2e-16 ***
+## factor(county)Yuba             7.125e+02  8.245e+00  86.421  &lt; 2e-16 ***
+## calwpct                        1.543e-02  6.941e-02   0.222  0.82425    
+## mealpct                       -5.902e-01  2.830e-02 -20.857  &lt; 2e-16 ***
+## computer                      -9.125e-05  1.171e-03  -0.078  0.93794    
+## stravg                        -8.700e-01  2.794e-01  -3.114  0.00199 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 8.611 on 371 degrees of freedom
+## Multiple R-squared:  0.9998, Adjusted R-squared:  0.9998 
+## F-statistic: 4.95e+04 on 49 and 371 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <div id="discrete-regression" class="section level2">
 <h2 class="hasAnchor">
 <a href="#discrete-regression" class="anchor"></a>Discrete Regression</h2>
 <p>Need to convert regression results to increment effect.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="co"># Store Regression Results</span></a>
-<a class="sourceLine" id="cb23-2" title="2">mt_model &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>( <span class="op">~</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(county) <span class="op">+</span><span class="st"> </span>calwpct <span class="op">+</span><span class="st"> </span>mealpct <span class="op">+</span><span class="st"> </span>computer <span class="op">+</span><span class="st"> </span>str)</a>
-<a class="sourceLine" id="cb23-3" title="3">rs_scr_on_str =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(testscr <span class="op">~</span><span class="st"> </span>mt_model <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb23-4" title="4"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(rs_scr_on_str))</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="co"># Store Regression Results</span></a>
+<a class="sourceLine" id="cb30-2" title="2">mt_model &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>( <span class="op">~</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(county) <span class="op">+</span><span class="st"> </span>calwpct <span class="op">+</span><span class="st"> </span>mealpct <span class="op">+</span><span class="st"> </span>computer <span class="op">+</span><span class="st"> </span>stravg)</a>
+<a class="sourceLine" id="cb30-3" title="3">rs_scr_on_str =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(testscr <span class="op">~</span><span class="st"> </span>mt_model <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb30-4" title="4"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(rs_scr_on_str))</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = testscr ~ mt_model - 1)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -32.035  -4.981   0.188   5.137  23.819 
+## -32.983  -4.907   0.122   4.895  23.816 
 ## 
 ## Coefficients:
 ##                                         Estimate Std. Error t value Pr(&gt;|t|)
-## mt_model(Intercept)                    7.072e+02  1.001e+01  70.621  &lt; 2e-16
-## mt_modelfactor(county)Butte           -6.264e+00  9.485e+00  -0.660  0.50939
-## mt_modelfactor(county)Calaveras       -9.138e+00  1.225e+01  -0.746  0.45613
-## mt_modelfactor(county)Contra Costa    -9.152e+00  9.233e+00  -0.991  0.32225
-## mt_modelfactor(county)El Dorado       -1.250e+01  9.061e+00  -1.380  0.16856
-## mt_modelfactor(county)Fresno          -1.128e+01  9.099e+00  -1.240  0.21592
-## mt_modelfactor(county)Glenn           -3.936e-01  1.006e+01  -0.039  0.96880
-## mt_modelfactor(county)Humboldt        -8.075e+00  8.921e+00  -0.905  0.36601
-## mt_modelfactor(county)Imperial        -1.122e+01  9.440e+00  -1.189  0.23538
-## mt_modelfactor(county)Inyo            -8.526e+00  1.224e+01  -0.697  0.48635
-## mt_modelfactor(county)Kern            -1.320e+01  8.886e+00  -1.485  0.13829
-## mt_modelfactor(county)Kings           -9.977e+00  9.169e+00  -1.088  0.27728
-## mt_modelfactor(county)Lake            -8.407e+00  1.077e+01  -0.780  0.43569
-## mt_modelfactor(county)Lassen          -8.356e+00  9.511e+00  -0.879  0.38017
-## mt_modelfactor(county)Los Angeles     -1.132e+01  8.897e+00  -1.272  0.20413
-## mt_modelfactor(county)Madera          -7.765e+00  9.503e+00  -0.817  0.41440
-## mt_modelfactor(county)Marin           -5.801e+00  9.147e+00  -0.634  0.52634
-## mt_modelfactor(county)Mendocino       -1.541e+01  1.228e+01  -1.256  0.21009
-## mt_modelfactor(county)Merced          -1.261e+01  9.129e+00  -1.381  0.16806
-## mt_modelfactor(county)Monterey        -1.847e+01  9.319e+00  -1.982  0.04817
-## mt_modelfactor(county)Nevada          -9.987e+00  9.103e+00  -1.097  0.27326
-## mt_modelfactor(county)Orange          -9.043e+00  9.117e+00  -0.992  0.32189
-## mt_modelfactor(county)Placer          -9.545e+00  9.040e+00  -1.056  0.29171
-## mt_modelfactor(county)Riverside       -1.255e+01  9.754e+00  -1.286  0.19908
-## mt_modelfactor(county)Sacramento      -1.714e+01  9.405e+00  -1.822  0.06920
-## mt_modelfactor(county)San Benito      -2.506e+01  9.972e+00  -2.513  0.01240
-## mt_modelfactor(county)San Bernardino  -1.372e+01  9.135e+00  -1.502  0.13404
-## mt_modelfactor(county)San Diego       -6.220e+00  8.894e+00  -0.699  0.48477
-## mt_modelfactor(county)San Joaquin     -2.194e+01  9.362e+00  -2.343  0.01964
-## mt_modelfactor(county)San Luis Obispo -8.935e+00  1.058e+01  -0.844  0.39907
-## mt_modelfactor(county)San Mateo       -1.024e+01  8.891e+00  -1.152  0.25003
-## mt_modelfactor(county)Santa Barbara   -5.774e+00  9.046e+00  -0.638  0.52364
-## mt_modelfactor(county)Santa Clara     -8.144e+00  8.896e+00  -0.915  0.36055
-## mt_modelfactor(county)Santa Cruz      -3.951e+00  9.237e+00  -0.428  0.66911
-## mt_modelfactor(county)Shasta          -6.421e+00  9.021e+00  -0.712  0.47707
-## mt_modelfactor(county)Siskiyou        -8.420e+00  9.183e+00  -0.917  0.35979
-## mt_modelfactor(county)Sonoma          -1.052e+01  8.786e+00  -1.198  0.23180
-## mt_modelfactor(county)Stanislaus      -1.393e+01  9.262e+00  -1.504  0.13351
-## mt_modelfactor(county)Sutter          -2.186e+01  9.360e+00  -2.335  0.02008
-## mt_modelfactor(county)Tehama          -5.421e+00  9.218e+00  -0.588  0.55683
-## mt_modelfactor(county)Trinity          1.869e+01  1.062e+01   1.760  0.07931
-## mt_modelfactor(county)Tulare          -1.028e+01  8.937e+00  -1.151  0.25058
-## mt_modelfactor(county)Tuolumne        -1.016e+01  9.355e+00  -1.086  0.27827
-## mt_modelfactor(county)Ventura         -1.173e+01  9.222e+00  -1.272  0.20430
-## mt_modelfactor(county)Yuba             4.911e+00  1.063e+01   0.462  0.64431
-## mt_modelcalwpct                        1.591e-02  6.949e-02   0.229  0.81898
-## mt_modelmealpct                       -5.909e-01  2.833e-02 -20.861  &lt; 2e-16
-## mt_modelcomputer                      -1.145e-04  1.172e-03  -0.098  0.92227
-## mt_modelstr                           -8.483e-01  2.853e-01  -2.973  0.00314
+## mt_model(Intercept)                    7.074e+02  9.929e+00  71.249  &lt; 2e-16
+## mt_modelfactor(county)Butte           -6.114e+00  9.475e+00  -0.645  0.51914
+## mt_modelfactor(county)Calaveras       -9.023e+00  1.224e+01  -0.737  0.46134
+## mt_modelfactor(county)Contra Costa    -8.961e+00  9.225e+00  -0.971  0.33196
+## mt_modelfactor(county)El Dorado       -1.231e+01  9.053e+00  -1.360  0.17461
+## mt_modelfactor(county)Fresno          -1.094e+01  9.092e+00  -1.204  0.22950
+## mt_modelfactor(county)Glenn           -4.135e-01  1.004e+01  -0.041  0.96717
+## mt_modelfactor(county)Humboldt        -7.976e+00  8.912e+00  -0.895  0.37136
+## mt_modelfactor(county)Imperial        -1.090e+01  9.435e+00  -1.156  0.24852
+## mt_modelfactor(county)Inyo            -8.272e+00  1.223e+01  -0.677  0.49904
+## mt_modelfactor(county)Kern            -1.308e+01  8.877e+00  -1.473  0.14159
+## mt_modelfactor(county)Kings           -9.885e+00  9.159e+00  -1.079  0.28117
+## mt_modelfactor(county)Lake            -8.203e+00  1.076e+01  -0.762  0.44647
+## mt_modelfactor(county)Lassen          -8.230e+00  9.500e+00  -0.866  0.38688
+## mt_modelfactor(county)Los Angeles     -1.113e+01  8.889e+00  -1.253  0.21112
+## mt_modelfactor(county)Madera          -7.587e+00  9.494e+00  -0.799  0.42472
+## mt_modelfactor(county)Marin           -5.658e+00  9.137e+00  -0.619  0.53610
+## mt_modelfactor(county)Mendocino       -1.571e+01  1.225e+01  -1.282  0.20058
+## mt_modelfactor(county)Merced          -1.251e+01  9.119e+00  -1.372  0.17094
+## mt_modelfactor(county)Monterey        -1.832e+01  9.310e+00  -1.968  0.04986
+## mt_modelfactor(county)Nevada          -9.845e+00  9.093e+00  -1.083  0.27967
+## mt_modelfactor(county)Orange          -8.874e+00  9.109e+00  -0.974  0.33057
+## mt_modelfactor(county)Placer          -9.481e+00  9.029e+00  -1.050  0.29437
+## mt_modelfactor(county)Riverside       -1.238e+01  9.744e+00  -1.270  0.20484
+## mt_modelfactor(county)Sacramento      -1.701e+01  9.395e+00  -1.810  0.07103
+## mt_modelfactor(county)San Benito      -2.485e+01  9.961e+00  -2.494  0.01306
+## mt_modelfactor(county)San Bernardino  -1.352e+01  9.127e+00  -1.482  0.13926
+## mt_modelfactor(county)San Diego       -6.090e+00  8.885e+00  -0.685  0.49348
+## mt_modelfactor(county)San Joaquin     -2.195e+01  9.351e+00  -2.347  0.01943
+## mt_modelfactor(county)San Luis Obispo -8.300e+00  1.058e+01  -0.785  0.43324
+## mt_modelfactor(county)San Mateo       -1.011e+01  8.881e+00  -1.138  0.25583
+## mt_modelfactor(county)Santa Barbara   -5.623e+00  9.037e+00  -0.622  0.53415
+## mt_modelfactor(county)Santa Clara     -7.979e+00  8.888e+00  -0.898  0.36993
+## mt_modelfactor(county)Santa Cruz      -4.004e+00  9.225e+00  -0.434  0.66452
+## mt_modelfactor(county)Shasta          -6.105e+00  9.015e+00  -0.677  0.49869
+## mt_modelfactor(county)Siskiyou        -8.289e+00  9.169e+00  -0.904  0.36653
+## mt_modelfactor(county)Sonoma          -1.041e+01  8.776e+00  -1.186  0.23636
+## mt_modelfactor(county)Stanislaus      -1.386e+01  9.251e+00  -1.498  0.13489
+## mt_modelfactor(county)Sutter          -2.181e+01  9.348e+00  -2.333  0.02020
+## mt_modelfactor(county)Tehama          -5.347e+00  9.208e+00  -0.581  0.56177
+## mt_modelfactor(county)Trinity          1.907e+01  1.061e+01   1.798  0.07306
+## mt_modelfactor(county)Tulare          -1.014e+01  8.928e+00  -1.136  0.25659
+## mt_modelfactor(county)Tuolumne        -1.004e+01  9.345e+00  -1.074  0.28339
+## mt_modelfactor(county)Ventura         -1.158e+01  9.212e+00  -1.257  0.20941
+## mt_modelfactor(county)Yuba             5.093e+00  1.062e+01   0.480  0.63170
+## mt_modelcalwpct                        1.543e-02  6.941e-02   0.222  0.82425
+## mt_modelmealpct                       -5.902e-01  2.830e-02 -20.857  &lt; 2e-16
+## mt_modelcomputer                      -9.125e-05  1.171e-03  -0.078  0.93794
+## mt_modelstravg                        -8.700e-01  2.794e-01  -3.114  0.00199
 ##                                          
 ## mt_model(Intercept)                   ***
 ## mt_modelfactor(county)Butte              
@@ -571,28 +704,28 @@ EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left
 ## mt_modelcalwpct                          
 ## mt_modelmealpct                       ***
 ## mt_modelcomputer                         
-## mt_modelstr                           ** 
+## mt_modelstravg                        ** 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 8.621 on 371 degrees of freedom
+## Residual standard error: 8.611 on 371 degrees of freedom
 ## Multiple R-squared:  0.9998, Adjusted R-squared:  0.9998 
-## F-statistic: 4.938e+04 on 49 and 371 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">rs_scr_on_str_tidy =<span class="st"> </span><span class="kw">tidy</span>(rs_scr_on_str)</a>
-<a class="sourceLine" id="cb25-2" title="2">rs_scr_on_str_tidy</a></code></pre></div>
+## F-statistic: 4.95e+04 on 49 and 371 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">rs_scr_on_str_tidy =<span class="st"> </span><span class="kw">tidy</span>(rs_scr_on_str)</a>
+<a class="sourceLine" id="cb32-2" title="2">rs_scr_on_str_tidy</a></code></pre></div>
 <pre><code>## # A tibble: 49 x 5
 ##    term                               estimate std.error statistic   p.value
 ##    &lt;chr&gt;                                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-##  1 mt_model(Intercept)                 707.        10.0    70.6    3.29e-217
-##  2 mt_modelfactor(county)Butte          -6.26       9.48   -0.660  5.09e-  1
-##  3 mt_modelfactor(county)Calaveras      -9.14      12.2    -0.746  4.56e-  1
-##  4 mt_modelfactor(county)Contra Costa   -9.15       9.23   -0.991  3.22e-  1
-##  5 mt_modelfactor(county)El Dorado     -12.5        9.06   -1.38   1.69e-  1
-##  6 mt_modelfactor(county)Fresno        -11.3        9.10   -1.24   2.16e-  1
-##  7 mt_modelfactor(county)Glenn          -0.394     10.1    -0.0391 9.69e-  1
-##  8 mt_modelfactor(county)Humboldt       -8.07       8.92   -0.905  3.66e-  1
-##  9 mt_modelfactor(county)Imperial      -11.2        9.44   -1.19   2.35e-  1
-## 10 mt_modelfactor(county)Inyo           -8.53      12.2    -0.697  4.86e-  1
+##  1 mt_model(Intercept)                 707.         9.93   71.2    1.54e-218
+##  2 mt_modelfactor(county)Butte          -6.11       9.48   -0.645  5.19e-  1
+##  3 mt_modelfactor(county)Calaveras      -9.02      12.2    -0.737  4.61e-  1
+##  4 mt_modelfactor(county)Contra Costa   -8.96       9.22   -0.971  3.32e-  1
+##  5 mt_modelfactor(county)El Dorado     -12.3        9.05   -1.36   1.75e-  1
+##  6 mt_modelfactor(county)Fresno        -10.9        9.09   -1.20   2.29e-  1
+##  7 mt_modelfactor(county)Glenn          -0.414     10.0    -0.0412 9.67e-  1
+##  8 mt_modelfactor(county)Humboldt       -7.98       8.91   -0.895  3.71e-  1
+##  9 mt_modelfactor(county)Imperial      -10.9        9.44   -1.16   2.49e-  1
+## 10 mt_modelfactor(county)Inyo           -8.27      12.2    -0.677  4.99e-  1
 ## # … with 39 more rows</code></pre>
 </div>
 <div id="construct-input-arrays-a_i" class="section level2">
@@ -600,19 +733,19 @@ EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left
 <a href="#construct-input-arrays-a_i" class="anchor"></a>Construct Input Arrays <span class="math inline">\(A_i\)</span>
 </h2>
 <p>Multiply coefficient vector by covariate matrix to generate <em>A</em> vector that is child/individual specific.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="co"># Estimates Table</span></a>
-<a class="sourceLine" id="cb27-2" title="2"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(rs_scr_on_str_tidy, <span class="dv">6</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="co"># Estimates Table</span></a>
+<a class="sourceLine" id="cb34-2" title="2"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(rs_scr_on_str_tidy, <span class="dv">6</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 6 x 5
 ##   term                               estimate std.error statistic   p.value
 ##   &lt;chr&gt;                                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 mt_model(Intercept)                  707.       10.0     70.6   3.29e-217
-## 2 mt_modelfactor(county)Butte           -6.26      9.48    -0.660 5.09e-  1
-## 3 mt_modelfactor(county)Calaveras       -9.14     12.2     -0.746 4.56e-  1
-## 4 mt_modelfactor(county)Contra Costa    -9.15      9.23    -0.991 3.22e-  1
-## 5 mt_modelfactor(county)El Dorado      -12.5       9.06    -1.38  1.69e-  1
-## 6 mt_modelfactor(county)Fresno         -11.3       9.10    -1.24  2.16e-  1</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="co"># Covariates</span></a>
-<a class="sourceLine" id="cb29-2" title="2"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(mt_model, <span class="dv">5</span>)</a></code></pre></div>
+## 1 mt_model(Intercept)                  707.        9.93    71.2   1.54e-218
+## 2 mt_modelfactor(county)Butte           -6.11      9.48    -0.645 5.19e-  1
+## 3 mt_modelfactor(county)Calaveras       -9.02     12.2     -0.737 4.61e-  1
+## 4 mt_modelfactor(county)Contra Costa    -8.96      9.22    -0.971 3.32e-  1
+## 5 mt_modelfactor(county)El Dorado      -12.3       9.05    -1.36  1.75e-  1
+## 6 mt_modelfactor(county)Fresno         -10.9       9.09    -1.20  2.29e-  1</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1"><span class="co"># Covariates</span></a>
+<a class="sourceLine" id="cb36-2" title="2"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(mt_model, <span class="dv">5</span>)</a></code></pre></div>
 <pre><code>##   (Intercept) factor(county)Butte factor(county)Calaveras
 ## 1           1                   0                       0
 ## 2           1                   1                       0
@@ -703,49 +836,71 @@ EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left
 ## 3                      0                     0                  0 55.0323
 ## 4                      0                     0                  0 36.4754
 ## 5                      0                     0                  0 33.1086
-##   mealpct computer      str
-## 1  2.0408       67 17.88991
-## 2 47.9167      101 21.52466
-## 3 76.3226      169 18.69723
+##   mealpct computer   stravg
+## 1  2.0408       67 17.72727
+## 2 47.9167      101 21.81818
+## 3 76.3226      169 18.67470
 ## 4 77.0492       85 17.35714
-## 5 78.4270      171 18.67133</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1"><span class="co"># Covariates coefficients from regression (including constant)</span></a>
-<a class="sourceLine" id="cb31-2" title="2">ar_fl_cova_esti &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(rs_scr_on_str_tidy <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="op">!</span><span class="kw">str_detect</span>(term, <span class="st">'str'</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(estimate))</a>
-<a class="sourceLine" id="cb31-3" title="3">ar_fl_main_esti &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(rs_scr_on_str_tidy <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw">str_detect</span>(term, <span class="st">'str'</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(estimate))</a>
-<a class="sourceLine" id="cb31-4" title="4"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(ar_fl_cova_esti, <span class="dv">5</span>)</a></code></pre></div>
+## 5 78.4270      171 18.54167</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1"><span class="co"># Covariates coefficients from regression (including constant)</span></a>
+<a class="sourceLine" id="cb38-2" title="2">ar_fl_cova_esti &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(rs_scr_on_str_tidy <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="op">!</span><span class="kw">str_detect</span>(term, <span class="st">'stravg'</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(estimate))</a>
+<a class="sourceLine" id="cb38-3" title="3">ar_fl_main_esti &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(rs_scr_on_str_tidy <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw">str_detect</span>(term, <span class="st">'stravg'</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(estimate))</a>
+<a class="sourceLine" id="cb38-4" title="4"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(ar_fl_cova_esti, <span class="dv">5</span>)</a></code></pre></div>
 <pre><code>##        estimate
-## [1,] 707.181424
-## [2,]  -6.263997
-## [3,]  -9.138178
-## [4,]  -9.151551
-## [5,] -12.499671</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(ar_fl_main_esti, <span class="dv">5</span>)</a></code></pre></div>
+## [1,] 707.424626
+## [2,]  -6.114316
+## [3,]  -9.022511
+## [4,]  -8.961224
+## [5,] -12.312981</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(ar_fl_main_esti, <span class="dv">5</span>)</a></code></pre></div>
 <pre><code>##        estimate
-## [1,] -0.8482993</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1"><span class="co"># Select Matrix subcomponents</span></a>
-<a class="sourceLine" id="cb35-2" title="2">mt_cova &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">as_tibble</span>(mt_model) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">"str"</span>)))</a>
-<a class="sourceLine" id="cb35-3" title="3"></a>
-<a class="sourceLine" id="cb35-4" title="4"><span class="co"># Generate A_i, use mt_cova_wth_const</span></a>
-<a class="sourceLine" id="cb35-5" title="5">ar_A_m &lt;-<span class="st"> </span>mt_cova <span class="op">%*%</span><span class="st"> </span>ar_fl_cova_esti</a>
-<a class="sourceLine" id="cb35-6" title="6"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(ar_A_m, <span class="dv">5</span>)</a></code></pre></div>
+## [1,] -0.8699505</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1"><span class="co"># Select Matrix subcomponents</span></a>
+<a class="sourceLine" id="cb42-2" title="2">mt_cova &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">as_tibble</span>(mt_model) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">"stravg"</span>)))</a>
+<a class="sourceLine" id="cb42-3" title="3"></a>
+<a class="sourceLine" id="cb42-4" title="4"><span class="co"># Generate A_i, use mt_cova_wth_const</span></a>
+<a class="sourceLine" id="cb42-5" title="5">ar_A_m &lt;-<span class="st"> </span>mt_cova <span class="op">%*%</span><span class="st"> </span>ar_fl_cova_esti</a>
+<a class="sourceLine" id="cb42-6" title="6"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(ar_A_m, <span class="dv">5</span>)</a></code></pre></div>
 <pre><code>##      estimate
-## [1,] 705.9760
-## [2,] 672.8378
-## [3,] 656.6757
-## [4,] 655.9607
-## [5,] 655.0831</code></pre>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1"><span class="co"># Generate alpha_i, in this problem, the alpha_i is generated differently.</span></a></code></pre></div>
+## [1,] 706.2218
+## [2,] 673.2570
+## [3,] 657.0958
+## [4,] 656.3883
+## [5,] 655.5153</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1"><span class="co"># Generate alpha_i, in this problem, the alpha_i is generated differently.</span></a></code></pre></div>
 </div>
+</div>
+<div id="construct-increment-specific-effect-of-each-additional-teacher" class="section level1">
+<h1 class="hasAnchor">
+<a href="#construct-increment-specific-effect-of-each-additional-teacher" class="anchor"></a>Construct Increment Specific Effect of Each Additional Teacher</h1>
 <div id="individual-alpha_i" class="section level2">
 <h2 class="hasAnchor">
 <a href="#individual-alpha_i" class="anchor"></a>Individual alpha_i</h2>
 <p>So this task is less trivial to do here. The procedure will be the following,</p>
+<div id="generate-expanded-long-frame" class="section level3">
+<h3 class="hasAnchor">
+<a href="#generate-expanded-long-frame" class="anchor"></a>Generate Expanded Long Frame</h3>
 <p><strong>Step 0</strong></p>
 <p><em>mt_ori</em>: this is the original dataframe with all variables, each row is a different observation</p>
 <p><strong>Step 1</strong></p>
 <p><em>mt_a</em>: Five column matrix: col 1, district index, col 2, max number of additional teachers each district could acquire (which is determined by the number of existing teachers). There could be a maximum and minimum overall, 0 and say 100 additional teacers per district at most regardless. And each district gets up to potentially 25 percent or 30 percent additional teachers. Col 3, the number of current level of teachers in the district. Col 4, the number of current number of students. Col 5, the A_i without the addition of teacher student ratio.</p>
 <p><strong>Step 2</strong></p>
 <p><em>mt_b</em>: expand <em>mt_a</em>. Each row is a feasible additional teacher for a district, each there are now five variables, ID, previous level of teachers, and new level of teachers, and the existing level of students, and original A_i.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1"><span class="co"># dfca_exmain: dfca expand main fram5, five variables</span></a>
+<a class="sourceLine" id="cb45-2" title="2">dfca_exmain &lt;-<span class="st"> </span>dfca <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb45-3" title="3"><span class="st">                </span><span class="kw">mutate</span>(<span class="dt">D_i =</span> <span class="kw"><a href="https://rdrr.io/r/base/Round.html">floor</a></span>(fl_max_add_teacher_percent<span class="op">*</span>teachers)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb45-4" title="4"><span class="st">                </span><span class="kw">select</span>(id,D_i,teachers,enrltot)</a>
+<a class="sourceLine" id="cb45-5" title="5"></a>
+<a class="sourceLine" id="cb45-6" title="6">dfca_exmain &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(dfca_exmain, ar_A_m) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>( <span class="dt">A_i =</span> estimate)</a>
+<a class="sourceLine" id="cb45-7" title="7"></a>
+<a class="sourceLine" id="cb45-8" title="8"><span class="co"># following: https://fanwangecon.github.io/R4Econ/summarize/count/fs_count_basics.html</span></a>
+<a class="sourceLine" id="cb45-9" title="9"><span class="co"># teachers is a count coloumn to expand by </span></a>
+<a class="sourceLine" id="cb45-10" title="10"><span class="co"># i_d_l is each incremental teacher</span></a>
+<a class="sourceLine" id="cb45-11" title="11"><span class="co"># teachers_addl is existing teacher level added up to current l</span></a>
+<a class="sourceLine" id="cb45-12" title="12">dfca_exmain &lt;-<span class="st"> </span>dfca_exmain <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">uncount</span>(D_i) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb45-13" title="13"><span class="st">                  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb45-14" title="14"><span class="st">                  </span><span class="kw">mutate</span>(<span class="dt">i_d_l =</span> <span class="kw">row_number</span>()) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb45-15" title="15"><span class="st">                  </span><span class="kw">mutate</span>(<span class="dt">teachers_addl =</span> teachers <span class="op">+</span><span class="st"> </span>i_d_l <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
 <p><strong>Step 3</strong></p>
 <p><em>mt_b</em>: add a alpha_i column, generate the marginal productivity value, and also generate actual updated A_i.</p>
 <p><strong>Step 4</strong></p>
@@ -753,8 +908,9 @@ EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left
 <p><strong>Step 5</strong></p>
 <p>Sort, and select top given total resource avaiable, The count the total allocation for each.</p>
 <p>Back to dataframe mt_ori, incorporate into that, but do and shift for each rho.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1"><span class="co"># Child Weight</span></a>
-<a class="sourceLine" id="cb38-2" title="2">ar_beta_m &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">1</span><span class="op">/</span><span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_A_m), <span class="dt">times=</span><span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_A_m))</a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1"><span class="co"># Child Weight</span></a>
+<a class="sourceLine" id="cb46-2" title="2">ar_beta_m &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">1</span><span class="op">/</span><span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_A_m), <span class="dt">times=</span><span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_A_m))</a></code></pre></div>
+</div>
 </div>
 </div>
   </div>
@@ -769,16 +925,21 @@ EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left
       <li>
 <a href="#load-packages-and-data">Load Packages and Data</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#load-dependencies">Load Dependencies</a></li>
+      <li><a href="#policy-parameters">Policy Parameters</a></li>
       <li><a href="#load-data">Load Data</a></li>
       </ul>
 </li>
       <li>
-<a href="#regression-with-data-and-construct-input-arrays">Regression with Data and Construct Input Arrays</a><ul class="nav nav-pills nav-stacked">
+<a href="#regression-with-data">Regression with Data</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#tabulate">Tabulate</a></li>
       <li><a href="#regression-testing">Regression Testing</a></li>
       <li><a href="#discrete-regression">Discrete Regression</a></li>
       <li><a href="#construct-input-arrays-a_i">Construct Input Arrays <span class="math inline">\(A_i\)</span></a></li>
-      <li><a href="#individual-alpha_i">Individual alpha_i</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#construct-increment-specific-effect-of-each-additional-teacher">Construct Increment Specific Effect of Each Additional Teacher</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#individual-alpha_i">Individual alpha_i</a></li>
       </ul>
 </li>
       </ul>
