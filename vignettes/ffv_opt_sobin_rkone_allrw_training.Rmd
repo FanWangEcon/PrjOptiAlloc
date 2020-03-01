@@ -30,7 +30,7 @@ rm(list = ls(all.names = TRUE))
 options(knitr.duplicate.label = 'allow')
 ```
 ```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
-library(dplyr)
+library(dplyr)qq
 library(tidyr)
 library(tibble)
 library(purrr)
@@ -83,6 +83,7 @@ Note that for each rho, the optimal ranking is different, and there are differen
 
 ```{r compute rev}
 ar_rho = c(-100, -0.001,  0.95)
+ar_rho <- 1 - (10^(c(seq(-2,2, length.out=30))))
 ar_rho <- unique(ar_rho)
 
 ar_bin_observed <- dfj %>% pull(trt)
@@ -102,8 +103,8 @@ for (it_rho_ctr in seq(1, length(ar_rho))) {
   
   fl_rho <- ar_rho[it_rho_ctr]
   
-  svr_rho_wage  <- paste0('rho_c', it_rho_ctr, '_rk_employ')
-  svr_rho_employ <- paste0('rho_c', it_rho_ctr, '_rk_wage')
+  svr_rho_employ  <- paste0('rho_c', it_rho_ctr, '_rk_employ')
+  svr_rho_wage <- paste0('rho_c', it_rho_ctr, '_rk_wage')
   
   ar_queue_optimal_wage <- dfj %>% pull(svr_rho_wage)
   ar_queue_optimal_employ <- dfj %>% pull(svr_rho_employ)
@@ -118,24 +119,70 @@ for (it_rho_ctr in seq(1, length(ar_rho))) {
 }
 print(ar_rev_wage)
 print(ar_rev_employ)
+
+# combine results
+mt_combine <- cbind(ar_rho, ar_rev_wage*100, ar_rev_employ*100)
+colnames(mt_combine) <- c('lambda', 'rev_expected_wage', 'rev_employment_prob')
+tb_rev_wage_employ <- as_tibble(mt_combine) %>% rowid_to_column(var = "eval")
+# Transform x-scale to 1-lambda
+tb_rev_wage_employ <- tb_rev_wage_employ %>% mutate(one_minus_lambda = 1 - lambda)
+
+# Reshape to long
+tb_rev_wage_employ_long <- tb_rev_wage_employ %>%
+  pivot_longer(
+    cols = starts_with('rev'),
+    names_to = c('Outcome'),
+    names_pattern = paste0('rev', "_(.*)"),
+    values_to = 'rev'
+  )
+
+
 ```
 
+Draw the REV graph. Following this [graph code](https://fanwangecon.github.io/Stat4Econ/probability/samplespacedice.html).
+
+```{r graph REV, fig.height = 4, fig.width = 7, fig.align = "center"}
+
+# x-labels
+x.labels <- c('λ=0.99', 'λ=0.90', 'λ=0', 'λ=-10', 'λ=-100')
+x.breaks <- c(0.01, 0.10, 1, 10, 100)
+
+# title line 2
+title_line1 <- sprintf("Percentage of Training Spots Misallocated, NSW Lalonda (AER, 1986)")
+title_line2 <- sprintf("REV (Resource Equivalent Variation) Along Planner Spectrum")
+
+# Graph Results--Draw
+line.plot <- tb_rev_wage_employ_long %>% 
+  ggplot(aes(x=one_minus_lambda, y=rev,
+             group=Outcome, 
+             colour=Outcome, size=2)) + 
+  geom_line(size=0.75) +
+  geom_vline(xintercept=c(1), linetype="dotted") +
+  labs(title = paste0(title_line1, '\n', title_line2),
+       x = 'log10 Rescale of λ, Log10(λ)\nλ=1 Utilitarian, λ=-infty Rawlsian',
+       y = 'Misallocation Percentage = REV',
+       caption = 'Training RCT with 297 treated, 425 untreated. Reallocate 297 training spots.') +
+  scale_x_continuous(trans='log10', labels = x.labels, breaks = x.breaks) +
+  theme_bw()
+
+print(line.plot)
+```
 # Analysis of A and alpha
 
 Generate some tables where the distributions of $A$ and $\alpha$ are compared. 
 
 ## Scatter Plots
 
-```{r}
+```{r, fig.height = 4, fig.width = 7, fig.align = "center"}
 # Binary Marginal Effects and Prediction without Binary
 ggplot.A.alpha <- function(df, svr_alpha = 'alpha_i', svr_A = "A_i",
                              slb_title = 'A_i and alpha_i (red)'){
   scatter <- ggplot(df, aes(x=!!sym(svr_A))) +
         geom_point(aes(y=!!sym(svr_alpha)), size=4, shape=4, color="red") +
         labs(title = paste0(slb_title),
-             x = 'A_i',
-             y = 'alpha_i',
-             caption = paste0('sdt_name')) +
+             x = 'A_i = Prob Employ no Training',
+             y = 'alpha_i = Effect of Training of Prob Employ',
+             caption = paste0('Logit Regression on training. Control for age, educ, race. Age <= 23 or > 23 interaction.')) +
         theme_bw()
 return(scatter)
 }
@@ -147,24 +194,28 @@ ggplot.A.alpha(df = dfj,
 
 ggplot.A.alpha(df = dfj, 
                svr_alpha = 'alpha_i_employ', svr_A = "A_i_employ",
-               slb_title = 'A_i and alpha_i, employment')
+               slb_title = 'Employment A_i and alpha_i Joint Distribution')
 
 ```
 
 ## Histogram Plots
 
 What is the distribution of A given alpha. This is relevant in the linear regression case
-```{r}
+```{r, fig.height = 4, fig.width = 7, fig.align = "center"}
 # Keep only relevant columns, and reshape data
 dfj_hist <- dfj %>% select(id, A_i_wage, alpha_i_wage)
 dfj_hist$alpha_i_wage <- factor(dfj_hist$alpha_i_wage) 
-# dfj_hist$alpha_i_wage <- factor(dfj_hist$alpha_i_wage, labels = c('ECON', 'Not.Econ'))
+dfj_hist$alpha_i_wage <- factor(dfj_hist$alpha_i_wage, labels = c('Age <= 23\nalpha_i=$454', 'Age > 23\nalpha_i=$1071'))
 
 # Graph 
 dfj_hist %>% ggplot(aes(x=A_i_wage, fill=alpha_i_wage)) +
       geom_density( color="#e9ecef", alpha=0.6, position = 'identity') +
       scale_fill_manual(values=c("#69b3a2", "#404080")) +
-      labs(fill="")
+      labs(fill="") %>%
+      labs(title = paste0('Wage A_i Distribution by alpha_i (two unique levels, Age <= 23 and > 23)'),
+             x = 'A_i = Expected Wage no Training',
+             y = 'density',
+             caption = paste0('Linear Wage Regression on training. Control for age, educ, race. Age <= 23 or > 23 interaction.'))
 ```
 
 

@@ -303,12 +303,14 @@ it_obs = dim(tb_opti_unique)[1]
 ar_rho <- c(-100, 0.8)
 ar_rho <- c(-50, -25, -10)
 ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.8)
-ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))
+# ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))
 # ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.99)
 # ar_rho <- c(-20, -1, 0.05, 0.9)
 # ar_rho <- c(-50, -40, -30, -20, -15, -10, -7.5, -5,-3,-2,-1)
 # ar_rho = c(-100, -0.001,  0.95)
 ar_rho = c(-100, -0.001,  0.95)
+ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))
+ar_rho <- 1 - (10^(c(seq(-2,2, length.out=30))))
 ar_rho <- unique(ar_rho)
 
 ls_bin_solu_all_rhos <-

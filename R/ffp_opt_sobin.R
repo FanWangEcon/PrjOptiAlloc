@@ -85,7 +85,7 @@ ffp_opt_sobin_rev <- function(ar_queue_optimal, ar_bin_observed,
   #' @examples
   #' library(tibble)
   #' library(dplyr)
-  #' library(tidyr)  
+  #' library(tidyr)
   #' fl_lambda <- -1
   #' ar_alpha <- c(0.1,1.5,2.5,4  ,9,1.2,3,2,8)
   #' ar_A <-     c(0.5,1.5,3.5,6.5,1.9,3,4,6,4)
@@ -115,7 +115,7 @@ ffp_opt_sobin_rev <- function(ar_queue_optimal, ar_bin_observed,
                   arrange(optimal)
 
   # Generate util observed and util unobserved columns
-  tb_onevar <- tb_onevar %>% mutate(utility = beta*((alpha+A)^fl_lambda)) %>%
+  tb_onevar <- tb_onevar %>% mutate(utility = beta*((A+alpha)^fl_lambda - A^fl_lambda)) %>%
                              mutate(util_ob = case_when(observed == 1 ~ utility,
                                                         TRUE ~ 0 )) %>%
                              mutate(util_notob = case_when(observed == 0 ~ utility,
@@ -131,7 +131,7 @@ ffp_opt_sobin_rev <- function(ar_queue_optimal, ar_bin_observed,
   # Following Theorem 1, simply compare util_ob_sum vs util_notob_sum
   tb_onevar <- tb_onevar %>%
         mutate(opti_better_obs =
-                 case_when(util_notob_sum > util_ob_sum ~ 1,
+                 case_when( (util_notob_sum/util_ob_sum > 1) ~ 1,
                            TRUE ~ 0)
                )
 

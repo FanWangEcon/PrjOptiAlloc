@@ -1,8 +1,8 @@
 ---
-title: BINARY--REV Resource Equivalent Variation Computation (Line by Line)
+title: BINARY--REV Test Two Resource Equivalent Variation Computation (Line by Line)
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--REV Resource Equivalent Variation Computation (Line by Line)}
+  %\VignetteIndexEntry{BINARY--REV Test Two Resource Equivalent Variation Computation (Line by Line)}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
@@ -62,8 +62,9 @@ dfj <- dfj %>% select(id,
 # treatment column to numeric
 dfj$trt <- as.numeric(dfj$trt) - 1
 
-# ar_rho = c(-100, -0.001,  0.95)
-ar_rho = c(-100)
+# As to be the same as what was used to generate the ranks
+ar_rho = c(-100, -0.001,  0.95)
+#ar_rho = c(0.2)
 ar_rho <- unique(ar_rho)
 
 ar_bin_observed <- dfj %>% pull(trt)
@@ -83,8 +84,8 @@ for (it_rho_ctr in seq(1, length(ar_rho))) {
   
   fl_rho <- ar_rho[it_rho_ctr]
   
-  svr_rho_wage  <- paste0('rho_c', it_rho_ctr, '_rk_employ')
-  svr_rho_employ <- paste0('rho_c', it_rho_ctr, '_rk_wage')
+  svr_rho_wage <- paste0('rho_c', it_rho_ctr, '_rk_wage')
+  svr_rho_employ  <- paste0('rho_c', it_rho_ctr, '_rk_employ')
   
   ar_queue_optimal_wage <- dfj %>% pull(svr_rho_wage)
   ar_queue_optimal_employ <- dfj %>% pull(svr_rho_employ)
@@ -124,7 +125,7 @@ tb_onevar <- as_tibble(mt_rev) %>% rename_all(~c(ar_st_varnames)) %>%
 it_w_res <- sum(ar_it_obs)
 
 # Generate util observed and util unobserved columns
-tb_onevar <- tb_onevar %>% mutate(utility = beta*((alpha+A)^fl_lambda)) %>%
+tb_onevar <- tb_onevar %>% mutate(utility = beta*((A+alpha)^fl_lambda - A^fl_lambda)) %>%
                            mutate(util_ob = case_when(observed == 1 ~ utility,
                                                       TRUE ~ 0 )) %>%
                            mutate(util_notob = case_when(observed == 0 ~ utility,
@@ -150,7 +151,7 @@ tb_onevar <- tb_onevar %>%
                        util_notob, util_notob_sum)
 
 # Display
-kable(tb_onevar) %>%
+kable(tb_onevar[1:50,]) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
@@ -158,7 +159,7 @@ kable(tb_onevar) %>%
 # Following Theorem 1, simply compare util_ob_sum vs util_notob_sum
 tb_onevar <- tb_onevar %>%
       mutate(opti_better_obs =
-               case_when(util_notob_sum > util_ob_sum ~ 1,
+               case_when(util_notob_sum/util_ob_sum > 1 ~ 1,
                          TRUE ~ 0)
              ) %>%
       select(id, observed, optimal,
@@ -169,7 +170,7 @@ tb_onevar <- tb_onevar %>%
              alpha, A, beta)
 
 # Display
-kable(tb_onevar) %>%
+kable(tb_onevar[1:50,]) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
@@ -189,7 +190,7 @@ tb_onevar <- tb_onevar %>%
              alpha, A, beta)
 
 # Display
-  kable(tb_onevar) %>%
+kable(tb_onevar[1:50,]) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 
 # Compute REV
@@ -200,31 +201,4 @@ delta_rev <- 1-(it_min_w_hat/it_w_hat_obs)
 cat('it_min_w_hat:', it_min_w_hat, '\n')
 cat('it_w_hat_obs:', it_w_hat_obs, '\n')
 cat('delta_rev:', delta_rev, '\n')
-```
-
-# Function test
-
-Test the function written based on the details above.
-
-```{r function test}
-fl_lambda <- -1
-ar_alpha <- c(0.1,1.5,2.5,4  ,9,1.2,3,2,8)
-ar_A <-     c(0.5,1.5,3.5,6.5,1.9,3,4,6,4)
-ar_beta <-  rep(0, length(ar_A)) + 1/length(ar_A)
-mt_alpha_A <- cbind(ar_alpha, ar_A, ar_beta)
-ar_st_varnames <- c('alpha', 'A', 'beta')
-tb_alpha_A <- as_tibble(mt_alpha_A) %>% rename_all(~c(ar_st_varnames))
-tb_alpha_A
-ar_rho <- c(-1)
-for (it_rho_ctr in seq(1,length(ar_rho))) {
-  fl_rho <- ar_rho[it_rho_ctr]
-  ar_it_rank <- tb_alpha_A %>% rowwise() %>%
-    do(rk = ffp_opt_sobin_target_row(., fl_rho,
-                                     ar_A, ar_alpha, ar_beta)) %>%
-    unnest(rk) %>% pull(rk)
-  cat('fl_rho:', fl_rho, 'ar_it_rank:', ar_it_rank, '\n')
-}
-ar_bin_observed <- c(0,1,0,1,0,0,1,1,0)
-ar_queue_optimal <- ar_it_rank
-ffp_opt_sobin_rev(ar_queue_optimal, ar_bin_observed, ar_A, ar_alpha, ar_beta, fl_lambda)
 ```

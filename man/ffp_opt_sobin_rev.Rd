@@ -33,7 +33,7 @@ This does not solve for the full solution, just the targeting queue, individual 
 \examples{
 library(tibble)
 library(dplyr)
-library(tidyr)  
+library(tidyr)
 fl_lambda <- -1
 ar_alpha <- c(0.1,1.5,2.5,4  ,9,1.2,3,2,8)
 ar_A <-     c(0.5,1.5,3.5,6.5,1.9,3,4,6,4)

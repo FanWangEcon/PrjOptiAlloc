@@ -314,7 +314,7 @@ str(tb_opti_alloc_all_rho_long)
 
 ### Bump Plot for Optimal Binary Allocations
 
-```{r binary allocation bump plot, fig.height = 5, fig.width = 12, fig.align = "center"}
+```{r binary allocation bump plot, fig.height = 8, fig.width = 12, fig.align = "center"}
 
 tb_opti_alloc_all_rho_long %>%
   ggplot(aes(x = rho_num, y = rank, group = carname)) +
@@ -331,109 +331,3 @@ tb_opti_alloc_all_rho_long %>%
 
 ```
 
-# Resource Equivalent Variations
-
-Given the observed manual--shift cars vs auto--shift cars. 
-
-Steps:
-
-1. Already have the optimal ranking along lambda, this is a matrix *tb_opti_alloc_all_rho*
-2. Find resource availability, in this case, the number of people with manual shift in the dataset
-3. Loop over rho, at each rho column of *tb_opti_alloc_all_rho*, generate temporary vector 0 and 1, 1 if below resource threshold. 
-4. Compare rho specific binary allocating vector against observed am vector, select rows where they are different. These are two different variables/columns. 
-5. Sum up each of the observed and optimal binary columns: *Sum(A+alpha binary)^lambda*, summ if binary =1. simiple sum for the observed column, but cumcum for the optimal column 
-6. At which observd ranking point, sorted by observed rank, does the optimal value fall below the observed value. 
-7. what is the rank where this threshold shifts. 
-
-The binary REV function requires these inputs:
-
-1. ID
-2. observed binary vector
-3. targeting queue rank
-4. total resource
-5. A vec
-6. alpha vec
-
-Note the algorithm here is not identical to the mathmatical formula laid out in the text, they are the same concept. 
-
-
-```{r REV Compute}
-# 1. Generate A and alpha Testing Vectors, random list no meanings
-ar_alpha <- c(0.1,1.5,2.5,4  ,9,1.2,3,2,8)
-ar_A <-     c(0.5,1.5,3.5,6.5,1.9,3,4,6,4)
-ar_beta <-  rep(0, length(ar_A)) + 1/length(ar_A)
-mt_alpha_A <- cbind(ar_alpha, ar_A, ar_beta)
-ar_st_varnames <- c('alpha', 'A', 'beta')
-tb_alpha_A <- as_tibble(mt_alpha_A) %>% rename_all(~c(ar_st_varnames))
-tb_alpha_A
-ar_rho <- c(-1)
-for (it_rho_ctr in seq(1,length(ar_rho))) {
-  fl_rho <- ar_rho[it_rho_ctr]
-  ar_it_rank <- tb_alpha_A %>% rowwise() %>%
-    do(rk = ffp_opt_sobin_target_row(., fl_rho,
-                                     ar_A, ar_alpha, ar_beta)) %>%
-    unnest(rk) %>% pull(rk)
-  cat('fl_rho:', fl_rho, 'ar_it_rank:', ar_it_rank, '\n')
-}
-
-# Use the just generated optimal ranking above
-ar_it_obs <- c(0,1,0,1,0,0,1,1,0)
-ar_opti_r <- ar_it_rank
-mt_rev <- cbind(seq(1,length(ar_opti_r)), ar_it_obs, ar_opti_r, ar_alpha, ar_A, ar_beta)
-ar_st_varnames <- c('id', 'observed', 'optimal', 'alpha', 'A', 'beta')
-tb_onevar <- as_tibble(mt_rev) %>% rename_all(~c(ar_st_varnames)) %>%
-                arrange(optimal)
-
-it_w_res <- sum(ar_it_obs)
-fl_lambda <- -10
-
-# Generate util observed and util unobserved columns
-tb_onevar <- tb_onevar %>% mutate(utility = beta*((alpha+A)^fl_lambda)) %>% 
-                           mutate(util_ob = case_when(observed == 1 ~ utility,
-                                                      TRUE ~ 0 )) %>%
-                           mutate(util_notob = case_when(observed == 0 ~ utility, 
-                                                         TRUE ~ 0 ))
-
-# Generate directional cumulative sums
-tb_onevar <- tb_onevar %>% 
-                arrange(-optimal) %>%
-                mutate(util_ob_sum = cumsum(util_ob)) %>%
-                arrange(optimal) %>%
-                mutate(util_notob_sum = cumsum(util_notob)) %>%
-                select(id, observed, optimal, alpha, A, beta, 
-                       utility, 
-                       util_ob, util_ob_sum,
-                       util_notob, util_notob_sum)
- 
-# Following Theorem 1, simply compare util_ob_sum vs util_notob_sum
-tb_onevar <- tb_onevar %>%
-      mutate(opti_better_obs = 
-               case_when(util_notob_sum > util_ob_sum ~ 1, 
-                         TRUE ~ 0)
-             ) %>%
-      select(id, observed, optimal,
-             utility, 
-             util_ob, util_ob_sum,
-             util_notob, util_notob_sum, 
-             opti_better_obs,
-             alpha, A, beta)
- 
-# Find the Rank number tha tmatches the First 1 in opti_better_obs
-tb_onevar <- tb_onevar %>% 
-  mutate(opti_better_obs_cumu = cumsum(opti_better_obs)) %>%
-  mutate(min_w_hat = 
-           case_when(opti_better_obs_cumu == 1 ~ optimal,
-                     TRUE ~ 0)) %>%
-      select(id, observed, optimal,
-             utility, 
-             util_ob, util_ob_sum,
-             util_notob, util_notob_sum, 
-             opti_better_obs,
-             min_w_hat,
-             alpha, A, beta)
-
-# Compute REV
-it_min_w_hat <- max(tb_onevar %>% pull(min_w_hat))
-it_w_hat_obs <- sum(ar_it_obs)
-detla_rev <- 1-(it_min_w_hat/it_w_hat_obs)
-```

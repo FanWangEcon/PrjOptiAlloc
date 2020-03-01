@@ -111,9 +111,12 @@ dft$p_mpg <- predict(rs_logit, newdata = dft, type = "response")
 #                                     "~ factor(", svr_binary,") + ",
 #                                     paste(ls_st_xs, collapse="+")))
 #                    , data = dft, family = "binomial")
-rs_logit_bi <- glm(emp78 ~ age + educ + black + hisp + marr + nodeg
+rs_logit_bi <- glm(emp78 ~ 
+                     age + I(age^2) + factor(age_m2)
+                   + educ + I(educ^2) +
+                   + educ + black + hisp + marr + nodeg
                    + factor(trt)
-                   + factor(black)*factor(trt)
+                   + factor(age_m2)*factor(trt)
                    , data = dft, family = "binomial")
 summary(rs_logit_bi)
 
@@ -234,6 +237,8 @@ Invoke the binary optimal allocation function *ffp_opt_anlyz_rhgin_bin* that loo
 beta_i <- rep(1/dim(dft)[1], times=dim(dft)[1])
 dft <- cbind(dft, beta_i)
 ar_rho = c(-100, -0.001,  0.95)
+ar_rho <- 1 - (10^(c(seq(-2,2, length.out=30))))
+ar_rho <- unique(ar_rho)
 
 ls_bin_solu_all_rhos <-
   ffp_opt_anlyz_rhgin_bin(dft, svr_id_i = 'id',
