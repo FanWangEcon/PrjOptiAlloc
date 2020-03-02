@@ -37,6 +37,7 @@ options(knitr.duplicate.label = 'allow')
 ```
 ```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
 library(tidyverse)
+library(forcats)
 library(knitr)
 library(kableExtra)
 library(REconTools)
@@ -111,7 +112,7 @@ dft$p_mpg <- predict(rs_logit, newdata = dft, type = "response")
 #                                     "~ factor(", svr_binary,") + ",
 #                                     paste(ls_st_xs, collapse="+")))
 #                    , data = dft, family = "binomial")
-rs_logit_bi <- glm(emp78 ~ 
+rs_logit_bi <- glm(emp78 ~
                      age + I(age^2) + factor(age_m2)
                    + educ + I(educ^2) +
                    + educ + black + hisp + marr + nodeg
@@ -276,13 +277,13 @@ df_all_rho_rho_c1 <- df_all_rho %>% select(id, rho_c1_rk)
 # rho really means rho index
 tb_lambda <- as_tibble(mt_combine) %>% rowid_to_column(var = "rho")
 
-# Merge 
-df_all_rho_long <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>% 
+# Merge
+df_all_rho_long <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>%
                       left_join(tb_lambda, by='rho') %>%
                       left_join(df_all_rho_rho_c1, by='id')
 
 # Select subset to graph
-df_rank_graph <- df_all_rho_long %>% 
+df_rank_graph <- df_all_rho_long %>%
                     mutate(id = factor(id)) %>%
                     filter((id == 2221) |  # utilitarian rank = 1
                            (id == 58) |  # utilitarian rank = 101
@@ -292,9 +293,9 @@ df_rank_graph <- df_all_rho_long %>%
                            (id == 248) |  # utilitarian rank = 501
                            (id == 206) |  # utilitarian rank = 601
                            (id == 272)   # utilitarian rank = 701
-                             ) %>% 
-                    mutate(one_minus_lambda = 1 - lambda) %>% 
-                    mutate(rho_c1_rk = factor(rho_c1_rk)) 
+                             ) %>%
+                    mutate(one_minus_lambda = 1 - lambda) %>%
+                    mutate(rho_c1_rk = factor(rho_c1_rk))
 
 df_rank_graph$rho_c1_rk
 
@@ -318,10 +319,10 @@ title_line1 <- sprintf("EMPLOY LOGIT: Optimal Tageting Queue, NSW Lalonda (AER, 
 title_line2 <- sprintf("How Do Allocation Rankings (Targeting Queue) Shift with λ?")
 
 # Graph Results--Draw
-line.plot <- df_rank_graph %>% 
+line.plot <- df_rank_graph %>%
   ggplot(aes(x=one_minus_lambda, y=rank,
-             group=fct_rev(id), 
-             colour=fct_rev(id), size=2)) + 
+             group=fct_rev(id),
+             colour=fct_rev(id), size=2)) +
   # geom_line(aes(linetype =fct_rev(id)), size=0.75) +
   geom_line(size=0.75) +
   geom_vline(xintercept=c(1), linetype="dotted") +
@@ -343,7 +344,7 @@ print(line.plot)
 
 # Change Variable names so that this can becombined with logit file later
 df_all_rho <- df_all_rho %>% rename_at(vars(starts_with("rho_")), funs(str_replace(., "rk", "rk_employ")))
-df_all_rho <- df_all_rho %>% 
+df_all_rho <- df_all_rho %>%
         rename(A_i_employ = A_i, alpha_i_employ = alpha_i, beta_i_employ = beta_i,
                rank_min_employ = rank_min, rank_max_employ = rank_max, avg_rank_employ = avg_rank)
 

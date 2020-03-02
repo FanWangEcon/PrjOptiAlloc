@@ -60,10 +60,10 @@
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Test One Resource Equivalent Variation Computation (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Test Two Resource Equivalent Variation Computation (Line by Line)</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_sobin_rkone_allfc_training_logit.html">BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution</a>
@@ -530,17 +530,17 @@
 <pre><code>## # A tibble: 32 x 10
 ##    rowid carname          mpg    hp  qsec vs          am      alpha     A   beta
 ##    &lt;int&gt; &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;       &lt;fct&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-##  1     1 Mazda RX4       21     110  16.5 engineVSha~ manual   3.97  18.9 0.0312
-##  2     2 Mazda RX4 Wag   21     110  17.0 engineVSha~ manual   3.97  18.9 0.0312
-##  3     3 Datsun 710      22.8    93  18.6 engineStra~ manual   6.53  21.3 0.0312
-##  4     4 Hornet 4 Drive  21.4   110  19.4 engineStra~ automa~  6.53  20.4 0.0312
-##  5     5 Hornet Sporta~  18.7   175  17.0 engineVSha~ automa~  3.97  15.9 0.0312
-##  6     6 Valiant         18.1   105  20.2 engineStra~ automa~  6.53  20.6 0.0312
-##  7     7 Duster 360      14.3   245  15.8 engineVSha~ automa~  3.97  12.9 0.0312
-##  8     8 Merc 240D       24.4    62  20   engineStra~ automa~  6.53  22.6 0.0312
-##  9     9 Merc 230        22.8    95  22.9 engineStra~ automa~  6.53  20.8 0.0312
-## 10    10 Merc 280        19.2   123  18.3 engineStra~ automa~  6.53  20.0 0.0312
-## # ... with 22 more rows</code></pre>
+##  1     1 Mazda RX4       21     110  16.5 engineVSha… manual   3.97  18.9 0.0312
+##  2     2 Mazda RX4 Wag   21     110  17.0 engineVSha… manual   3.97  18.9 0.0312
+##  3     3 Datsun 710      22.8    93  18.6 engineStra… manual   6.53  21.3 0.0312
+##  4     4 Hornet 4 Drive  21.4   110  19.4 engineStra… automa…  6.53  20.4 0.0312
+##  5     5 Hornet Sporta…  18.7   175  17.0 engineVSha… automa…  3.97  15.9 0.0312
+##  6     6 Valiant         18.1   105  20.2 engineStra… automa…  6.53  20.6 0.0312
+##  7     7 Duster 360      14.3   245  15.8 engineVSha… automa…  3.97  12.9 0.0312
+##  8     8 Merc 240D       24.4    62  20   engineStra… automa…  6.53  22.6 0.0312
+##  9     9 Merc 230        22.8    95  22.9 engineStra… automa…  6.53  20.8 0.0312
+## 10    10 Merc 280        19.2   123  18.3 engineStra… automa…  6.53  20.0 0.0312
+## # … with 22 more rows</code></pre>
 </div>
 </div>
 <div id="optimal-linear-allocations" class="section level1">
@@ -767,122 +767,6 @@
 </div>
 </div>
 </div>
-<div id="resource-equivalent-variations" class="section level1">
-<h1 class="hasAnchor">
-<a href="#resource-equivalent-variations" class="anchor"></a>Resource Equivalent Variations</h1>
-<p>Given the observed manual–shift cars vs auto–shift cars.</p>
-<p>Steps:</p>
-<ol style="list-style-type: decimal">
-<li>Already have the optimal ranking along lambda, this is a matrix <em>tb_opti_alloc_all_rho</em>
-</li>
-<li>Find resource availability, in this case, the number of people with manual shift in the dataset</li>
-<li>Loop over rho, at each rho column of <em>tb_opti_alloc_all_rho</em>, generate temporary vector 0 and 1, 1 if below resource threshold.</li>
-<li>Compare rho specific binary allocating vector against observed am vector, select rows where they are different. These are two different variables/columns.</li>
-<li>Sum up each of the observed and optimal binary columns: <em>Sum(A+alpha binary)^lambda</em>, summ if binary =1. simiple sum for the observed column, but cumcum for the optimal column</li>
-<li>At which observd ranking point, sorted by observed rank, does the optimal value fall below the observed value.</li>
-<li>what is the rank where this threshold shifts.</li>
-</ol>
-<p>The binary REV function requires these inputs:</p>
-<ol style="list-style-type: decimal">
-<li>ID</li>
-<li>observed binary vector</li>
-<li>targeting queue rank</li>
-<li>total resource</li>
-<li>A vec</li>
-<li>alpha vec</li>
-</ol>
-<p>Note the algorithm here is not identical to the mathmatical formula laid out in the text, they are the same concept.</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1"><span class="co"># 1. Generate A and alpha Testing Vectors, random list no meanings</span></a>
-<a class="sourceLine" id="cb52-2" title="2">ar_alpha &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.1</span>,<span class="fl">1.5</span>,<span class="fl">2.5</span>,<span class="dv">4</span>  ,<span class="dv">9</span>,<span class="fl">1.2</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">8</span>)</a>
-<a class="sourceLine" id="cb52-3" title="3">ar_A &lt;-<span class="st">     </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.5</span>,<span class="fl">1.5</span>,<span class="fl">3.5</span>,<span class="fl">6.5</span>,<span class="fl">1.9</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb52-4" title="4">ar_beta &lt;-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_A)) <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_A)</a>
-<a class="sourceLine" id="cb52-5" title="5">mt_alpha_A &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(ar_alpha, ar_A, ar_beta)</a>
-<a class="sourceLine" id="cb52-6" title="6">ar_st_varnames &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span>)</a>
-<a class="sourceLine" id="cb52-7" title="7">tb_alpha_A &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(mt_alpha_A) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename_all</span>(<span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(ar_st_varnames))</a>
-<a class="sourceLine" id="cb52-8" title="8">tb_alpha_A</a></code></pre></div>
-<pre><code>## # A tibble: 9 x 3
-##   alpha     A  beta
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1   0.1   0.5 0.111
-## 2   1.5   1.5 0.111
-## 3   2.5   3.5 0.111
-## 4   4     6.5 0.111
-## 5   9     1.9 0.111
-## 6   1.2   3   0.111
-## 7   3     4   0.111
-## 8   2     6   0.111
-## 9   8     4   0.111</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb54-2" title="2"><span class="cf">for</span> (it_rho_ctr <span class="cf">in</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">1</span>,<span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_rho))) {</a>
-<a class="sourceLine" id="cb54-3" title="3">  fl_rho &lt;-<span class="st"> </span>ar_rho[it_rho_ctr]</a>
-<a class="sourceLine" id="cb54-4" title="4">  ar_it_rank &lt;-<span class="st"> </span>tb_alpha_A <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-5" title="5"><span class="st">    </span><span class="kw">do</span>(<span class="dt">rk =</span> <span class="kw"><a href="../reference/ffp_opt_sobin_target_row.html">ffp_opt_sobin_target_row</a></span>(., fl_rho,</a>
-<a class="sourceLine" id="cb54-6" title="6">                                     ar_A, ar_alpha, ar_beta)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-7" title="7"><span class="st">    </span><span class="kw">unnest</span>(rk) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(rk)</a>
-<a class="sourceLine" id="cb54-8" title="8">  <span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'fl_rho:'</span>, fl_rho, <span class="st">'ar_it_rank:'</span>, ar_it_rank, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</a>
-<a class="sourceLine" id="cb54-9" title="9">}</a></code></pre></div>
-<pre><code>## fl_rho: -1 ar_it_rank: 3 2 5 8 1 7 6 9 4</code></pre>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1"><span class="co"># Use the just generated optimal ranking above</span></a>
-<a class="sourceLine" id="cb56-2" title="2">ar_it_obs &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb56-3" title="3">ar_opti_r &lt;-<span class="st"> </span>ar_it_rank</a>
-<a class="sourceLine" id="cb56-4" title="4">mt_rev &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">1</span>,<span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_opti_r)), ar_it_obs, ar_opti_r, ar_alpha, ar_A, ar_beta)</a>
-<a class="sourceLine" id="cb56-5" title="5">ar_st_varnames &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'id'</span>, <span class="st">'observed'</span>, <span class="st">'optimal'</span>, <span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span>)</a>
-<a class="sourceLine" id="cb56-6" title="6">tb_onevar &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(mt_rev) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename_all</span>(<span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(ar_st_varnames)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-7" title="7"><span class="st">                </span><span class="kw">arrange</span>(optimal)</a>
-<a class="sourceLine" id="cb56-8" title="8"></a>
-<a class="sourceLine" id="cb56-9" title="9">it_w_res &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(ar_it_obs)</a>
-<a class="sourceLine" id="cb56-10" title="10">fl_lambda &lt;-<span class="st"> </span><span class="dv">-10</span></a>
-<a class="sourceLine" id="cb56-11" title="11"></a>
-<a class="sourceLine" id="cb56-12" title="12"><span class="co"># Generate util observed and util unobserved columns</span></a>
-<a class="sourceLine" id="cb56-13" title="13">tb_onevar &lt;-<span class="st"> </span>tb_onevar <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">utility =</span> beta<span class="op">*</span>((alpha<span class="op">+</span>A)<span class="op">^</span>fl_lambda)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb56-14" title="14"><span class="st">                           </span><span class="kw">mutate</span>(<span class="dt">util_ob =</span> <span class="kw">case_when</span>(observed <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span>utility,</a>
-<a class="sourceLine" id="cb56-15" title="15">                                                      <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> )) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-16" title="16"><span class="st">                           </span><span class="kw">mutate</span>(<span class="dt">util_notob =</span> <span class="kw">case_when</span>(observed <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> </span>utility, </a>
-<a class="sourceLine" id="cb56-17" title="17">                                                         <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> ))</a>
-<a class="sourceLine" id="cb56-18" title="18"></a>
-<a class="sourceLine" id="cb56-19" title="19"><span class="co"># Generate directional cumulative sums</span></a>
-<a class="sourceLine" id="cb56-20" title="20">tb_onevar &lt;-<span class="st"> </span>tb_onevar <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb56-21" title="21"><span class="st">                </span><span class="kw">arrange</span>(<span class="op">-</span>optimal) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-22" title="22"><span class="st">                </span><span class="kw">mutate</span>(<span class="dt">util_ob_sum =</span> <span class="kw"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(util_ob)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-23" title="23"><span class="st">                </span><span class="kw">arrange</span>(optimal) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-24" title="24"><span class="st">                </span><span class="kw">mutate</span>(<span class="dt">util_notob_sum =</span> <span class="kw"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(util_notob)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-25" title="25"><span class="st">                </span><span class="kw">select</span>(id, observed, optimal, alpha, A, beta, </a>
-<a class="sourceLine" id="cb56-26" title="26">                       utility, </a>
-<a class="sourceLine" id="cb56-27" title="27">                       util_ob, util_ob_sum,</a>
-<a class="sourceLine" id="cb56-28" title="28">                       util_notob, util_notob_sum)</a>
-<a class="sourceLine" id="cb56-29" title="29"> </a>
-<a class="sourceLine" id="cb56-30" title="30"><span class="co"># Following Theorem 1, simply compare util_ob_sum vs util_notob_sum</span></a>
-<a class="sourceLine" id="cb56-31" title="31">tb_onevar &lt;-<span class="st"> </span>tb_onevar <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-32" title="32"><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">opti_better_obs =</span> </a>
-<a class="sourceLine" id="cb56-33" title="33">               <span class="kw">case_when</span>(util_notob_sum <span class="op">&gt;</span><span class="st"> </span>util_ob_sum <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </a>
-<a class="sourceLine" id="cb56-34" title="34">                         <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb56-35" title="35">             ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-36" title="36"><span class="st">      </span><span class="kw">select</span>(id, observed, optimal,</a>
-<a class="sourceLine" id="cb56-37" title="37">             utility, </a>
-<a class="sourceLine" id="cb56-38" title="38">             util_ob, util_ob_sum,</a>
-<a class="sourceLine" id="cb56-39" title="39">             util_notob, util_notob_sum, </a>
-<a class="sourceLine" id="cb56-40" title="40">             opti_better_obs,</a>
-<a class="sourceLine" id="cb56-41" title="41">             alpha, A, beta)</a>
-<a class="sourceLine" id="cb56-42" title="42"> </a>
-<a class="sourceLine" id="cb56-43" title="43"><span class="co"># Find the Rank number tha tmatches the First 1 in opti_better_obs</span></a>
-<a class="sourceLine" id="cb56-44" title="44">tb_onevar &lt;-<span class="st"> </span>tb_onevar <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb56-45" title="45"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">opti_better_obs_cumu =</span> <span class="kw"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(opti_better_obs)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-46" title="46"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">min_w_hat =</span> </a>
-<a class="sourceLine" id="cb56-47" title="47">           <span class="kw">case_when</span>(opti_better_obs_cumu <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span>optimal,</a>
-<a class="sourceLine" id="cb56-48" title="48">                     <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-49" title="49"><span class="st">      </span><span class="kw">select</span>(id, observed, optimal,</a>
-<a class="sourceLine" id="cb56-50" title="50">             utility, </a>
-<a class="sourceLine" id="cb56-51" title="51">             util_ob, util_ob_sum,</a>
-<a class="sourceLine" id="cb56-52" title="52">             util_notob, util_notob_sum, </a>
-<a class="sourceLine" id="cb56-53" title="53">             opti_better_obs,</a>
-<a class="sourceLine" id="cb56-54" title="54">             min_w_hat,</a>
-<a class="sourceLine" id="cb56-55" title="55">             alpha, A, beta)</a>
-<a class="sourceLine" id="cb56-56" title="56"></a>
-<a class="sourceLine" id="cb56-57" title="57"><span class="co"># Compute REV</span></a>
-<a class="sourceLine" id="cb56-58" title="58">it_min_w_hat &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(tb_onevar <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(min_w_hat))</a>
-<a class="sourceLine" id="cb56-59" title="59">it_w_hat_obs &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(ar_it_obs)</a>
-<a class="sourceLine" id="cb56-60" title="60">detla_rev &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span>(it_min_w_hat<span class="op">/</span>it_w_hat_obs)</a></code></pre></div>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -917,7 +801,6 @@
       <li><a href="#optimal-binary-allocation-crs">Optimal binary Allocation (CRS)</a></li>
       </ul>
 </li>
-      <li><a href="#resource-equivalent-variations">Resource Equivalent Variations</a></li>
       </ul>
 </div>
       </div>

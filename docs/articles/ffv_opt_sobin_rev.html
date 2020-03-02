@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BINARY--REV Resource Equivalent Variation Computation (Line by Line) • PrjOptiAlloc</title>
+<title>BINARY--REV Test One Resource Equivalent Variation Computation (Line by Line) • PrjOptiAlloc</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="BINARY--REV Resource Equivalent Variation Computation (Line by Line)">
+<script src="../pkgdown.js"></script><meta property="og:title" content="BINARY--REV Test One Resource Equivalent Variation Computation (Line by Line)">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -60,10 +60,10 @@
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Test One Resource Equivalent Variation Computation (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Test Two Resource Equivalent Variation Computation (Line by Line)</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_sobin_rkone_allfc_training_logit.html">BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution</a>
@@ -111,7 +111,7 @@
       </header><script src="ffv_opt_sobin_rev_files/kePrint-0.0.1/kePrint.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>BINARY–REV Resource Equivalent Variation Computation (Line by Line)</h1>
+      <h1>BINARY–REV Test One Resource Equivalent Variation Computation (Line by Line)</h1>
             
       
       
@@ -173,7 +173,7 @@
 ## 7   3     4   0.111
 ## 8   2     6   0.111
 ## 9   8     4   0.111</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">1</span>)</a>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.99</span>)</a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="cf">for</span> (it_rho_ctr <span class="cf">in</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">1</span>,<span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_rho))) {</a>
 <a class="sourceLine" id="cb5-3" title="3">  fl_rho &lt;-<span class="st"> </span>ar_rho[it_rho_ctr]</a>
 <a class="sourceLine" id="cb5-4" title="4">  ar_it_rank &lt;-<span class="st"> </span>tb_alpha_A <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></a>
@@ -182,7 +182,7 @@
 <a class="sourceLine" id="cb5-7" title="7"><span class="st">    </span><span class="kw">unnest</span>(rk) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(rk)</a>
 <a class="sourceLine" id="cb5-8" title="8">  <span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'fl_rho:'</span>, fl_rho, <span class="st">'ar_it_rank:'</span>, ar_it_rank, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</a>
 <a class="sourceLine" id="cb5-9" title="9">}</a></code></pre></div>
-<pre><code>## fl_rho: -1 ar_it_rank: 3 2 5 8 1 7 6 9 4</code></pre>
+<pre><code>## fl_rho: 0.99 ar_it_rank: 9 7 5 3 1 8 4 6 2</code></pre>
 </div>
 <div id="compute-rev" class="section level2">
 <h2 class="hasAnchor">
@@ -198,10 +198,10 @@
 <pre><code>## Warning: `as_tibble.matrix()` requires a matrix with column names or a `.name_repair` argument. Using compatibility `.name_repair`.
 ## This warning is displayed once per session.</code></pre>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">it_w_res &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(ar_it_obs)</a>
-<a class="sourceLine" id="cb9-2" title="2">fl_lambda &lt;-<span class="st"> </span><span class="dv">-10</span></a>
+<a class="sourceLine" id="cb9-2" title="2">fl_lambda &lt;-<span class="st"> </span>ar_rho</a>
 <a class="sourceLine" id="cb9-3" title="3"></a>
 <a class="sourceLine" id="cb9-4" title="4"><span class="co"># Generate util observed and util unobserved columns</span></a>
-<a class="sourceLine" id="cb9-5" title="5">tb_onevar &lt;-<span class="st"> </span>tb_onevar <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">utility =</span> beta<span class="op">*</span>((alpha<span class="op">+</span>A)<span class="op">^</span>fl_lambda)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb9-5" title="5">tb_onevar &lt;-<span class="st"> </span>tb_onevar <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">utility =</span> beta<span class="op">*</span>((A<span class="op">+</span>alpha)<span class="op">^</span>fl_lambda <span class="op">-</span><span class="st"> </span>A<span class="op">^</span>fl_lambda)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb9-6" title="6"><span class="st">                           </span><span class="kw">mutate</span>(<span class="dt">util_ob =</span> <span class="kw">case_when</span>(observed <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span>utility,</a>
 <a class="sourceLine" id="cb9-7" title="7">                                                      <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> )) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb9-8" title="8"><span class="st">                           </span><span class="kw">mutate</span>(<span class="dt">util_notob =</span> <span class="kw">case_when</span>(observed <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> </span>utility,</a>
@@ -261,71 +261,13 @@ util_notob
 0.1111111
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
+0.9727629
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
-</tr>
-<tr>
 <td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1.5
-</td>
-<td style="text-align:right;">
-1.5
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-<td style="text-align:right;">
-0.0000019
-</td>
-<td style="text-align:right;">
-1.9e-06
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0.5
-</td>
-<td style="text-align:right;">
-0.1
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-<td style="text-align:right;">
-18.3757463
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-18.3757463
+0.9727629
 </td>
 </tr>
 <tr>
@@ -336,7 +278,7 @@ util_notob
 0
 </td>
 <td style="text-align:right;">
-4
+2
 </td>
 <td style="text-align:right;">
 4.0
@@ -348,10 +290,68 @@ util_notob
 0.1111111
 </td>
 <td style="text-align:right;">
+0.8622839
+</td>
+<td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-0.0e+00
+0.8622839
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+<td style="text-align:right;">
+0.4307246
+</td>
+<td style="text-align:right;">
+0.4307246
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+<td style="text-align:right;">
+0.3244636
+</td>
+<td style="text-align:right;">
+0.3244636
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -377,18 +377,18 @@ util_notob
 0.1111111
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
+0.2707806
 </td>
 <td style="text-align:right;">
 0.0000000
+</td>
+<td style="text-align:right;">
+0.2707806
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-7
+8
 </td>
 <td style="text-align:right;">
 1
@@ -397,19 +397,48 @@ util_notob
 6
 </td>
 <td style="text-align:right;">
-4.0
+6.0
 </td>
 <td style="text-align:right;">
-3.0
+2.0
 </td>
 <td style="text-align:right;">
 0.1111111
 </td>
 <td style="text-align:right;">
-0.0000000
+0.2157678
 </td>
 <td style="text-align:right;">
-0.0e+00
+0.2157678
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+<td style="text-align:right;">
+0.1636991
+</td>
+<td style="text-align:right;">
+0.1636991
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -423,7 +452,7 @@ util_notob
 0
 </td>
 <td style="text-align:right;">
-7
+8
 </td>
 <td style="text-align:right;">
 3.0
@@ -435,71 +464,42 @@ util_notob
 0.1111111
 </td>
 <td style="text-align:right;">
-0.0000001
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0000001
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-6.5
-</td>
-<td style="text-align:right;">
-4.0
-</td>
-<td style="text-align:right;">
-0.1111111
+0.1303261
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0000000
+0.1303261
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-8
+1
 </td>
 <td style="text-align:right;">
-1
+0
 </td>
 <td style="text-align:right;">
 9
 </td>
 <td style="text-align:right;">
-6.0
+0.5
 </td>
 <td style="text-align:right;">
-2.0
+0.1
 </td>
 <td style="text-align:right;">
 0.1111111
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
+0.0110661
 </td>
 <td style="text-align:right;">
 0.0000000
+</td>
+<td style="text-align:right;">
+0.0110661
 </td>
 </tr>
 </tbody>
@@ -579,89 +579,19 @@ util_notob_sum
 0.1111111
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-1.9e-06
+0.9727629
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-0.00000
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
+1.1346551
 </td>
 <td style="text-align:right;">
-1
+0.9727629
 </td>
 <td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1.5
-</td>
-<td style="text-align:right;">
-1.5
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-<td style="text-align:right;">
-0.0000019
-</td>
-<td style="text-align:right;">
-1.9e-06
-</td>
-<td style="text-align:right;">
-1.9e-06
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.00000
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0.1
-</td>
-<td style="text-align:right;">
-0.5
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-<td style="text-align:right;">
-18.3757463
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-18.3757463
-</td>
-<td style="text-align:right;">
-18.37575
+0.9727629
 </td>
 </tr>
 <tr>
@@ -672,7 +602,7 @@ util_notob_sum
 0
 </td>
 <td style="text-align:right;">
-4
+2
 </td>
 <td style="text-align:right;">
 8.0
@@ -684,19 +614,89 @@ util_notob_sum
 0.1111111
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
+0.8622839
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-18.37575
+1.1346551
+</td>
+<td style="text-align:right;">
+0.8622839
+</td>
+<td style="text-align:right;">
+1.8350468
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+<td style="text-align:right;">
+0.4307246
+</td>
+<td style="text-align:right;">
+0.4307246
+</td>
+<td style="text-align:right;">
+1.1346551
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+1.8350468
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+<td style="text-align:right;">
+0.3244636
+</td>
+<td style="text-align:right;">
+0.3244636
+</td>
+<td style="text-align:right;">
+0.7039305
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+1.8350468
 </td>
 </tr>
 <tr>
@@ -719,124 +719,19 @@ util_notob_sum
 0.1111111
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
+0.2707806
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-18.37575
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-7
+0.3794669
 </td>
 <td style="text-align:right;">
-1
+0.2707806
 </td>
 <td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-3.0
-</td>
-<td style="text-align:right;">
-4.0
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-18.37575
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-1.2
-</td>
-<td style="text-align:right;">
-3.0
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-<td style="text-align:right;">
-0.0000001
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0000001
-</td>
-<td style="text-align:right;">
-18.37575
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-4.0
-</td>
-<td style="text-align:right;">
-6.5
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-18.37575
+2.1058273
 </td>
 </tr>
 <tr>
@@ -847,7 +742,7 @@ util_notob_sum
 1
 </td>
 <td style="text-align:right;">
-9
+6
 </td>
 <td style="text-align:right;">
 2.0
@@ -859,19 +754,124 @@ util_notob_sum
 0.1111111
 </td>
 <td style="text-align:right;">
+0.2157678
+</td>
+<td style="text-align:right;">
+0.2157678
+</td>
+<td style="text-align:right;">
+0.3794669
+</td>
+<td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-0.0e+00
+2.1058273
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
 </td>
 <td style="text-align:right;">
-0.0e+00
+1
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+<td style="text-align:right;">
+0.1636991
+</td>
+<td style="text-align:right;">
+0.1636991
+</td>
+<td style="text-align:right;">
+0.1636991
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-18.37575
+2.1058273
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+<td style="text-align:right;">
+0.1303261
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.1303261
+</td>
+<td style="text-align:right;">
+2.2361534
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:right;">
+0.5
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+<td style="text-align:right;">
+0.0110661
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0110661
+</td>
+<td style="text-align:right;">
+2.2472195
 </td>
 </tr>
 </tbody>
@@ -879,7 +879,7 @@ util_notob_sum
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co"># Following Theorem 1, simply compare util_ob_sum vs util_notob_sum</span></a>
 <a class="sourceLine" id="cb11-2" title="2">tb_onevar &lt;-<span class="st"> </span>tb_onevar <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb11-3" title="3"><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">opti_better_obs =</span></a>
-<a class="sourceLine" id="cb11-4" title="4">               <span class="kw">case_when</span>(util_notob_sum <span class="op">&gt;</span><span class="st"> </span>util_ob_sum <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb11-4" title="4">               <span class="kw">case_when</span>(util_notob_sum<span class="op">/</span>util_ob_sum <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</a>
 <a class="sourceLine" id="cb11-5" title="5">                         <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>)</a>
 <a class="sourceLine" id="cb11-6" title="6">             ) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb11-7" title="7"><span class="st">      </span><span class="kw">select</span>(id, observed, optimal,</a>
@@ -943,19 +943,19 @@ beta
 1
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-1.9e-06
+0.9727629
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-0.00000
+1.1346551
+</td>
+<td style="text-align:right;">
+0.9727629
+</td>
+<td style="text-align:right;">
+0.9727629
 </td>
 <td style="text-align:right;">
 0
@@ -972,110 +972,110 @@ beta
 </tr>
 <tr>
 <td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0.0000019
-</td>
-<td style="text-align:right;">
-1.9e-06
-</td>
-<td style="text-align:right;">
-1.9e-06
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.00000
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1.5
-</td>
-<td style="text-align:right;">
-1.5
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-18.3757463
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-18.3757463
-</td>
-<td style="text-align:right;">
-18.37575
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0.1
-</td>
-<td style="text-align:right;">
-0.5
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
 9
 </td>
 <td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
-4
+2
+</td>
+<td style="text-align:right;">
+0.8622839
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-0.0e+00
+1.1346551
 </td>
 <td style="text-align:right;">
-0.0e+00
+0.8622839
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-18.37575
+1.8350468
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
 8.0
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.4307246
+</td>
+<td style="text-align:right;">
+0.4307246
+</td>
+<td style="text-align:right;">
+1.1346551
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+1.8350468
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.3244636
+</td>
+<td style="text-align:right;">
+0.3244636
+</td>
+<td style="text-align:right;">
+0.7039305
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+1.8350468
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.0
 </td>
 <td style="text-align:right;">
 4.0
@@ -1095,19 +1095,19 @@ beta
 5
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
+0.2707806
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-18.37575
+0.3794669
+</td>
+<td style="text-align:right;">
+0.2707806
+</td>
+<td style="text-align:right;">
+2.1058273
 </td>
 <td style="text-align:right;">
 1
@@ -1124,7 +1124,7 @@ beta
 </tr>
 <tr>
 <td style="text-align:right;">
-7
+8
 </td>
 <td style="text-align:right;">
 1
@@ -1133,28 +1133,66 @@ beta
 6
 </td>
 <td style="text-align:right;">
+0.2157678
+</td>
+<td style="text-align:right;">
+0.2157678
+</td>
+<td style="text-align:right;">
+0.3794669
+</td>
+<td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-18.37575
+2.1058273
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-3.0
+2.0
 </td>
 <td style="text-align:right;">
-4.0
+6.0
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0.1636991
+</td>
+<td style="text-align:right;">
+0.1636991
+</td>
+<td style="text-align:right;">
+0.1636991
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2.1058273
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+1.5
 </td>
 <td style="text-align:right;">
 0.1111111
@@ -1168,22 +1206,22 @@ beta
 0
 </td>
 <td style="text-align:right;">
-7
+8
 </td>
 <td style="text-align:right;">
-0.0000001
+0.1303261
 </td>
 <td style="text-align:right;">
-0.0e+00
+0.0000000
 </td>
 <td style="text-align:right;">
-0.0e+00
+0.0000000
 </td>
 <td style="text-align:right;">
-0.0000001
+0.1303261
 </td>
 <td style="text-align:right;">
-18.37575
+2.2361534
 </td>
 <td style="text-align:right;">
 1
@@ -1200,75 +1238,37 @@ beta
 </tr>
 <tr>
 <td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-18.37575
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-4.0
-</td>
-<td style="text-align:right;">
-6.5
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-1
+0
 </td>
 <td style="text-align:right;">
 9
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
+0.0110661
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-18.37575
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0110661
+</td>
+<td style="text-align:right;">
+2.2472195
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-2.0
+0.1
 </td>
 <td style="text-align:right;">
-6.0
+0.5
 </td>
 <td style="text-align:right;">
 0.1111111
@@ -1347,19 +1347,19 @@ beta
 1
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-1.9e-06
+0.9727629
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-0.00000
+1.1346551
+</td>
+<td style="text-align:right;">
+0.9727629
+</td>
+<td style="text-align:right;">
+0.9727629
 </td>
 <td style="text-align:right;">
 0
@@ -1379,116 +1379,34 @@ beta
 </tr>
 <tr>
 <td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0.0000019
-</td>
-<td style="text-align:right;">
-1.9e-06
-</td>
-<td style="text-align:right;">
-1.9e-06
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.00000
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1.5
-</td>
-<td style="text-align:right;">
-1.5
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-18.3757463
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-18.3757463
-</td>
-<td style="text-align:right;">
-18.37575
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0.1
-</td>
-<td style="text-align:right;">
-0.5
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
 9
 </td>
 <td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
-4
+2
+</td>
+<td style="text-align:right;">
+0.8622839
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-0.0e+00
+1.1346551
 </td>
 <td style="text-align:right;">
-0.0e+00
+0.8622839
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-18.37575
+1.8350468
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-0
+2
 </td>
 <td style="text-align:right;">
 8.0
@@ -1502,151 +1420,28 @@ beta
 </tr>
 <tr>
 <td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-18.37575
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2.5
-</td>
-<td style="text-align:right;">
-3.5
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-18.37575
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3.0
-</td>
-<td style="text-align:right;">
-4.0
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-0.0000001
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0000001
-</td>
-<td style="text-align:right;">
-18.37575
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1.2
-</td>
-<td style="text-align:right;">
-3.0
-</td>
-<td style="text-align:right;">
-0.1111111
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
 4
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-8
+3
+</td>
+<td style="text-align:right;">
+0.4307246
+</td>
+<td style="text-align:right;">
+0.4307246
+</td>
+<td style="text-align:right;">
+1.1346551
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-18.37575
+1.8350468
 </td>
 <td style="text-align:right;">
 1
@@ -1666,28 +1461,110 @@ beta
 </tr>
 <tr>
 <td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.3244636
+</td>
+<td style="text-align:right;">
+0.3244636
+</td>
+<td style="text-align:right;">
+0.7039305
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+1.8350468
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.2707806
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.3794669
+</td>
+<td style="text-align:right;">
+0.2707806
+</td>
+<td style="text-align:right;">
+2.1058273
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
 8
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-9
+6
+</td>
+<td style="text-align:right;">
+0.2157678
+</td>
+<td style="text-align:right;">
+0.2157678
+</td>
+<td style="text-align:right;">
+0.3794669
 </td>
 <td style="text-align:right;">
 0.0000000
 </td>
 <td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0e+00
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-18.37575
+2.1058273
 </td>
 <td style="text-align:right;">
 1
@@ -1705,6 +1582,129 @@ beta
 0.1111111
 </td>
 </tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0.1636991
+</td>
+<td style="text-align:right;">
+0.1636991
+</td>
+<td style="text-align:right;">
+0.1636991
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2.1058273
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0.1303261
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.1303261
+</td>
+<td style="text-align:right;">
+2.2361534
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.0110661
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0110661
+</td>
+<td style="text-align:right;">
+2.2472195
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:right;">
+0.5
+</td>
+<td style="text-align:right;">
+0.1111111
+</td>
+</tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co"># Compute REV</span></a>
@@ -1713,51 +1713,38 @@ beta
 <a class="sourceLine" id="cb13-4" title="4">delta_rev &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span>(it_min_w_hat<span class="op">/</span>it_w_hat_obs)</a>
 <a class="sourceLine" id="cb13-5" title="5"></a>
 <a class="sourceLine" id="cb13-6" title="6"><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'it_min_w_hat:'</span>, it_min_w_hat, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</a></code></pre></div>
-<pre><code>## it_min_w_hat: 3</code></pre>
+<pre><code>## it_min_w_hat: 2</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'it_w_hat_obs:'</span>, it_w_hat_obs, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</a></code></pre></div>
 <pre><code>## it_w_hat_obs: 4</code></pre>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'delta_rev:'</span>, delta_rev, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</a></code></pre></div>
-<pre><code>## delta_rev: 0.25</code></pre>
+<pre><code>## delta_rev: 0.5</code></pre>
 </div>
 </div>
 <div id="function-test" class="section level1">
 <h1 class="hasAnchor">
 <a href="#function-test" class="anchor"></a>Function test</h1>
 <p>Test the function written based on the details above.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">fl_lambda &lt;-<span class="st"> </span><span class="dv">-1</span></a>
-<a class="sourceLine" id="cb19-2" title="2">ar_alpha &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.1</span>,<span class="fl">1.5</span>,<span class="fl">2.5</span>,<span class="dv">4</span>  ,<span class="dv">9</span>,<span class="fl">1.2</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">8</span>)</a>
-<a class="sourceLine" id="cb19-3" title="3">ar_A &lt;-<span class="st">     </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.5</span>,<span class="fl">1.5</span>,<span class="fl">3.5</span>,<span class="fl">6.5</span>,<span class="fl">1.9</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb19-4" title="4">ar_beta &lt;-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_A)) <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_A)</a>
-<a class="sourceLine" id="cb19-5" title="5">mt_alpha_A &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(ar_alpha, ar_A, ar_beta)</a>
-<a class="sourceLine" id="cb19-6" title="6">ar_st_varnames &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span>)</a>
-<a class="sourceLine" id="cb19-7" title="7">tb_alpha_A &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(mt_alpha_A) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename_all</span>(<span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(ar_st_varnames))</a>
-<a class="sourceLine" id="cb19-8" title="8">tb_alpha_A</a></code></pre></div>
-<pre><code>## # A tibble: 9 x 3
-##   alpha     A  beta
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1   0.1   0.5 0.111
-## 2   1.5   1.5 0.111
-## 3   2.5   3.5 0.111
-## 4   4     6.5 0.111
-## 5   9     1.9 0.111
-## 6   1.2   3   0.111
-## 7   3     4   0.111
-## 8   2     6   0.111
-## 9   8     4   0.111</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb21-2" title="2"><span class="cf">for</span> (it_rho_ctr <span class="cf">in</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">1</span>,<span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_rho))) {</a>
-<a class="sourceLine" id="cb21-3" title="3">  fl_rho &lt;-<span class="st"> </span>ar_rho[it_rho_ctr]</a>
-<a class="sourceLine" id="cb21-4" title="4">  ar_it_rank &lt;-<span class="st"> </span>tb_alpha_A <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb21-5" title="5"><span class="st">    </span><span class="kw">do</span>(<span class="dt">rk =</span> <span class="kw"><a href="../reference/ffp_opt_sobin_target_row.html">ffp_opt_sobin_target_row</a></span>(., fl_rho,</a>
-<a class="sourceLine" id="cb21-6" title="6">                                     ar_A, ar_alpha, ar_beta)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb21-7" title="7"><span class="st">    </span><span class="kw">unnest</span>(rk) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(rk)</a>
-<a class="sourceLine" id="cb21-8" title="8">  <span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'fl_rho:'</span>, fl_rho, <span class="st">'ar_it_rank:'</span>, ar_it_rank, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</a>
-<a class="sourceLine" id="cb21-9" title="9">}</a></code></pre></div>
-<pre><code>## fl_rho: -1 ar_it_rank: 3 2 5 8 1 7 6 9 4</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">ar_bin_observed &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb23-2" title="2">ar_queue_optimal &lt;-<span class="st"> </span>ar_it_rank</a>
-<a class="sourceLine" id="cb23-3" title="3"><span class="kw"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span>(ar_queue_optimal, ar_bin_observed, ar_A, ar_alpha, ar_beta, fl_lambda)</a></code></pre></div>
-<pre><code>## [1] 0.25</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="co"># ar_alpha &lt;- c(0.1,1.5,2.5,4  ,9,1.2,3,2,8)</span></a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="co"># ar_A &lt;-     c(0.5,1.5,3.5,6.5,1.9,3,4,6,4)</span></a>
+<a class="sourceLine" id="cb19-3" title="3"><span class="co"># ar_beta &lt;-  rep(0, length(ar_A)) + 1/length(ar_A)</span></a>
+<a class="sourceLine" id="cb19-4" title="4"><span class="co"># mt_alpha_A &lt;- cbind(ar_alpha, ar_A, ar_beta)</span></a>
+<a class="sourceLine" id="cb19-5" title="5"><span class="co"># ar_st_varnames &lt;- c('alpha', 'A', 'beta')</span></a>
+<a class="sourceLine" id="cb19-6" title="6"><span class="co"># tb_alpha_A &lt;- as_tibble(mt_alpha_A) %&gt;% rename_all(~c(ar_st_varnames))</span></a>
+<a class="sourceLine" id="cb19-7" title="7"><span class="co"># tb_alpha_A</span></a>
+<a class="sourceLine" id="cb19-8" title="8"><span class="co"># ar_rho &lt;- c(-1)</span></a>
+<a class="sourceLine" id="cb19-9" title="9"><span class="cf">for</span> (it_rho_ctr <span class="cf">in</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">1</span>,<span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_rho))) {</a>
+<a class="sourceLine" id="cb19-10" title="10">  fl_rho &lt;-<span class="st"> </span>ar_rho[it_rho_ctr]</a>
+<a class="sourceLine" id="cb19-11" title="11">  ar_it_rank &lt;-<span class="st"> </span>tb_alpha_A <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb19-12" title="12"><span class="st">    </span><span class="kw">do</span>(<span class="dt">rk =</span> <span class="kw"><a href="../reference/ffp_opt_sobin_target_row.html">ffp_opt_sobin_target_row</a></span>(., fl_rho,</a>
+<a class="sourceLine" id="cb19-13" title="13">                                     ar_A, ar_alpha, ar_beta)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb19-14" title="14"><span class="st">    </span><span class="kw">unnest</span>(rk) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(rk)</a>
+<a class="sourceLine" id="cb19-15" title="15">  <span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'fl_rho:'</span>, fl_rho, <span class="st">'ar_it_rank:'</span>, ar_it_rank, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</a>
+<a class="sourceLine" id="cb19-16" title="16">}</a></code></pre></div>
+<pre><code>## fl_rho: 0.99 ar_it_rank: 9 7 5 3 1 8 4 6 2</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">ar_bin_observed &lt;-<span class="st"> </span>ar_it_obs</a>
+<a class="sourceLine" id="cb21-2" title="2">ar_queue_optimal &lt;-<span class="st"> </span>ar_it_rank</a>
+<a class="sourceLine" id="cb21-3" title="3"><span class="kw"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span>(ar_queue_optimal, ar_bin_observed, ar_A, ar_alpha, ar_beta, fl_rho)</a></code></pre></div>
+<pre><code>## [1] 0.5</code></pre>
 </div>
   </div>
 

@@ -99,10 +99,10 @@ includes min and max rank. Based on training logit regressin." />
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Test One Resource Equivalent Variation Computation (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Test Two Resource Equivalent Variation Computation (Line by Line)</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_sobin_rkone_allfc_training_logit.html">BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution</a>
@@ -178,49 +178,126 @@ includes min and max rank. Based on training logit regressin.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_lalonde_training_employ</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_opt_lalonde_training_employ</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt;    id A_i_employ alpha_i_employ beta_i_employ rank_min_employ rank_max_employ
-#&gt; 1   1  0.6483406     0.07878288   0.001385042             187             180
-#&gt; 2   2  0.8577941     0.06358309   0.001385042             688             685
-#&gt; 3   3  0.6582975     0.07746136   0.001385042             246             235
-#&gt; 4   4  0.6062724     0.08370079   0.001385042              43              40
-#&gt; 5   5  0.6748927     0.07512792   0.001385042             423             406
-#&gt; 6   6  0.5438145     0.08893549   0.001385042               3               2
-#&gt; 7   7  0.6748927     0.07512792   0.001385042             423             406
-#&gt; 8   8  0.6744480     0.07519257   0.001385042             406             389
-#&gt; 9   9  0.8447118     0.06884295   0.001385042             640             622
-#&gt; 10 10  0.6630602     0.07680834   0.001385042             294             281
+#&gt; 1   1  0.6466332     0.09434268   0.001385042             194               8
+#&gt; 2   2  0.8485082     0.03809367   0.001385042             682             620
+#&gt; 3   3  0.6499830     0.09380271   0.001385042             199              13
+#&gt; 4   4  0.5651946     0.07950350   0.001385042             260               3
+#&gt; 5   5  0.6824193     0.08817794   0.001385042             383             130
+#&gt; 6   6  0.6433307     0.07240217   0.001385042             462             185
+#&gt; 7   7  0.6824193     0.08817794   0.001385042             383             130
+#&gt; 8   8  0.6295665     0.07390839   0.001385042             434             158
+#&gt; 9   9  0.8260749     0.04286336   0.001385042             646             597
+#&gt; 10 10  0.6694840     0.06924924   0.001385042             503             294
 #&gt;    avg_rank_employ   trt age educ black hisp marr nodeg re74     re75      re78
-#&gt; 1       182.666667 ntran  23   10     1    0    0     1    0    0.000     0.000
-#&gt; 2       687.000000 ntran  26   12     0    0    0     0    0    0.000 12383.680
-#&gt; 3       239.000000 ntran  22    9     1    0    0     1    0    0.000     0.000
-#&gt; 4        41.333333 ntran  34    9     1    0    0     1   NA 4368.413 14051.160
-#&gt; 5       412.333333 ntran  18    9     1    0    0     1    0    0.000 10740.080
-#&gt; 6         2.333333 ntran  45   11     1    0    0     1    0    0.000 11796.470
-#&gt; 7       412.333333 ntran  18    9     1    0    0     1    0    0.000  9227.052
-#&gt; 8       395.333333 ntran  27   12     1    0    0     0   NA 2483.851  3552.268
-#&gt; 9       634.000000 ntran  24    8     0    0    0     1    0    0.000 10569.270
-#&gt; 10      285.666667 ntran  34   11     1    0    1     1    0    0.000  6040.335
+#&gt; 1          81.9000 ntran  23   10     1    0    0     1    0    0.000     0.000
+#&gt; 2         662.4667 ntran  26   12     0    0    0     0    0    0.000 12383.680
+#&gt; 3          88.6000 ntran  22    9     1    0    0     1    0    0.000     0.000
+#&gt; 4         113.0333 ntran  34    9     1    0    0     1   NA 4368.413 14051.160
+#&gt; 5         241.0000 ntran  18    9     1    0    0     1    0    0.000 10740.080
+#&gt; 6         352.6333 ntran  45   11     1    0    0     1    0    0.000 11796.470
+#&gt; 7         241.0000 ntran  18    9     1    0    0     1    0    0.000  9227.052
+#&gt; 8         312.1333 ntran  27   12     1    0    0     0   NA 2483.851  3552.268
+#&gt; 9         624.5667 ntran  24    8     0    0    0     1    0    0.000 10569.270
+#&gt; 10        433.5000 ntran  34   11     1    0    1     1    0    0.000  6040.335
 #&gt;    emp78 emp75 race age_m2 age_m3     p_mpg  p_mpg_hp p_mpg_hp_bi0 p_mpg_hp_bi1
-#&gt; 1      0     0    1      1      2 0.6783821 0.6483406    0.6483406    0.7271235
-#&gt; 2      1     0    0      2      2 0.8897568 0.8577941    0.8577941    0.9213772
-#&gt; 3      0     0    1      1      2 0.6883859 0.6582975    0.6582975    0.7357589
-#&gt; 4      1     1    1      2      3 0.6383402 0.6062724    0.6062724    0.6899732
-#&gt; 5      1     0    1      1      1 0.7042022 0.6748927    0.6748927    0.7500207
-#&gt; 6      1     0    1      2      3 0.5762456 0.5438145    0.5438145    0.6327500
-#&gt; 7      1     0    1      1      1 0.7042022 0.6748927    0.6748927    0.7500207
-#&gt; 8      1     1    1      2      3 0.7123512 0.6744480    0.6744480    0.7496406
-#&gt; 9      1     0    0      2      2 0.8749490 0.8447118    0.8447118    0.9135548
-#&gt; 10     1     0    1      2      3 0.6934077 0.6630602    0.6630602    0.7398685
-#&gt;    rho_c1_rk_employ rho_c2_rk_employ rho_c3_rk_employ
-#&gt; 1               180              181              187
-#&gt; 2               688              688              685
-#&gt; 3               235              236              246
-#&gt; 4                40               41               43
-#&gt; 5               406              408              423
-#&gt; 6                 2                2                3
-#&gt; 7               406              408              423
-#&gt; 8               389              391              406
-#&gt; 9               640              640              622
-#&gt; 10              281              282              294</div></pre>
+#&gt; 1      0     0    1      1      2 0.6783821 0.6466332    0.6466332    0.7409759
+#&gt; 2      1     0    0      2      2 0.8897568 0.8485082    0.8485082    0.8866018
+#&gt; 3      0     0    1      1      2 0.6883859 0.6499830    0.6499830    0.7437857
+#&gt; 4      1     1    1      2      3 0.6383402 0.5651946    0.5651946    0.6446980
+#&gt; 5      1     0    1      1      1 0.7042022 0.6824193    0.6824193    0.7705972
+#&gt; 6      1     0    1      2      3 0.5762456 0.6433307    0.6433307    0.7157329
+#&gt; 7      1     0    1      1      1 0.7042022 0.6824193    0.6824193    0.7705972
+#&gt; 8      1     1    1      2      3 0.7123512 0.6295665    0.6295665    0.7034749
+#&gt; 9      1     0    0      2      2 0.8749490 0.8260749    0.8260749    0.8689382
+#&gt; 10     1     0    1      2      3 0.6934077 0.6694840    0.6694840    0.7387332
+#&gt;    rho_c1_rk_employ rho_c2_rk_employ rho_c3_rk_employ rho_c4_rk_employ
+#&gt; 1                 8                8                8                8
+#&gt; 2               682              682              682              682
+#&gt; 3                13               13               13               13
+#&gt; 4               260              260              260              260
+#&gt; 5               130              130              130              130
+#&gt; 6               462              462              462              462
+#&gt; 7               130              130              130              130
+#&gt; 8               434              434              434              434
+#&gt; 9               646              646              646              646
+#&gt; 10              503              503              503              503
+#&gt;    rho_c5_rk_employ rho_c6_rk_employ rho_c7_rk_employ rho_c8_rk_employ
+#&gt; 1                 8                8                8                8
+#&gt; 2               682              682              682              682
+#&gt; 3                13               13               13               13
+#&gt; 4               256              256              256              256
+#&gt; 5               130              130              130              130
+#&gt; 6               462              462              462              462
+#&gt; 7               130              130              130              130
+#&gt; 8               434              430              430              430
+#&gt; 9               646              646              646              646
+#&gt; 10              503              503              503              501
+#&gt;    rho_c9_rk_employ rho_c10_rk_employ rho_c11_rk_employ rho_c12_rk_employ
+#&gt; 1                 8                 8                 8                 8
+#&gt; 2               681               681               681               680
+#&gt; 3                13                13                13                13
+#&gt; 4               245               243               233               226
+#&gt; 5               130               130               130               130
+#&gt; 6               462               461               457               455
+#&gt; 7               130               130               130               130
+#&gt; 8               430               428               428               425
+#&gt; 9               646               646               646               646
+#&gt; 10              501               501               501               500
+#&gt;    rho_c13_rk_employ rho_c14_rk_employ rho_c15_rk_employ rho_c16_rk_employ
+#&gt; 1                  8                 8                 8                 8
+#&gt; 2                679               679               677               675
+#&gt; 3                 13                13                13                16
+#&gt; 4                173               100                54                11
+#&gt; 5                130               148               219               255
+#&gt; 6                455               451               442               427
+#&gt; 7                130               148               219               255
+#&gt; 8                420               411               399               387
+#&gt; 9                644               641               636               632
+#&gt; 10               500               499               494               490
+#&gt;    rho_c17_rk_employ rho_c18_rk_employ rho_c19_rk_employ rho_c20_rk_employ
+#&gt; 1                 52               119               142               147
+#&gt; 2                673               670               667               664
+#&gt; 3                 81               126               148               156
+#&gt; 4                  3                 3                 3                 3
+#&gt; 5                269               289               316               317
+#&gt; 6                414               366               298               256
+#&gt; 7                269               289               316               317
+#&gt; 8                328               255               219               186
+#&gt; 9                624               616               613               604
+#&gt; 10               484               476               458               438
+#&gt;    rho_c21_rk_employ rho_c22_rk_employ rho_c23_rk_employ rho_c24_rk_employ
+#&gt; 1                162               173               185               185
+#&gt; 2                661               649               640               632
+#&gt; 3                172               181               190               199
+#&gt; 4                  3                 3                 3                 3
+#&gt; 5                331               349               371               378
+#&gt; 6                226               207               200               193
+#&gt; 7                331               349               371               378
+#&gt; 8                166               158               158               158
+#&gt; 9                600               599               597               597
+#&gt; 10               393               353               320               309
+#&gt;    rho_c25_rk_employ rho_c26_rk_employ rho_c27_rk_employ rho_c28_rk_employ
+#&gt; 1                194               194               194               194
+#&gt; 2                629               620               620               620
+#&gt; 3                199               199               199               199
+#&gt; 4                  3                 3                 3                 3
+#&gt; 5                383               383               383               383
+#&gt; 6                186               186               186               185
+#&gt; 7                383               383               383               383
+#&gt; 8                158               158               158               158
+#&gt; 9                597               597               597               597
+#&gt; 10               296               294               294               294
+#&gt;    rho_c29_rk_employ rho_c30_rk_employ
+#&gt; 1                194               194
+#&gt; 2                620               620
+#&gt; 3                199               199
+#&gt; 4                  3                 3
+#&gt; 5                383               383
+#&gt; 6                185               185
+#&gt; 7                383               383
+#&gt; 8                158               158
+#&gt; 9                597               597
+#&gt; 10               294               294</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

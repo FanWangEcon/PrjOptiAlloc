@@ -60,10 +60,10 @@
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Test One Resource Equivalent Variation Computation (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Test Two Resource Equivalent Variation Computation (Line by Line)</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_sobin_rkone_allfc_training_logit.html">BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution</a>
@@ -164,17 +164,17 @@
 <pre><code>## # A tibble: 10 x 17
 ##    S.country vil.id indi.id sex   svymthRound momEdu wealthIdx   hgt    wgt
 ##    &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-##  1 Cebu           1       2 Fema~          24    7.1       7.3  79.2 10776.
-##  2 Cebu           1       3 Fema~          24    9.4      10.3  76.7 10296.
-##  3 Cebu           1       4 Fema~          24   13.9      13.3  78.1  7604.
+##  1 Cebu           1       2 Fema…          24    7.1       7.3  79.2 10776.
+##  2 Cebu           1       3 Fema…          24    9.4      10.3  76.7 10296.
+##  3 Cebu           1       4 Fema…          24   13.9      13.3  78.1  7604.
 ##  4 Cebu           1       5 Male           24   11.3       9.3  84.1 11787.
-##  5 Cebu           1       6 Fema~          24    7.3       7.3  76.9  7991.
+##  5 Cebu           1       6 Fema…          24    7.3       7.3  76.9  7991.
 ##  6 Cebu           1       7 Male           24   10.4       8.3  79.6 12583.
-##  7 Cebu           1       8 Fema~          24   13.5       9.3  81.5  8358.
-##  8 Cebu           1       9 Fema~          24   10.4      17.3  74.7  8195.
+##  7 Cebu           1       8 Fema…          24   13.5       9.3  81.5  8358.
+##  8 Cebu           1       9 Fema…          24   10.4      17.3  74.7  8195.
 ##  9 Cebu           1      10 Male           24   10.5       6.3  77.1  9442.
 ## 10 Cebu           1      11 Male           24    1.9       6.3  72.1  6627.
-## # ... with 8 more variables: hgt0 &lt;dbl&gt;, wgt0 &lt;dbl&gt;, prot &lt;dbl&gt;, cal &lt;dbl&gt;,
+## # … with 8 more variables: hgt0 &lt;dbl&gt;, wgt0 &lt;dbl&gt;, prot &lt;dbl&gt;, cal &lt;dbl&gt;,
 ## #   p.A.prot &lt;dbl&gt;, p.A.nProt &lt;dbl&gt;, momEduRound &lt;fct&gt;, hgt0med &lt;fct&gt;</code></pre>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(df_esti, <span class="dv">10</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 10 x 9
@@ -266,7 +266,7 @@
 ##  8 Cebu           1       9          24    0.0101   0.00669  78.0  4.34 9.59e-4
 ##  9 Cebu           1      10          24    0.0662   0.0139   80.0  4.36 9.59e-4
 ## 10 Cebu           1      11          24    0.0602   0.0121   77.7  4.33 9.59e-4
-## # ... with 12 more variables: rho_c1_optiallocate &lt;dbl&gt;,
+## # … with 12 more variables: rho_c1_optiallocate &lt;dbl&gt;,
 ## #   rho_c1_optiexpoutcm &lt;dbl&gt;, rho_c2_optiallocate &lt;dbl&gt;,
 ## #   rho_c2_optiexpoutcm &lt;dbl&gt;, rho_c3_optiallocate &lt;dbl&gt;,
 ## #   rho_c3_optiexpoutcm &lt;dbl&gt;, rho_c4_optiallocate &lt;dbl&gt;,
@@ -275,7 +275,7 @@
 ## #   rho_c6_optiexpoutcm &lt;dbl&gt;</code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(df_opti_alloc_all_rho <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">'rho'</span>)), <span class="dv">20</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 20 x 12
-##    rho_c1_optiallo~ rho_c1_optiexpo~ rho_c2_optiallo~ rho_c2_optiexpo~
+##    rho_c1_optiallo… rho_c1_optiexpo… rho_c2_optiallo… rho_c2_optiexpo…
 ##               &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
 ##  1             0                78.4             0                78.4
 ##  2             0                79.9             0                79.9
@@ -297,7 +297,7 @@
 ## 18             0                79.1             0                79.1
 ## 19             0                78.7             0                78.7
 ## 20             0                79.1             0                79.1
-## # ... with 8 more variables: rho_c3_optiallocate &lt;dbl&gt;,
+## # … with 8 more variables: rho_c3_optiallocate &lt;dbl&gt;,
 ## #   rho_c3_optiexpoutcm &lt;dbl&gt;, rho_c4_optiallocate &lt;dbl&gt;,
 ## #   rho_c4_optiexpoutcm &lt;dbl&gt;, rho_c5_optiallocate &lt;dbl&gt;,
 ## #   rho_c5_optiexpoutcm &lt;dbl&gt;, rho_c6_optiallocate &lt;dbl&gt;,
@@ -353,14 +353,14 @@
 <a class="sourceLine" id="cb18-6" title="6"><span class="co"># Print</span></a>
 <a class="sourceLine" id="cb18-7" title="7"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(ar_opti_alloc_gini)</a></code></pre></div>
 <pre><code>## rho_c1_optiallocate rho_c2_optiallocate rho_c3_optiallocate rho_c4_optiallocate 
-##           0.7496377           0.6902218           0.8089562           0.8105391 
+##           0.2503623           0.3097782           0.1910438           0.1894609 
 ## rho_c5_optiallocate rho_c6_optiallocate 
-##           0.8107186           0.8107186</code></pre>
+##           0.1892814           0.1892814</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(ar_expc_outcm_gini)</a></code></pre></div>
 <pre><code>## rho_c1_optiexpoutcm rho_c2_optiexpoutcm rho_c3_optiexpoutcm rho_c4_optiexpoutcm 
-##         0.006735065         0.007619387         0.013797035         0.013896702 
+##           0.9932649           0.9923806           0.9862030           0.9861033 
 ## rho_c5_optiexpoutcm rho_c6_optiexpoutcm 
-##         0.013907624         0.013907624</code></pre>
+##           0.9860924           0.9860924</code></pre>
 </div>
 <div id="gini-results-reshaping-for-easier-outputs" class="section level2">
 <h2 class="hasAnchor">
@@ -387,47 +387,47 @@
 <a class="sourceLine" id="cb22-20" title="20"><span class="co"># Print</span></a>
 <a class="sourceLine" id="cb22-21" title="21"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(tb_gini_onerow_wide)</a></code></pre></div>
 <pre><code>##   rho_c1_optiallocate rho_c2_optiallocate rho_c3_optiallocate
-## 1           0.7496377           0.6902218           0.8089562
+## 1           0.2503623           0.3097782           0.1910438
 ##   rho_c4_optiallocate rho_c5_optiallocate rho_c6_optiallocate
-## 1           0.8105391           0.8107186           0.8107186
+## 1           0.1894609           0.1892814           0.1892814
 ##   rho_c1_optiexpoutcm rho_c2_optiexpoutcm rho_c3_optiexpoutcm
-## 1         0.006735065         0.007619387          0.01379703
+## 1           0.9932649           0.9923806            0.986203
 ##   rho_c4_optiexpoutcm rho_c5_optiexpoutcm rho_c6_optiexpoutcm
-## 1           0.0138967          0.01390762          0.01390762</code></pre>
+## 1           0.9861033           0.9860924           0.9860924</code></pre>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(tb_gini_long)</a></code></pre></div>
 <pre><code>## # A tibble: 12 x 3
-##    it_rho_ctr oneh            gini
-##    &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt;
-##  1 1          optiallocate 0.750  
-##  2 2          optiallocate 0.690  
-##  3 3          optiallocate 0.809  
-##  4 4          optiallocate 0.811  
-##  5 5          optiallocate 0.811  
-##  6 6          optiallocate 0.811  
-##  7 1          optiexpoutcm 0.00674
-##  8 2          optiexpoutcm 0.00762
-##  9 3          optiexpoutcm 0.0138 
-## 10 4          optiexpoutcm 0.0139 
-## 11 5          optiexpoutcm 0.0139 
-## 12 6          optiexpoutcm 0.0139</code></pre>
+##    it_rho_ctr oneh          gini
+##    &lt;chr&gt;      &lt;chr&gt;        &lt;dbl&gt;
+##  1 1          optiallocate 0.250
+##  2 2          optiallocate 0.310
+##  3 3          optiallocate 0.191
+##  4 4          optiallocate 0.189
+##  5 5          optiallocate 0.189
+##  6 6          optiallocate 0.189
+##  7 1          optiexpoutcm 0.993
+##  8 2          optiexpoutcm 0.992
+##  9 3          optiexpoutcm 0.986
+## 10 4          optiexpoutcm 0.986
+## 11 5          optiexpoutcm 0.986
+## 12 6          optiexpoutcm 0.986</code></pre>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(tb_gini_wide2)</a></code></pre></div>
 <pre><code>## # A tibble: 6 x 3
 ##   it_rho_ctr optiallocate optiexpoutcm
 ##   &lt;chr&gt;             &lt;dbl&gt;        &lt;dbl&gt;
-## 1 1                 0.750      0.00674
-## 2 2                 0.690      0.00762
-## 3 3                 0.809      0.0138 
-## 4 4                 0.811      0.0139 
-## 5 5                 0.811      0.0139 
-## 6 6                 0.811      0.0139</code></pre>
+## 1 1                 0.250        0.993
+## 2 2                 0.310        0.992
+## 3 3                 0.191        0.986
+## 4 4                 0.189        0.986
+## 5 5                 0.189        0.986
+## 6 6                 0.189        0.986</code></pre>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(mt_gini)</a></code></pre></div>
 <pre><code>##      it_rho_ctr optiallocate optiexpoutcm planner_elas
-## [1,]          1    0.7496377  0.006735065    0.7029034
-## [2,]          2    0.6902218  0.007619387    0.7375989
-## [3,]          3    0.8089562  0.013797035    1.0678406
-## [4,]          4    0.8105391  0.013896702    1.1349799
-## [5,]          5    0.8107186  0.013907624    1.3862944
-## [6,]          6    0.8107186  0.013907624    1.6739764</code></pre>
+## [1,]          1    0.2503623    0.9932649    0.7029034
+## [2,]          2    0.3097782    0.9923806    0.7375989
+## [3,]          3    0.1910438    0.9862030    1.0678406
+## [4,]          4    0.1894609    0.9861033    1.1349799
+## [5,]          5    0.1892814    0.9860924    1.3862944
+## [6,]          6    0.1892814    0.9860924    1.6739764</code></pre>
 </div>
 </div>
 <div id="save-outputs" class="section level1">

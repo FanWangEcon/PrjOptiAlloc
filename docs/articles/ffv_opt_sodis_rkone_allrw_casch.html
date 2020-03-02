@@ -60,10 +60,10 @@
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Test One Resource Equivalent Variation Computation (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Test Two Resource Equivalent Variation Computation (Line by Line)</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_sobin_rkone_allfc_training_logit.html">BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution</a>
@@ -249,17 +249,17 @@
 <pre><code>## # A tibble: 45 x 16
 ##    county X_mean distcod_mean enrltot_mean teachers_mean calwpct_mean
 ##    &lt;fct&gt;   &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;
-##  1 Alame~     1        75119          195          10.9         0.510
+##  1 Alame…     1        75119          195          10.9         0.510
 ##  2 Butte     36        61486.        1152.         60.5        36.3  
-##  3 Calav~   233        61572          777          36.8        13.0  
-##  4 Contr~   299.       61738.        2726.        138.          3.51 
-##  5 El Do~   294.       61912.        1373.         69.5         6.73 
+##  3 Calav…   233        61572          777          36.8        13.0  
+##  4 Contr…   299.       61738.        2726.        138.          3.51 
+##  5 El Do…   294.       61912.        1373.         69.5         6.73 
 ##  6 Fresno   111        62250.         504.         26.4        21.1  
 ##  7 Glenn    264.       62596          138.          6.58        7.11 
-##  8 Humbo~   240.       62888.         380.         20.6        17.8  
-##  9 Imper~   121.       63163.        1936          92.5        19.7  
+##  8 Humbo…   240.       62888.         380.         20.6        17.8  
+##  9 Imper…   121.       63163.        1936          92.5        19.7  
 ## 10 Inyo     252        63255         1510          73.3        10.3  
-## # ... with 35 more rows, and 10 more variables: mealpct_mean &lt;dbl&gt;,
+## # … with 35 more rows, and 10 more variables: mealpct_mean &lt;dbl&gt;,
 ## #   computer_mean &lt;dbl&gt;, testscr_mean &lt;dbl&gt;, compstu_mean &lt;dbl&gt;,
 ## #   expnstu_mean &lt;dbl&gt;, str_mean &lt;dbl&gt;, avginc_mean &lt;dbl&gt;, elpct_mean &lt;dbl&gt;,
 ## #   readscr_mean &lt;dbl&gt;, mathscr_mean &lt;dbl&gt;</code></pre>
@@ -315,7 +315,7 @@
 ##  8 Humboldt          14       3
 ##  9 Imperial           6      NA
 ## 10 Inyo               1      NA
-## # ... with 35 more rows</code></pre>
+## # … with 35 more rows</code></pre>
 </div>
 <div id="regression-testing" class="section level2">
 <h2 class="hasAnchor">
@@ -729,7 +729,7 @@ EY_i \left(T_i + 1\right) - EY_i \left(T_i\right) = \theta \cdot S_i \cdot \left
 ##  8 mt_modelfactor(county)Humboldt       -7.98       8.91   -0.895  3.71e-  1
 ##  9 mt_modelfactor(county)Imperial      -10.9        9.44   -1.16   2.49e-  1
 ## 10 mt_modelfactor(county)Inyo           -8.27      12.2    -0.677  4.99e-  1
-## # ... with 39 more rows</code></pre>
+## # … with 39 more rows</code></pre>
 </div>
 <div id="construct-input-arrays-a_i" class="section level2">
 <h2 class="hasAnchor">

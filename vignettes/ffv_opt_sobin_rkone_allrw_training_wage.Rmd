@@ -28,6 +28,7 @@ options(knitr.duplicate.label = 'allow')
 library(dplyr)
 library(tidyr)
 library(tibble)
+library(forcats)
 library(stringr)
 library(broom)
 library(ggplot2)
@@ -356,13 +357,13 @@ df_all_rho_rho_c1 <- df_all_rho %>% select(id, rho_c1_rk_wage)
 # rho really means rho index
 tb_lambda <- as_tibble(mt_combine) %>% rowid_to_column(var = "rho")
 
-# Merge 
-df_all_rho_long <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>% 
+# Merge
+df_all_rho_long <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>%
                       left_join(tb_lambda, by='rho') %>%
                       left_join(df_all_rho_rho_c1, by='id')
 
 # Select subset to graph
-df_rank_graph <- df_all_rho_long %>% 
+df_rank_graph <- df_all_rho_long %>%
                     mutate(id = factor(id)) %>%
                     filter((id == 200) |  # utilitarian rank = 1
                            (id == 110) |  # utilitarian rank = 101
@@ -372,9 +373,9 @@ df_rank_graph <- df_all_rho_long %>%
                            (id == 101) |  # utilitarian rank = 501
                            (id == 131) |  # utilitarian rank = 601
                            (id == 3610)   # utilitarian rank = 701
-                             ) %>% 
-                    mutate(one_minus_lambda = 1 - lambda) %>% 
-                    mutate(rho_c1_rk_wage = factor(rho_c1_rk_wage)) 
+                             ) %>%
+                    mutate(one_minus_lambda = 1 - lambda) %>%
+                    mutate(rho_c1_rk_wage = factor(rho_c1_rk_wage))
 
 df_rank_graph$rho_c1_rk_wage
 
@@ -398,11 +399,11 @@ title_line1 <- sprintf("LINEAR WAGE: Optimal Tageting Queue, NSW Lalonda (AER, 1
 title_line2 <- sprintf("How Do Allocation Rankings (Targeting Queue) Shift with λ?")
 
 # Graph Results--Draw
-line.plot <- df_rank_graph %>% 
+line.plot <- df_rank_graph %>%
   ggplot(aes(x=one_minus_lambda, y=rank,
-             group=fct_rev(id), 
+             group=fct_rev(id),
              colour=fct_rev(id),
-             size=2)) + 
+             size=2)) +
   # geom_line(aes(linetype =fct_rev(id)), size=0.75) +
   geom_line(size=0.75) +
   geom_vline(xintercept=c(1), linetype="dotted") +

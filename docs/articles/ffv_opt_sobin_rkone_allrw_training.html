@@ -60,10 +60,10 @@
       <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Test One Resource Equivalent Variation Computation (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Test Two Resource Equivalent Variation Computation (Line by Line)</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_sobin_rkone_allfc_training_logit.html">BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution</a>
@@ -193,125 +193,283 @@
 <a class="sourceLine" id="cb5-9" title="9"></a>
 <a class="sourceLine" id="cb5-10" title="10"><span class="co"># Summarize</span></a>
 <a class="sourceLine" id="cb5-11" title="11"><span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(dfj)</a></code></pre></div>
-<pre><code>## 'data.frame':    722 obs. of  38 variables:
-##  $ id              : int  1 2 3 4 5 6 7 8 9 10 ...
-##  $ A_i_employ      : num  0.648 0.858 0.658 0.606 0.675 ...
-##  $ A_i_wage        : num  4.71 6.84 4.37 4.13 4.19 ...
-##  $ alpha_i_employ  : num  0.0788 0.0636 0.0775 0.0837 0.0751 ...
-##  $ alpha_i_wage    : num  0.454 0.454 0.454 0.454 0.454 ...
-##  $ beta_i_employ   : num  0.00139 0.00139 0.00139 0.00139 0.00139 ...
-##  $ beta_i_wage     : num  0.00139 0.00139 0.00139 0.00139 0.00139 ...
-##  $ rank_min_employ : int  187 688 246 43 423 3 423 406 640 294 ...
-##  $ rank_max_employ : int  180 685 235 40 406 2 406 389 622 281 ...
-##  $ avg_rank_employ : num  182.7 687 239 41.3 412.3 ...
-##  $ rank_min_wage   : int  392 689 278 178 223 483 223 499 545 496 ...
-##  $ rank_max_wage   : int  284 673 163 61 106 399 106 416 495 68 ...
-##  $ avg_rank_wage   : num  356 684 240 139 184 ...
-##  $ rho_c1_rk_employ: int  180 688 235 40 406 2 406 389 640 281 ...
-##  $ rho_c2_rk_employ: int  181 688 236 41 408 2 408 391 640 282 ...
-##  $ rho_c3_rk_employ: int  187 685 246 43 423 3 423 406 622 294 ...
-##  $ rho_c1_rk_wage  : int  284 673 163 61 106 399 106 416 495 496 ...
-##  $ rho_c2_rk_wage  : int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c3_rk_wage  : int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ trt             : num  0 0 0 0 0 0 0 0 0 0 ...
-##  $ age             : int  23 26 22 34 18 45 18 27 24 34 ...
-##  $ educ            : int  10 12 9 9 9 11 9 12 8 11 ...
-##  $ black           : int  1 0 1 1 1 1 1 1 0 1 ...
-##  $ hisp            : int  0 0 0 0 0 0 0 0 0 0 ...
-##  $ marr            : int  0 0 0 0 0 0 0 0 0 1 ...
-##  $ nodeg           : int  1 0 1 1 1 1 1 0 1 1 ...
-##  $ re74            : num  0 0 0 NA 0 0 0 NA 0 0 ...
-##  $ re75            : num  0 0 0 4368 0 ...
-##  $ re78            : num  0 12384 0 14051 10740 ...
-##  $ emp78           : num  0 1 0 1 1 1 1 1 1 1 ...
-##  $ emp75           : num  0 0 0 1 0 0 0 1 0 0 ...
-##  $ race            : num  1 0 1 1 1 1 1 1 0 1 ...
-##  $ age_m2          : num  1 2 1 2 1 2 1 2 2 2 ...
-##  $ age_m3          : num  2 2 2 3 1 3 1 3 2 3 ...
-##  $ p_mpg           : num  0.678 0.89 0.688 0.638 0.704 ...
-##  $ p_mpg_hp        : num  0.648 0.858 0.658 0.606 0.675 ...
-##  $ p_mpg_hp_bi0    : num  0.648 0.858 0.658 0.606 0.675 ...
-##  $ p_mpg_hp_bi1    : num  0.727 0.921 0.736 0.69 0.75 ...</code></pre>
+<pre><code>## 'data.frame':    722 obs. of  92 variables:
+##  $ id               : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ A_i_employ       : num  0.647 0.849 0.65 0.565 0.682 ...
+##  $ A_i_wage         : num  4.71 6.84 4.37 4.13 4.19 ...
+##  $ alpha_i_employ   : num  0.0943 0.0381 0.0938 0.0795 0.0882 ...
+##  $ alpha_i_wage     : num  0.454 0.454 0.454 0.454 0.454 ...
+##  $ beta_i_employ    : num  0.00139 0.00139 0.00139 0.00139 0.00139 ...
+##  $ beta_i_wage      : num  0.00139 0.00139 0.00139 0.00139 0.00139 ...
+##  $ rank_min_employ  : int  194 682 199 260 383 462 383 434 646 503 ...
+##  $ rank_max_employ  : int  8 620 13 3 130 185 130 158 597 294 ...
+##  $ avg_rank_employ  : num  81.9 662.5 88.6 113 241 ...
+##  $ rank_min_wage    : int  392 689 278 178 223 483 223 499 545 496 ...
+##  $ rank_max_wage    : int  284 673 163 61 106 399 106 416 495 68 ...
+##  $ avg_rank_wage    : num  356 684 236 132 178 ...
+##  $ rho_c1_rk_employ : int  8 682 13 260 130 462 130 434 646 503 ...
+##  $ rho_c2_rk_employ : int  8 682 13 260 130 462 130 434 646 503 ...
+##  $ rho_c3_rk_employ : int  8 682 13 260 130 462 130 434 646 503 ...
+##  $ rho_c4_rk_employ : int  8 682 13 260 130 462 130 434 646 503 ...
+##  $ rho_c5_rk_employ : int  8 682 13 256 130 462 130 434 646 503 ...
+##  $ rho_c6_rk_employ : int  8 682 13 256 130 462 130 430 646 503 ...
+##  $ rho_c7_rk_employ : int  8 682 13 256 130 462 130 430 646 503 ...
+##  $ rho_c8_rk_employ : int  8 682 13 256 130 462 130 430 646 501 ...
+##  $ rho_c9_rk_employ : int  8 681 13 245 130 462 130 430 646 501 ...
+##  $ rho_c10_rk_employ: int  8 681 13 243 130 461 130 428 646 501 ...
+##  $ rho_c11_rk_employ: int  8 681 13 233 130 457 130 428 646 501 ...
+##  $ rho_c12_rk_employ: int  8 680 13 226 130 455 130 425 646 500 ...
+##  $ rho_c13_rk_employ: int  8 679 13 173 130 455 130 420 644 500 ...
+##  $ rho_c14_rk_employ: int  8 679 13 100 148 451 148 411 641 499 ...
+##  $ rho_c15_rk_employ: int  8 677 13 54 219 442 219 399 636 494 ...
+##  $ rho_c16_rk_employ: int  8 675 16 11 255 427 255 387 632 490 ...
+##  $ rho_c17_rk_employ: int  52 673 81 3 269 414 269 328 624 484 ...
+##  $ rho_c18_rk_employ: int  119 670 126 3 289 366 289 255 616 476 ...
+##  $ rho_c19_rk_employ: int  142 667 148 3 316 298 316 219 613 458 ...
+##  $ rho_c20_rk_employ: int  147 664 156 3 317 256 317 186 604 438 ...
+##  $ rho_c21_rk_employ: int  162 661 172 3 331 226 331 166 600 393 ...
+##  $ rho_c22_rk_employ: int  173 649 181 3 349 207 349 158 599 353 ...
+##  $ rho_c23_rk_employ: int  185 640 190 3 371 200 371 158 597 320 ...
+##  $ rho_c24_rk_employ: int  185 632 199 3 378 193 378 158 597 309 ...
+##  $ rho_c25_rk_employ: int  194 629 199 3 383 186 383 158 597 296 ...
+##  $ rho_c26_rk_employ: int  194 620 199 3 383 186 383 158 597 294 ...
+##  $ rho_c27_rk_employ: int  194 620 199 3 383 186 383 158 597 294 ...
+##  $ rho_c28_rk_employ: int  194 620 199 3 383 185 383 158 597 294 ...
+##  $ rho_c29_rk_employ: int  194 620 199 3 383 185 383 158 597 294 ...
+##  $ rho_c30_rk_employ: int  194 620 199 3 383 185 383 158 597 294 ...
+##  $ rho_c1_rk_wage   : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c2_rk_wage   : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c3_rk_wage   : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c4_rk_wage   : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c5_rk_wage   : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c6_rk_wage   : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c7_rk_wage   : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c8_rk_wage   : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c9_rk_wage   : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c10_rk_wage  : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c11_rk_wage  : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c12_rk_wage  : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c13_rk_wage  : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c14_rk_wage  : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c15_rk_wage  : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c16_rk_wage  : int  392 689 278 178 223 483 223 499 545 68 ...
+##  $ rho_c17_rk_wage  : int  391 689 269 162 208 483 208 499 545 68 ...
+##  $ rho_c18_rk_wage  : int  375 689 252 146 191 473 191 490 543 85 ...
+##  $ rho_c19_rk_wage  : int  362 689 231 112 170 460 170 476 530 199 ...
+##  $ rho_c20_rk_wage  : int  345 688 198 86 136 451 136 469 522 316 ...
+##  $ rho_c21_rk_wage  : int  320 686 186 68 114 437 114 459 515 366 ...
+##  $ rho_c22_rk_wage  : int  308 682 169 64 111 432 111 450 512 445 ...
+##  $ rho_c23_rk_wage  : int  304 675 167 61 108 416 108 440 505 481 ...
+##  $ rho_c24_rk_wage  : int  297 674 166 61 106 407 106 426 498 485 ...
+##  $ rho_c25_rk_wage  : int  289 674 164 61 106 401 106 419 497 491 ...
+##  $ rho_c26_rk_wage  : int  284 673 164 61 106 400 106 417 496 494 ...
+##  $ rho_c27_rk_wage  : int  284 673 163 61 106 399 106 417 496 495 ...
+##  $ rho_c28_rk_wage  : int  284 673 163 61 106 399 106 416 495 496 ...
+##  $ rho_c29_rk_wage  : int  284 673 163 61 106 399 106 416 495 496 ...
+##  $ rho_c30_rk_wage  : int  284 673 163 61 106 399 106 416 495 496 ...
+##  $ trt              : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ age              : int  23 26 22 34 18 45 18 27 24 34 ...
+##  $ educ             : int  10 12 9 9 9 11 9 12 8 11 ...
+##  $ black            : int  1 0 1 1 1 1 1 1 0 1 ...
+##  $ hisp             : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ marr             : int  0 0 0 0 0 0 0 0 0 1 ...
+##  $ nodeg            : int  1 0 1 1 1 1 1 0 1 1 ...
+##  $ re74             : num  0 0 0 NA 0 0 0 NA 0 0 ...
+##  $ re75             : num  0 0 0 4368 0 ...
+##  $ re78             : num  0 12384 0 14051 10740 ...
+##  $ emp78            : num  0 1 0 1 1 1 1 1 1 1 ...
+##  $ emp75            : num  0 0 0 1 0 0 0 1 0 0 ...
+##  $ race             : num  1 0 1 1 1 1 1 1 0 1 ...
+##  $ age_m2           : num  1 2 1 2 1 2 1 2 2 2 ...
+##  $ age_m3           : num  2 2 2 3 1 3 1 3 2 3 ...
+##  $ p_mpg            : num  0.678 0.89 0.688 0.638 0.704 ...
+##  $ p_mpg_hp         : num  0.647 0.849 0.65 0.565 0.682 ...
+##  $ p_mpg_hp_bi0     : num  0.647 0.849 0.65 0.565 0.682 ...
+##  $ p_mpg_hp_bi1     : num  0.741 0.887 0.744 0.645 0.771 ...</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(dfj)</a></code></pre></div>
 <pre><code>##        id           A_i_employ        A_i_wage     alpha_i_employ   
-##  Min.   :   1.0   Min.   :0.5019   Min.   :3.673   Min.   :0.04560  
-##  1st Qu.: 181.2   1st Qu.:0.6490   1st Qu.:4.433   1st Qu.:0.07152  
-##  Median : 361.5   Median :0.6708   Median :4.970   Median :0.07593  
-##  Mean   : 854.4   Mean   :0.6978   Mean   :5.146   Mean   :0.07497  
-##  3rd Qu.:1458.5   3rd Qu.:0.7102   3rd Qu.:5.687   3rd Qu.:0.07896  
-##  Max.   :4110.0   Max.   :0.9007   Max.   :9.420   Max.   :0.10440  
+##  Min.   :   1.0   Min.   :0.5639   Min.   :3.673   Min.   :0.02455  
+##  1st Qu.: 181.2   1st Qu.:0.6432   1st Qu.:4.433   1st Qu.:0.06712  
+##  Median : 361.5   Median :0.6810   Median :4.970   Median :0.07760  
+##  Mean   : 854.4   Mean   :0.6991   Mean   :5.146   Mean   :0.07208  
+##  3rd Qu.:1458.5   3rd Qu.:0.7280   3rd Qu.:5.687   3rd Qu.:0.08626  
+##  Max.   :4110.0   Max.   :0.9220   Max.   :9.420   Max.   :0.09486  
 ##                                                                     
 ##   alpha_i_wage    beta_i_employ       beta_i_wage       rank_min_employ
-##  Min.   :0.4538   Min.   :0.001385   Min.   :0.001385   Min.   :  2.0  
-##  1st Qu.:0.4538   1st Qu.:0.001385   1st Qu.:0.001385   1st Qu.:188.2  
-##  Median :0.4538   Median :0.001385   Median :0.001385   Median :381.0  
-##  Mean   :0.5538   Mean   :0.001385   Mean   :0.001385   Mean   :377.9  
-##  3rd Qu.:0.4538   3rd Qu.:0.001385   3rd Qu.:0.001385   3rd Qu.:580.8  
+##  Min.   :0.4538   Min.   :0.001385   Min.   :0.001385   Min.   :186.0  
+##  1st Qu.:0.4538   1st Qu.:0.001385   1st Qu.:0.001385   1st Qu.:352.0  
+##  Median :0.4538   Median :0.001385   Median :0.001385   Median :456.0  
+##  Mean   :0.5538   Mean   :0.001385   Mean   :0.001385   Mean   :458.7  
+##  3rd Qu.:0.4538   3rd Qu.:0.001385   3rd Qu.:0.001385   3rd Qu.:553.8  
 ##  Max.   :1.0708   Max.   :0.001385   Max.   :0.001385   Max.   :722.0  
 ##                                                                        
-##  rank_max_employ avg_rank_employ   rank_min_wage   rank_max_wage   
-##  Min.   :  1.0   Min.   :  1.333   Min.   :119.0   Min.   :  1.00  
-##  1st Qu.:180.0   1st Qu.:183.917   1st Qu.:295.0   1st Qu.: 92.25  
-##  Median :355.0   Median :366.333   Median :450.0   Median :254.00  
-##  Mean   :349.7   Mean   :363.814   Mean   :431.8   Mean   :295.86  
-##  3rd Qu.:516.0   3rd Qu.:541.667   3rd Qu.:578.8   3rd Qu.:492.00  
-##  Max.   :722.0   Max.   :722.000   Max.   :722.0   Max.   :722.00  
-##                                                                    
+##  rank_max_employ avg_rank_employ  rank_min_wage   rank_max_wage   
+##  Min.   :  1.0   Min.   : 72.47   Min.   :119.0   Min.   :  1.00  
+##  1st Qu.: 97.0   1st Qu.:207.60   1st Qu.:295.0   1st Qu.: 92.25  
+##  Median :184.0   Median :324.72   Median :450.0   Median :254.00  
+##  Mean   :269.0   Mean   :363.81   Mean   :431.8   Mean   :295.86  
+##  3rd Qu.:486.8   3rd Qu.:527.29   3rd Qu.:578.8   3rd Qu.:492.00  
+##  Max.   :720.0   Max.   :721.43   Max.   :722.0   Max.   :722.00  
+##                                                                   
 ##  avg_rank_wage    rho_c1_rk_employ rho_c2_rk_employ rho_c3_rk_employ
-##  Min.   : 48.33   Min.   :  1.0    Min.   :  1.0    Min.   :  1.0   
-##  1st Qu.:202.00   1st Qu.:181.2    1st Qu.:181.2    1st Qu.:187.0   
-##  Median :326.67   Median :365.0    Median :367.0    Median :371.0   
+##  Min.   : 37.43   Min.   :  1.0    Min.   :  1.0    Min.   :  1.0   
+##  1st Qu.:196.60   1st Qu.:184.8    1st Qu.:184.8    1st Qu.:184.8   
+##  Median :343.03   Median :367.0    Median :367.0    Median :367.0   
 ##  Mean   :363.81   Mean   :363.8    Mean   :363.8    Mean   :363.8   
-##  3rd Qu.:526.00   3rd Qu.:544.0    3rd Qu.:543.2    3rd Qu.:542.0   
+##  3rd Qu.:526.43   3rd Qu.:541.8    3rd Qu.:541.8    3rd Qu.:541.8   
 ##  Max.   :722.00   Max.   :722.0    Max.   :722.0    Max.   :722.0   
 ##                                                                     
-##  rho_c1_rk_wage  rho_c2_rk_wage  rho_c3_rk_wage       trt        
-##  Min.   :  2.0   Min.   :  1.0   Min.   :  1.0   Min.   :0.0000  
-##  1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0   1st Qu.:0.0000  
-##  Median :364.0   Median :363.0   Median :363.0   Median :0.0000  
-##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :0.4114  
-##  3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:1.0000  
-##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :1.0000  
+##  rho_c4_rk_employ rho_c5_rk_employ rho_c6_rk_employ rho_c7_rk_employ
+##  Min.   :  1.0    Min.   :  1.0    Min.   :  1.0    Min.   :  1.0   
+##  1st Qu.:184.8    1st Qu.:184.8    1st Qu.:184.8    1st Qu.:184.8   
+##  Median :367.0    Median :367.0    Median :362.0    Median :362.0   
+##  Mean   :363.8    Mean   :363.8    Mean   :363.8    Mean   :363.8   
+##  3rd Qu.:541.8    3rd Qu.:541.8    3rd Qu.:541.8    3rd Qu.:541.8   
+##  Max.   :722.0    Max.   :722.0    Max.   :722.0    Max.   :722.0   
+##                                                                     
+##  rho_c8_rk_employ rho_c9_rk_employ rho_c10_rk_employ rho_c11_rk_employ
+##  Min.   :  1.0    Min.   :  1.0    Min.   :  1.0     Min.   :  1.0    
+##  1st Qu.:184.8    1st Qu.:184.8    1st Qu.:184.8     1st Qu.:184.8    
+##  Median :364.5    Median :364.0    Median :361.5     Median :362.5    
+##  Mean   :363.8    Mean   :363.8    Mean   :363.8     Mean   :363.8    
+##  3rd Qu.:541.8    3rd Qu.:541.8    3rd Qu.:541.8     3rd Qu.:542.0    
+##  Max.   :722.0    Max.   :722.0    Max.   :722.0     Max.   :722.0    
+##                                                                       
+##  rho_c12_rk_employ rho_c13_rk_employ rho_c14_rk_employ rho_c15_rk_employ
+##  Min.   :  1.0     Min.   :  1.0     Min.   :  1.0     Min.   :  1.0    
+##  1st Qu.:184.8     1st Qu.:191.0     1st Qu.:182.0     1st Qu.:191.0    
+##  Median :366.0     Median :364.0     Median :362.0     Median :364.0    
+##  Mean   :363.8     Mean   :363.8     Mean   :363.8     Mean   :363.8    
+##  3rd Qu.:542.5     3rd Qu.:542.5     3rd Qu.:542.0     3rd Qu.:541.8    
+##  Max.   :722.0     Max.   :722.0     Max.   :722.0     Max.   :722.0    
+##                                                                         
+##  rho_c16_rk_employ rho_c17_rk_employ rho_c18_rk_employ rho_c19_rk_employ
+##  Min.   :  1.0     Min.   :  2.0     Min.   :  2.0     Min.   :  2.0    
+##  1st Qu.:182.2     1st Qu.:186.0     1st Qu.:182.0     1st Qu.:181.2    
+##  Median :362.0     Median :364.0     Median :365.0     Median :368.0    
+##  Mean   :363.8     Mean   :363.8     Mean   :363.8     Mean   :363.8    
+##  3rd Qu.:541.8     3rd Qu.:541.8     3rd Qu.:542.0     3rd Qu.:541.8    
+##  Max.   :722.0     Max.   :722.0     Max.   :722.0     Max.   :722.0    
+##                                                                         
+##  rho_c20_rk_employ rho_c21_rk_employ rho_c22_rk_employ rho_c23_rk_employ
+##  Min.   :  2.0     Min.   :  2.0     Min.   :  2.0     Min.   :  2.0    
+##  1st Qu.:182.0     1st Qu.:187.0     1st Qu.:181.5     1st Qu.:185.0    
+##  Median :370.0     Median :362.0     Median :363.5     Median :371.0    
+##  Mean   :363.8     Mean   :363.8     Mean   :363.8     Mean   :363.8    
+##  3rd Qu.:543.0     3rd Qu.:542.0     3rd Qu.:541.8     3rd Qu.:544.0    
+##  Max.   :722.0     Max.   :722.0     Max.   :722.0     Max.   :722.0    
+##                                                                         
+##  rho_c24_rk_employ rho_c25_rk_employ rho_c26_rk_employ rho_c27_rk_employ
+##  Min.   :  2.0     Min.   :  2.0     Min.   :  2.0     Min.   :  2.0    
+##  1st Qu.:185.0     1st Qu.:185.0     1st Qu.:185.0     1st Qu.:185.0    
+##  Median :369.5     Median :362.0     Median :366.0     Median :366.0    
+##  Mean   :363.8     Mean   :363.8     Mean   :363.8     Mean   :363.8    
+##  3rd Qu.:541.8     3rd Qu.:541.8     3rd Qu.:541.8     3rd Qu.:541.8    
+##  Max.   :722.0     Max.   :722.0     Max.   :722.0     Max.   :722.0    
+##                                                                         
+##  rho_c28_rk_employ rho_c29_rk_employ rho_c30_rk_employ rho_c1_rk_wage 
+##  Min.   :  2.0     Min.   :  2.0     Min.   :  2.0     Min.   :  1.0  
+##  1st Qu.:184.0     1st Qu.:184.0     1st Qu.:184.0     1st Qu.:183.0  
+##  Median :366.0     Median :366.0     Median :366.0     Median :363.0  
+##  Mean   :363.8     Mean   :363.8     Mean   :363.8     Mean   :363.8  
+##  3rd Qu.:541.8     3rd Qu.:541.8     3rd Qu.:541.8     3rd Qu.:543.0  
+##  Max.   :722.0     Max.   :722.0     Max.   :722.0     Max.   :722.0  
+##                                                                       
+##  rho_c2_rk_wage  rho_c3_rk_wage  rho_c4_rk_wage  rho_c5_rk_wage 
+##  Min.   :  1.0   Min.   :  1.0   Min.   :  1.0   Min.   :  1.0  
+##  1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0  
+##  Median :363.0   Median :363.0   Median :363.0   Median :363.0  
+##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
+##  3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0  
+##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
+##                                                                 
+##  rho_c6_rk_wage  rho_c7_rk_wage  rho_c8_rk_wage  rho_c9_rk_wage 
+##  Min.   :  1.0   Min.   :  1.0   Min.   :  1.0   Min.   :  1.0  
+##  1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0  
+##  Median :363.0   Median :363.0   Median :363.0   Median :363.0  
+##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
+##  3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0  
+##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
+##                                                                 
+##  rho_c10_rk_wage rho_c11_rk_wage rho_c12_rk_wage rho_c13_rk_wage
+##  Min.   :  1.0   Min.   :  1.0   Min.   :  1.0   Min.   :  1.0  
+##  1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0  
+##  Median :363.0   Median :363.0   Median :363.0   Median :363.0  
+##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
+##  3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0  
+##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
+##                                                                 
+##  rho_c14_rk_wage rho_c15_rk_wage rho_c16_rk_wage rho_c17_rk_wage
+##  Min.   :  1.0   Min.   :  1.0   Min.   :  1.0   Min.   :  1.0  
+##  1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0   1st Qu.:181.2  
+##  Median :363.0   Median :363.0   Median :363.0   Median :362.0  
+##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
+##  3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0  
+##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
+##                                                                 
+##  rho_c18_rk_wage rho_c19_rk_wage rho_c20_rk_wage rho_c21_rk_wage
+##  Min.   :  1.0   Min.   :  1.0   Min.   :  2.0   Min.   :  2.0  
+##  1st Qu.:191.0   1st Qu.:181.5   1st Qu.:182.0   1st Qu.:182.2  
+##  Median :362.0   Median :362.0   Median :362.0   Median :364.0  
+##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
+##  3rd Qu.:541.8   3rd Qu.:542.0   3rd Qu.:542.0   3rd Qu.:545.0  
+##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
+##                                                                 
+##  rho_c22_rk_wage rho_c23_rk_wage rho_c24_rk_wage rho_c25_rk_wage
+##  Min.   :  2.0   Min.   :  2.0   Min.   :  2.0   Min.   :  2.0  
+##  1st Qu.:192.0   1st Qu.:185.0   1st Qu.:184.0   1st Qu.:183.0  
+##  Median :363.0   Median :374.0   Median :366.0   Median :366.0  
+##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
+##  3rd Qu.:545.5   3rd Qu.:546.0   3rd Qu.:546.0   3rd Qu.:542.0  
+##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
+##                                                                 
+##  rho_c26_rk_wage rho_c27_rk_wage rho_c28_rk_wage rho_c29_rk_wage
+##  Min.   :  2.0   Min.   :  2.0   Min.   :  2.0   Min.   :  2.0  
+##  1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0  
+##  Median :364.0   Median :364.0   Median :364.0   Median :364.0  
+##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
+##  3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0  
+##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
+##                                                                 
+##  rho_c30_rk_wage      trt              age             educ      
+##  Min.   :  2.0   Min.   :0.0000   Min.   :17.00   Min.   : 3.00  
+##  1st Qu.:183.0   1st Qu.:0.0000   1st Qu.:19.00   1st Qu.: 9.00  
+##  Median :364.0   Median :0.0000   Median :23.00   Median :10.00  
+##  Mean   :363.8   Mean   :0.4114   Mean   :24.52   Mean   :10.27  
+##  3rd Qu.:543.0   3rd Qu.:1.0000   3rd Qu.:27.00   3rd Qu.:11.00  
+##  Max.   :722.0   Max.   :1.0000   Max.   :55.00   Max.   :16.00  
 ##                                                                  
-##       age             educ           black             hisp       
-##  Min.   :17.00   Min.   : 3.00   Min.   :0.0000   Min.   :0.0000  
-##  1st Qu.:19.00   1st Qu.: 9.00   1st Qu.:1.0000   1st Qu.:0.0000  
-##  Median :23.00   Median :10.00   Median :1.0000   Median :0.0000  
-##  Mean   :24.52   Mean   :10.27   Mean   :0.8006   Mean   :0.1053  
-##  3rd Qu.:27.00   3rd Qu.:11.00   3rd Qu.:1.0000   3rd Qu.:0.0000  
-##  Max.   :55.00   Max.   :16.00   Max.   :1.0000   Max.   :1.0000  
-##                                                                   
-##       marr           nodeg             re74              re75        
-##  Min.   :0.000   Min.   :0.0000   Min.   :    0.0   Min.   :    0.0  
-##  1st Qu.:0.000   1st Qu.:1.0000   1st Qu.:    0.0   1st Qu.:    0.0  
-##  Median :0.000   Median :1.0000   Median :    0.0   Median :  936.3  
-##  Mean   :0.162   Mean   :0.7798   Mean   : 2102.3   Mean   : 3042.9  
-##  3rd Qu.:0.000   3rd Qu.:1.0000   3rd Qu.:  824.4   3rd Qu.: 3993.2  
-##  Max.   :1.000   Max.   :1.0000   Max.   :39570.7   Max.   :37431.7  
-##                                   NA's   :277                        
-##       re78           emp78            emp75             race      
-##  Min.   :    0   Min.   :0.0000   Min.   :0.0000   Min.   :0.000  
-##  1st Qu.:    0   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:1.000  
-##  Median : 3952   Median :1.0000   Median :1.0000   Median :1.000  
-##  Mean   : 5455   Mean   :0.7285   Mean   :0.5997   Mean   :1.011  
-##  3rd Qu.: 8772   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.000  
-##  Max.   :60308   Max.   :1.0000   Max.   :1.0000   Max.   :2.000  
-##                                                                   
-##      age_m2          age_m3          p_mpg           p_mpg_hp     
-##  Min.   :1.000   Min.   :1.000   Min.   :0.5347   Min.   :0.5019  
-##  1st Qu.:1.000   1st Qu.:1.000   1st Qu.:0.6803   1st Qu.:0.6637  
-##  Median :1.000   Median :2.000   Median :0.7024   Median :0.7140  
-##  Mean   :1.486   Mean   :1.965   Mean   :0.7285   Mean   :0.7285  
-##  3rd Qu.:2.000   3rd Qu.:3.000   3rd Qu.:0.7407   3rd Qu.:0.7656  
-##  Max.   :2.000   Max.   :3.000   Max.   :0.9244   Max.   :0.9463  
-##                                                                   
-##   p_mpg_hp_bi0     p_mpg_hp_bi1   
-##  Min.   :0.5019   Min.   :0.5929  
-##  1st Qu.:0.6490   1st Qu.:0.7277  
-##  Median :0.6708   Median :0.7465  
-##  Mean   :0.6978   Mean   :0.7728  
-##  3rd Qu.:0.7102   3rd Qu.:0.7798  
-##  Max.   :0.9007   Max.   :0.9463  
+##      black             hisp             marr           nodeg       
+##  Min.   :0.0000   Min.   :0.0000   Min.   :0.000   Min.   :0.0000  
+##  1st Qu.:1.0000   1st Qu.:0.0000   1st Qu.:0.000   1st Qu.:1.0000  
+##  Median :1.0000   Median :0.0000   Median :0.000   Median :1.0000  
+##  Mean   :0.8006   Mean   :0.1053   Mean   :0.162   Mean   :0.7798  
+##  3rd Qu.:1.0000   3rd Qu.:0.0000   3rd Qu.:0.000   3rd Qu.:1.0000  
+##  Max.   :1.0000   Max.   :1.0000   Max.   :1.000   Max.   :1.0000  
+##                                                                    
+##       re74              re75              re78           emp78       
+##  Min.   :    0.0   Min.   :    0.0   Min.   :    0   Min.   :0.0000  
+##  1st Qu.:    0.0   1st Qu.:    0.0   1st Qu.:    0   1st Qu.:0.0000  
+##  Median :    0.0   Median :  936.3   Median : 3952   Median :1.0000  
+##  Mean   : 2102.3   Mean   : 3042.9   Mean   : 5455   Mean   :0.7285  
+##  3rd Qu.:  824.4   3rd Qu.: 3993.2   3rd Qu.: 8772   3rd Qu.:1.0000  
+##  Max.   :39570.7   Max.   :37431.7   Max.   :60308   Max.   :1.0000  
+##  NA's   :277                                                         
+##      emp75             race           age_m2          age_m3     
+##  Min.   :0.0000   Min.   :0.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:0.0000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000  
+##  Median :1.0000   Median :1.000   Median :1.000   Median :2.000  
+##  Mean   :0.5997   Mean   :1.011   Mean   :1.486   Mean   :1.965  
+##  3rd Qu.:1.0000   3rd Qu.:1.000   3rd Qu.:2.000   3rd Qu.:3.000  
+##  Max.   :1.0000   Max.   :2.000   Max.   :2.000   Max.   :3.000  
+##                                                                  
+##      p_mpg           p_mpg_hp       p_mpg_hp_bi0     p_mpg_hp_bi1   
+##  Min.   :0.5347   Min.   :0.5652   Min.   :0.5639   Min.   :0.6435  
+##  1st Qu.:0.6803   1st Qu.:0.6640   1st Qu.:0.6432   1st Qu.:0.7156  
+##  Median :0.7024   Median :0.7072   Median :0.6810   Median :0.7663  
+##  Mean   :0.7285   Mean   :0.7285   Mean   :0.6991   Mean   :0.7712  
+##  3rd Qu.:0.7407   3rd Qu.:0.7860   3rd Qu.:0.7280   3rd Qu.:0.8056  
+##  Max.   :0.9244   Max.   :0.9487   Max.   :0.9220   Max.   :0.9487  
 ## </code></pre>
 </div>
 </div>
@@ -321,89 +479,142 @@
 <p>Compute Resource Equivalent Variations. Assume here that i use here the same ar_rho vector as used in <a href="C:%5CUsers%5Cfan%5CPrjOptiAlloc%5Cvignettes%5Cffv_opt_sobin_rkone_allfc_training_logit.Rmd">emloyment</a> and <a href="C:%5CUsers%5Cfan%5CPrjOptiAlloc%5Cvignettes%5Cffv_opt_sobin_rkone_allrw_training_wage.Rmd">wage</a> regressions.</p>
 <p>Note that for each rho, the optimal ranking is different, and there are different optimal rankings for wage and employment outcomes.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">ar_rho =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="fl">-0.001</span>,  <span class="fl">0.95</span>)</a>
-<a class="sourceLine" id="cb9-2" title="2">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(ar_rho)</a>
-<a class="sourceLine" id="cb9-3" title="3"></a>
-<a class="sourceLine" id="cb9-4" title="4">ar_bin_observed &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(trt)</a>
-<a class="sourceLine" id="cb9-5" title="5">ar_A_wage &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(A_i_wage)</a>
-<a class="sourceLine" id="cb9-6" title="6">ar_A_employ &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(A_i_employ)</a>
-<a class="sourceLine" id="cb9-7" title="7"></a>
-<a class="sourceLine" id="cb9-8" title="8">ar_alpha_wage &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(alpha_i_wage)</a>
-<a class="sourceLine" id="cb9-9" title="9">ar_alpha_employ &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(alpha_i_employ)</a>
-<a class="sourceLine" id="cb9-10" title="10"></a>
-<a class="sourceLine" id="cb9-11" title="11">ar_beta_wage &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(beta_i_wage)</a>
-<a class="sourceLine" id="cb9-12" title="12">ar_beta_employ &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(beta_i_employ)</a>
-<a class="sourceLine" id="cb9-13" title="13"></a>
-<a class="sourceLine" id="cb9-14" title="14">ar_rev_wage &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_rho))</a>
-<a class="sourceLine" id="cb9-15" title="15">ar_rev_employ &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_rho))</a>
-<a class="sourceLine" id="cb9-16" title="16">  </a>
-<a class="sourceLine" id="cb9-17" title="17"><span class="cf">for</span> (it_rho_ctr <span class="cf">in</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">1</span>, <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_rho))) {</a>
-<a class="sourceLine" id="cb9-18" title="18">  </a>
-<a class="sourceLine" id="cb9-19" title="19">  fl_rho &lt;-<span class="st"> </span>ar_rho[it_rho_ctr]</a>
-<a class="sourceLine" id="cb9-20" title="20">  </a>
-<a class="sourceLine" id="cb9-21" title="21">  svr_rho_wage  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, it_rho_ctr, <span class="st">'_rk_employ'</span>)</a>
-<a class="sourceLine" id="cb9-22" title="22">  svr_rho_employ &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, it_rho_ctr, <span class="st">'_rk_wage'</span>)</a>
-<a class="sourceLine" id="cb9-23" title="23">  </a>
-<a class="sourceLine" id="cb9-24" title="24">  ar_queue_optimal_wage &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(svr_rho_wage)</a>
-<a class="sourceLine" id="cb9-25" title="25">  ar_queue_optimal_employ &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(svr_rho_employ)</a>
-<a class="sourceLine" id="cb9-26" title="26">  </a>
-<a class="sourceLine" id="cb9-27" title="27">  ar_rev_wage[it_rho_ctr] &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span>(ar_queue_optimal_wage, ar_bin_observed,</a>
-<a class="sourceLine" id="cb9-28" title="28">                                               ar_A_wage, ar_alpha_wage, ar_beta_wage,</a>
-<a class="sourceLine" id="cb9-29" title="29">                                               fl_rho)</a>
-<a class="sourceLine" id="cb9-30" title="30">  </a>
-<a class="sourceLine" id="cb9-31" title="31">  ar_rev_employ[it_rho_ctr] &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span>(ar_queue_optimal_employ, ar_bin_observed,</a>
-<a class="sourceLine" id="cb9-32" title="32">                                                 ar_A_employ, ar_alpha_employ, ar_beta_employ,</a>
-<a class="sourceLine" id="cb9-33" title="33">                                                 fl_rho)</a>
-<a class="sourceLine" id="cb9-34" title="34">}</a>
-<a class="sourceLine" id="cb9-35" title="35"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(ar_rev_wage)</a></code></pre></div>
-<pre><code>## [1]  0.3367003  0.0000000 -0.1077441</code></pre>
+<a class="sourceLine" id="cb9-2" title="2">ar_rho &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>(<span class="dv">10</span><span class="op">^</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">2</span>, <span class="dt">length.out=</span><span class="dv">30</span>))))</a>
+<a class="sourceLine" id="cb9-3" title="3">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(ar_rho)</a>
+<a class="sourceLine" id="cb9-4" title="4"></a>
+<a class="sourceLine" id="cb9-5" title="5">ar_bin_observed &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(trt)</a>
+<a class="sourceLine" id="cb9-6" title="6">ar_A_wage &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(A_i_wage)</a>
+<a class="sourceLine" id="cb9-7" title="7">ar_A_employ &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(A_i_employ)</a>
+<a class="sourceLine" id="cb9-8" title="8"></a>
+<a class="sourceLine" id="cb9-9" title="9">ar_alpha_wage &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(alpha_i_wage)</a>
+<a class="sourceLine" id="cb9-10" title="10">ar_alpha_employ &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(alpha_i_employ)</a>
+<a class="sourceLine" id="cb9-11" title="11"></a>
+<a class="sourceLine" id="cb9-12" title="12">ar_beta_wage &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(beta_i_wage)</a>
+<a class="sourceLine" id="cb9-13" title="13">ar_beta_employ &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(beta_i_employ)</a>
+<a class="sourceLine" id="cb9-14" title="14"></a>
+<a class="sourceLine" id="cb9-15" title="15">ar_rev_wage &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_rho))</a>
+<a class="sourceLine" id="cb9-16" title="16">ar_rev_employ &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_rho))</a>
+<a class="sourceLine" id="cb9-17" title="17">  </a>
+<a class="sourceLine" id="cb9-18" title="18"><span class="cf">for</span> (it_rho_ctr <span class="cf">in</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">1</span>, <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_rho))) {</a>
+<a class="sourceLine" id="cb9-19" title="19">  </a>
+<a class="sourceLine" id="cb9-20" title="20">  fl_rho &lt;-<span class="st"> </span>ar_rho[it_rho_ctr]</a>
+<a class="sourceLine" id="cb9-21" title="21">  </a>
+<a class="sourceLine" id="cb9-22" title="22">  svr_rho_employ  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, it_rho_ctr, <span class="st">'_rk_employ'</span>)</a>
+<a class="sourceLine" id="cb9-23" title="23">  svr_rho_wage &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, it_rho_ctr, <span class="st">'_rk_wage'</span>)</a>
+<a class="sourceLine" id="cb9-24" title="24">  </a>
+<a class="sourceLine" id="cb9-25" title="25">  ar_queue_optimal_wage &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(svr_rho_wage)</a>
+<a class="sourceLine" id="cb9-26" title="26">  ar_queue_optimal_employ &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(svr_rho_employ)</a>
+<a class="sourceLine" id="cb9-27" title="27">  </a>
+<a class="sourceLine" id="cb9-28" title="28">  ar_rev_wage[it_rho_ctr] &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span>(ar_queue_optimal_wage, ar_bin_observed,</a>
+<a class="sourceLine" id="cb9-29" title="29">                                               ar_A_wage, ar_alpha_wage, ar_beta_wage,</a>
+<a class="sourceLine" id="cb9-30" title="30">                                               fl_rho)</a>
+<a class="sourceLine" id="cb9-31" title="31">  </a>
+<a class="sourceLine" id="cb9-32" title="32">  ar_rev_employ[it_rho_ctr] &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span>(ar_queue_optimal_employ, ar_bin_observed,</a>
+<a class="sourceLine" id="cb9-33" title="33">                                                 ar_A_employ, ar_alpha_employ, ar_beta_employ,</a>
+<a class="sourceLine" id="cb9-34" title="34">                                                 fl_rho)</a>
+<a class="sourceLine" id="cb9-35" title="35">}</a>
+<a class="sourceLine" id="cb9-36" title="36"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(ar_rev_wage)</a></code></pre></div>
+<pre><code>##  [1] 0.3063973 0.3063973 0.3063973 0.3063973 0.3063973 0.3063973 0.3063973
+##  [8] 0.2491582 0.2491582 0.2491582 0.2491582 0.2491582 0.2491582 0.2491582
+## [15] 0.3063973 0.3063973 0.2996633 0.3400673 0.3838384 0.4612795 0.5521886
+## [22] 0.6835017 0.7946128 0.8585859 0.9326599 0.9528620 0.9797980 0.9831650
+## [29] 0.9932660 0.9932660</code></pre>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(ar_rev_employ)</a></code></pre></div>
-<pre><code>## [1] -0.340067340 -0.003367003 -0.063973064</code></pre>
-</div>
-<div id="analysis-of-a-and-alpha" class="section level1">
-<h1 class="hasAnchor">
-<a href="#analysis-of-a-and-alpha" class="anchor"></a>Analysis of A and alpha</h1>
+<pre><code>##  [1] 0.1919192 0.1919192 0.1919192 0.1919192 0.1919192 0.1919192 0.1919192
+##  [8] 0.1919192 0.1885522 0.1851852 0.1750842 0.1885522 0.1885522 0.1952862
+## [15] 0.2020202 0.1986532 0.2491582 0.2929293 0.3501684 0.4141414 0.5353535
+## [22] 0.6262626 0.7205387 0.7979798 0.8518519 0.8888889 0.9158249 0.9360269
+## [29] 0.9528620 0.9663300</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co"># combine results</span></a>
+<a class="sourceLine" id="cb13-2" title="2">mt_combine &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(ar_rho, ar_rev_wage<span class="op">*</span><span class="dv">100</span>, ar_rev_employ<span class="op">*</span><span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(mt_combine) &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'lambda'</span>, <span class="st">'rev_expected_wage'</span>, <span class="st">'rev_employment_prob'</span>)</a>
+<a class="sourceLine" id="cb13-4" title="4">tb_rev_wage_employ &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(mt_combine) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowid_to_column</span>(<span class="dt">var =</span> <span class="st">"eval"</span>)</a>
+<a class="sourceLine" id="cb13-5" title="5"><span class="co"># Transform x-scale to 1-lambda</span></a>
+<a class="sourceLine" id="cb13-6" title="6">tb_rev_wage_employ &lt;-<span class="st"> </span>tb_rev_wage_employ <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">one_minus_lambda =</span> <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>lambda)</a>
+<a class="sourceLine" id="cb13-7" title="7"></a>
+<a class="sourceLine" id="cb13-8" title="8"><span class="co"># Reshape to long</span></a>
+<a class="sourceLine" id="cb13-9" title="9">tb_rev_wage_employ_long &lt;-<span class="st"> </span>tb_rev_wage_employ <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb13-10" title="10"><span class="st">  </span><span class="kw">pivot_longer</span>(</a>
+<a class="sourceLine" id="cb13-11" title="11">    <span class="dt">cols =</span> <span class="kw">starts_with</span>(<span class="st">'rev'</span>),</a>
+<a class="sourceLine" id="cb13-12" title="12">    <span class="dt">names_to =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Outcome'</span>),</a>
+<a class="sourceLine" id="cb13-13" title="13">    <span class="dt">names_pattern =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rev'</span>, <span class="st">"_(.*)"</span>),</a>
+<a class="sourceLine" id="cb13-14" title="14">    <span class="dt">values_to =</span> <span class="st">'rev'</span></a>
+<a class="sourceLine" id="cb13-15" title="15">  )</a></code></pre></div>
+<p>Draw the REV graph. Following this <a href="https://fanwangecon.github.io/Stat4Econ/probability/samplespacedice.html">graph code</a>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="co"># x-labels</span></a>
+<a class="sourceLine" id="cb14-2" title="2">x.labels &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'λ=0.99'</span>, <span class="st">'λ=0.90'</span>, <span class="st">'λ=0'</span>, <span class="st">'λ=-10'</span>, <span class="st">'λ=-100'</span>)</a>
+<a class="sourceLine" id="cb14-3" title="3">x.breaks &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.01</span>, <span class="fl">0.10</span>, <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb14-4" title="4"></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co"># title line 2</span></a>
+<a class="sourceLine" id="cb14-6" title="6">title_line1 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"Percentage of Training Spots Misallocated, NSW Lalonda (AER, 1986)"</span>)</a>
+<a class="sourceLine" id="cb14-7" title="7">title_line2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"REV (Resource Equivalent Variation) Along Planner Spectrum"</span>)</a>
+<a class="sourceLine" id="cb14-8" title="8"></a>
+<a class="sourceLine" id="cb14-9" title="9"><span class="co"># Graph Results--Draw</span></a>
+<a class="sourceLine" id="cb14-10" title="10">line.plot &lt;-<span class="st"> </span>tb_rev_wage_employ_long <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb14-11" title="11"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>one_minus_lambda, <span class="dt">y=</span>rev,</a>
+<a class="sourceLine" id="cb14-12" title="12">             <span class="dt">group=</span>Outcome, </a>
+<a class="sourceLine" id="cb14-13" title="13">             <span class="dt">colour=</span>Outcome, <span class="dt">size=</span><span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb14-14" title="14"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size=</span><span class="fl">0.75</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-15" title="15"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>), <span class="dt">linetype=</span><span class="st">"dotted"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-16" title="16"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(title_line1, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>, title_line2),</a>
+<a class="sourceLine" id="cb14-17" title="17">       <span class="dt">x =</span> <span class="st">'log10 Rescale of λ, Log10(λ)</span><span class="ch">\n</span><span class="st">λ=1 Utilitarian, λ=-infty Rawlsian'</span>,</a>
+<a class="sourceLine" id="cb14-18" title="18">       <span class="dt">y =</span> <span class="st">'Misallocation Percentage = REV'</span>,</a>
+<a class="sourceLine" id="cb14-19" title="19">       <span class="dt">caption =</span> <span class="st">'Training RCT with 297 treated, 425 untreated. Reallocate 297 training spots.'</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-20" title="20"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans=</span><span class="st">'log10'</span>, <span class="dt">labels =</span> x.labels, <span class="dt">breaks =</span> x.breaks) <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-21" title="21"><span class="st">  </span><span class="kw">theme_bw</span>()</a>
+<a class="sourceLine" id="cb14-22" title="22"></a>
+<a class="sourceLine" id="cb14-23" title="23"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(line.plot)</a></code></pre></div>
+<p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/graph%20REV-1.png" width="672" style="display: block; margin: auto;"> # Analysis of A and alpha</p>
 <p>Generate some tables where the distributions of <span class="math inline">\(A\)</span> and <span class="math inline">\(\alpha\)</span> are compared.</p>
 <div id="scatter-plots" class="section level2">
 <h2 class="hasAnchor">
 <a href="#scatter-plots" class="anchor"></a>Scatter Plots</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co"># Binary Marginal Effects and Prediction without Binary</span></a>
-<a class="sourceLine" id="cb13-2" title="2">ggplot.A.alpha &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">svr_alpha =</span> <span class="st">'alpha_i'</span>, <span class="dt">svr_A =</span> <span class="st">"A_i"</span>,</a>
-<a class="sourceLine" id="cb13-3" title="3">                             <span class="dt">slb_title =</span> <span class="st">'A_i and alpha_i (red)'</span>){</a>
-<a class="sourceLine" id="cb13-4" title="4">  scatter &lt;-<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span><span class="op">!!</span><span class="kw">sym</span>(svr_A))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-5" title="5"><span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y=</span><span class="op">!!</span><span class="kw">sym</span>(svr_alpha)), <span class="dt">size=</span><span class="dv">4</span>, <span class="dt">shape=</span><span class="dv">4</span>, <span class="dt">color=</span><span class="st">"red"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-6" title="6"><span class="st">        </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(slb_title),</a>
-<a class="sourceLine" id="cb13-7" title="7">             <span class="dt">x =</span> <span class="st">'A_i'</span>,</a>
-<a class="sourceLine" id="cb13-8" title="8">             <span class="dt">y =</span> <span class="st">'alpha_i'</span>,</a>
-<a class="sourceLine" id="cb13-9" title="9">             <span class="dt">caption =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'sdt_name'</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-10" title="10"><span class="st">        </span><span class="kw">theme_bw</span>()</a>
-<a class="sourceLine" id="cb13-11" title="11"><span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span>(scatter)</a>
-<a class="sourceLine" id="cb13-12" title="12">}</a>
-<a class="sourceLine" id="cb13-13" title="13"></a>
-<a class="sourceLine" id="cb13-14" title="14"><span class="co"># Plot over multiple</span></a>
-<a class="sourceLine" id="cb13-15" title="15"><span class="kw">ggplot.A.alpha</span>(<span class="dt">df =</span> dfj, </a>
-<a class="sourceLine" id="cb13-16" title="16">               <span class="dt">svr_alpha =</span> <span class="st">'alpha_i_wage'</span>, <span class="dt">svr_A =</span> <span class="st">"A_i_wage"</span>,</a>
-<a class="sourceLine" id="cb13-17" title="17">               <span class="dt">slb_title =</span> <span class="st">'A_i and alpha_i, wage'</span>)</a></code></pre></div>
-<p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">ggplot.A.alpha</span>(<span class="dt">df =</span> dfj, </a>
-<a class="sourceLine" id="cb14-2" title="2">               <span class="dt">svr_alpha =</span> <span class="st">'alpha_i_employ'</span>, <span class="dt">svr_A =</span> <span class="st">"A_i_employ"</span>,</a>
-<a class="sourceLine" id="cb14-3" title="3">               <span class="dt">slb_title =</span> <span class="st">'A_i and alpha_i, employment'</span>)</a></code></pre></div>
-<p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-1-2.png" width="700"></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co"># Binary Marginal Effects and Prediction without Binary</span></a>
+<a class="sourceLine" id="cb15-2" title="2">ggplot.A.alpha &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">svr_alpha =</span> <span class="st">'alpha_i'</span>, <span class="dt">svr_A =</span> <span class="st">"A_i"</span>,</a>
+<a class="sourceLine" id="cb15-3" title="3">                             <span class="dt">slb_title =</span> <span class="st">'A_i and alpha_i (red)'</span>){</a>
+<a class="sourceLine" id="cb15-4" title="4">  scatter &lt;-<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span><span class="op">!!</span><span class="kw">sym</span>(svr_A))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb15-5" title="5"><span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y=</span><span class="op">!!</span><span class="kw">sym</span>(svr_alpha)), <span class="dt">size=</span><span class="dv">4</span>, <span class="dt">shape=</span><span class="dv">4</span>, <span class="dt">color=</span><span class="st">"red"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb15-6" title="6"><span class="st">        </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(slb_title),</a>
+<a class="sourceLine" id="cb15-7" title="7">             <span class="dt">x =</span> <span class="st">'A_i = Prob Employ no Training'</span>,</a>
+<a class="sourceLine" id="cb15-8" title="8">             <span class="dt">y =</span> <span class="st">'alpha_i = Effect of Training of Prob Employ'</span>,</a>
+<a class="sourceLine" id="cb15-9" title="9">             <span class="dt">caption =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Logit Regression on training. Control for age, educ, race. Age &lt;= 23 or &gt; 23 interaction.'</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb15-10" title="10"><span class="st">        </span><span class="kw">theme_bw</span>()</a>
+<a class="sourceLine" id="cb15-11" title="11"><span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span>(scatter)</a>
+<a class="sourceLine" id="cb15-12" title="12">}</a>
+<a class="sourceLine" id="cb15-13" title="13"></a>
+<a class="sourceLine" id="cb15-14" title="14"><span class="co"># Plot over multiple</span></a>
+<a class="sourceLine" id="cb15-15" title="15"><span class="kw">ggplot.A.alpha</span>(<span class="dt">df =</span> dfj, </a>
+<a class="sourceLine" id="cb15-16" title="16">               <span class="dt">svr_alpha =</span> <span class="st">'alpha_i_wage'</span>, <span class="dt">svr_A =</span> <span class="st">"A_i_wage"</span>,</a>
+<a class="sourceLine" id="cb15-17" title="17">               <span class="dt">slb_title =</span> <span class="st">'A_i and alpha_i, wage'</span>)</a></code></pre></div>
+<p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">ggplot.A.alpha</span>(<span class="dt">df =</span> dfj, </a>
+<a class="sourceLine" id="cb16-2" title="2">               <span class="dt">svr_alpha =</span> <span class="st">'alpha_i_employ'</span>, <span class="dt">svr_A =</span> <span class="st">"A_i_employ"</span>,</a>
+<a class="sourceLine" id="cb16-3" title="3">               <span class="dt">slb_title =</span> <span class="st">'Employment A_i and alpha_i Joint Distribution'</span>)</a></code></pre></div>
+<p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-1-2.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div id="histogram-plots" class="section level2">
 <h2 class="hasAnchor">
 <a href="#histogram-plots" class="anchor"></a>Histogram Plots</h2>
 <p>What is the distribution of A given alpha. This is relevant in the linear regression case</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co"># Keep only relevant columns, and reshape data</span></a>
-<a class="sourceLine" id="cb15-2" title="2">dfj_hist &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(id, A_i_wage, alpha_i_wage)</a>
-<a class="sourceLine" id="cb15-3" title="3">dfj_hist<span class="op">$</span>alpha_i_wage &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(dfj_hist<span class="op">$</span>alpha_i_wage) </a>
-<a class="sourceLine" id="cb15-4" title="4"><span class="co"># dfj_hist$alpha_i_wage &lt;- factor(dfj_hist$alpha_i_wage, labels = c('ECON', 'Not.Econ'))</span></a>
-<a class="sourceLine" id="cb15-5" title="5"></a>
-<a class="sourceLine" id="cb15-6" title="6"><span class="co"># Graph </span></a>
-<a class="sourceLine" id="cb15-7" title="7">dfj_hist <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>A_i_wage, <span class="dt">fill=</span>alpha_i_wage)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb15-8" title="8"><span class="st">      </span><span class="kw">geom_density</span>( <span class="dt">color=</span><span class="st">"#e9ecef"</span>, <span class="dt">alpha=</span><span class="fl">0.6</span>, <span class="dt">position =</span> <span class="st">'identity'</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb15-9" title="9"><span class="st">      </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#69b3a2"</span>, <span class="st">"#404080"</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb15-10" title="10"><span class="st">      </span><span class="kw">labs</span>(<span class="dt">fill=</span><span class="st">""</span>)</a></code></pre></div>
-<p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co"># Keep only relevant columns, and reshape data</span></a>
+<a class="sourceLine" id="cb17-2" title="2">dfj_hist &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(id, A_i_wage, alpha_i_wage)</a>
+<a class="sourceLine" id="cb17-3" title="3">dfj_hist<span class="op">$</span>alpha_i_wage &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(dfj_hist<span class="op">$</span>alpha_i_wage) </a>
+<a class="sourceLine" id="cb17-4" title="4">dfj_hist<span class="op">$</span>alpha_i_wage &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(dfj_hist<span class="op">$</span>alpha_i_wage, <span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Age &lt;= 23</span><span class="ch">\n</span><span class="st">alpha_i=$454'</span>, <span class="st">'Age &gt; 23</span><span class="ch">\n</span><span class="st">alpha_i=$1071'</span>))</a>
+<a class="sourceLine" id="cb17-5" title="5"></a>
+<a class="sourceLine" id="cb17-6" title="6"></a>
+<a class="sourceLine" id="cb17-7" title="7">title_line1 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"Wage A_i Distribution (Linear Wage), NSW Training Lalonda (AER, 1986)"</span>)</a>
+<a class="sourceLine" id="cb17-8" title="8">title_line2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"By Two Unique Levels of alpha_i: for Age &lt;= 23 and for Age &gt; 23"</span>)</a>
+<a class="sourceLine" id="cb17-9" title="9"></a>
+<a class="sourceLine" id="cb17-10" title="10"><span class="co"># Graph </span></a>
+<a class="sourceLine" id="cb17-11" title="11">dfj_hist <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>A_i_wage, <span class="dt">fill=</span>alpha_i_wage)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb17-12" title="12"><span class="st">      </span><span class="kw">geom_density</span>( <span class="dt">color=</span><span class="st">"#e9ecef"</span>, <span class="dt">alpha=</span><span class="fl">0.6</span>, <span class="dt">position =</span> <span class="st">'identity'</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb17-13" title="13"><span class="st">      </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#69b3a2"</span>, <span class="st">"#404080"</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb17-14" title="14"><span class="st">      </span><span class="kw">labs</span>(<span class="dt">fill=</span><span class="st">""</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb17-15" title="15"><span class="st">      </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(title_line1, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>, title_line2),</a>
+<a class="sourceLine" id="cb17-16" title="16">             <span class="dt">x =</span> <span class="st">'A_i = Expected Wage no Training (in thousands, 1979)'</span>,</a>
+<a class="sourceLine" id="cb17-17" title="17">             <span class="dt">y =</span> <span class="st">'density'</span>,</a>
+<a class="sourceLine" id="cb17-18" title="18">             <span class="dt">caption =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Linear Wage Regression on training. Control for age, educ, race. Age &lt;= 23 or &gt; 23 interaction.'</span>))</a></code></pre></div>
+<p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div id="min-and-max-rank-change-across-lambda" class="section level1">
@@ -414,49 +625,49 @@
 <h2 class="hasAnchor">
 <a href="#histogram-plots-and-table-highest-rank-reached" class="anchor"></a>Histogram Plots and Table highest Rank Reached</h2>
 <p>Looked highest rank reached for each (highest rank (smallest number ever reached)).</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co"># Generate min and max gaps</span></a>
-<a class="sourceLine" id="cb16-2" title="2">dfj_highest &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(id, rank_max_wage, rank_max_employ)</a>
-<a class="sourceLine" id="cb16-3" title="3"></a>
-<a class="sourceLine" id="cb16-4" title="4"><span class="co"># Wide to long</span></a>
-<a class="sourceLine" id="cb16-5" title="5">st_gap_prefix &lt;-<span class="st"> 'rank_max'</span></a>
-<a class="sourceLine" id="cb16-6" title="6">dfj_highest_long &lt;-<span class="st"> </span>dfj_highest <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-7" title="7"><span class="st">  </span><span class="kw">pivot_longer</span>(</a>
-<a class="sourceLine" id="cb16-8" title="8">    <span class="dt">cols =</span> <span class="kw">starts_with</span>(st_gap_prefix),</a>
-<a class="sourceLine" id="cb16-9" title="9">    <span class="dt">names_to =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'employvswwage'</span>),</a>
-<a class="sourceLine" id="cb16-10" title="10">    <span class="dt">names_pattern =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(st_gap_prefix, <span class="st">"_(.*)"</span>),</a>
-<a class="sourceLine" id="cb16-11" title="11">    <span class="dt">values_to =</span> <span class="st">'highestrank'</span></a>
-<a class="sourceLine" id="cb16-12" title="12">  )</a>
-<a class="sourceLine" id="cb16-13" title="13"></a>
-<a class="sourceLine" id="cb16-14" title="14"><span class="co"># Rank change to categories</span></a>
-<a class="sourceLine" id="cb16-15" title="15">dfj_highest_long &lt;-<span class="st"> </span>dfj_highest_long <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-16" title="16"><span class="st">           </span><span class="kw">mutate</span>(<span class="dt">highestrank_grp =</span></a>
-<a class="sourceLine" id="cb16-17" title="17">                    <span class="kw">case_when</span>(highestrank <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> "Top A 1"</span>,</a>
-<a class="sourceLine" id="cb16-18" title="18">                              highestrank <span class="op">&lt;=</span><span class="st"> </span><span class="dv">10</span>  <span class="op">&amp;</span><span class="st"> </span>highestrank <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> "Top B 10"</span>,</a>
-<a class="sourceLine" id="cb16-19" title="19">                              highestrank <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span> <span class="op">&amp;</span><span class="st"> </span>highestrank <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span> <span class="op">~</span><span class="st"> "Top C 11 to 50"</span>,</a>
-<a class="sourceLine" id="cb16-20" title="20">                              highestrank <span class="op">&lt;=</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>highestrank <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span> <span class="op">~</span><span class="st"> "Top D 51 to 100"</span>,</a>
-<a class="sourceLine" id="cb16-21" title="21">                              highestrank <span class="op">&lt;=</span><span class="st"> </span><span class="dv">297</span> <span class="op">&amp;</span><span class="st"> </span>highestrank <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">~</span><span class="st"> "Top E 101 to 297"</span>,</a>
-<a class="sourceLine" id="cb16-22" title="22">                              highestrank <span class="op">&gt;</span><span class="st"> </span><span class="dv">297</span> <span class="op">~</span><span class="st"> "Top F &gt; 297"</span>))</a>
-<a class="sourceLine" id="cb16-23" title="23"></a>
-<a class="sourceLine" id="cb16-24" title="24"><span class="co"># Graph </span></a>
-<a class="sourceLine" id="cb16-25" title="25">dfj_highest_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>highestrank, <span class="dt">fill=</span>employvswwage)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb16-26" title="26"><span class="st">      </span><span class="kw">geom_histogram</span>(<span class="dt">color=</span><span class="st">"#e9ecef"</span>, <span class="dt">alpha=</span><span class="fl">0.6</span>, <span class="dt">position =</span> <span class="st">'identity'</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb16-27" title="27"><span class="st">      </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#69b3a2"</span>, <span class="st">"#404080"</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb16-28" title="28"><span class="st">      </span><span class="kw">labs</span>(<span class="dt">fill=</span><span class="st">""</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="co"># Generate min and max gaps</span></a>
+<a class="sourceLine" id="cb18-2" title="2">dfj_highest &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(id, rank_max_wage, rank_max_employ)</a>
+<a class="sourceLine" id="cb18-3" title="3"></a>
+<a class="sourceLine" id="cb18-4" title="4"><span class="co"># Wide to long</span></a>
+<a class="sourceLine" id="cb18-5" title="5">st_gap_prefix &lt;-<span class="st"> 'rank_max'</span></a>
+<a class="sourceLine" id="cb18-6" title="6">dfj_highest_long &lt;-<span class="st"> </span>dfj_highest <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb18-7" title="7"><span class="st">  </span><span class="kw">pivot_longer</span>(</a>
+<a class="sourceLine" id="cb18-8" title="8">    <span class="dt">cols =</span> <span class="kw">starts_with</span>(st_gap_prefix),</a>
+<a class="sourceLine" id="cb18-9" title="9">    <span class="dt">names_to =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'employvswwage'</span>),</a>
+<a class="sourceLine" id="cb18-10" title="10">    <span class="dt">names_pattern =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(st_gap_prefix, <span class="st">"_(.*)"</span>),</a>
+<a class="sourceLine" id="cb18-11" title="11">    <span class="dt">values_to =</span> <span class="st">'highestrank'</span></a>
+<a class="sourceLine" id="cb18-12" title="12">  )</a>
+<a class="sourceLine" id="cb18-13" title="13"></a>
+<a class="sourceLine" id="cb18-14" title="14"><span class="co"># Rank change to categories</span></a>
+<a class="sourceLine" id="cb18-15" title="15">dfj_highest_long &lt;-<span class="st"> </span>dfj_highest_long <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb18-16" title="16"><span class="st">           </span><span class="kw">mutate</span>(<span class="dt">highestrank_grp =</span></a>
+<a class="sourceLine" id="cb18-17" title="17">                    <span class="kw">case_when</span>(highestrank <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> "Top A 1"</span>,</a>
+<a class="sourceLine" id="cb18-18" title="18">                              highestrank <span class="op">&lt;=</span><span class="st"> </span><span class="dv">10</span>  <span class="op">&amp;</span><span class="st"> </span>highestrank <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> "Top B 10"</span>,</a>
+<a class="sourceLine" id="cb18-19" title="19">                              highestrank <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span> <span class="op">&amp;</span><span class="st"> </span>highestrank <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span> <span class="op">~</span><span class="st"> "Top C 11 to 50"</span>,</a>
+<a class="sourceLine" id="cb18-20" title="20">                              highestrank <span class="op">&lt;=</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>highestrank <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span> <span class="op">~</span><span class="st"> "Top D 51 to 100"</span>,</a>
+<a class="sourceLine" id="cb18-21" title="21">                              highestrank <span class="op">&lt;=</span><span class="st"> </span><span class="dv">297</span> <span class="op">&amp;</span><span class="st"> </span>highestrank <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">~</span><span class="st"> "Top E 101 to 297"</span>,</a>
+<a class="sourceLine" id="cb18-22" title="22">                              highestrank <span class="op">&gt;</span><span class="st"> </span><span class="dv">297</span> <span class="op">~</span><span class="st"> "Top F &gt; 297"</span>))</a>
+<a class="sourceLine" id="cb18-23" title="23"></a>
+<a class="sourceLine" id="cb18-24" title="24"><span class="co"># Graph </span></a>
+<a class="sourceLine" id="cb18-25" title="25">dfj_highest_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>highestrank, <span class="dt">fill=</span>employvswwage)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb18-26" title="26"><span class="st">      </span><span class="kw">geom_histogram</span>(<span class="dt">color=</span><span class="st">"#e9ecef"</span>, <span class="dt">alpha=</span><span class="fl">0.6</span>, <span class="dt">position =</span> <span class="st">'identity'</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb18-27" title="27"><span class="st">      </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#69b3a2"</span>, <span class="st">"#404080"</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb18-28" title="28"><span class="st">      </span><span class="kw">labs</span>(<span class="dt">fill=</span><span class="st">""</span>)</a></code></pre></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="co"># Table</span></a>
-<a class="sourceLine" id="cb18-2" title="2">dfj_highest_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(employvswwage, highestrank_grp) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb18-3" title="3"><span class="st">                </span><span class="kw">summarize</span>(<span class="dt">count =</span> <span class="kw">n</span>())</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co"># Table</span></a>
+<a class="sourceLine" id="cb20-2" title="2">dfj_highest_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(employvswwage, highestrank_grp) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="st">                </span><span class="kw">summarize</span>(<span class="dt">count =</span> <span class="kw">n</span>())</a></code></pre></div>
 <pre><code>## # A tibble: 12 x 3
 ## # Groups:   employvswwage [2]
 ##    employvswwage highestrank_grp  count
 ##    &lt;chr&gt;         &lt;chr&gt;            &lt;int&gt;
-##  1 employ        Top A 1              2
-##  2 employ        Top B 10            10
-##  3 employ        Top C 11 to 50      41
-##  4 employ        Top D 51 to 100     49
-##  5 employ        Top E 101 to 297   208
-##  6 employ        Top F &gt; 297        412
+##  1 employ        Top A 1              1
+##  2 employ        Top B 10            17
+##  3 employ        Top C 11 to 50      73
+##  4 employ        Top D 51 to 100    109
+##  5 employ        Top E 101 to 297   286
+##  6 employ        Top F &gt; 297        236
 ##  7 wage          Top A 1              1
 ##  8 wage          Top B 10            17
 ##  9 wage          Top C 11 to 50      82
@@ -474,157 +685,179 @@
 <li>show table summary statistics differences</li>
 <li>show graph differences</li>
 </ol>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co"># Generate min and max gaps</span></a>
-<a class="sourceLine" id="cb20-2" title="2">dfj_gap &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">rank_gap_wage =</span> rank_min_wage <span class="op">-</span><span class="st"> </span>rank_max_wage,</a>
-<a class="sourceLine" id="cb20-3" title="3">                          <span class="dt">rank_gap_employ =</span> rank_min_employ <span class="op">-</span><span class="st"> </span>rank_max_employ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb20-4" title="4"><span class="st">                </span><span class="kw">select</span>(id, rank_gap_wage, rank_gap_employ)</a>
-<a class="sourceLine" id="cb20-5" title="5"></a>
-<a class="sourceLine" id="cb20-6" title="6"><span class="co"># Wide to long</span></a>
-<a class="sourceLine" id="cb20-7" title="7">st_gap_prefix &lt;-<span class="st"> 'rank_gap'</span></a>
-<a class="sourceLine" id="cb20-8" title="8">dfj_gap_long &lt;-<span class="st"> </span>dfj_gap <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb20-9" title="9"><span class="st">  </span><span class="kw">pivot_longer</span>(</a>
-<a class="sourceLine" id="cb20-10" title="10">    <span class="dt">cols =</span> <span class="kw">starts_with</span>(st_gap_prefix),</a>
-<a class="sourceLine" id="cb20-11" title="11">    <span class="dt">names_to =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'employvswwage'</span>),</a>
-<a class="sourceLine" id="cb20-12" title="12">    <span class="dt">names_pattern =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(st_gap_prefix, <span class="st">"_(.*)"</span>),</a>
-<a class="sourceLine" id="cb20-13" title="13">    <span class="dt">values_to =</span> <span class="st">'rank_gap'</span></a>
-<a class="sourceLine" id="cb20-14" title="14">  )</a>
-<a class="sourceLine" id="cb20-15" title="15"></a>
-<a class="sourceLine" id="cb20-16" title="16"><span class="co"># Rank change to categories</span></a>
-<a class="sourceLine" id="cb20-17" title="17">dfj_gap_long &lt;-<span class="st"> </span>dfj_gap_long <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb20-18" title="18"><span class="st">           </span><span class="kw">mutate</span>(<span class="dt">rank_gap_grp =</span></a>
-<a class="sourceLine" id="cb20-19" title="19">                    <span class="kw">case_when</span>(rank_gap <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> "change A no change"</span>,</a>
-<a class="sourceLine" id="cb20-20" title="20">                              rank_gap <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span>  <span class="op">&amp;</span><span class="st"> </span>rank_gap <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> "change B 50 positions"</span>,</a>
-<a class="sourceLine" id="cb20-21" title="21">                              rank_gap <span class="op">&lt;=</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>rank_gap <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span> <span class="op">~</span><span class="st"> "change C 51 to 100"</span>,</a>
-<a class="sourceLine" id="cb20-22" title="22">                              rank_gap <span class="op">&lt;=</span><span class="st"> </span><span class="dv">200</span> <span class="op">&amp;</span><span class="st"> </span>rank_gap <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">~</span><span class="st"> "change D 101 to 200"</span>,</a>
-<a class="sourceLine" id="cb20-23" title="23">                              rank_gap <span class="op">&lt;=</span><span class="st"> </span><span class="dv">400</span> <span class="op">&amp;</span><span class="st"> </span>rank_gap <span class="op">&gt;</span><span class="st"> </span><span class="dv">200</span> <span class="op">~</span><span class="st"> "change E 201 to 400"</span>,</a>
-<a class="sourceLine" id="cb20-24" title="24">                              rank_gap <span class="op">&gt;</span><span class="st"> </span><span class="dv">400</span> <span class="op">~</span><span class="st"> "change F more than 401"</span>))</a>
-<a class="sourceLine" id="cb20-25" title="25"></a>
-<a class="sourceLine" id="cb20-26" title="26"><span class="co"># Graph </span></a>
-<a class="sourceLine" id="cb20-27" title="27">dfj_gap_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>rank_gap, <span class="dt">fill=</span>employvswwage)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-28" title="28"><span class="st">      </span><span class="kw">geom_histogram</span>(<span class="dt">color=</span><span class="st">"#e9ecef"</span>, <span class="dt">alpha=</span><span class="fl">0.6</span>, <span class="dt">position =</span> <span class="st">'identity'</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-29" title="29"><span class="st">      </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#69b3a2"</span>, <span class="st">"#404080"</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-30" title="30"><span class="st">      </span><span class="kw">labs</span>(<span class="dt">fill=</span><span class="st">""</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co"># Generate min and max gaps</span></a>
+<a class="sourceLine" id="cb22-2" title="2">dfj_gap &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">rank_gap_wage =</span> rank_min_wage <span class="op">-</span><span class="st"> </span>rank_max_wage,</a>
+<a class="sourceLine" id="cb22-3" title="3">                          <span class="dt">rank_gap_employ =</span> rank_min_employ <span class="op">-</span><span class="st"> </span>rank_max_employ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb22-4" title="4"><span class="st">                </span><span class="kw">select</span>(id, rank_gap_wage, rank_gap_employ)</a>
+<a class="sourceLine" id="cb22-5" title="5"></a>
+<a class="sourceLine" id="cb22-6" title="6"><span class="co"># Wide to long</span></a>
+<a class="sourceLine" id="cb22-7" title="7">st_gap_prefix &lt;-<span class="st"> 'rank_gap'</span></a>
+<a class="sourceLine" id="cb22-8" title="8">dfj_gap_long &lt;-<span class="st"> </span>dfj_gap <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb22-9" title="9"><span class="st">  </span><span class="kw">pivot_longer</span>(</a>
+<a class="sourceLine" id="cb22-10" title="10">    <span class="dt">cols =</span> <span class="kw">starts_with</span>(st_gap_prefix),</a>
+<a class="sourceLine" id="cb22-11" title="11">    <span class="dt">names_to =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'employvswwage'</span>),</a>
+<a class="sourceLine" id="cb22-12" title="12">    <span class="dt">names_pattern =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(st_gap_prefix, <span class="st">"_(.*)"</span>),</a>
+<a class="sourceLine" id="cb22-13" title="13">    <span class="dt">values_to =</span> <span class="st">'rank_gap'</span></a>
+<a class="sourceLine" id="cb22-14" title="14">  )</a>
+<a class="sourceLine" id="cb22-15" title="15"></a>
+<a class="sourceLine" id="cb22-16" title="16"><span class="co"># Rank change to categories</span></a>
+<a class="sourceLine" id="cb22-17" title="17">dfj_gap_long &lt;-<span class="st"> </span>dfj_gap_long <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb22-18" title="18"><span class="st">           </span><span class="kw">mutate</span>(<span class="dt">rank_gap_grp =</span></a>
+<a class="sourceLine" id="cb22-19" title="19">                    <span class="kw">case_when</span>(rank_gap <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> "change A no change"</span>,</a>
+<a class="sourceLine" id="cb22-20" title="20">                              rank_gap <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span>  <span class="op">&amp;</span><span class="st"> </span>rank_gap <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> "change B 50 positions"</span>,</a>
+<a class="sourceLine" id="cb22-21" title="21">                              rank_gap <span class="op">&lt;=</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>rank_gap <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span> <span class="op">~</span><span class="st"> "change C 51 to 100"</span>,</a>
+<a class="sourceLine" id="cb22-22" title="22">                              rank_gap <span class="op">&lt;=</span><span class="st"> </span><span class="dv">200</span> <span class="op">&amp;</span><span class="st"> </span>rank_gap <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">~</span><span class="st"> "change D 101 to 200"</span>,</a>
+<a class="sourceLine" id="cb22-23" title="23">                              rank_gap <span class="op">&lt;=</span><span class="st"> </span><span class="dv">400</span> <span class="op">&amp;</span><span class="st"> </span>rank_gap <span class="op">&gt;</span><span class="st"> </span><span class="dv">200</span> <span class="op">~</span><span class="st"> "change E 201 to 400"</span>,</a>
+<a class="sourceLine" id="cb22-24" title="24">                              rank_gap <span class="op">&gt;</span><span class="st"> </span><span class="dv">400</span> <span class="op">~</span><span class="st"> "change F more than 401"</span>))</a>
+<a class="sourceLine" id="cb22-25" title="25"></a>
+<a class="sourceLine" id="cb22-26" title="26"><span class="co"># Graph </span></a>
+<a class="sourceLine" id="cb22-27" title="27">dfj_gap_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>rank_gap, <span class="dt">fill=</span>employvswwage)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-28" title="28"><span class="st">      </span><span class="kw">geom_histogram</span>(<span class="dt">color=</span><span class="st">"#e9ecef"</span>, <span class="dt">alpha=</span><span class="fl">0.6</span>, <span class="dt">position =</span> <span class="st">'identity'</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-29" title="29"><span class="st">      </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#69b3a2"</span>, <span class="st">"#404080"</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-30" title="30"><span class="st">      </span><span class="kw">labs</span>(<span class="dt">fill=</span><span class="st">""</span>)</a></code></pre></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co"># Table</span></a>
-<a class="sourceLine" id="cb22-2" title="2">dfj_gap_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(employvswwage, rank_gap_grp) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb22-3" title="3"><span class="st">                </span><span class="kw">summarize</span>(<span class="dt">count =</span> <span class="kw">n</span>())</a></code></pre></div>
-<pre><code>## # A tibble: 12 x 3
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="co"># Table</span></a>
+<a class="sourceLine" id="cb24-2" title="2">dfj_gap_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(employvswwage, rank_gap_grp) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb24-3" title="3"><span class="st">                </span><span class="kw">summarize</span>(<span class="dt">count =</span> <span class="kw">n</span>())</a></code></pre></div>
+<pre><code>## # A tibble: 11 x 3
 ## # Groups:   employvswwage [2]
 ##    employvswwage rank_gap_grp           count
 ##    &lt;chr&gt;         &lt;chr&gt;                  &lt;int&gt;
-##  1 employ        change A no change        30
-##  2 employ        change B 50 positions    630
-##  3 employ        change C 51 to 100        30
-##  4 employ        change D 101 to 200       15
-##  5 employ        change E 201 to 400       10
-##  6 employ        change F more than 401     7
-##  7 wage          change A no change         2
-##  8 wage          change B 50 positions    177
-##  9 wage          change C 51 to 100       147
-## 10 wage          change D 101 to 200      285
-## 11 wage          change E 201 to 400       31
-## 12 wage          change F more than 401    80</code></pre>
+##  1 employ        change A no change         4
+##  2 employ        change B 50 positions    154
+##  3 employ        change C 51 to 100        27
+##  4 employ        change D 101 to 200       70
+##  5 employ        change E 201 to 400      467
+##  6 wage          change A no change         2
+##  7 wage          change B 50 positions    177
+##  8 wage          change C 51 to 100       147
+##  9 wage          change D 101 to 200      285
+## 10 wage          change E 201 to 400       31
+## 11 wage          change F more than 401    80</code></pre>
 </div>
 </div>
 <div id="table-of-top-10-individuals" class="section level1">
 <h1 class="hasAnchor">
 <a href="#table-of-top-10-individuals" class="anchor"></a>Table of Top 10 Individuals</h1>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="co"># Calculat the maximum rank reached by each from all the rhos we have</span></a>
-<a class="sourceLine" id="cb24-2" title="2"><span class="co"># The difference between this and the other max, this computes across all rhos, employment and wage</span></a>
-<a class="sourceLine" id="cb24-3" title="3"></a>
-<a class="sourceLine" id="cb24-4" title="4">dfj_top10 &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb24-5" title="5"><span class="st">    </span><span class="kw">select</span>(<span class="kw">contains</span>(<span class="st">"rho_"</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb24-6" title="6"><span class="st">    </span><span class="kw">reduce</span>(pmin) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb24-7" title="7"><span class="st">    </span><span class="kw">mutate</span>(dfj, <span class="dt">max_rank_rhos =</span> .)</a>
-<a class="sourceLine" id="cb24-8" title="8"></a>
-<a class="sourceLine" id="cb24-9" title="9">dfj_top10 &lt;-<span class="st"> </span>dfj_top10 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(max_rank_rhos <span class="op">&lt;=</span><span class="st"> </span><span class="dv">10</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb24-10" title="10"><span class="st">  </span><span class="kw">select</span>(id, age, educ, black, hisp, marr, re74, re78, <span class="kw">contains</span>(<span class="st">"rho_"</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb24-11" title="11"><span class="st">  </span><span class="kw">arrange</span>(age, educ, black, hisp)</a>
-<a class="sourceLine" id="cb24-12" title="12"></a>
-<a class="sourceLine" id="cb24-13" title="13"><span class="co"># Graphing Library</span></a>
-<a class="sourceLine" id="cb24-14" title="14"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(kableExtra)</a>
-<a class="sourceLine" id="cb24-15" title="15"><span class="co"># Load Data</span></a>
-<a class="sourceLine" id="cb24-16" title="16">dt &lt;-<span class="st"> </span>mtcars[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>]</a>
-<a class="sourceLine" id="cb24-17" title="17"><span class="co"># Generate latex string variable</span></a>
-<a class="sourceLine" id="cb24-18" title="18">st_out_tex &lt;-<span class="st"> </span><span class="kw">kable</span>(dfj_top10, <span class="st">"latex"</span>)</a>
-<a class="sourceLine" id="cb24-19" title="19"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(st_out_tex)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="co"># Calculat the maximum rank reached by each from all the rhos we have</span></a>
+<a class="sourceLine" id="cb26-2" title="2"><span class="co"># The difference between this and the other max, this computes across all rhos, employment and wage</span></a>
+<a class="sourceLine" id="cb26-3" title="3"></a>
+<a class="sourceLine" id="cb26-4" title="4">dfj_top10 &lt;-<span class="st"> </span>dfj <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-5" title="5"><span class="st">    </span><span class="kw">select</span>(<span class="kw">contains</span>(<span class="st">"rho_"</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-6" title="6"><span class="st">    </span><span class="kw">reduce</span>(pmin) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-7" title="7"><span class="st">    </span><span class="kw">mutate</span>(dfj, <span class="dt">max_rank_rhos =</span> .)</a>
+<a class="sourceLine" id="cb26-8" title="8"></a>
+<a class="sourceLine" id="cb26-9" title="9">dfj_top10 &lt;-<span class="st"> </span>dfj_top10 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(max_rank_rhos <span class="op">&lt;=</span><span class="st"> </span><span class="dv">10</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-10" title="10"><span class="st">  </span><span class="kw">select</span>(id, age, educ, black, race, </a>
+<a class="sourceLine" id="cb26-11" title="11">         rho_c1_rk_employ, rho_c16_rk_employ, rho_c30_rk_employ,</a>
+<a class="sourceLine" id="cb26-12" title="12">         rho_c1_rk_wage, rho_c16_rk_wage, rho_c30_rk_wage) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-13" title="13"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">emp_util =</span> rho_c1_rk_employ,</a>
+<a class="sourceLine" id="cb26-14" title="14">         <span class="dt">emp_CD   =</span> rho_c16_rk_employ,</a>
+<a class="sourceLine" id="cb26-15" title="15">         <span class="dt">emp_rawl =</span> rho_c30_rk_employ,</a>
+<a class="sourceLine" id="cb26-16" title="16">         <span class="dt">wag_util =</span> rho_c1_rk_wage,</a>
+<a class="sourceLine" id="cb26-17" title="17">         <span class="dt">wag_CD   =</span> rho_c16_rk_wage,</a>
+<a class="sourceLine" id="cb26-18" title="18">         <span class="dt">wag_rawl =</span> rho_c30_rk_wage,</a>
+<a class="sourceLine" id="cb26-19" title="19">         ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-20" title="20"><span class="st">  </span><span class="kw">arrange</span>(age, educ, race)</a>
+<a class="sourceLine" id="cb26-21" title="21"></a>
+<a class="sourceLine" id="cb26-22" title="22"><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(dfj_top10)</a></code></pre></div>
+<pre><code>## [1] 36 11</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="co"># Graphing Library</span></a>
+<a class="sourceLine" id="cb28-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(kableExtra)</a>
+<a class="sourceLine" id="cb28-3" title="3"><span class="co"># Load Data</span></a>
+<a class="sourceLine" id="cb28-4" title="4">dt &lt;-<span class="st"> </span>mtcars[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>]</a>
+<a class="sourceLine" id="cb28-5" title="5"><span class="co"># Generate latex string variable</span></a>
+<a class="sourceLine" id="cb28-6" title="6">st_out_tex &lt;-<span class="st"> </span><span class="kw">kable</span>(dfj_top10, <span class="st">"latex"</span>)</a>
+<a class="sourceLine" id="cb28-7" title="7"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(st_out_tex)</a></code></pre></div>
 <pre><code>## 
-## \begin{tabular}{r|r|r|r|r|r|r|r|r|r|r|r|r|r}
+## \begin{tabular}{r|r|r|r|r|r|r|r|r|r|r}
 ## \hline
-## id &amp; age &amp; educ &amp; black &amp; hisp &amp; marr &amp; re74 &amp; re78 &amp; rho\_c1\_rk\_employ &amp; rho\_c2\_rk\_employ &amp; rho\_c3\_rk\_employ &amp; rho\_c1\_rk\_wage &amp; rho\_c2\_rk\_wage &amp; rho\_c3\_rk\_wage\\
+## id &amp; age &amp; educ &amp; black &amp; race &amp; emp\_util &amp; emp\_CD &amp; emp\_rawl &amp; wag\_util &amp; wag\_CD &amp; wag\_rawl\\
 ## \hline
-## 107 &amp; 24 &amp; 7 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 1455.690 &amp; 274 &amp; 275 &amp; 286 &amp; 2 &amp; 119 &amp; 119\\
+## 2221 &amp; 23 &amp; 9 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 186 &amp; 279 &amp; 279 &amp; 165\\
 ## \hline
-## 137 &amp; 24 &amp; 7 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 2193.528 &amp; 274 &amp; 275 &amp; 286 &amp; 2 &amp; 119 &amp; 119\\
+## 1 &amp; 23 &amp; 10 &amp; 1 &amp; 1 &amp; 8 &amp; 8 &amp; 194 &amp; 392 &amp; 392 &amp; 284\\
 ## \hline
-## 2751 &amp; 24 &amp; 10 &amp; 1 &amp; 0 &amp; 1 &amp; 11703.200 &amp; 0.000 &amp; 539 &amp; 546 &amp; 579 &amp; 277 &amp; 9 &amp; 9\\
+## 70 &amp; 23 &amp; 10 &amp; 1 &amp; 1 &amp; 8 &amp; 8 &amp; 194 &amp; 392 &amp; 392 &amp; 284\\
 ## \hline
-## 37 &amp; 25 &amp; 8 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 3515.929 &amp; 197 &amp; 198 &amp; 205 &amp; 5 &amp; 122 &amp; 122\\
+## 166 &amp; 23 &amp; 10 &amp; 1 &amp; 1 &amp; 8 &amp; 8 &amp; 194 &amp; 392 &amp; 392 &amp; 284\\
 ## \hline
-## 200 &amp; 25 &amp; 8 &amp; 1 &amp; 0 &amp; 1 &amp; NA &amp; 14281.310 &amp; 558 &amp; 567 &amp; 613 &amp; 143 &amp; 1 &amp; 1\\
+## 193 &amp; 23 &amp; 10 &amp; 1 &amp; 1 &amp; 8 &amp; 8 &amp; 194 &amp; 392 &amp; 392 &amp; 284\\
 ## \hline
-## 901 &amp; 25 &amp; 8 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 0.000 &amp; 197 &amp; 198 &amp; 205 &amp; 5 &amp; 122 &amp; 122\\
+## 1810 &amp; 23 &amp; 10 &amp; 1 &amp; 1 &amp; 8 &amp; 8 &amp; 194 &amp; 392 &amp; 392 &amp; 284\\
 ## \hline
-## 1421 &amp; 25 &amp; 8 &amp; 1 &amp; 0 &amp; 0 &amp; NA &amp; 2346.828 &amp; 197 &amp; 198 &amp; 205 &amp; 5 &amp; 122 &amp; 122\\
+## 1841 &amp; 23 &amp; 10 &amp; 1 &amp; 1 &amp; 8 &amp; 8 &amp; 194 &amp; 392 &amp; 392 &amp; 284\\
 ## \hline
-## 167 &amp; 25 &amp; 9 &amp; 1 &amp; 0 &amp; 1 &amp; 0.000 &amp; 4715.371 &amp; 541 &amp; 548 &amp; 585 &amp; 168 &amp; 5 &amp; 5\\
+## 2261 &amp; 23 &amp; 10 &amp; 1 &amp; 1 &amp; 8 &amp; 8 &amp; 194 &amp; 392 &amp; 392 &amp; 284\\
 ## \hline
-## 424 &amp; 25 &amp; 9 &amp; 1 &amp; 0 &amp; 1 &amp; 24731.620 &amp; 7343.964 &amp; 541 &amp; 548 &amp; 585 &amp; 168 &amp; 5 &amp; 5\\
+## 107 &amp; 24 &amp; 7 &amp; 1 &amp; 1 &amp; 407 &amp; 284 &amp; 137 &amp; 119 &amp; 114 &amp; 2\\
 ## \hline
-## 294 &amp; 26 &amp; 8 &amp; 1 &amp; 0 &amp; 1 &amp; NA &amp; 0.000 &amp; 547 &amp; 554 &amp; 594 &amp; 149 &amp; 2 &amp; 2\\
+## 137 &amp; 24 &amp; 7 &amp; 1 &amp; 1 &amp; 407 &amp; 284 &amp; 137 &amp; 119 &amp; 114 &amp; 2\\
 ## \hline
-## 388 &amp; 26 &amp; 8 &amp; 1 &amp; 0 &amp; 0 &amp; 1126.290 &amp; 3523.578 &amp; 173 &amp; 174 &amp; 180 &amp; 6 &amp; 123 &amp; 123\\
+## 2751 &amp; 24 &amp; 10 &amp; 1 &amp; 1 &amp; 530 &amp; 517 &amp; 333 &amp; 9 &amp; 9 &amp; 277\\
 ## \hline
-## 19 &amp; 27 &amp; 7 &amp; 1 &amp; 0 &amp; 1 &amp; 0.000 &amp; 0.000 &amp; 552 &amp; 559 &amp; 601 &amp; 164 &amp; 3 &amp; 3\\
+## 37 &amp; 25 &amp; 8 &amp; 1 &amp; 1 &amp; 359 &amp; 163 &amp; 92 &amp; 122 &amp; 117 &amp; 5\\
 ## \hline
-## 35 &amp; 27 &amp; 8 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 3783.660 &amp; 150 &amp; 151 &amp; 157 &amp; 9 &amp; 126 &amp; 126\\
+## 200 &amp; 25 &amp; 8 &amp; 1 &amp; 1 &amp; 525 &amp; 512 &amp; 328 &amp; 1 &amp; 1 &amp; 143\\
 ## \hline
-## 851 &amp; 27 &amp; 8 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 0.000 &amp; 150 &amp; 151 &amp; 157 &amp; 9 &amp; 126 &amp; 126\\
+## 901 &amp; 25 &amp; 8 &amp; 1 &amp; 1 &amp; 359 &amp; 163 &amp; 92 &amp; 122 &amp; 117 &amp; 5\\
 ## \hline
-## 2301 &amp; 27 &amp; 8 &amp; 1 &amp; 0 &amp; 0 &amp; NA &amp; 7976.932 &amp; 150 &amp; 151 &amp; 157 &amp; 9 &amp; 126 &amp; 126\\
+## 1421 &amp; 25 &amp; 8 &amp; 1 &amp; 1 &amp; 359 &amp; 163 &amp; 92 &amp; 122 &amp; 117 &amp; 5\\
 ## \hline
-## 1261 &amp; 27 &amp; 9 &amp; 1 &amp; 0 &amp; 1 &amp; 0.000 &amp; 1773.423 &amp; 517 &amp; 521 &amp; 554 &amp; 206 &amp; 6 &amp; 6\\
+## 167 &amp; 25 &amp; 9 &amp; 1 &amp; 1 &amp; 496 &amp; 483 &amp; 277 &amp; 5 &amp; 5 &amp; 168\\
 ## \hline
-## 405 &amp; 28 &amp; 9 &amp; 1 &amp; 0 &amp; 1 &amp; 10222.410 &amp; 1239.844 &amp; 503 &amp; 507 &amp; 537 &amp; 227 &amp; 7 &amp; 7\\
+## 424 &amp; 25 &amp; 9 &amp; 1 &amp; 1 &amp; 496 &amp; 483 &amp; 277 &amp; 5 &amp; 5 &amp; 168\\
 ## \hline
-## 2961 &amp; 35 &amp; 8 &amp; 1 &amp; 0 &amp; 1 &amp; 13732.070 &amp; 3786.628 &amp; 409 &amp; 411 &amp; 426 &amp; 251 &amp; 8 &amp; 8\\
+## 294 &amp; 26 &amp; 8 &amp; 1 &amp; 1 &amp; 504 &amp; 491 &amp; 295 &amp; 2 &amp; 2 &amp; 149\\
 ## \hline
-## 370 &amp; 36 &amp; 11 &amp; 0 &amp; 1 &amp; 0 &amp; 5443.734 &amp; 1324.542 &amp; 580 &amp; 333 &amp; 7 &amp; 646 &amp; 668 &amp; 668\\
+## 388 &amp; 26 &amp; 8 &amp; 1 &amp; 1 &amp; 335 &amp; 120 &amp; 69 &amp; 123 &amp; 120 &amp; 6\\
 ## \hline
-## 134 &amp; 42 &amp; 10 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 6930.336 &amp; 10 &amp; 10 &amp; 12 &amp; 249 &amp; 359 &amp; 359\\
+## 19 &amp; 27 &amp; 7 &amp; 1 &amp; 1 &amp; 537 &amp; 526 &amp; 384 &amp; 3 &amp; 3 &amp; 164\\
 ## \hline
-## 377 &amp; 43 &amp; 10 &amp; 1 &amp; 0 &amp; 0 &amp; 2502.868 &amp; 7565.273 &amp; 8 &amp; 8 &amp; 10 &amp; 250 &amp; 360 &amp; 360\\
+## 35 &amp; 27 &amp; 8 &amp; 1 &amp; 1 &amp; 309 &amp; 88 &amp; 47 &amp; 126 &amp; 123 &amp; 9\\
 ## \hline
-## 34 &amp; 44 &amp; 9 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 9722.003 &amp; 9 &amp; 9 &amp; 11 &amp; 146 &amp; 262 &amp; 262\\
+## 851 &amp; 27 &amp; 8 &amp; 1 &amp; 1 &amp; 309 &amp; 88 &amp; 47 &amp; 126 &amp; 123 &amp; 9\\
 ## \hline
-## 145 &amp; 44 &amp; 11 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 0.000 &amp; 5 &amp; 5 &amp; 6 &amp; 398 &amp; 482 &amp; 482\\
+## 2301 &amp; 27 &amp; 8 &amp; 1 &amp; 1 &amp; 309 &amp; 88 &amp; 47 &amp; 126 &amp; 123 &amp; 9\\
 ## \hline
-## 951 &amp; 44 &amp; 11 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 0.000 &amp; 5 &amp; 5 &amp; 6 &amp; 398 &amp; 482 &amp; 482\\
+## 1261 &amp; 27 &amp; 9 &amp; 1 &amp; 1 &amp; 476 &amp; 459 &amp; 237 &amp; 6 &amp; 6 &amp; 206\\
 ## \hline
-## 189 &amp; 45 &amp; 9 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 4844.803 &amp; 6 &amp; 6 &amp; 8 &amp; 148 &amp; 264 &amp; 264\\
+## 405 &amp; 28 &amp; 9 &amp; 1 &amp; 1 &amp; 472 &amp; 451 &amp; 218 &amp; 7 &amp; 7 &amp; 227\\
 ## \hline
-## 6 &amp; 45 &amp; 11 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 11796.470 &amp; 2 &amp; 2 &amp; 3 &amp; 399 &amp; 483 &amp; 483\\
+## 324 &amp; 29 &amp; 9 &amp; 1 &amp; 1 &amp; 262 &amp; 20 &amp; 5 &amp; 150 &amp; 150 &amp; 33\\
 ## \hline
-## 2561 &amp; 46 &amp; 8 &amp; 1 &amp; 0 &amp; 0 &amp; 3165.658 &amp; 0.000 &amp; 7 &amp; 7 &amp; 9 &amp; 107 &amp; 224 &amp; 224\\
+## 404 &amp; 29 &amp; 9 &amp; 1 &amp; 1 &amp; 262 &amp; 20 &amp; 5 &amp; 150 &amp; 150 &amp; 33\\
 ## \hline
-## 123 &amp; 50 &amp; 10 &amp; 0 &amp; 1 &amp; 0 &amp; 0.000 &amp; 0.000 &amp; 576 &amp; 38 &amp; 1 &amp; 632 &amp; 657 &amp; 657\\
+## 2481 &amp; 31 &amp; 9 &amp; 1 &amp; 1 &amp; 259 &amp; 10 &amp; 2 &amp; 162 &amp; 162 &amp; 45\\
 ## \hline
-## 183 &amp; 54 &amp; 11 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 7812.522 &amp; 1 &amp; 1 &amp; 2 &amp; 412 &amp; 495 &amp; 495\\
+## 2801 &amp; 31 &amp; 9 &amp; 1 &amp; 1 &amp; 259 &amp; 10 &amp; 2 &amp; 162 &amp; 162 &amp; 45\\
 ## \hline
-## 114 &amp; 55 &amp; 3 &amp; 1 &amp; 0 &amp; 0 &amp; 0.000 &amp; 5843.796 &amp; 3 &amp; 3 &amp; 4 &amp; 557 &amp; 590 &amp; 590\\
+## 38 &amp; 31 &amp; 10 &amp; 1 &amp; 1 &amp; 267 &amp; 25 &amp; 10 &amp; 271 &amp; 271 &amp; 156\\
+## \hline
+## 120 &amp; 31 &amp; 10 &amp; 1 &amp; 1 &amp; 267 &amp; 25 &amp; 10 &amp; 271 &amp; 271 &amp; 156\\
+## \hline
+## 301 &amp; 31 &amp; 10 &amp; 1 &amp; 1 &amp; 267 &amp; 25 &amp; 10 &amp; 271 &amp; 271 &amp; 156\\
+## \hline
+## 152 &amp; 32 &amp; 10 &amp; 1 &amp; 1 &amp; 264 &amp; 22 &amp; 7 &amp; 273 &amp; 273 &amp; 158\\
+## \hline
+## 1931 &amp; 32 &amp; 10 &amp; 1 &amp; 1 &amp; 264 &amp; 22 &amp; 7 &amp; 273 &amp; 273 &amp; 158\\
+## \hline
+## 4 &amp; 34 &amp; 9 &amp; 1 &amp; 1 &amp; 260 &amp; 11 &amp; 3 &amp; 178 &amp; 178 &amp; 61\\
+## \hline
+## 2961 &amp; 35 &amp; 8 &amp; 1 &amp; 1 &amp; 479 &amp; 463 &amp; 242 &amp; 8 &amp; 8 &amp; 251\\
 ## \hline
 ## \end{tabular}</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="co"># File out</span></a>
-<a class="sourceLine" id="cb26-2" title="2"><span class="co"># fileConn &lt;- file("./../../_file/tex/tex_sample_a_tab.tex")</span></a>
-<a class="sourceLine" id="cb26-3" title="3">fileConn &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/connections.html">file</a></span>(<span class="st">"C:/users/fan/HgtOptiAlloDraft/_tab/lalonda_wage_employ_top10.tex"</span>)</a>
-<a class="sourceLine" id="cb26-4" title="4"><span class="kw"><a href="https://rdrr.io/r/base/writeLines.html">writeLines</a></span>(st_out_tex, fileConn)</a>
-<a class="sourceLine" id="cb26-5" title="5"><span class="kw"><a href="https://rdrr.io/r/base/connections.html">close</a></span>(fileConn)</a>
-<a class="sourceLine" id="cb26-6" title="6"></a>
-<a class="sourceLine" id="cb26-7" title="7"><span class="co"># Display results here</span></a>
-<a class="sourceLine" id="cb26-8" title="8">dfj_top10 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb26-9" title="9"><span class="st">    </span><span class="kw">kable</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb26-10" title="10"><span class="st">    </span><span class="kw">kable_styling</span>(<span class="dt">bootstrap_options =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"responsive"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="co"># File out</span></a>
+<a class="sourceLine" id="cb30-2" title="2"><span class="co"># fileConn &lt;- file("./../../_file/tex/tex_sample_a_tab.tex")</span></a>
+<a class="sourceLine" id="cb30-3" title="3">fileConn &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/connections.html">file</a></span>(<span class="st">"C:/users/fan/HgtOptiAlloDraft/_tab/lalonda_wage_employ_top10.tex"</span>)</a>
+<a class="sourceLine" id="cb30-4" title="4"><span class="kw"><a href="https://rdrr.io/r/base/writeLines.html">writeLines</a></span>(st_out_tex, fileConn)</a>
+<a class="sourceLine" id="cb30-5" title="5"><span class="kw"><a href="https://rdrr.io/r/base/connections.html">close</a></span>(fileConn)</a>
+<a class="sourceLine" id="cb30-6" title="6"></a>
+<a class="sourceLine" id="cb30-7" title="7"><span class="co"># Display results here</span></a>
+<a class="sourceLine" id="cb30-8" title="8">dfj_top10 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-9" title="9"><span class="st">    </span><span class="kw">kable</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-10" title="10"><span class="st">    </span><span class="kw">kable_styling</span>(<span class="dt">bootstrap_options =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"responsive"</span>))</a></code></pre></div>
 <table class="table table table-striped table-hover table-responsive">
 <thead><tr>
 <th style="text-align:right;">
@@ -640,37 +873,308 @@ educ
 black
 </th>
 <th style="text-align:right;">
-hisp
+race
 </th>
 <th style="text-align:right;">
-marr
+emp_util
 </th>
 <th style="text-align:right;">
-re74
+emp_CD
 </th>
 <th style="text-align:right;">
-re78
+emp_rawl
 </th>
 <th style="text-align:right;">
-rho_c1_rk_employ
+wag_util
 </th>
 <th style="text-align:right;">
-rho_c2_rk_employ
+wag_CD
 </th>
 <th style="text-align:right;">
-rho_c3_rk_employ
-</th>
-<th style="text-align:right;">
-rho_c1_rk_wage
-</th>
-<th style="text-align:right;">
-rho_c2_rk_wage
-</th>
-<th style="text-align:right;">
-rho_c3_rk_wage
+wag_rawl
 </th>
 </tr></thead>
 <tbody>
+<tr>
+<td style="text-align:right;">
+2221
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+186
+</td>
+<td style="text-align:right;">
+279
+</td>
+<td style="text-align:right;">
+279
+</td>
+<td style="text-align:right;">
+165
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+194
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+284
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+70
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+194
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+284
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+166
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+194
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+284
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+193
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+194
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+284
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1810
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+194
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+284
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1841
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+194
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+284
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2261
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+194
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+392
+</td>
+<td style="text-align:right;">
+284
+</td>
+</tr>
 <tr>
 <td style="text-align:right;">
 107
@@ -685,34 +1189,25 @@ rho_c3_rk_wage
 1
 </td>
 <td style="text-align:right;">
-0
+1
 </td>
 <td style="text-align:right;">
-0
+407
 </td>
 <td style="text-align:right;">
-0.000
+284
 </td>
 <td style="text-align:right;">
-1455.690
+137
 </td>
 <td style="text-align:right;">
-274
+119
 </td>
 <td style="text-align:right;">
-275
-</td>
-<td style="text-align:right;">
-286
+114
 </td>
 <td style="text-align:right;">
 2
-</td>
-<td style="text-align:right;">
-119
-</td>
-<td style="text-align:right;">
-119
 </td>
 </tr>
 <tr>
@@ -729,34 +1224,25 @@ rho_c3_rk_wage
 1
 </td>
 <td style="text-align:right;">
-0
+1
 </td>
 <td style="text-align:right;">
-0
+407
 </td>
 <td style="text-align:right;">
-0.000
+284
 </td>
 <td style="text-align:right;">
-2193.528
+137
 </td>
 <td style="text-align:right;">
-274
+119
 </td>
 <td style="text-align:right;">
-275
-</td>
-<td style="text-align:right;">
-286
+114
 </td>
 <td style="text-align:right;">
 2
-</td>
-<td style="text-align:right;">
-119
-</td>
-<td style="text-align:right;">
-119
 </td>
 </tr>
 <tr>
@@ -773,34 +1259,25 @@ rho_c3_rk_wage
 1
 </td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-11703.200
+530
 </td>
 <td style="text-align:right;">
-0.000
+517
 </td>
 <td style="text-align:right;">
-539
+333
 </td>
 <td style="text-align:right;">
-546
+9
 </td>
 <td style="text-align:right;">
-579
+9
 </td>
 <td style="text-align:right;">
 277
-</td>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-9
 </td>
 </tr>
 <tr>
@@ -817,34 +1294,25 @@ rho_c3_rk_wage
 1
 </td>
 <td style="text-align:right;">
-0
+1
 </td>
 <td style="text-align:right;">
-0
+359
 </td>
 <td style="text-align:right;">
-0.000
+163
 </td>
 <td style="text-align:right;">
-3515.929
+92
 </td>
 <td style="text-align:right;">
-197
+122
 </td>
 <td style="text-align:right;">
-198
-</td>
-<td style="text-align:right;">
-205
+117
 </td>
 <td style="text-align:right;">
 5
-</td>
-<td style="text-align:right;">
-122
-</td>
-<td style="text-align:right;">
-122
 </td>
 </tr>
 <tr>
@@ -861,34 +1329,25 @@ rho_c3_rk_wage
 1
 </td>
 <td style="text-align:right;">
-0
+1
+</td>
+<td style="text-align:right;">
+525
+</td>
+<td style="text-align:right;">
+512
+</td>
+<td style="text-align:right;">
+328
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-14281.310
-</td>
-<td style="text-align:right;">
-558
-</td>
-<td style="text-align:right;">
-567
-</td>
-<td style="text-align:right;">
-613
+1
 </td>
 <td style="text-align:right;">
 143
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
 </td>
 </tr>
 <tr>
@@ -905,34 +1364,25 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
+1
 </td>
 <td style="text-align:right;">
-0
+359
 </td>
 <td style="text-align:right;">
-0.000
+163
 </td>
 <td style="text-align:right;">
-0.000
+92
 </td>
 <td style="text-align:right;">
-197
+122
 </td>
 <td style="text-align:right;">
-198
-</td>
-<td style="text-align:right;">
-205
+117
 </td>
 <td style="text-align:right;">
 5
-</td>
-<td style="text-align:right;">
-122
-</td>
-<td style="text-align:right;">
-122
 </td>
 </tr>
 <tr>
@@ -949,34 +1399,25 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
+1
 </td>
 <td style="text-align:right;">
-0
+359
 </td>
 <td style="text-align:right;">
-NA
+163
 </td>
 <td style="text-align:right;">
-2346.828
+92
 </td>
 <td style="text-align:right;">
-197
+122
 </td>
 <td style="text-align:right;">
-198
-</td>
-<td style="text-align:right;">
-205
+117
 </td>
 <td style="text-align:right;">
 5
-</td>
-<td style="text-align:right;">
-122
-</td>
-<td style="text-align:right;">
-122
 </td>
 </tr>
 <tr>
@@ -993,34 +1434,25 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-0.000
+496
 </td>
 <td style="text-align:right;">
-4715.371
+483
 </td>
 <td style="text-align:right;">
-541
+277
 </td>
 <td style="text-align:right;">
-548
+5
 </td>
 <td style="text-align:right;">
-585
+5
 </td>
 <td style="text-align:right;">
 168
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-5
 </td>
 </tr>
 <tr>
@@ -1037,34 +1469,25 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-24731.620
+496
 </td>
 <td style="text-align:right;">
-7343.964
+483
 </td>
 <td style="text-align:right;">
-541
+277
 </td>
 <td style="text-align:right;">
-548
+5
 </td>
 <td style="text-align:right;">
-585
+5
 </td>
 <td style="text-align:right;">
 168
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-5
 </td>
 </tr>
 <tr>
@@ -1081,34 +1504,25 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-NA
+504
 </td>
 <td style="text-align:right;">
-0.000
+491
 </td>
 <td style="text-align:right;">
-547
+295
 </td>
 <td style="text-align:right;">
-554
+2
 </td>
 <td style="text-align:right;">
-594
+2
 </td>
 <td style="text-align:right;">
 149
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
 </td>
 </tr>
 <tr>
@@ -1125,34 +1539,25 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
+1
 </td>
 <td style="text-align:right;">
-0
+335
 </td>
 <td style="text-align:right;">
-1126.290
+120
 </td>
 <td style="text-align:right;">
-3523.578
+69
 </td>
 <td style="text-align:right;">
-173
+123
 </td>
 <td style="text-align:right;">
-174
-</td>
-<td style="text-align:right;">
-180
+120
 </td>
 <td style="text-align:right;">
 6
-</td>
-<td style="text-align:right;">
-123
-</td>
-<td style="text-align:right;">
-123
 </td>
 </tr>
 <tr>
@@ -1169,34 +1574,25 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-0.000
+537
 </td>
 <td style="text-align:right;">
-0.000
+526
 </td>
 <td style="text-align:right;">
-552
+384
 </td>
 <td style="text-align:right;">
-559
+3
 </td>
 <td style="text-align:right;">
-601
+3
 </td>
 <td style="text-align:right;">
 164
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-3
 </td>
 </tr>
 <tr>
@@ -1213,34 +1609,25 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
+1
 </td>
 <td style="text-align:right;">
-0
+309
 </td>
 <td style="text-align:right;">
-0.000
+88
 </td>
 <td style="text-align:right;">
-3783.660
+47
 </td>
 <td style="text-align:right;">
-150
+126
 </td>
 <td style="text-align:right;">
-151
-</td>
-<td style="text-align:right;">
-157
+123
 </td>
 <td style="text-align:right;">
 9
-</td>
-<td style="text-align:right;">
-126
-</td>
-<td style="text-align:right;">
-126
 </td>
 </tr>
 <tr>
@@ -1257,34 +1644,25 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
+1
 </td>
 <td style="text-align:right;">
-0
+309
 </td>
 <td style="text-align:right;">
-0.000
+88
 </td>
 <td style="text-align:right;">
-0.000
+47
 </td>
 <td style="text-align:right;">
-150
+126
 </td>
 <td style="text-align:right;">
-151
-</td>
-<td style="text-align:right;">
-157
+123
 </td>
 <td style="text-align:right;">
 9
-</td>
-<td style="text-align:right;">
-126
-</td>
-<td style="text-align:right;">
-126
 </td>
 </tr>
 <tr>
@@ -1301,34 +1679,25 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
+1
 </td>
 <td style="text-align:right;">
-0
+309
 </td>
 <td style="text-align:right;">
-NA
+88
 </td>
 <td style="text-align:right;">
-7976.932
+47
 </td>
 <td style="text-align:right;">
-150
+126
 </td>
 <td style="text-align:right;">
-151
-</td>
-<td style="text-align:right;">
-157
+123
 </td>
 <td style="text-align:right;">
 9
-</td>
-<td style="text-align:right;">
-126
-</td>
-<td style="text-align:right;">
-126
 </td>
 </tr>
 <tr>
@@ -1345,34 +1714,25 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-0.000
+476
 </td>
 <td style="text-align:right;">
-1773.423
+459
 </td>
 <td style="text-align:right;">
-517
+237
 </td>
 <td style="text-align:right;">
-521
+6
 </td>
 <td style="text-align:right;">
-554
+6
 </td>
 <td style="text-align:right;">
 206
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-6
 </td>
 </tr>
 <tr>
@@ -1389,34 +1749,375 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
+1
+</td>
+<td style="text-align:right;">
+472
+</td>
+<td style="text-align:right;">
+451
+</td>
+<td style="text-align:right;">
+218
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+227
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+324
+</td>
+<td style="text-align:right;">
+29
+</td>
+<td style="text-align:right;">
+9
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-10222.410
+1
 </td>
 <td style="text-align:right;">
-1239.844
+262
 </td>
 <td style="text-align:right;">
-503
+20
 </td>
 <td style="text-align:right;">
-507
+5
 </td>
 <td style="text-align:right;">
-537
+150
 </td>
 <td style="text-align:right;">
-227
+150
+</td>
+<td style="text-align:right;">
+33
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+404
+</td>
+<td style="text-align:right;">
+29
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+262
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+33
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2481
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+259
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+162
+</td>
+<td style="text-align:right;">
+162
+</td>
+<td style="text-align:right;">
+45
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2801
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+259
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+162
+</td>
+<td style="text-align:right;">
+162
+</td>
+<td style="text-align:right;">
+45
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+38
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+267
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+271
+</td>
+<td style="text-align:right;">
+271
+</td>
+<td style="text-align:right;">
+156
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+267
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+271
+</td>
+<td style="text-align:right;">
+271
+</td>
+<td style="text-align:right;">
+156
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+301
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+267
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+271
+</td>
+<td style="text-align:right;">
+271
+</td>
+<td style="text-align:right;">
+156
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+152
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+264
+</td>
+<td style="text-align:right;">
+22
 </td>
 <td style="text-align:right;">
 7
 </td>
 <td style="text-align:right;">
+273
+</td>
+<td style="text-align:right;">
+273
+</td>
+<td style="text-align:right;">
+158
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1931
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+264
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
 7
+</td>
+<td style="text-align:right;">
+273
+</td>
+<td style="text-align:right;">
+273
+</td>
+<td style="text-align:right;">
+158
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+260
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+178
+</td>
+<td style="text-align:right;">
+178
+</td>
+<td style="text-align:right;">
+61
 </td>
 </tr>
 <tr>
@@ -1433,562 +2134,25 @@ NA
 1
 </td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-13732.070
+479
 </td>
 <td style="text-align:right;">
-3786.628
+463
 </td>
 <td style="text-align:right;">
-409
+242
 </td>
 <td style="text-align:right;">
-411
+8
 </td>
 <td style="text-align:right;">
-426
+8
 </td>
 <td style="text-align:right;">
 251
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-8
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-370
-</td>
-<td style="text-align:right;">
-36
-</td>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-5443.734
-</td>
-<td style="text-align:right;">
-1324.542
-</td>
-<td style="text-align:right;">
-580
-</td>
-<td style="text-align:right;">
-333
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-646
-</td>
-<td style="text-align:right;">
-668
-</td>
-<td style="text-align:right;">
-668
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-134
-</td>
-<td style="text-align:right;">
-42
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-6930.336
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:right;">
-249
-</td>
-<td style="text-align:right;">
-359
-</td>
-<td style="text-align:right;">
-359
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-377
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2502.868
-</td>
-<td style="text-align:right;">
-7565.273
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-250
-</td>
-<td style="text-align:right;">
-360
-</td>
-<td style="text-align:right;">
-360
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-34
-</td>
-<td style="text-align:right;">
-44
-</td>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-9722.003
-</td>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:right;">
-146
-</td>
-<td style="text-align:right;">
-262
-</td>
-<td style="text-align:right;">
-262
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-145
-</td>
-<td style="text-align:right;">
-44
-</td>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-398
-</td>
-<td style="text-align:right;">
-482
-</td>
-<td style="text-align:right;">
-482
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-951
-</td>
-<td style="text-align:right;">
-44
-</td>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-398
-</td>
-<td style="text-align:right;">
-482
-</td>
-<td style="text-align:right;">
-482
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-189
-</td>
-<td style="text-align:right;">
-45
-</td>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-4844.803
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-148
-</td>
-<td style="text-align:right;">
-264
-</td>
-<td style="text-align:right;">
-264
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-45
-</td>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-11796.470
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-399
-</td>
-<td style="text-align:right;">
-483
-</td>
-<td style="text-align:right;">
-483
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2561
-</td>
-<td style="text-align:right;">
-46
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3165.658
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-107
-</td>
-<td style="text-align:right;">
-224
-</td>
-<td style="text-align:right;">
-224
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-123
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-576
-</td>
-<td style="text-align:right;">
-38
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-632
-</td>
-<td style="text-align:right;">
-657
-</td>
-<td style="text-align:right;">
-657
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-183
-</td>
-<td style="text-align:right;">
-54
-</td>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-7812.522
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-412
-</td>
-<td style="text-align:right;">
-495
-</td>
-<td style="text-align:right;">
-495
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-114
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-5843.796
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-557
-</td>
-<td style="text-align:right;">
-590
-</td>
-<td style="text-align:right;">
-590
 </td>
 </tr>
 </tbody>
@@ -2009,9 +2173,8 @@ NA
       <li><a href="#merge-the-wage-and-employmennt-rsults">Merge the Wage and Employmennt Rsults</a></li>
       </ul>
 </li>
-      <li><a href="#compute-rev">Compute REV</a></li>
       <li>
-<a href="#analysis-of-a-and-alpha">Analysis of A and alpha</a><ul class="nav nav-pills nav-stacked">
+<a href="#compute-rev">Compute REV</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#scatter-plots">Scatter Plots</a></li>
       <li><a href="#histogram-plots">Histogram Plots</a></li>
       </ul>
