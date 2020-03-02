@@ -342,6 +342,82 @@ df_opt_lalonde_training_wage <- df_all_rho
 usethis::use_data(df_opt_lalonde_training_wage, df_opt_lalonde_training_wage, overwrite = TRUE)
 ```
 
+## Change in Rank along Lambda
+
+```{r graph of rank change, fig.height = 4, fig.width = 7, fig.align = "center"}
+
+# generate dataframe of lambda
+mt_combine <- cbind(ar_rho)
+colnames(mt_combine) <- c('lambda')
+
+# get rank when wage rho = 1
+df_all_rho_rho_c1 <- df_all_rho %>% select(id, rho_c1_rk_wage)
+
+# rho really means rho index
+tb_lambda <- as_tibble(mt_combine) %>% rowid_to_column(var = "rho")
+
+# Merge 
+df_all_rho_long <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>% 
+                      left_join(tb_lambda, by='rho') %>%
+                      left_join(df_all_rho_rho_c1, by='id')
+
+# Select subset to graph
+df_rank_graph <- df_all_rho_long %>% 
+                    mutate(id = factor(id)) %>%
+                    filter((id == 200) |  # utilitarian rank = 1
+                           (id == 110) |  # utilitarian rank = 101
+                           (id == 95)  |  # utilitarian rank = 201
+                           (id == 217) |  # utilitarian rank = 301
+                           (id == 2741)|  # utilitarian rank = 401
+                           (id == 101) |  # utilitarian rank = 501
+                           (id == 131) |  # utilitarian rank = 601
+                           (id == 3610)   # utilitarian rank = 701
+                             ) %>% 
+                    mutate(one_minus_lambda = 1 - lambda) %>% 
+                    mutate(rho_c1_rk_wage = factor(rho_c1_rk_wage)) 
+
+df_rank_graph$rho_c1_rk_wage
+
+df_rank_graph$id <- factor(df_rank_graph$rho_c1_rk_wage,
+                           labels = c('Rank= 1 when λ=0.99', #200
+                                      'Rank= 101 when λ=0.99', #110
+                                      'Rank= 201 when λ=0.99', #95
+                                      'Rank= 301 when λ=0.99', #217
+                                      'Rank= 401 when λ=0.99', #274
+                                      'Rank= 501 when λ=0.99', #101
+                                      'Rank= 601 when λ=0.99', #131
+                                      'Rank= 701 when λ=0.99' #3610
+                                       ))
+
+# x-labels
+x.labels <- c('λ=0.99', 'λ=0.90', 'λ=0', 'λ=-10', 'λ=-100')
+x.breaks <- c(0.01, 0.10, 1, 10, 100)
+
+# title line 2
+title_line1 <- sprintf("LINEAR WAGE: Optimal Tageting Queue, NSW Lalonda (AER, 1986)")
+title_line2 <- sprintf("How Do Allocation Rankings (Targeting Queue) Shift with λ?")
+
+# Graph Results--Draw
+line.plot <- df_rank_graph %>% 
+  ggplot(aes(x=one_minus_lambda, y=rank,
+             group=fct_rev(id), 
+             colour=fct_rev(id),
+             size=2)) + 
+  # geom_line(aes(linetype =fct_rev(id)), size=0.75) +
+  geom_line(size=0.75) +
+  geom_vline(xintercept=c(1), linetype="dotted") +
+  labs(title = paste0(title_line1, '\n', title_line2),
+       x = 'log10 Rescale of λ, Log10(λ)\nλ=1 Utilitarian, λ=-infty Rawlsian',
+       y = 'Optimal Targeting Queue Rank (1=highest)',
+       caption = 'Training RCT with 297 treated, 425 untreated. Optimal Binary Targeting Queue.') +
+  scale_x_continuous(trans='log10', labels = x.labels, breaks = x.breaks) +
+  theme_bw()
+
+print(line.plot)
+
+
+```
+
 ## Bump Plot for Optimal Binary Allocations
 
 ```{r binary allocation bump plot, fig.height = 10, fig.width = 20, fig.align = "center"}

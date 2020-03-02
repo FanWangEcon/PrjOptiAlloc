@@ -30,7 +30,7 @@ rm(list = ls(all.names = TRUE))
 options(knitr.duplicate.label = 'allow')
 ```
 ```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
-library(dplyr)qq
+library(dplyr)
 library(tidyr)
 library(tibble)
 library(purrr)
@@ -207,13 +207,17 @@ dfj_hist <- dfj %>% select(id, A_i_wage, alpha_i_wage)
 dfj_hist$alpha_i_wage <- factor(dfj_hist$alpha_i_wage) 
 dfj_hist$alpha_i_wage <- factor(dfj_hist$alpha_i_wage, labels = c('Age <= 23\nalpha_i=$454', 'Age > 23\nalpha_i=$1071'))
 
+
+title_line1 <- sprintf("Wage A_i Distribution (Linear Wage), NSW Training Lalonda (AER, 1986)")
+title_line2 <- sprintf("By Two Unique Levels of alpha_i: for Age <= 23 and for Age > 23")
+
 # Graph 
 dfj_hist %>% ggplot(aes(x=A_i_wage, fill=alpha_i_wage)) +
       geom_density( color="#e9ecef", alpha=0.6, position = 'identity') +
       scale_fill_manual(values=c("#69b3a2", "#404080")) +
       labs(fill="") %>%
-      labs(title = paste0('Wage A_i Distribution by alpha_i (two unique levels, Age <= 23 and > 23)'),
-             x = 'A_i = Expected Wage no Training',
+      labs(title = paste0(title_line1, '\n', title_line2),
+             x = 'A_i = Expected Wage no Training (in thousands, 1979)',
              y = 'density',
              caption = paste0('Linear Wage Regression on training. Control for age, educ, race. Age <= 23 or > 23 interaction.'))
 ```
@@ -322,8 +326,19 @@ dfj_top10 <- dfj %>%
     mutate(dfj, max_rank_rhos = .)
 
 dfj_top10 <- dfj_top10 %>% filter(max_rank_rhos <= 10) %>%
-  select(id, age, educ, black, hisp, marr, re74, re78, contains("rho_")) %>%
-  arrange(age, educ, black, hisp)
+  select(id, age, educ, black, race, 
+         rho_c1_rk_employ, rho_c16_rk_employ, rho_c30_rk_employ,
+         rho_c1_rk_wage, rho_c16_rk_wage, rho_c30_rk_wage) %>%
+  rename(emp_util = rho_c1_rk_employ,
+         emp_CD   = rho_c16_rk_employ,
+         emp_rawl = rho_c30_rk_employ,
+         wag_util = rho_c1_rk_wage,
+         wag_CD   = rho_c16_rk_wage,
+         wag_rawl = rho_c30_rk_wage,
+         ) %>%
+  arrange(age, educ, race)
+
+dim(dfj_top10)
 
 # Graphing Library
 library(kableExtra)

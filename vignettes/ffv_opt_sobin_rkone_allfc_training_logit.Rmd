@@ -178,20 +178,27 @@ What is the difference in probability between binary = 0 vs binary = 1. How does
 
 In the binary logit case, the relationship will be hump--shaped by construction between $A_i$ and $\alpha_i$. In the exponential wage cases, the relationship is convex upwards.
 
-```{r logit prediction marginal vs base, fig.height = 4, fig.width = 6, fig.align = "center"}
+```{r logit prediction marginal vs base, fig.height = 4, fig.width = 7, fig.align = "center"}
 # Generate Gap Variable
 dft <- dft %>% mutate(alpha_i = p_mpg_hp_bi1 - p_mpg_hp_bi0) %>%
                 mutate(A_i = p_mpg_hp_bi0)
 
+dft_graph <- dft
+dft_graph$age_m2 <- factor(dft_graph$age_m2, labels = c('Age <= 23', 'Age > 23'))
+
+# Titling
+title_line1 <- sprintf("Employment A_i and alpha_i (Logit), NSW Training Lalonda (AER, 1986)")
+title_line2 <- sprintf("Individual Specific alpha_i from Nonlinearity")
+
 # Binary Marginal Effects and Prediction without Binary
-scatter <- ggplot(dft, aes(x=A_i)) +
-      geom_point(aes(y=alpha_i), size=4, shape=4, color="red") +
+scatter <- dft_graph %>% ggplot(aes(x=A_i)) +
+      geom_point(aes(y=alpha_i, color=factor(age_m2)), size=4, shape=4) +
       geom_abline(intercept = 0, slope = 1) + # 45 degree line
-      labs(title = paste0('The Relationship between A and alpha'),
-           x = 'A = P(train=0) for all',
-           y = 'alpha = P(train=1) - P(train=0)',
-           caption = paste0(sdt_name)) +
-      theme_bw()
+      scale_colour_manual(values=c("#69b3a2", "#404080")) +
+      labs(title = paste0(title_line1, '\n', title_line2),
+           x = 'A_i = Prob of Employment no Training)',
+           y = 'alpha_i = P(train=1) - P(train=0)',
+           caption = paste0('Logit Employment on training. Control for age, educ, race. Age <= 23 or > 23 interaction.'))
 print(scatter)
 ```
 
@@ -253,6 +260,81 @@ df_all_rho_long <- ls_bin_solu_all_rhos$df_all_rho_long
 # How many people have different ranks across rhos
 it_how_many_vary_rank <- sum(df_all_rho$rank_max - df_all_rho$rank_min)
 it_how_many_vary_rank
+```
+
+## Change in Rank along Lambda
+
+```{r graph of rank change, fig.height = 4, fig.width = 7, fig.align = "center"}
+
+# generate dataframe of lambda
+mt_combine <- cbind(ar_rho)
+colnames(mt_combine) <- c('lambda')
+
+# get rank when wage rho = 1
+df_all_rho_rho_c1 <- df_all_rho %>% select(id, rho_c1_rk)
+
+# rho really means rho index
+tb_lambda <- as_tibble(mt_combine) %>% rowid_to_column(var = "rho")
+
+# Merge 
+df_all_rho_long <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>% 
+                      left_join(tb_lambda, by='rho') %>%
+                      left_join(df_all_rho_rho_c1, by='id')
+
+# Select subset to graph
+df_rank_graph <- df_all_rho_long %>% 
+                    mutate(id = factor(id)) %>%
+                    filter((id == 2221) |  # utilitarian rank = 1
+                           (id == 58) |  # utilitarian rank = 101
+                           (id == 710)  |  # utilitarian rank = 201
+                           (id == 57) |  # utilitarian rank = 301
+                           (id == 74)|  # utilitarian rank = 401
+                           (id == 248) |  # utilitarian rank = 501
+                           (id == 206) |  # utilitarian rank = 601
+                           (id == 272)   # utilitarian rank = 701
+                             ) %>% 
+                    mutate(one_minus_lambda = 1 - lambda) %>% 
+                    mutate(rho_c1_rk = factor(rho_c1_rk)) 
+
+df_rank_graph$rho_c1_rk
+
+df_rank_graph$id <- factor(df_rank_graph$rho_c1_rk,
+                           labels = c('Rank= 1 when λ=0.99', #200
+                                      'Rank= 101 when λ=0.99', #110
+                                      'Rank= 201 when λ=0.99', #95
+                                      'Rank= 301 when λ=0.99', #217
+                                      'Rank= 401 when λ=0.99', #274
+                                      'Rank= 501 when λ=0.99', #101
+                                      'Rank= 601 when λ=0.99', #131
+                                      'Rank= 701 when λ=0.99' #3610
+                                       ))
+
+# x-labels
+x.labels <- c('λ=0.99', 'λ=0.90', 'λ=0', 'λ=-10', 'λ=-100')
+x.breaks <- c(0.01, 0.10, 1, 10, 100)
+
+# title line 2
+title_line1 <- sprintf("EMPLOY LOGIT: Optimal Tageting Queue, NSW Lalonda (AER, 1986)")
+title_line2 <- sprintf("How Do Allocation Rankings (Targeting Queue) Shift with λ?")
+
+# Graph Results--Draw
+line.plot <- df_rank_graph %>% 
+  ggplot(aes(x=one_minus_lambda, y=rank,
+             group=fct_rev(id), 
+             colour=fct_rev(id), size=2)) + 
+  # geom_line(aes(linetype =fct_rev(id)), size=0.75) +
+  geom_line(size=0.75) +
+  geom_vline(xintercept=c(1), linetype="dotted") +
+  labs(title = paste0(title_line1, '\n', title_line2),
+       x = 'log10 Rescale of λ, Log10(λ)\nλ=1 Utilitarian, λ=-infty Rawlsian',
+       y = 'Optimal Targeting Queue Rank (1=highest)',
+       caption = 'Training RCT with 297 treated, 425 untreated. Optimal Binary Targeting Queue.') +
+  scale_x_continuous(trans='log10', labels = x.labels, breaks = x.breaks) +
+  theme_bw()
+
+print(line.plot)
+
+
 ```
 
 ## Save Results
