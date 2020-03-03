@@ -112,34 +112,83 @@
   <div class="contents col-md-9">
 
 
-<p>This is a research project <a href="https://fanwangecon.github.io/PrjOptiAlloc/">website</a> for solving optimal allocation problems given estimation results. Various theorems from <a href="https://fanwangecon.github.io/">Fan</a>’s Optimal Allocation paper are implemented here as R code in one package that supports the paper.</p>
+<p>This is a research project <a href="https://fanwangecon.github.io/PrjOptiAlloc/">website</a> for solving individual specific optimal allocation problems given estimation results. Various theorems from <a href="https://fanwangecon.github.io/">Fan</a>’s <a href="http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Optimal Allocation paper</a> are implemented here as R code in one package that supports the paper.</p>
 <p>See <a href="https://github.com/FanWangEcon">here</a> for all of <a href="https://fanwangecon.github.io/">Fan</a>’s public repositories. Please contact <a href="https://fanwangecon.github.io/">FanWangEcon</a> for issues or problems.</p>
 <p><a href="https://github.com/FanWangEcon/PrjOptiAlloc/commits/master"><img src="https://img.shields.io/github/last-commit/fanwangecon/PrjOptiAlloc"></a> <a href="https://github.com/FanWangEcon/PrjOptiAlloc/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/fanwangecon/PrjOptiAlloc"></a> <a href="https://github.com/FanWangEcon/PrjOptiAlloc/issues"><img src="https://img.shields.io/github/issues/fanwangecon/PrjOptiAlloc"></a> <a href="https://github.com/FanWangEcon/PrjOptiAlloc/pulls"><img src="https://img.shields.io/github/issues-pr/fanwangecon/PrjOptiAlloc"></a></p>
-<div id="1-introduction" class="section level1">
+<div id="installation" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#1-introduction" class="anchor"></a>1. Introduction</h1></div>
-<div id="11-from-causal-estimates-to-optimal-allocations" class="section level2">
-<h2 class="hasAnchor">
-<a href="#11-from-causal-estimates-to-optimal-allocations" class="anchor"></a>1.1 From Causal Estimates to Optimal Allocations</h2>
-<p>The we we approach an estimation problem here is in three steps.</p>
-<p><em>First</em>, we get estimates from estimation function from some existing research project. Finding causal estimates whether in reduced form or structural context is the main objective of most empirical papers. Generally, most research ends with finding what inputs/factors/policies matter, and how much they matter.</p>
-<p><em>Second</em>, using our optimal allocation theroems to solve for the optimal allocations that are implied by the estimation results. This is rarely done in empirical works. Most empirical papers do not then discuss how to allocate the input/factor/policy across individuals–children, households, schools, etc–given finite resource and the estimation results. Our theorems provide analytical or pseudo-analytical solutions to the optimal allocation problem given a large class of estimation results.</p>
-<p><em>Third</em>, given our allocation theorems, we can analyze how inequality shifts given different level of resource available and different types of planner preference. In particular, we calculate inequality gini coefficients for allocation as well as expected outcomes given allocations that are the solutions to the optimal allocation problems of different planners.</p>
-</div>
-<div id="12-installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#12-installation" class="anchor"></a>1.2 Installation</h2>
-<p>One key aspect of this project is that the theorems we derive are easily implemenable for large classes of estimation results. The theorems are computationally implemented here using R (the algorithms are language agnostic) in a package called <a href="https://github.com/FanWangEcon/PrjOptiAlloc">PrjOptiAlloc</a>. Functions in this package are described in the various <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/">reference pages</a> and <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/">vignette articles</a> on this website.</p>
+<a href="#installation" class="anchor"></a>Installation</h1></div>
+<p>One key aspect of this project is that the theorems from the <a href="http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Optimal Allocation paper</a> are easily implemenable for large classes of estimation results. The theorems are computationally implemented here using R (the algorithms are language agnostic) in a package called <a href="https://github.com/FanWangEcon/PrjOptiAlloc">PrjOptiAlloc</a>. Functions in this package are described in the various <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/">reference pages</a> and <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/">vignette articles</a> on this website.</p>
 <p>The tools here depend on <a href="">base R</a>, <a href="">tidyverse</a> and <a href="">tidymodels</a>. After installing those, two packages should be installed, <a href="http://fanwangecon.github.io/">fan</a>’s <a href="http://fanwangecon.github.io/REconTools/">REconTools</a>, which provides a number of support tools required, as well as this package itself <a href="http://fanwangecon.github.io/PrjOptiAlloc/">PrjOptiAllocs</a>. For installation help, see <a href="http://r-pkgs.had.co.nz/intro.html">devtools</a>.</p>
 <pre><code># To Install the Programs in the R folder of the REconTools Repository
 devtools::install_github("fanwangecon/PrjOptiAlloc")
 # There are various dependencies that need to be installed, including
 devtools::install_github("fanwangecon/REconTools")</code></pre>
 </div>
-</div>
-<div id="2-optimal-allocation-continuous-linear-problems" class="section level1">
+<div id="1-introduction" class="section level1">
 <h1 class="hasAnchor">
-<a href="#2-optimal-allocation-continuous-linear-problems" class="anchor"></a>2 Optimal Allocation Continuous Linear Problems</h1>
+<a href="#1-introduction" class="anchor"></a>1. Introduction</h1>
+<p>We approach an estimation/allocation problem here is in three steps.</p>
+<div id="11-causal-estimation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#11-causal-estimation" class="anchor"></a>1.1 Causal Estimation</h2>
+<p>We estimate some causal relationship between individual specific allocable input $V_i$ and some outcome of interest. For example, we can estimate the relationship between nutritional supplements and height growth, the effect of a training program on employment chances, the relationship between teacher-student-ratio and test scores, or the effect of offering savings accounts to households in village economies. Finding causal estimates in reduced form or structural context is the main objective of most empirical papers. Generally, most research ends with finding what inputs/factors/policies matter, and how much they matter.</p>
+</div>
+<div id="12-optimal-allocation-given-estimates" class="section level2">
+<h2 class="hasAnchor">
+<a href="#12-optimal-allocation-given-estimates" class="anchor"></a>1.2 Optimal Allocation given Estimates</h2>
+<p>What are the allocative implications of the causal estimates and observables? One way to think about this is that we might want to randomize in order to estimate causal effects, but given our estimates, how should we allocate among heterogeneous individuals the finite resources that we found to be beneficial. A development Aid agency, an NGO or a government branch has limited budgets to purchase nutrition, to offer training spots, to hire additional teachers, and to offer savings account access to village households. How do we allocate resources, given resource constraints, heterogeneities across individuals, heterogeneous effects of treatment, and planner preferences and biases?</p>
+<p>Using the optimal allocation theorems developed in <a href="https://fanwangecon.github.io/">Fan</a>’s <a href="http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Optimal Allocation paper</a>, it turns out, we can analytical solve for the individual allocation problem analytically. Various pages on the site provides tutorials and examples for different theorems.</p>
+</div>
+</div>
+<div id="2-optimal-allocation" class="section level1">
+<h1 class="hasAnchor">
+<a href="#2-optimal-allocation" class="anchor"></a>2. Optimal Allocation</h1>
+<div id="21-optimal-targeting-queue" class="section level2">
+<h2 class="hasAnchor">
+<a href="#21-optimal-targeting-queue" class="anchor"></a>2.1 Optimal Targeting Queue</h2>
+<p>The key analytical concept that make the solutions possible is the Optimal Targeting Queue. It turns out, in both discrete and continuous cases, we can analytical solve for the optimal ranking in which individuals should receive allocations. This ranking, crucially, is invariant to resources. In the discrete cases, the ranking is the allocation. For example, for the binary allocation problem, the theorems will tell us, given the planner’s preference for efficiency and equality, exactly who should be the first to receive a training opportunity, the 2nd, the 3rd, etc.</p>
+</div>
+<div id="22-optimal-targeting-queue-and-knots" class="section level2">
+<h2 class="hasAnchor">
+<a href="#22-optimal-targeting-queue-and-knots" class="anchor"></a>2.2 Optimal Targeting Queue and Knots</h2>
+<p>One might think the targeting queue concept is not relevant for the continuous problems, because there, we need to figure out how much to provide to each individual, not just who should receive first or second. But it turns out that for the continuous problem, the solution is to first analytically find who should be the first individual to receive allocations. Then, there is an analytical function that maps total resource available to how much this first recipient should optimally receive as total resource availability increase. This function, it turns out, is a linear spline, and each successive knot of the spline is where the next individual in the optimal targeting queue begins to receive allocations.</p>
+<p>So we first find the optimal targeting queue of who should begin to receive first, second, and third. Then we find the optimal targeting knots associated with the targeting queue, which tells us how much resources is needed before an individual begins to receive. These two analytical sequences lead to analytical solutions to each individual’s optimal allocation solution.</p>
+</div>
+<div id="23-brute-force-vs-analytical-solutions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#23-brute-force-vs-analytical-solutions" class="anchor"></a>2.3 Brute-Force vs Analytical Solutions</h2>
+<p>While the brute-force computational problem is infeasible to solve, the analytical solutions are instantaneous to implement even as the number of candidate recipient of allocations increase to large $N$.</p>
+<p>How to optimally allocate across individuals is a computationally difficult question to answer because if we want to allocate to $N$ individuals given $W$ units of resource, the choice set grows factorially with each additional individual, and the state space of the problem grows exponentially with each additional individual. How much the planner can allocate to each individual will be a function of the attributes of all other candidate recipients of allocations.</p>
+<p>Trying to solve this problem using brute-force comparison of all possible allocations is computational infeasible even with very small $N$. For example, if we have 700 individuals and 200 training spots, the number of possible combinations is $\frac{700!}{(700=200)!200!}$. This number can not be calculated by normal programs, it is significantly large than $10^{308}$, which is the maximum number allowed by double precision.</p>
+</div>
+</div>
+<div id="3-accessible-welfare-analysis" class="section level1">
+<h1 class="hasAnchor">
+<a href="#3-accessible-welfare-analysis" class="anchor"></a>3. Accessible Welfare Analysis</h1>
+<div id="31-allocation-and-misallocation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#31-allocation-and-misallocation" class="anchor"></a>3.1 Allocation and Misallocation</h2>
+<p>With analytical results on what is optimal, we can also compute an interesting welfare measure, which the paper calls REV (resource equivalent variation).</p>
+<p>Suppose there are 10 bottles of protein, and 5 kids. If we randomly allocate, 5 kids will get the proteins. There are $\frac{10!}{5!5!}=252$ combinations of allocations. The random allocation is one of these 252 allocations. The optimal allocation is also one of these 252 allocations. The chance that the random allocation is optimal is 1 out of 252.</p>
+<p>But how far away is the random allocation away from the optimal? How much resource is wasted by not allocating more optimally?</p>
+</div>
+<div id="32-resource-equivalent-variation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#32-resource-equivalent-variation" class="anchor"></a>3.2 Resource Equivalent Variation</h2>
+<p>To address this, we can use expenditure minimization. We can evaluate the utility of the planner given planner preferences at the observed allocations. Then we can solve for how much less resources is needed to achieve the same level of planner utility if we were allocating optimally? This is an analytical object because it is a function of the analytical optimal targeting queue.</p>
+<p>For the example here, we had 5 bottles, perhaps the planner have the same utility (given the equality of efficiency objective it has) if only 2 bottles were offered to the top 2 ranked individuals on the targeting queue. REV in this case would be $\frac{5-2}{5}=0.6$. 60 percent of the resource, we can say, is misallocated.</p>
+<p>The exciting thing here is that welfare calculation traditionally has been mainly a tool/concept that macro-economists use. The dominant concept is CEV (consumption equivalent variation). REV is applying in some sense a similar idea, but now to wide swaths of reduced form empirical estimation results. As a simple post estimation command, empirical researchers can evaluate the welfare implications of the observables they see given they estimates they find.</p>
+</div>
+<div id="33-from-the-utilitarian-to-the-rawlsian" class="section level2">
+<h2 class="hasAnchor">
+<a href="#33-from-the-utilitarian-to-the-rawlsian" class="anchor"></a>3.3 From the Utilitarian to the Rawlsian</h2>
+<p>For the more equality focused planner, the top two ranked could be the two kids who were be expected to be the shortest without the nutrition. For the more efficiency minded planner, the top two ranked could be the two kids for whom additional nutrient have the greatest marginal effects. As we shift along the preference spectrum from the Utilitarian to the Rawlsian, the rankings of each of the 10 individuals on the optimal targeting queue shift.</p>
+</div>
+</div>
+<div id="3-optimal-allocation-continuous-linear-problems" class="section level1">
+<h1 class="hasAnchor">
+<a href="#3-optimal-allocation-continuous-linear-problems" class="anchor"></a>3 Optimal Allocation Continuous Linear Problems</h1>
 <p>Linear Optimal Allocations for the <em>N_i</em> and <em>H_i</em> problem. Optimal constrained resource allocation given continuous linear estimation results. The continuous linear estimation results could be based on causal reduced form estimation, or production function estimation results.</p>
 <div id="21-allocation-function" class="section level2">
 <h2 class="hasAnchor">
@@ -230,7 +279,9 @@ devtools::install_github("fanwangecon/REconTools")</code></pre>
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li>What license it uses</li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
 <div class="developers">
