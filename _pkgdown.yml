@@ -1,0 +1,30 @@
+reference:
+- title: Theorem Functions
+  desc: Functions that implement discrete and continuous optimal allocation theorems given parameters of the allocation space
+  contents:
+  - starts_with("ffp_")
+- title: Raw Datasets
+  desc: Testing datasets
+  contents:
+  - starts_with("df_opt_")
+  - -df_opt_dtgch_cbem4_rrlop
+  - -df_opt_dtgch_cbem4_rrlop_allrh
+  - -df_opt_dtgch_cbem4_rrlop_argin
+  - -df_opt_lalonde_training_employ
+  - -df_opt_lalonde_training_wage
+- title: Datasets with Optimal Allocation Results
+  desc: Datset files with additional columns that store optimal allocation results or allocation space parameters
+  contents:
+  - df_opt_dtgch_cbem4_rrlop
+  - df_opt_dtgch_cbem4_rrlop_allrh
+  - df_opt_dtgch_cbem4_rrlop_argin
+  - df_opt_lalonde_training_employ
+  - df_opt_lalonde_training_wage
+- title: Support Files
+  desc: Support functions and sample files that generate allocation space parameters from estimation space
+  contents:
+  - starts_with("ffy_")
+
+template:
+  params:
+    ganalytics: UA-92953468-10

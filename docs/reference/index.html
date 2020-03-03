@@ -50,6 +50,16 @@
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-92953468-10"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-92953468-10');
+</script>
+
 
   </head>
 
@@ -163,8 +173,46 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-theorem-functions" class="hasAnchor"><a href="#section-theorem-functions" class="anchor"></a>Theorem Functions</h2>
+          <p class="section-desc"><p>Functions that implement discrete and continuous optimal allocation theorems given parameters of the allocation space</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="ffp_opt_anlyz_rhgin.html">ffp_opt_anlyz_rhgin()</a></code> </p>
+        </td>
+        <td><p>Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (lambda)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ffp_opt_anlyz_rhgin_bin.html">ffp_opt_anlyz_rhgin_bin()</a></code> </p>
+        </td>
+        <td><p>Theorem 1, Binary Optimal Allocation solution, loop along a vector of planner inequality preference (lambda)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ffp_opt_sobin_rev.html">ffp_opt_sobin_rev()</a></code> </p>
+        </td>
+        <td><p>Theorem 1, Equation 6, Resource Equivalent Variation</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ffp_opt_sobin_target_row.html">ffp_opt_sobin_target_row()</a></code> </p>
+        </td>
+        <td><p>Theorem 1 and 2, solves the binary targeting queue with Ai_i, alpha_i, and planner preferences, for one individual</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ffp_opt_solin_relow.html">ffp_opt_solin_relow()</a></code> </p>
+        </td>
+        <td><p>Theorem 1, Binary Optimal Allocation solution, for one planner inequality preference (one lambda value)</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-raw-datasets" class="hasAnchor"><a href="#section-raw-datasets" class="anchor"></a>Raw Datasets</h2>
+          <p class="section-desc"><p>Testing datasets</p></p>
         </th>
       </tr>
       <tr>
@@ -194,6 +242,26 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="df_opt_lalonde_training.html">df_opt_lalonde_training</a></code> </p>
+        </td>
+        <td><p>Test Dataset Job Training Effects Lalonde AER 1986</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="df_opt_nccrimes.html">df_opt_nccrimes</a></code> </p>
+        </td>
+        <td><p>Test Dataset North Carolina Crimes</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-datasets-with-optimal-allocation-results" class="hasAnchor"><a href="#section-datasets-with-optimal-allocation-results" class="anchor"></a>Datasets with Optimal Allocation Results</h2>
+          <p class="section-desc"><p>Datset files with additional columns that store optimal allocation results or allocation space parameters</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
           <p><code><a href="df_opt_dtgch_cbem4_rrlop.html">df_opt_dtgch_cbem4_rrlop</a></code> </p>
         </td>
         <td><p>Optimal Linear Allocation based on dtgch cbem4 solved by solin relow</p></td>
@@ -212,12 +280,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="df_opt_lalonde_training.html">df_opt_lalonde_training</a></code> </p>
-        </td>
-        <td><p>Test Dataset Job Training Effects Lalonde AER 1986</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="df_opt_lalonde_training_employ.html">df_opt_lalonde_training_employ</a></code> </p>
         </td>
         <td><p>Lalonde AER 1986 with Wage Regression Allocation Queue Queue</p></td>
@@ -227,43 +289,15 @@
           <p><code><a href="df_opt_lalonde_training_wage.html">df_opt_lalonde_training_wage</a></code> </p>
         </td>
         <td><p>Lalonde AER 1986 with Wage Regression Allocation Queue Queue</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="df_opt_nccrimes.html">df_opt_nccrimes</a></code> </p>
-        </td>
-        <td><p>Test Dataset North Carolina Crimes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ffp_opt_anlyz_rhgin.html">ffp_opt_anlyz_rhgin()</a></code> </p>
-        </td>
-        <td><p>Solves for optimal allocation problem over many rhos, and computes gini, this is for the continuous lower bounded problem</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ffp_opt_anlyz_rhgin_bin.html">ffp_opt_anlyz_rhgin_bin()</a></code> </p>
-        </td>
-        <td><p>Solves for optimal targeting queue for binary problems over many rhos, this is for the binary problems</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ffp_opt_sobin_rev.html">ffp_opt_sobin_rev()</a></code> </p>
-        </td>
-        <td><p>Theorem 1, Equation 6, Resource Equivalent Variation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ffp_opt_sobin_target_row.html">ffp_opt_sobin_target_row()</a></code> </p>
-        </td>
-        <td><p>Solves the binary targeting queue with Ai_i, alpha_i, and planner preferences, for one individual</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ffp_opt_solin_relow.html">ffp_opt_solin_relow()</a></code> </p>
-        </td>
-        <td><p>Solves the linear allocation problem with Ai_i, alpha_i, and planner preferences</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-support-files" class="hasAnchor"><a href="#section-support-files" class="anchor"></a>Support Files</h2>
+          <p class="section-desc"><p>Support functions and sample files that generate allocation space parameters from estimation space</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="ffy_opt_dtgch_cbem4.html">ffy_opt_dtgch_cbem4()</a></code> </p>
@@ -283,7 +317,10 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-theorem-functions">Theorem Functions</a></li>
+      <li><a href="#section-raw-datasets">Raw Datasets</a></li>
+      <li><a href="#section-datasets-with-optimal-allocation-results">Datasets with Optimal Allocation Results</a></li>
+      <li><a href="#section-support-files">Support Files</a></li>
     </ul>
   </div>
 </div>

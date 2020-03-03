@@ -2,7 +2,7 @@
 % Please edit documentation in R/ffp_opt_sobin.R
 \name{ffp_opt_sobin_target_row}
 \alias{ffp_opt_sobin_target_row}
-\title{Solves the binary targeting queue with Ai_i, alpha_i, and planner preferences, for one individual}
+\title{Theorem 1 and 2, solves the binary targeting queue with Ai_i, alpha_i, and planner preferences, for one individual}
 \usage{
 ffp_opt_sobin_target_row(
   ls_row,

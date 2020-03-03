@@ -2,7 +2,7 @@
 % Please edit documentation in R/ffp_opt_anlyz.R
 \name{ffp_opt_anlyz_rhgin}
 \alias{ffp_opt_anlyz_rhgin}
-\title{Solves for optimal allocation problem over many rhos, and computes gini, this is for the continuous lower bounded problem}
+\title{Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (lambda)}
 \usage{
 ffp_opt_anlyz_rhgin(
   df,

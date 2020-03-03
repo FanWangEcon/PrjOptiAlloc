@@ -1,7 +1,7 @@
 ffp_opt_sobin_target_row <- function(ls_row, fl_rho,
                                      ar_A, ar_alpha, ar_beta,
                                      svr_A_i = 'A', svr_alpha_i = 'alpha', svr_beta_i = 'beta'){
-  #' Solves the binary targeting queue with Ai_i, alpha_i, and planner preferences, for one individual
+  #' Theorem 1 and 2, solves the binary targeting queue with Ai_i, alpha_i, and planner preferences, for one individual
   #'
   #' @description
   #' This does not solve for the full solution, just the targeting queue, individual position on queue.

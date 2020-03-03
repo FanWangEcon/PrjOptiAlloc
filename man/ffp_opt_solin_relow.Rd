@@ -2,7 +2,7 @@
 % Please edit documentation in R/ffp_opt_solin.R
 \name{ffp_opt_solin_relow}
 \alias{ffp_opt_solin_relow}
-\title{Solves the linear allocation problem with Ai_i, alpha_i, and planner preferences}
+\title{Theorem 1, Binary Optimal Allocation solution, for one planner inequality preference (one lambda value)}
 \usage{
 ffp_opt_solin_relow(
   df,

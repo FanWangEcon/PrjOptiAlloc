@@ -2,7 +2,7 @@
 % Please edit documentation in R/ffp_opt_anlyz.R
 \name{ffp_opt_anlyz_rhgin_bin}
 \alias{ffp_opt_anlyz_rhgin_bin}
-\title{Solves for optimal targeting queue for binary problems over many rhos, this is for the binary problems}
+\title{Theorem 1, Binary Optimal Allocation solution, loop along a vector of planner inequality preference (lambda)}
 \usage{
 ffp_opt_anlyz_rhgin_bin(
   df,

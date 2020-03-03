@@ -3,7 +3,7 @@ ffp_opt_anlyz_rhgin <- function(df, svr_id_i,
                                 fl_N_agg, ar_rho,
                                 svr_inpalc = 'optiallocate',
                                 svr_expout = 'opti_exp_outcome') {
-#' Solves for optimal allocation problem over many rhos, and computes gini, this is for the continuous lower bounded problem
+#' Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (lambda)
 #'
 #' @description
 #' Works with linear allocation problems. The function
@@ -120,7 +120,7 @@ ffp_opt_anlyz_rhgin_bin <- function(df, svr_id_i,
                                     ar_rho = 0.5,
                                     svr_inpalc = 'opti_alloc_queue',
                                     svr_expout = 'opti_exp_outcome') {
-#' Solves for optimal targeting queue for binary problems over many rhos, this is for the binary problems
+#' Theorem 1, Binary Optimal Allocation solution, loop along a vector of planner inequality preference (lambda)
 #'
 #' @description
 #' Works with binary allocation problems. The function
