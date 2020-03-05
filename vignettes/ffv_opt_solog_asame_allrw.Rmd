@@ -1,0 +1,383 @@
+---
+title: LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Analytical Common Alpha
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Analytical Common Alpha}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+urlcolor: blue
+---
+back to **[fan](https://fanwangecon.github.io/)**'s optimal allocation homepage **[table of content](https://fanwangecon.github.io/prjoptialloc/)**
+
+# Objective
+
+- *opt*: optimal allocation project
+- *solog*: log linear production function
+- *asame*: alpha is the same
+- *allrw*: all code line by line raw original file
+
+When $\alpha_i=\alpha$, the log--linear, decreasing returns to scale problem has analytical solution that is well known. The solution is programed and tested here. Perhaps what is new here is to compute the analytical REV expression as well from Corollary 5. 
+
+# Load Packages and Data
+
+## Load Dependencies
+
+```{r globaloptions, echo = T, results = 'hide', message=F, warning=F}
+rm(list = ls(all.names = TRUE))
+options(knitr.duplicate.label = 'allow')
+```
+```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
+library(tidyverse)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+library(PrjOptiAlloc)
+```
+
+## common parameters
+
+Some important shared, common fixed parameters specify them here:
+
+```{r setup}
+# which params to test
+it_test = 6
+
+# parameters
+fl_rho = 0.20
+svr_id_var = 'indi_id'
+
+# it_child_count = n, the number of children
+it_n_child_cnt = 2
+# it_heter_param = q, number of parameters that are heterogeneous across children
+it_q_hetpa_cnt = 2
+
+# choice grid for nutritional feasible choices for each
+fl_n_agg = 100
+fl_n_min = 0
+it_n_choice_cnt_ttest = 3
+it_n_choice_cnt_dense = 100
+```
+
+## A and alpha input matrix
+
+Different types of *alpha* and *a* combinations. the algorithm, solutions should work for any alpha and a.
+
+```{r}
+if (it_test == 1) {
+  # A. test params 1
+  # these are initially what i tested with, positively correlated a and alpha, some have both higher tfp as well as elasticity.
+  ar_nn_a = seq(-2, 2, length.out = it_n_child_cnt)
+  ar_nn_alpha = seq(0.1, 0.9, length.out = it_n_child_cnt)
+  mt_nn_by_nq_a_alpha = cbind(ar_nn_a, ar_nn_alpha)
+} else if (it_test == 2) {
+  # B. test params 2
+  ar_nn_a = c(0,0)
+  ar_nn_alpha = c(0.1,0.2)
+  mt_nn_by_nq_a_alpha = cbind(ar_nn_a, ar_nn_alpha)
+} else if (it_test == 3) {
+  # C. test params 3
+  ar_nn_a = c(0,0)
+  ar_nn_alpha = c(0.1,0.1)
+  mt_nn_by_nq_a_alpha = cbind(ar_nn_a, ar_nn_alpha)
+} else if (it_test == 4) {
+  # D. test params 4
+  ar_nn_a = c(0,0)
+  ar_nn_alpha = c(0.006686704,0.009251407)
+  mt_nn_by_nq_a_alpha = cbind(ar_nn_a, ar_nn_alpha)
+} else if (it_test == 5) {
+  # E. test params 5
+  ar_nn_a = c(4.342501, 4.359987)
+  ar_nn_alpha = c(0.006686704,0.009251407)
+  mt_nn_by_nq_a_alpha = cbind(ar_nn_a, ar_nn_alpha)
+} else if (it_test == 6) {
+  # graph b
+  # input group two, from the project
+  ls_opti_alpha_a <- ffy_opt_dtgch_cbem4()
+  df_esti <- ls_opti_alpha_a$df_esti
+  df_dtgch_cbem4_bisec <- df_esti[, c('A_log', 'alpha_log')]
+  ar_nn_a <- df_dtgch_cbem4_bisec %>% pull(A_log)
+  ar_nn_alpha <- df_dtgch_cbem4_bisec %>% pull(alpha_log)
+  mt_nn_by_nq_a_alpha = cbind(ar_nn_a, ar_nn_alpha)
+}
+```
+
+## expand matrix
+
+```{r matrix expansion}
+# choice grid for nutritional feasible choices for each
+it_n_choice_cnt_ttest = 3
+it_n_choice_cnt_dense = 100
+ar_n_choices_ttest = seq(fl_n_min, fl_n_agg, length.out = it_n_choice_cnt_ttest)
+ar_n_choices_dense = seq(fl_n_min, fl_n_agg, length.out = it_n_choice_cnt_dense)
+
+# mesh expand
+tb_states_choices <- as_tibble(mt_nn_by_nq_a_alpha) %>% rowid_to_column(var=svr_id_var)
+tb_states_choices_ttest <- tb_states_choices %>% sample_n(9, replace = FALSE) %>%
+                              expand_grid(choices = ar_n_choices_ttest)
+tb_states_choices_dense <- tb_states_choices %>% sample_n(9, replace = FALSE) %>%
+                              expand_grid(choices = ar_n_choices_dense)
+
+# display
+summary(tb_states_choices_dense)
+kable(tb_states_choices_ttest) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+# Apply Same Function All Rows, some inputs row-specific, other shared
+
+## 3 points and denser dataframs and define function
+
+```{r define function}
+# convert matrix to tibble
+ar_st_col_names = c(svr_id_var,'fl_a', 'fl_alpha')
+tb_states_choices <- tb_states_choices %>% rename_all(~c(ar_st_col_names))
+ar_st_col_names = c(svr_id_var,'fl_a', 'fl_alpha', 'fl_n')
+tb_states_choices_ttest <- tb_states_choices_ttest %>% rename_all(~c(ar_st_col_names))
+tb_states_choices_dense <- tb_states_choices_dense %>% rename_all(~c(ar_st_col_names))
+
+# define implicit function
+ffi_nonlin_dplyrdo <- function(fl_a, fl_alpha, fl_n, ar_a, ar_alpha, fl_n_agg, fl_rho){
+  # scalar value that are row-specific, in dataframe already: *fl_a*, *fl_alpha*, *fl_n*
+  # array and scalars not in dataframe, common all rows: *ar_a*, *ar_alpha*, *fl_n_agg*, *fl_rho*
+
+  # test parameters
+  # ar_a = ar_nn_a
+  # ar_alpha = ar_nn_alpha
+  # fl_n = 100
+  # fl_rho = -1
+  # fl_n_q = 10
+
+  # apply function
+  ar_p1_s1 = exp((fl_a - ar_a)*fl_rho)
+  ar_p1_s2 = (fl_alpha/ar_alpha)
+  ar_p1_s3 = (1/(ar_alpha*fl_rho - 1))
+  ar_p1 = (ar_p1_s1*ar_p1_s2)^ar_p1_s3
+  ar_p2 = fl_n^((fl_alpha*fl_rho-1)/(ar_alpha*fl_rho-1))
+  ar_overall = ar_p1*ar_p2
+  fl_overall = fl_n_agg - sum(ar_overall)
+
+  return(fl_overall)
+}
+```
+
+## evaluate at three choice points and show table
+
+in the example below, just show results evaluating over three choice points and show table.
+
+```{r linear_apply}
+# fl_a, fl_alpha are from columns of tb_nn_by_nq_a_alpha
+tb_states_choices_ttest_eval = tb_states_choices_ttest %>% rowwise() %>%
+                        mutate(dplyr_eval = ffi_nonlin_dplyrdo(fl_a, fl_alpha, fl_n,
+                                                               ar_nn_a, ar_nn_alpha,
+                                                               fl_n_agg, fl_rho))
+# show
+kable(tb_states_choices_ttest_eval) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+## evaluate at many choice points and show graphically
+
+same as above, but now we evaluate the function over the individuals at many choice points so that we can graph things out.
+
+```{r linear apply many points}
+# fl_a, fl_alpha are from columns of tb_nn_by_nq_a_alpha
+tb_states_choices_dense_eval = tb_states_choices_dense %>% rowwise() %>%
+                        mutate(dplyr_eval = ffi_nonlin_dplyrdo(fl_a, fl_alpha, fl_n,
+                                                               ar_nn_a, ar_nn_alpha,
+                                                               fl_n_agg, fl_rho))
+```
+
+```{r graph many evaluations}
+# show
+dim(tb_states_choices_dense_eval)
+summary(tb_states_choices_dense_eval)
+lineplot <- tb_states_choices_dense_eval %>%
+    ggplot(aes(x=fl_n, y=dplyr_eval)) +
+        geom_line() +
+        facet_wrap( . ~ indi_id, scales = "free") +
+        geom_hline(yintercept=0, linetype="dashed",
+                color = "red", size=1)
+        labs(title = 'evaluate non-linear functions to search for roots',
+             x = 'x values',
+             y = 'f(x)',
+             caption = 'evaluating the function')
+print(lineplot)
+```
+
+# bisection solve optimal choice for each individual
+
+## bisection algorithm
+
+## dplyr implementation of bisection
+
+### initialize matrix
+
+first, initialize the matrix with $a_0$ and $b_0$, the initial min and max points:
+
+```{r bisect initialize}
+
+# common prefix to make reshaping easier
+st_bisec_prefix <- 'bisec_'
+svr_a_lst <- paste0(st_bisec_prefix, 'a_0')
+svr_b_lst <- paste0(st_bisec_prefix, 'b_0')
+svr_fa_lst <- paste0(st_bisec_prefix, 'fa_0')
+svr_fb_lst <- paste0(st_bisec_prefix, 'fb_0')
+
+# add initial a and b
+tb_states_choices_bisec <- tb_states_choices %>%
+                            mutate(!!sym(svr_a_lst) := fl_n_min, !!sym(svr_b_lst) := fl_n_agg)
+
+# evaluate function f(a_0) and f(b_0)
+tb_states_choices_bisec <- tb_states_choices_bisec %>% rowwise() %>%
+                            mutate(!!sym(svr_fa_lst) := ffi_nonlin_dplyrdo(fl_a, fl_alpha, !!sym(svr_a_lst),
+                                                                          ar_nn_a, ar_nn_alpha,
+                                                                          fl_n_agg, fl_rho),
+                                   !!sym(svr_fb_lst) := ffi_nonlin_dplyrdo(fl_a, fl_alpha, !!sym(svr_b_lst),
+                                                                          ar_nn_a, ar_nn_alpha,
+                                                                          fl_n_agg, fl_rho))
+# summarize
+dim(tb_states_choices_bisec)
+summary(tb_states_choices_bisec)
+```
+
+### iterate and solve for f(p), update f(a) and f(b)
+
+implement the dplyr based concurrent bisection algorithm.
+
+```{r iterate bisect all}
+# fl_tol = float tolerance criteria
+# it_tol = number of interations to allow at most
+fl_tol <- 10^-6
+it_tol <- 100
+# fl_p_dist2zr = distance to zero to initalize
+fl_p_dist2zr <- 1000
+it_cur <- 0
+while (it_cur <= it_tol && fl_p_dist2zr >= fl_tol ) {
+
+  it_cur <- it_cur + 1
+
+  # new variables
+  svr_a_cur <- paste0(st_bisec_prefix, 'a_', it_cur)
+  svr_b_cur <- paste0(st_bisec_prefix, 'b_', it_cur)
+  svr_fa_cur <- paste0(st_bisec_prefix, 'fa_', it_cur)
+  svr_fb_cur <- paste0(st_bisec_prefix, 'fb_', it_cur)
+
+  # evaluate function f(a_0) and f(b_0)
+  # 1. generate p
+  # 2. generate f_p
+  # 3. generate f_p*f_a
+  tb_states_choices_bisec <- tb_states_choices_bisec %>% rowwise() %>%
+                              mutate(p = ((!!sym(svr_a_lst) + !!sym(svr_b_lst))/2)) %>%
+                              mutate(f_p = ffi_nonlin_dplyrdo(fl_a, fl_alpha, p,
+                                                              ar_nn_a, ar_nn_alpha,
+                                                              fl_n_agg, fl_rho)) %>%
+                              mutate(f_p_t_f_a = f_p*!!sym(svr_fa_lst))
+  # fl_p_dist2zr = sum(abs(p))
+  fl_p_dist2zr <- mean(abs(tb_states_choices_bisec %>% pull(f_p)))
+
+  # update a and b
+  tb_states_choices_bisec <- tb_states_choices_bisec %>%
+                              mutate(!!sym(svr_a_cur) :=
+                                       case_when(f_p_t_f_a < 0 ~ !!sym(svr_a_lst),
+                                                 TRUE ~ p)) %>%
+                              mutate(!!sym(svr_b_cur) :=
+                                       case_when(f_p_t_f_a < 0 ~ p,
+                                                 TRUE ~ !!sym(svr_b_lst)))
+  # update f(a) and f(b)
+  tb_states_choices_bisec <- tb_states_choices_bisec %>%
+                              mutate(!!sym(svr_fa_cur) :=
+                                       case_when(f_p_t_f_a < 0 ~ !!sym(svr_fa_lst),
+                                                 TRUE ~ f_p)) %>%
+                              mutate(!!sym(svr_fb_cur) :=
+                                       case_when(f_p_t_f_a < 0 ~ f_p,
+                                                 TRUE ~ !!sym(svr_fb_lst)))
+  # save from last
+  svr_a_lst <- svr_a_cur
+  svr_b_lst <- svr_b_cur
+  svr_fa_lst <- svr_fa_cur
+  svr_fb_lst <- svr_fb_cur
+
+  # summar current round
+  print(paste0('it_cur:', it_cur, ', fl_p_dist2zr:', fl_p_dist2zr))
+  summary(tb_states_choices_bisec %>% select(one_of(svr_a_cur, svr_b_cur, svr_fa_cur, svr_fb_cur)))
+}
+```
+
+### Reshape wide to long to wide
+
+#### Table One--very wide
+
+```{r very wide table}
+head(tb_states_choices_bisec, 10)
+print(paste0('input allocated total sum: ', sum(tb_states_choices_bisec %>% pull(p))))
+```
+
+#### Table Two--very wide to very long
+
+we want to treat the iteration count information that is the suffix of variable names as a variable by itself. additionally, we want to treat the a,b,fa,fb as a variable. structuring the data very long like this allows for easy graphing and other types of analysis. rather than dealing with many many variables, we have only 3 core variables that store bisection iteration information.
+
+here we use the very nice *pivot_longer* function. note that to achieve this, we put a common prefix in front of the variables we wanted to convert to long. this is helpful, because we can easily identify which variables need to be reshaped.  
+
+```{r reshape solution from wide to very long}
+# new variables
+svr_bisect_iter <- 'biseciter'
+svr_abfafb_long_name <- 'varname'
+svr_number_col <- 'value'
+svr_id_bisect_iter <- paste0(svr_id_var, '_bisect_ier')
+
+# pivot wide to very long
+tb_states_choices_bisec_long <- tb_states_choices_bisec %>% sample_n(9, replace = FALSE) %>%
+  pivot_longer(
+    cols = starts_with(st_bisec_prefix),
+    names_to = c(svr_abfafb_long_name, svr_bisect_iter),
+    names_pattern = paste0(st_bisec_prefix, "(.*)_(.*)"),
+    values_to = svr_number_col
+  )
+
+# print
+summary(tb_states_choices_bisec_long)
+head(tb_states_choices_bisec_long %>% select(-one_of('p','f_p','f_p_t_f_a')), 30)
+tail(tb_states_choices_bisec_long %>% select(-one_of('p','f_p','f_p_t_f_a')), 30)
+```
+
+#### Table Two--very very long to wider again
+
+but the previous results are too long, with the a, b, fa, and fb all in one column as different categories, they are really not different categories, they are in fact different types of variables. so we want to spread those four categories of this variable into four columns, each one representing the a, b, fa, and fb values. the rows would then be uniquly identified by the iteration counter and individual id.
+
+```{r reshape solution for table show}
+# pivot wide to very long to a little wide
+tb_states_choices_bisec_wider <- tb_states_choices_bisec_long %>%
+  pivot_wider(
+    names_from = !!sym(svr_abfafb_long_name),
+    values_from = svr_number_col
+  )
+
+# print
+summary(tb_states_choices_bisec_wider)
+head(tb_states_choices_bisec_wider %>% select(-one_of('p','f_p','f_p_t_f_a')), 30)
+tail(tb_states_choices_bisec_wider %>% select(-one_of('p','f_p','f_p_t_f_a')), 30)
+```
+
+### Graph Bisection Iteration results
+
+actually we want to graph based on the long results, not the wider. wider easier to view in table.
+
+```{r reshape solution for graphing}
+# graph results
+lineplot <- tb_states_choices_bisec_long %>%
+    mutate(!!sym(svr_bisect_iter) := as.numeric(!!sym(svr_bisect_iter))) %>%
+    filter(!!sym(svr_abfafb_long_name) %in% c('a', 'b')) %>%
+    ggplot(aes(x=!!sym(svr_bisect_iter), y=!!sym(svr_number_col),
+               colour=!!sym(svr_abfafb_long_name),
+               linetype=!!sym(svr_abfafb_long_name),
+               shape=!!sym(svr_abfafb_long_name))) +
+        facet_wrap( ~ indi_id) +
+        geom_line() +
+        geom_point() +    
+        labs(title = 'bisection iteration over individuals until convergence',
+             x = 'bisection iteration',
+             y = 'a (left side point) and b (right side point) values',
+             caption = 'dplyr concurrent bisection nonlinear multple individuals') +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1))
+print(lineplot)
+```

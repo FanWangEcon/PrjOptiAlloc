@@ -44,7 +44,7 @@ library(kableExtra)
 # 30 percent teacher at most per school, discretize floor as needed
 fl_max_add_teacher_percent = 0.30
 # 15 percent total additional of all teachers
-fl_teacher_increase_percent = 0.15
+fl_teacher_increase_percent = 0.10
 ```
 
 ## Load Data
@@ -196,13 +196,9 @@ mt_A_theta_beta <- cbind(ar_A_m, ar_theta_m, ar_beta_m)
 colnames(mt_A_theta_beta) <- c('A_i', 'theta_i', 'beta_i')
 ```
 
-# Construct Increment Specific Effect of Each Additional Teacher
+# Construct Increment Specific Effect of Each Additional Teacher and Generate Optimal Target Queue
 
-## Individual alpha_i
-
-So this task is less trivial to do here. The procedure will be the following,
-
-### Generate Expanded Long Frame
+## Step zero, one and two
 
 **Step 0**
 
@@ -237,6 +233,8 @@ kable(dfca_exmain[0:25,]) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
+## Step Three and Four
+
 **Step 3**
 
 *mt_b*: add a alpha_i column, generate the marginal productivity value, and also generate actual updated A_i. Apply the formula stated earlier. 
@@ -269,6 +267,7 @@ kable(dfca_exmain[0:75,]) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
+## Step Five
 
 **Step 5**
 
@@ -290,13 +289,25 @@ df_all_rho <- ls_bin_solu_all_rhos$df_all_rho
 df_all_rho_long <- ls_bin_solu_all_rhos$df_all_rho_long
 
 # display
-kable(df_all_rho[0:500,]) %>%
+kable(df_all_rho[0:100,]) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
+# Optimally Allocate
 
-Back to dataframe mt_ori, incorporate into that, but do and shift for each rho.
+In the problem here, I am expanding total teaching research by 10 percent, so what is the total number of teachers that are in all schools currently, 
 
-```{r}
-# Child Weight
+```{r allocate given resource}
+# What is the number of teachers we can increase by
+fl_teacher_increase_number <- sum(dfca$teachers)*fl_teacher_increase_percent
+fl_teacher_increase_number <- floor(fl_teacher_increase_number)
+
+# We can increase teacher count
+cat('this is W = fl_teacher_increase_number:', fl_teacher_increase_number, '\n')
+
+# What is the number of candidate recipient now in il unit 
+cat('fl_max_add_teacher_percent:', fl_max_add_teacher_percent, '\n')
+cat('this is N = total candidate slots = dim(df_all_rho)[1]:', dim(df_all_rho)[1], '\n')
 ```
+
+
