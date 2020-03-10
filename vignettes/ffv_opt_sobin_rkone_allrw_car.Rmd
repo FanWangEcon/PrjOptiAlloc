@@ -256,14 +256,22 @@ ffi_binary_dplyrdo_func <- function(ls_row, fl_rho,
               ((fl_A + fl_alpha)^fl_rho - (fl_A)^fl_rho)
              )
   ar_right <- ((ar_beta)/(fl_beta))
-  ar_full <- ar_left*ar_right
-  ar_indicator <- (ar_full >= 1)
-
-  it_rank <- sum(ar_indicator)
-  return(it_rank)
+  ar_rank_val <- ar_left*ar_right
+  
+  ar_bl_rank_val <- (ar_rank_val >= 1)
+  ar_rank <- rank(ar_rank_val)
+  it_rank <- sum(ar_bl_rank_val)
+  
+  return(list(it_rank=it_rank,
+              ar_rank=ar_rank,
+              ar_rank_val=ar_rank_val))
+  # return(it_rank)
 }
-ffi_binary_dplyrdo_func(tb_key_alpha_A_beta[1,], 0)
 
+ls_ranks <- ffi_binary_dplyrdo_func(tb_key_alpha_A_beta[1,], 0.1)
+it_rank <- ls_ranks$it_rank
+ar_rank <- ls_ranks$ar_rank
+ar_rank_val <- ls_ranks$ar_rank_val
 
 # accumulate allocation results
 tb_opti_alloc_all_rho <- tb_key_alpha_A_beta
@@ -272,12 +280,9 @@ tb_opti_alloc_all_rho <- tb_key_alpha_A_beta
 # Generate Rank Order
 for (it_rho_ctr in seq(1,length(ar_rho))) {
   rho = ar_rho[it_rho_ctr]
-
-  queue_rank <- tb_key_alpha_A_beta %>% rowwise() %>%
-                              do(rk = ffi_binary_dplyrdo_func(., rho)) %>%
-                              unnest(rk) %>% pull(rk)
-
-  tb_with_rank <- tb_key_alpha_A_beta %>% add_column(queue_rank)
+  
+  tb_with_rank <- tb_key_alpha_A_beta %>% 
+    mutate(queue_rank = ffi_binary_dplyrdo_func(tb_key_alpha_A_beta[1,], rho)$ar_rank) 
 
   # m. Keep for df collection individual key + optimal allocation
   # _on stands for optimal nutritional choices

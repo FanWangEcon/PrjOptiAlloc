@@ -45,10 +45,10 @@ tb_alpha_A
 ar_rho <- c(-1)
 for (it_rho_ctr in seq(1,length(ar_rho))) {
   fl_rho <- ar_rho[it_rho_ctr]
-  ar_it_rank <- tb_alpha_A \%>\% rowwise() \%>\%
-    do(rk = ffp_opt_sobin_target_row(., fl_rho,
-                                     ar_A, ar_alpha, ar_beta)) \%>\%
-    unnest(rk) \%>\% pull(rk)
+  ls_ranks <- ffp_opt_sobin_target_row(tb_alpha_A[1,], fl_rho, ar_A, ar_alpha, ar_beta)
+  it_rank <- ls_ranks$it_rank
+  ar_it_rank <- ls_ranks$ar_it_rank
+  ar_fl_rank_val <- ls_ranks$ar_fl_rank_val
   cat('fl_rho:', fl_rho, 'ar_it_rank:', ar_it_rank, '\n')
 }
 ar_bin_observed <- c(0,1,0,1,0,0,1,1,0)

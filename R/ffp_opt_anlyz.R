@@ -176,12 +176,7 @@ df_all_rho <- df
 for (it_rho_ctr in seq(1,length(ar_rho))) {
   rho = ar_rho[it_rho_ctr]
 
-  queue_rank <- df %>% rowwise() %>%
-                              do(rk = ffp_opt_sobin_target_row(.,
-                                 rho, ar_A, ar_alpha, ar_beta,
-                                 svr_A_i, svr_alpha_i, svr_beta_i)) %>%
-                              unnest(rk) %>% pull(rk)
-
+  queue_rank <- ffp_opt_sobin_target_row(df[1,], rho, ar_A, ar_alpha, ar_beta, svr_A_i, svr_alpha_i, svr_beta_i)$ar_it_rank
   tb_with_rank <- df %>% add_column(queue_rank)
 
   # m. Keep for df collection individual key + optimal allocation

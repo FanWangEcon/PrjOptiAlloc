@@ -14,7 +14,12 @@ ffp_opt_sobin_target_row <- function(ls_row, fl_rho,
   #' @param svr_alpha_i string name of the alpha_i variable, individual specific effects of treatment
   #' @param svr_beta_i string name of the beta_i variable, relative preference weight for each child
   #' @param fl_rho float preference for equality for the planner
-  #' @return an integer equal to the person's rank on the optimal binary targeting queue, smaller number means higher ranking, 1 is ranked first to receive allocations
+  #' @return a list with an integer and an array
+  #' \itemize{
+  #'   \item ar_rank_val - array of relative values based on which rank is computed, relative value order same for all rows
+  #'   \item ar_rank - array of index that correspond to ar_rank_val
+  #'   \item it_rank - an integer equal to the person's rank on the optimal binary targeting queue, smaller number means higher ranking, 1 is ranked first to receive allocations
+  #' }
   #' @author Fan Wang, \url{http://fanwangecon.github.io}
   #' @references
   #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sobin_target_row.html}
@@ -35,12 +40,13 @@ ffp_opt_sobin_target_row <- function(ls_row, fl_rho,
   #' ar_rho <- c(-100, -1.1, 0.01, 0.10, 0.9)
   #' for (it_rho_ctr in seq(1,length(ar_rho))) {
   #'   fl_rho <- ar_rho[it_rho_ctr]
-  #'   it_rank <- tb_alpha_A %>% rowwise() %>%
-  #'     do(rk = ffp_opt_sobin_target_row(., fl_rho,
-  #'                                      ar_A, ar_alpha, ar_beta)) %>%
-  #'     unnest(rk) %>% pull(rk)
-  #'
+  #'   ls_ranks <- ffp_opt_sobin_target_row(tb_alpha_A[1,], 0.1, ar_A, ar_alpha, ar_beta)
+  #'   it_rank <- ls_ranks$it_rank
+  #'   ar_it_rank <- ls_ranks$ar_it_rank
+  #'   ar_fl_rank_val <- ls_ranks$ar_fl_rank_val
   #'   cat('fl_rho:', fl_rho, 'it_rank:', it_rank, '\n')
+  #'   cat('ar_it_rank:', ar_it_rank, '\n')
+  #'   cat('ar_fl_rank_val:', ar_fl_rank_val, '\n')
   #' }
   #'
 
@@ -52,16 +58,19 @@ ffp_opt_sobin_target_row <- function(ls_row, fl_rho,
               /
               ((fl_A + fl_alpha)^fl_rho - (fl_A)^fl_rho))
   ar_right <- ((ar_beta)/(fl_beta))
-  ar_full <- ar_left*ar_right
+  ar_fl_rank_val <- ar_left*ar_right
 
-  ar_indicator <- (ar_full >= 1)
-
-  it_rank <- sum(ar_indicator)
+  # Not int he form of ranks, but in the form of values.
+  # Not needed to compute value/rank row by row, one row is sufficient.
+  ar_bl_rank_val <- (ar_fl_rank_val >= 1)
+  ar_it_rank <- rank(-ar_fl_rank_val)
+  it_rank <- sum(ar_bl_rank_val)
 
   # message(paste0('it_rank:', it_rank))
   # message(ar_full)
-
-  return(it_rank)
+  return(list(it_rank=it_rank,
+              ar_it_rank=ar_it_rank,
+              ar_fl_rank_val=ar_fl_rank_val))
 }
 
 ffp_opt_sobin_rev <- function(ar_queue_optimal, ar_bin_observed,
@@ -97,10 +106,10 @@ ffp_opt_sobin_rev <- function(ar_queue_optimal, ar_bin_observed,
   #' ar_rho <- c(-1)
   #' for (it_rho_ctr in seq(1,length(ar_rho))) {
   #'   fl_rho <- ar_rho[it_rho_ctr]
-  #'   ar_it_rank <- tb_alpha_A %>% rowwise() %>%
-  #'     do(rk = ffp_opt_sobin_target_row(., fl_rho,
-  #'                                      ar_A, ar_alpha, ar_beta)) %>%
-  #'     unnest(rk) %>% pull(rk)
+  #'   ls_ranks <- ffp_opt_sobin_target_row(tb_alpha_A[1,], fl_rho, ar_A, ar_alpha, ar_beta)
+  #'   it_rank <- ls_ranks$it_rank
+  #'   ar_it_rank <- ls_ranks$ar_it_rank
+  #'   ar_fl_rank_val <- ls_ranks$ar_fl_rank_val
   #'   cat('fl_rho:', fl_rho, 'ar_it_rank:', ar_it_rank, '\n')
   #' }
   #' ar_bin_observed <- c(0,1,0,1,0,0,1,1,0)

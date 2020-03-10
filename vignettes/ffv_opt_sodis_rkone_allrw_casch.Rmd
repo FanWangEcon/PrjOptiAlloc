@@ -275,17 +275,20 @@ Sort, and select top given total resource avaiable, The count the total allocati
 
 ```{r invoke the optimal targeting function}
 # Optimal Targeting
-ar_rho = c(-100, -0.001,  0.95)
+dfca_exmain_target <- dfca_exmain %>% ungroup(id) %>% select(IDil, A_il, alpha_il, beta_i)
+ar_rho <- 1 - (10^(c(seq(-2,2, length.out=30))))
+# ar_rho = c(-100, -0.001,  0.95)
 ar_rho <- unique(ar_rho)
 ls_bin_solu_all_rhos <-
-  ffp_opt_anlyz_rhgin_bin(dfca_exmain, svr_id_i = 'IDil',
+  ffp_opt_anlyz_rhgin_bin(dfca_exmain_target, svr_id_i = 'IDil',
                           svr_A_i = 'A_il', svr_alpha_i = 'alpha_il', svr_beta_i = 'beta_i',
                           ar_rho = ar_rho,
                           svr_inpalc = 'opti_alloc_queue',
                           svr_expout = 'opti_exp_outcome')
-
+  
 # Results from optimal targeting
 df_all_rho <- ls_bin_solu_all_rhos$df_all_rho
+df_all_rho <- df_all_rho %>% left_join(dfca_exmain %>% select(IDil, id, teachers,enrltot, theta_i, i_d_l, teachers_addl), by='IDil')
 df_all_rho_long <- ls_bin_solu_all_rhos$df_all_rho_long
 
 # display
