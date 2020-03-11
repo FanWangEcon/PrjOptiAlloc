@@ -196,7 +196,7 @@ mt_A_theta_beta <- cbind(ar_A_m, ar_theta_m, ar_beta_m)
 colnames(mt_A_theta_beta) <- c('A_i', 'theta_i', 'beta_i')
 ```
 
-# Construct Increment Specific Effect of Each Additional Teacher and Generate Optimal Target Queue
+# Effect of an Additional Teacher and Target Queue 
 
 ## Step zero, one and two
 
@@ -215,8 +215,8 @@ colnames(mt_A_theta_beta) <- c('A_i', 'theta_i', 'beta_i')
 ```{r generate longer dataframe}
 # dfca_exmain: dfca expand main frame, five variables
 dfca_exmain <- dfca %>%
-                mutate(D_i = floor(fl_max_add_teacher_percent*teachers)) %>%
-                select(id, D_i, teachers, enrltot)
+                mutate(Dmax_i = floor(fl_max_add_teacher_percent*teachers)) %>%
+                select(id, Dmax_i, teachers, enrltot)
 
 dfca_exmain <- cbind(dfca_exmain, mt_A_theta_beta)
 
@@ -224,10 +224,14 @@ dfca_exmain <- cbind(dfca_exmain, mt_A_theta_beta)
 # teachers is a count coloumn to expand by 
 # i_d_l is each incremental teacher
 # teachers_addl is existing teacher level added up to current l
-dfca_exmain <- dfca_exmain %>% uncount(D_i) %>% 
+dfca_exmain <- dfca_exmain %>% uncount(Dmax_i) %>% 
                   group_by(id) %>% 
                   mutate(i_d_l = row_number()) %>% 
                   mutate(teachers_addl = teachers + i_d_l - 1)
+
+# Generate Dmax_i again, which disapeared due to uncount
+dfca_exmain <- dfca_exmain %>% mutate(Dmax_i = floor(fl_max_add_teacher_percent*teachers))
+
 # display
 kable(dfca_exmain[0:25,]) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
@@ -275,7 +279,7 @@ Sort, and select top given total resource avaiable, The count the total allocati
 
 ```{r invoke the optimal targeting function}
 # Optimal Targeting
-dfca_exmain_target <- dfca_exmain %>% ungroup(id) %>% select(IDil, A_il, alpha_il, beta_i)
+dfca_exmain_target <- dfca_exmain %>% ungroup(id) %>% select(IDil, Dmax_i, A_il, alpha_il, beta_i)
 ar_rho <- 1 - (10^(c(seq(-2,2, length.out=30))))
 # ar_rho = c(-100, -0.001,  0.95)
 ar_rho <- unique(ar_rho)
@@ -312,5 +316,75 @@ cat('this is W = fl_teacher_increase_number:', fl_teacher_increase_number, '\n')
 cat('fl_max_add_teacher_percent:', fl_max_add_teacher_percent, '\n')
 cat('this is N = total candidate slots = dim(df_all_rho)[1]:', dim(df_all_rho)[1], '\n')
 ```
+
+## Determine Allocation Count Cutoffs
+
+Already have almost fully solved the problem. Need to do one extra thing here. 
+
+Given the $Q_{il}$ ranking, do the following, for each $\lambda$:
+
+1. Select only relevant columns for current calulcation:
+    - $i$ indicator variable
+    - $l$ within i counter for additional increments
+    - $Q_{il}$ targeting queue ranking
+2. If $Q_{il}\left(\lambda\right) \le \widehat{W}$, set $A_{il}\left(\lambda\right) = 1$, otherwise $0$
+3. Group by and Sum for each $i$ over $l$, total will be between $0$ and $\bar{D}$, mutate new $D_{i} = \sum_l 1\left\{ Q_{il} < \widehat{W} \right\}$
+4. Loop over $\lambda$ and finish
+
+
+The implementation below is actually different, uses the *rho_long* file
+
+1. Generate $A_{il}$ from from long file with all $\lambda$
+2. Join long file with wide file key variables, includes $D_i$, individual max count as well as id. 
+3. Also generate $F_i = \frac{D_i}{Dmax_i}$
+
+```{r, aggregateing allocation for individual across units}
+# Generate A_il
+df_all_rho_long_Ail <- df_all_rho_long %>%
+  select(IDil, rho, rank) %>%
+  mutate(A_il = case_when(rank <= fl_teacher_increase_number ~ 1, TRUE ~ 0)) %>%
+  select(IDil, rho, A_il) %>%
+  left_join(df_all_rho %>% select(IDil, id, Dmax_i), by='IDil') %>%
+  select(id, rho, Dmax_i, A_il) 
+
+# Generate D_i
+df_all_rho_long_D_i <- df_all_rho_long_Ail %>%
+  group_by(id, rho) %>%
+  summarize(D_i = sum(A_il), Dmax_i = mean(Dmax_i),
+            F_i = D_i/Dmax_i) %>%
+  mutate(rho = as.numeric(rho))
+```
+
+## Allocation Distribution Analysis
+
+Given the allocations we have, not
+
+```{r summarize by lambda}
+
+df <- df_all_rho_long_D_i
+vars.group <- c('rho')
+var.numeric <- 'F_i'
+str.stats.group <- 'allperc'
+ar.perc <- c(0.01, seq(0.05,0.95,by=0.05), 0.99)
+ls_summ_by_group <- ff_summ_bygroup(df, vars.group, var.numeric, str.stats.group, ar.perc)
+df_table_grp_stats <- ls_summ_by_group$df_table_grp_stats
+df_row_grp_stats <- ls_summ_by_group$df_row_grp_stats
+df_overall_stats <- ls_summ_by_group$df_overall_stats
+df_row_stats_all <- ls_summ_by_group$df_row_stats_all
+
+# Display Results
+  kable(df_table_grp_stats) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+
+
+
+
+
+
+
+
+
 
 
