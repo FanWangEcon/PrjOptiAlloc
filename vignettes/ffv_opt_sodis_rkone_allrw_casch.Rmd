@@ -41,10 +41,12 @@ library(kableExtra)
 
 
 ```{r control policy}
-# 30 percent teacher at most per school, discretize floor as needed
-fl_max_add_teacher_percent = 0.30
-# 15 percent total additional of all teachers
-fl_teacher_increase_percent = 0.10
+# 100 percent teacher at most per school, discretize floor as needed
+fl_max_add_teacher_percent = 1.00
+# 20 percent total additional of all teachers
+fl_teacher_increase_percent = 0.20
+# Rho values to consider
+ar_rho <- 1 - (10^(c(seq(-2,2, length.out=4))))
 ```
 
 ## Load Data
@@ -214,17 +216,18 @@ colnames(mt_A_theta_beta) <- c('A_i', 'theta_i', 'beta_i')
 
 ```{r generate longer dataframe}
 # dfca_exmain: dfca expand main frame, five variables
-dfca_exmain <- dfca %>%
-                mutate(Dmax_i = floor(fl_max_add_teacher_percent*teachers)) %>%
-                select(id, Dmax_i, teachers, enrltot)
+# Dunif_i: uniform allocation results, note ROUND
+dfca <- dfca %>% mutate(Dmax_i = floor(fl_max_add_teacher_percent*teachers)) %>% 
+  mutate(Dunif_i = round(fl_teacher_increase_percent*teachers))
 
-dfca_exmain <- cbind(dfca_exmain, mt_A_theta_beta)
+dfca_exmain_i <- dfca %>% select(id, Dmax_i, Dunif_i, teachers, enrltot)
+dfca_exmain_i <- cbind(dfca, mt_A_theta_beta)
 
 # following: https://fanwangecon.github.io/R4Econ/summarize/count/fs_count_basics.html
 # teachers is a count coloumn to expand by 
 # i_d_l is each incremental teacher
 # teachers_addl is existing teacher level added up to current l
-dfca_exmain <- dfca_exmain %>% uncount(Dmax_i) %>% 
+dfca_exmain <- dfca_exmain_i %>% uncount(Dmax_i) %>% 
                   group_by(id) %>% 
                   mutate(i_d_l = row_number()) %>% 
                   mutate(teachers_addl = teachers + i_d_l - 1)
@@ -280,7 +283,6 @@ Sort, and select top given total resource avaiable, The count the total allocati
 ```{r invoke the optimal targeting function}
 # Optimal Targeting
 dfca_exmain_target <- dfca_exmain %>% ungroup(id) %>% select(IDil, Dmax_i, A_il, alpha_il, beta_i)
-ar_rho <- 1 - (10^(c(seq(-2,2, length.out=30))))
 # ar_rho = c(-100, -0.001,  0.95)
 ar_rho <- unique(ar_rho)
 ls_bin_solu_all_rhos <-
@@ -347,12 +349,44 @@ df_all_rho_long_Ail <- df_all_rho_long %>%
   left_join(df_all_rho %>% select(IDil, id, Dmax_i), by='IDil') %>%
   select(id, rho, Dmax_i, A_il) 
 
-# Generate D_i
+# Generate D_i and F_i long
 df_all_rho_long_D_i <- df_all_rho_long_Ail %>%
   group_by(id, rho) %>%
   summarize(D_i = sum(A_il), Dmax_i = mean(Dmax_i),
             F_i = D_i/Dmax_i) %>%
-  mutate(rho = as.numeric(rho))
+  mutate(rho = as.numeric(rho)) %>%
+  arrange(id, rho)
+
+# Generate D_i Wide
+df_all_rho_D_i <- df_all_rho_long_D_i %>%
+  select(id, rho, F_i, Dmax_i) %>%
+  mutate(rho = as.numeric(rho)) %>%
+  pivot_wider(
+    names_from = 'rho',
+    values_from = 'F_i'
+  )
+  
+# Rename rho columns and merge with key district attributes
+st_last_rho <- paste0('rho', length(ar_rho))
+df_all_rho_D_i <- df_all_rho_D_i %>%
+  rename_at(vars(num_range('', paste0(seq(1, length(ar_rho))))), 
+            funs(paste0("rho",.))) %>%
+  left_join(dfca %>% 
+              select(id, distcod, county, district, grspan,
+                     enrltot, teachers, avginc, testscr, stravg), 
+            by='id') %>%
+  select(id, distcod, county, district, grspan, avginc, testscr, enrltot, teachers, stravg, everything()) %>%
+  mutate(rho_diff = (!!sym(st_last_rho) - rho1))
+
+  # mutate(rho_diff = 
+  #          case_when(
+  #            (abs(!!sym(st_last_rho) - rho1) == 0) & (rho1 == 0) ~ -2,
+  #            (abs(!!sym(st_last_rho) - rho1) == 0) & (rho1 == 1) ~ 2,
+  #            TRUE ~ !!sym(st_last_rho) - rho1))
+  
+# Display Results
+kable(df_all_rho_D_i[1:420,] %>% mutate_if(is.numeric, round, 2)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
 ## Allocation Distribution Analysis
@@ -373,9 +407,64 @@ df_overall_stats <- ls_summ_by_group$df_overall_stats
 df_row_stats_all <- ls_summ_by_group$df_row_stats_all
 
 # Display Results
-  kable(df_table_grp_stats) %>%
+kable(df_table_grp_stats) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
+
+# Resource Equivalent Variations
+
+Resource Equivalent Variation, compare against evenly increasing allocation by the same percentage across all schools. 
+
+## Compare Total Resource Usages
+
+Check the following:
+
+1. Total optimal allocation each rho, is resource constraint satisfied
+2. What would it mean to uniformly allocate across all individuals, total sum from uniform allocation
+    + uniform addition for each school was already calculated
+
+```{r}
+# Total optimal allocation each row, should equal to fl_teacher_increase_number
+df_all_rho_long_D_i %>%
+  group_by(rho) %>%
+  summarize(sum_D_i = sum(D_i)) %>%
+  mutate(summ_D_i_correct = case_when(fl_teacher_increase_number == sum_D_i ~ 1,
+                                      TRUE ~ 0 ))
+
+# What is the uniform allocation total
+dfca %>% summarize(sum_Dunif_i = sum(Dunif_i))
+```
+
+## Within School Cumulative Sum
+
+To build up overall value, calculate the utility contribution of school to overall functional form, at each increment of teacher.
+ 
+Generate the $il$ aggregated at $i$ level utility component dataframe:
+
+1. by each school 
+2. within each school, value of each additional teacher
+3. within each school, row by row, cumulative sum of value of additional techer
+4. within each school, row by row, common individual school functional form
+
+## Utility for Any Observed Allocation 
+
+Merge the data utility component dataframe with the random/uniform allocation frame. And simple sum for total utility. 
+
+1. Select from main file id column and observed/unif/random allocation colummn
+2. Merge main left_join with utility component dataframe, only keep on row
+3. Simple Sum and Outter power form to generate overall utility from observed allocations
+
+## Utility from Optimal Allocations
+
+The goal is to generate a different optimal allocation level for each $\widehat{W}$ level of aggregate resources, should be increasing with $\widehat{W}$.
+
+This is trickier than for binary allocation, because here there is the problem of double counting if I simply cumulatively sum up the utility component dataframe. 
+
+So the process will be to first do simple cumulative sum, and then generate $\widehat{W}$ increment by increment double counted values, and then substract their values from the cumulative sum. This is the slightly challenging part. How to figure out at each $\widehat{W}$, how many of the elements in the targeting queue below $Q_{il} \le \widehat{W}$ should be dropped?
+
+
+
+
 
 
 
