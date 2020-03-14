@@ -329,7 +329,7 @@ Given the $Q_{il}$ ranking, do the following, for each $\lambda$:
     - $i$ indicator variable
     - $l$ within i counter for additional increments
     - $Q_{il}$ targeting queue ranking
-2. If $Q_{il}\left(\lambda\right) \le \widehat{W}$, set $A_{il}\left(\lambda\right) = 1$, otherwise $0$
+2. If $Q_{il}\left(\lambda\right) \le \widehat{W}$, set $Z_{il}\left(\lambda\right) = 1$, otherwise $0$
 3. Group by and Sum for each $i$ over $l$, total will be between $0$ and $\bar{D}$, mutate new $D_{i} = \sum_l 1\left\{ Q_{il} < \widehat{W} \right\}$
 4. Loop over $\lambda$ and finish
 
@@ -341,18 +341,18 @@ The implementation below is actually different, uses the *rho_long* file
 3. Also generate $F_i = \frac{D_i}{Dmax_i}$
 
 ```{r, aggregateing allocation for individual across units}
-# Generate A_il
+# Generate Z_il
 df_all_rho_long_Ail <- df_all_rho_long %>%
-  select(IDil, rho, rank) %>%
-  mutate(A_il = case_when(rank <= fl_teacher_increase_number ~ 1, TRUE ~ 0)) %>%
-  select(IDil, rho, A_il) %>%
-  left_join(df_all_rho %>% select(IDil, id, Dmax_i), by='IDil') %>%
-  select(id, rho, Dmax_i, A_il) 
+  # select(IDil, rho, rank) %>%
+  mutate(Z_il = case_when(rank <= fl_teacher_increase_number ~ 1, TRUE ~ 0)) %>%
+  # select(IDil, rho, Z_il) %>%
+  left_join(df_all_rho %>% select(IDil, id, Dmax_i), by='IDil')
 
 # Generate D_i and F_i long
 df_all_rho_long_D_i <- df_all_rho_long_Ail %>%
+  select(id, rho, Dmax_i, Z_il) %>%
   group_by(id, rho) %>%
-  summarize(D_i = sum(A_il), Dmax_i = mean(Dmax_i),
+  summarize(D_i = sum(Z_il), Dmax_i = mean(Dmax_i),
             F_i = D_i/Dmax_i) %>%
   mutate(rho = as.numeric(rho)) %>%
   arrange(id, rho)
@@ -445,6 +445,12 @@ Generate the $il$ aggregated at $i$ level utility component dataframe:
 2. within each school, value of each additional teacher
 3. within each school, row by row, cumulative sum of value of additional techer
 4. within each school, row by row, common individual school functional form
+
+Do not actually have to do "cumulative sum" here, they are already done. Just use the already generated A_il, alphia_il and beta_i.
+
+```{r}
+df_all_rho_long_Ail
+```
 
 ## Utility for Any Observed Allocation 
 
