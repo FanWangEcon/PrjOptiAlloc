@@ -12,9 +12,112 @@ Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage 
 
 # Objective
 
-The california school dataset, the effect of teacher ratio on student scores.
+The california school dataset, the effect of teacher ratio on student scores. The overall structure is:
 
-# Load Packages and Data
+1. Inputs: 
+    - *df_input_il*: prefer the input dataframe as specified below
+        * $N \times D$ by $7$, and $D$ might be individual specific.
+    - $\lambda$: planner inequality aversion
+    - $\widehat{W}$: resource available
+    - $\mathcal{O}^{o}$: utility at observed allocations
+    - Policy Parameters: 
+        * $\mathcal{FI}^{\text{max}}$: maximum increase fraction for each $i$, shared across $i$, other problems could have more $i$ specific upper bounds. Here the existing level of teachers per district multiplied by $\mathcal{F}^{\text{max}}$ provides the maximum increase per district allowed
+        * $\mathcal{FA}^{\text{max}}$: aggregate increase in total resource allowed, total existing teacher count multiplied by this gives $widehat{W}$.
+2. *df_queue_il*: compute optimal targeting queue, for many $\lambda$, relies completely on binary allocation function, need to structure data
+    - $N \times D$ by $8$, + 1 rank
+    - in practice, solve concurrently for multiple $\lambda$, leading to wide and long version of the same file.
+        * *df_queue_il_wide*: $N \times D$ rows with $L$ addition columns for each $\lambda$ solved for.
+        * *df_queue_il_long*: $N \times D \times \lambda$ rows with $L$ times additioan rows for each $\lambda$ solved for.
+    - Invokes [ffp_opt_anlyz_rhgin_bin](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin_bin.html)
+    - Using the binary targeting queue function, generate *df_queue_il*, which introduces an additional $Q_{il}$ Variable. 
+    - This is a function of $\lambda$
+3. *df_alloc_i*: aggregate to obtain optimal allocations given resource constraint, this is a dplyr aggregation command
+    - $N$ rows, individual allocations
+    - This introduceds $D^{\star}_i$, optimal allocation given resources
+    - This is a function of $\lambda$ as well as $\widehat{W}$
+4. *df_rev_il*: rev computation
+    - $N \times \widehat{W}$ rows
+    - Invokes [ff_panel_cumsum_grouplast](https://fanwangecon.github.io/REconTools/reference/ff_panel_cumsum_grouplast.html)
+    - This is a function o f$\mathcal{O}^{o}$ and $\lambda$ (for computing reasons, also $\widehat{W}$).
+    - compute $\Delta^{\text{REV}}$, which is a float
+    
+## Input Data Structures
+
+The *df_input_il* frame is based on another dataframe, *df_casch_prep_i* that generates the variables in *df_input_il*, and *df_opt_caschool* which is the raw dataframe: 
+
+- *df_opt_caschool*: raw dataframe
+- *df_casch_prep_i*: individual (district) level dataframe
+    * includes *comparison* allocation, in the test here, uniform allocation
+- *df_input_il*: input frame for optimal allocations
+- *df_queue_il_long*: optimal targeting queue, wide, $\lambda$ results as rows, this is the main file
+    * *df_queue_il_wide*: optimal targeting queue, wide, $\lambda$ results as columns, this is the support file, because only one value distributed to each $\lambda$. Long version can have multiple $\lambda$ specific values. 
+- *df_alloc_i_long*: aggregate allocations up
+- *df_rev_il*
+
+### The *df_casch_prep_i* Dataframe
+
+This is not general, in each specific problem, this dataframe could be different.
+
+1. $\text{ID}_i$: individual id
+2. $D^{\text{max}}_{i}$: maximimum discrete allocation each person, in addition to existing levels
+3. $D^{\text{o}}_{i}$: what I call observed allocation, just any comparison allocation, in addition to existing levels, this is the additional allocation (ignoring existing levels), this is the not the total allocation. If fully redistributing, this could be the observed level of allocation.
+4. $\Omega_{i}$: This is the expected outcome when the input of interest is completely zero, $Omega_{i}\neq A_{i,l=0}$, because $l=0$ does not mean input is zero, using $\Omega_i$ rather than $A_i$ to avoid confusion because $A_i$ sounds like $A_i = A_{i, l=0}$, but again, the problem does not start with allocation at zero, but each district already has some existing number of teachers.
+5. $\theta_{i}$: coefficient in front of student teacher ratio
+6. $\beta_{i}$: i specific preference
+7. $\text{enrltot}_{i}$: enrollment per district/school, assume no within district variations
+8. $\text{teachers}_{i}$: teacher per distrct/school
+9. $\text{stravg}_{i}$: average of student teacher ratio district/school
+
+
+### The *df_input_il* Dataframe
+
+The *df_input_il* Dataframe has:
+
+1. $\text{ID}_i$: individual id
+2. $\text{ID}_{il}$: unique id for individual/allocation id
+3. $D^{\text{max}}_{i}$: maximimum discrete allocation each person
+4. $D_{il}$: lth discrete allocation level for ith person, if fully redistributing, then this is equal to toal allocation count, if this is distribution additional teachers, this is equal to the additional allocation of teachers for each school. 
+5. $A_{il}$: A when considering the lth allocation for ith person, expected outcome without the lth allocation
+6. $\alpha_{il}$: marginal expected effect of the lth allocation
+7. $\beta_{i}$: i specific preference
+
+The *df_input_ib* Dataframe is what would be generated for binary allocation in some sense:
+
+1. $\text{ID}_i$: individual id
+2. $A_{i,l=0}$: A when considering the lth allocation for ith person, expected outcome without the lth allocation
+3. $\alpha^{\text{o}}_{i}$: see *df_casch_prep_i*, observed/random/uniform allocation's marginal effect. Note since $\alpha_{il}$ considers only additional allocation, with existing allocations embeded in $D_{il}$, $\alpha^{\text{o}}_{i}$ also only includes additional allocations that is not already embeded in $\A_{i,l=0}$.
+4. $\beta_{i}$: i specific preference
+
+### The *df_queue_il* Dataframe
+
+For **df_queue_il_long**, same as *df_input_il*, but add: 
+
+1. $\lambda$: lambda value corresponding to current optimal allocations
+2. $Q_{il}$: allocation rank for the lth discrete allocation level for ith person.
+3. $D^{\widehat{W},\text{BIN}}_{il}$: $0$ or $1$, given $\widehat{W}$, whether individual $i^{th}$ $l^{th}$ allocation is allocated.
+
+For **df_queue_il_wide**, same as *df_input_il*, but add: 
+
+1. Add *teachers*, *enrltot*, and *theta_i*
+
+### The *df_alloc_i* Dataframe
+
+*df_alloc_i_long* based on aggregating allocations to i level from *df_queue_il_long*.
+
+1. $\lambda$
+2. $\text{ID}_i$: individual id
+3. $D^{\text{max}}_{i}$: maximimum discrete allocation each person
+4. $D^{\star, \widehat{W}}_{i}$: optimal allocation for $i^{th}$ person, given $\widehat{W}$
+5. $F^{\star, \widehat{W}}_{i}$: $\frac{D^{\star, \widehat{W}}_{i}}{D^{\text{max}}_{i}}$
+
+### The *df_rev_il* Dataframe
+
+*df_rev_il_long* based on df_input_il, this does include the REV number, but includes aggregate utility cumulative summed at each rank position point. 
+
+1. $\lambda$
+2. $\text{ID}_{il}$: unique id for individual/allocation id
+3. $Q_{il}$: allocation rank for the lth discrete allocation level for ith person.
+4. $V_{il}$: aggregate utility up to the ith indiviudal lth allocation cumulative summing up to the rank
 
 ## Load Dependencies
 
@@ -39,23 +142,25 @@ library(kableExtra)
 
 ## Policy Parameters
 
+Some parameters that can be determined regardless of actual data. Note that we will define inputs needed to generate *df_queue_il*, *df_alloc_i* and *df_rev_il* after *df_input_il* is prepared.
 
 ```{r control policy}
 # 100 percent teacher at most per school, discretize floor as needed
-fl_max_add_teacher_percent = 1.00
+fl_fi_max = 1.00
 # 20 percent total additional of all teachers
-fl_teacher_increase_percent = 0.20
+fl_fa_max = 0.20
 # Rho values to consider
+# ar_rho = c(-100, -0.001,  0.95)
 ar_rho <- 1 - (10^(c(seq(-2,2, length.out=4))))
+ar_rho <- unique(ar_rho)
 ```
 
 ## Load Data
 
-Generate four categories by initial height and mother's education levels combinations. Note the dataset does not provide all the details we want, so we will make some assumptions. Importantly, we only have averages within district. 
+Generate four categories by initial height and mother's education levels combinations. Note the dataset does not provide all the details we want, so we will make some assumptions. Importantly, we only have averages within district.
 
-1. *teachers*: is full-time-equivalent average number of teacher per district. 
+1. *teachers*: is full-time-equivalent average number of teacher per district.
 2. *enrl_tot*: is the enrollment average per district
-
 
 ```{r Load Packages and Process Data}
 # Load Data
@@ -72,8 +177,8 @@ dfca %>% group_by(county) %>%
 # School characteristics are averaged across the district, don't know school count per district, implicitly assume the number of schools per district is the same.
 # Some districts have larger and others smaller sized schools, ignoring within district variations.
 dfca <- dfca %>%
-          mutate(id = X) %>% select(-X) %>%
-          select(id, everything()) %>%
+          mutate(id_i = X) %>% select(-X) %>%
+          select(id_i, everything()) %>%
           mutate(teachers = round(teachers),
                  enrltot = round(enrltot))
 
@@ -95,7 +200,9 @@ dfca <- dfca %>% mutate(stravg = enrltot/teachers)
 #                                labels=c("novisit","1visit","morevisit")))
 ```
 
-# Regression with Data
+# DF1: Effect of Teacher on Scores (df_casch_prep_i)
+
+The objective of this section is the generate dataframe *df_casch_prep_i*.
 
 ## Tabulate
 
@@ -182,82 +289,101 @@ mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("stravg")))
 mt_intr <- t(t(rep(1, dim(mt_model)[1])))
 
 # Generate A_i, use mt_cova_wth_const
-ar_A_m <- mt_cova %*% ar_fl_cova_esti
-head(ar_A_m, 5)
+ar_Omega_m <- mt_cova %*% ar_fl_cova_esti
+head(ar_Omega_m, 5)
 
 # Generate temporary theta_i (alpha elswhere, but theta here, because how student count will enter
 ar_theta_m <- mt_intr %*% ar_fl_main_esti
 head(ar_theta_m, 5)
 
 # Beta
-ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
+ar_beta_m <- rep(1/length(ar_Omega_m), times=length(ar_Omega_m))
 
 # Dataframe of A and temporary theta
-mt_A_theta_beta <- cbind(ar_A_m, ar_theta_m, ar_beta_m)
+mt_A_theta_beta <- cbind(ar_Omega_m, ar_theta_m, ar_beta_m)
 
-colnames(mt_A_theta_beta) <- c('A_i', 'theta_i', 'beta_i')
+colnames(mt_A_theta_beta) <- c('Omega_i', 'theta_i', 'beta_i')
 ```
 
-# Effect of an Additional Teacher and Target Queue 
-
-## Step zero, one and two
-
-**Step 0**
-
-*mt_ori*: this is the original dataframe with all variables, each row is a different observation
-
-**Step 1**
-
-*mt_a*: Six column matrix: col 1, district index, col 2, max number of additional teachers each district could acquire (which is determined by the number of existing teachers). There could be a maximum and minimum overall, 0 and say 100 additional teacers per district at most regardless. And each district gets up to potentially 25 percent or 30 percent additional teachers. Col 3, the number of current level of teachers in the district. Col 4, the number of current number of students. Col 5, the A_i without the addition of teacher student ratio. Col 6, not alpha_i, but just the coefficient theta that might be already individual specific due to earlier regression allowing for interaction, the alpha_i which is the $\theta_i$ possibly heterogeneous effects of str on outcomes of interest.
-
-**Step 2**
-
-*mt_b*: expand *mt_a*. Each row is a feasible additional teacher for a district, each there are now five variables, ID, previous level of teachers, and new level of teachers, and the existing level of students, and original A_i.
+## Uniform allocation and Maximum Per School Allocation
 
 ```{r generate longer dataframe}
-# dfca_exmain: dfca expand main frame, five variables
-# Dunif_i: uniform allocation results, note ROUND
-dfca <- dfca %>% mutate(Dmax_i = floor(fl_max_add_teacher_percent*teachers)) %>% 
-  mutate(Dunif_i = round(fl_teacher_increase_percent*teachers))
-
-dfca_exmain_i <- dfca %>% select(id, Dmax_i, Dunif_i, teachers, enrltot)
-dfca_exmain_i <- cbind(dfca, mt_A_theta_beta)
-
-# following: https://fanwangecon.github.io/R4Econ/summarize/count/fs_count_basics.html
-# teachers is a count coloumn to expand by 
-# i_d_l is each incremental teacher
-# teachers_addl is existing teacher level added up to current l
-dfca_exmain <- dfca_exmain_i %>% uncount(Dmax_i) %>% 
-                  group_by(id) %>% 
-                  mutate(i_d_l = row_number()) %>% 
-                  mutate(teachers_addl = teachers + i_d_l - 1)
-
-# Generate Dmax_i again, which disapeared due to uncount
-dfca_exmain <- dfca_exmain %>% mutate(Dmax_i = floor(fl_max_add_teacher_percent*teachers))
+# Maximum Allocaiton D_max_i
+# D_o_i: uniform allocation results, note ROUND
+dfca <- dfca %>% mutate(D_max_i = floor(fl_fi_max*teachers)) %>%
+          mutate(D_o_i = round(fl_fa_max*teachers))
 
 # display
-kable(dfca_exmain[0:25,]) %>%
+kable(dfca[0:25,]) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-## Step Three and Four
+## Generate df_casch_prep_i
 
-**Step 3**
+Now we have all the ingredients for *df_casch_prep_i*, needing as listed in the introduction, see variables defined at the top of the file. 
 
-*mt_b*: add a alpha_i column, generate the marginal productivity value, and also generate actual updated A_i. Apply the formula stated earlier. 
+```{r}
+df_casch_prep_i <- cbind(dfca, mt_A_theta_beta)
+ls_var_additional <- c('distcod', 'county', 'district', 'grspan', 'avginc', 'testscr')
+df_casch_prep_i <- df_casch_prep_i %>% select(id_i, D_max_i, D_o_i, Omega_i, theta_i, beta_i, enrltot, teachers, stravg, one_of(ls_var_additional))
+```
 
-**Step 4**
 
-*mt_c*: merge together the matrix now has alpha_i with also the already existing A_i.
+# DF2: Effect of an Additional Teacher (df_input_il)
+
+The objective of this section is the generate dataframe *df_input_il* as well as *df_input_ib*
+
+## Generate *df_input_ib*
+
+ib df has has two columns, id, and marginal effects of allocations, in excess of what is considered in $\A_{i,l=0}$.
+
+```{r}
+# Generate marginal expected effect from uniform additional allocation
+df_input_ib <- df_casch_prep_i %>% mutate(alpha_o_i = theta_i*enrltot*((1/(teachers+D_o_i)) - (1/(teachers)))) %>%
+                                   mutate(A_i_l0 = Omega_i + theta_i*(enrltot/(teachers))) %>% 
+                                   select(id_i, A_i_l0, alpha_o_i, beta_i)
+# view(df_casch_prep_i %>% select(id_i, theta_i, enrltot, teachers, D_o_i))
+
+# display
+kable(df_input_ib[0:25,]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+## Uncount and Expand $i$ DF to $il$ DF
+
+Following the describing at the top of the file for variables required for *df_input_il*. 
+
+```{r}
+# following: https://fanwangecon.github.io/R4Econ/summarize/count/fs_count_basics.html
+# teachers is a count coloumn to expand by
+# D_il is each incremental teacher
+# teachers_addl is existing teacher level added up to current l
+df_input_il <- df_casch_prep_i %>% uncount(D_max_i) %>%
+                  group_by(id_i) %>%
+                  mutate(D_il = row_number()) %>%
+                  mutate(teachers_addl = teachers + D_il)
+
+# Generate D_max_i again, which disapeared due to uncount
+df_input_il <- df_input_il %>% mutate(D_max_i = floor(fl_fi_max*teachers))
+
+# Generate alpha_i for each additional teacher
+df_input_il <- df_input_il %>% mutate(alpha_il = theta_i*enrltot*((1/teachers_addl) - (1/(teachers_addl-1)))) %>%
+                               mutate(A_il = Omega_i + theta_i*(enrltot/(teachers_addl-1))) %>% 
+                               rowid_to_column(var = "id_il")
+# Select Subset of Columns
+df_input_il <- df_input_il %>% ungroup() %>% select(id_i, id_il, D_max_i, D_il, A_il, alpha_il, beta_i)
+
+# display
+kable(df_input_il[0:25,]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+## Graph $A_{il}$ and $\alpha_{il}$ Joint Distribution
 
 ```{r marginal effect of an additional teacher here, fig.height = 4, fig.width = 6, fig.align = "center"}
-# Generate alpha_i for each additional teacher
-dfca_exmain <- dfca_exmain %>% mutate(alpha_il = theta_i*enrltot*((1/teachers_addl) - (1/(teachers_addl-1)))) %>%
-                                   mutate(A_il = A_i + theta_i*(enrltot/(teachers_addl-1))) %>%
-                                   rowid_to_column(var = "IDil")
 
 # Graph of the Distribution of Alpha_i and A_i
-scatter <- dfca_exmain %>% ggplot(aes(x=A_il)) +
+scatter <- df_input_il %>% ggplot(aes(x=A_il)) +
       geom_point(aes(y=log(alpha_il)), size=4, shape=4, color="red") +
       geom_abline(intercept = 0, slope = 1) + # 45 degree line
       labs(title = paste0('Discrete Allocation\nCalifornia Test Score and Student Teacher Ratio\nThe Relationship between A_il and alpha_il'),
@@ -265,63 +391,25 @@ scatter <- dfca_exmain %>% ggplot(aes(x=A_il)) +
            y = 'log(alpha_il = E(teacher + n + 1) - E(teacher + n))',
            caption = paste0('Stock and Watson California Test and STR')) +
       theme_bw()
-      
+
 print(scatter)
-
-
-# display
-kable(dfca_exmain[0:75,]) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-## Step Five
+# DF3: Optimal Target Queue (df_queue_il)
 
-**Step 5**
+## Number of Ranking Spots
 
-Sort, and select top given total resource avaiable, The count the total allocation for each. This means to invoke the binary allocation function. 
-
-```{r invoke the optimal targeting function}
-# Optimal Targeting
-dfca_exmain_target <- dfca_exmain %>% ungroup(id) %>% select(IDil, Dmax_i, A_il, alpha_il, beta_i)
-# ar_rho = c(-100, -0.001,  0.95)
-ar_rho <- unique(ar_rho)
-ls_bin_solu_all_rhos <-
-  ffp_opt_anlyz_rhgin_bin(dfca_exmain_target, svr_id_i = 'IDil',
-                          svr_A_i = 'A_il', svr_alpha_i = 'alpha_il', svr_beta_i = 'beta_i',
-                          ar_rho = ar_rho,
-                          svr_inpalc = 'opti_alloc_queue',
-                          svr_expout = 'opti_exp_outcome')
-  
-# Results from optimal targeting
-df_all_rho <- ls_bin_solu_all_rhos$df_all_rho
-df_all_rho <- df_all_rho %>% left_join(dfca_exmain %>% select(IDil, id, teachers,enrltot, theta_i, i_d_l, teachers_addl), by='IDil')
-df_all_rho_long <- ls_bin_solu_all_rhos$df_all_rho_long
-
-# display
-kable(df_all_rho[0:100,]) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
-```
-
-# Optimally Allocate
-
-In the problem here, I am expanding total teaching research by 10 percent, so what is the total number of teachers that are in all schools currently, 
+In the problem here, I am expanding total teaching research by 10 percent, so what is the total number of teachers that are in all schools currently,
 
 ```{r allocate given resource}
 # What is the number of teachers we can increase by
-fl_teacher_increase_number <- sum(dfca$teachers)*fl_teacher_increase_percent
+fl_teacher_increase_number <- sum(df_casch_prep_i$teachers)*fl_fa_max
 fl_teacher_increase_number <- floor(fl_teacher_increase_number)
-
-# We can increase teacher count
-cat('this is W = fl_teacher_increase_number:', fl_teacher_increase_number, '\n')
-
-# What is the number of candidate recipient now in il unit 
-cat('fl_max_add_teacher_percent:', fl_max_add_teacher_percent, '\n')
-cat('this is N = total candidate slots = dim(df_all_rho)[1]:', dim(df_all_rho)[1], '\n')
 ```
 
-## Determine Allocation Count Cutoffs
+## Solve for Optimally Targeting Queue
 
-Already have almost fully solved the problem. Need to do one extra thing here. 
+Sort, and select top given total resource avaiable, The count the total allocation for each. This means to invoke the binary allocation function.
 
 Given the $Q_{il}$ ranking, do the following, for each $\lambda$:
 
@@ -329,63 +417,94 @@ Given the $Q_{il}$ ranking, do the following, for each $\lambda$:
     - $i$ indicator variable
     - $l$ within i counter for additional increments
     - $Q_{il}$ targeting queue ranking
-2. If $Q_{il}\left(\lambda\right) \le \widehat{W}$, set $Z_{il}\left(\lambda\right) = 1$, otherwise $0$
+2. If $Q_{il}\left(\lambda\right) \le \widehat{W}$, set $D^{\widehat{W},\text{BIN}}_{il} = 1$, otherwise $0$
 3. Group by and Sum for each $i$ over $l$, total will be between $0$ and $\bar{D}$, mutate new $D_{i} = \sum_l 1\left\{ Q_{il} < \widehat{W} \right\}$
 4. Loop over $\lambda$ and finish
 
+```{r invoke the optimal targeting function}
+# Call function to Solve for Optimal Targeting Queue
+svr_rho <- 'lambda'
+svr_inpalc <- 'Q_il'
+ls_df_queues <- ffp_opt_anlyz_rhgin_bin(df_input_il, svr_id_i = 'id_il',
+                                        svr_A_i = 'A_il', svr_alpha_i = 'alpha_il', svr_beta_i = 'beta_i',
+                                        ar_rho = ar_rho,
+                                        svr_rho = svr_rho,
+                                        svr_inpalc = svr_inpalc,
+                                        svr_expout = 'opti_exp_outcome')
+# Primary Long File
+df_queue_il_long <- ls_df_queues$df_all_rho_long %>%
+  mutate(D_Wbin_il = case_when(!!sym(svr_inpalc) <= fl_teacher_increase_number ~ 1, TRUE ~ 0)) %>%
+  left_join(df_input_il %>% select(id_i, id_il, D_max_i, D_il), by='id_il') %>%
+  select(!!sym(svr_rho), id_i, id_il, D_max_i, D_il, !!sym(svr_inpalc), D_Wbin_il, A_il, alpha_il, beta_i)
+
+# Results from optimal targeting
+# wide frame is mainly for visualization and analysis
+df_queue_il_wide <- ls_df_queues$df_all_rho %>% 
+  left_join(df_casch_prep_i %>% select(id_i, teachers, enrltot, theta_i), by='id_i') %>% 
+  select(id_i, id_il, teachers, enrltot, theta_i, D_max_i, D_il, A_il, alpha_il, beta_i, everything())
+
+# display
+kable(df_queue_il_wide[0:100,]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+## Number of Ranking Spots
+
+How many potential teacher spots are to be allocated?
+
+```{r allocate given resource}
+# We can increase teacher count
+cat('this is W = fl_teacher_increase_number:', fl_teacher_increase_number, '\n')
+
+# What is the number of candidate recipient now in il unit
+cat('fl_fi_max:', fl_fi_max, '\n')
+cat('this is N = total candidate slots = dim(df_queue_il_wide)[1]:', dim(df_queue_il_wide)[1], '\n')
+```
+
+# DF4: Optimal Allocations (df_alloc_i)
+
+Generate the *df_alloc_i_long* file. 
+
+## Aggregate to get Optimal Allocation
 
 The implementation below is actually different, uses the *rho_long* file
 
 1. Generate $A_{il}$ from from long file with all $\lambda$
-2. Join long file with wide file key variables, includes $D_i$, individual max count as well as id. 
-3. Also generate $F_i = \frac{D_i}{Dmax_i}$
+2. Join long file with wide file key variables, includes $D_i$, individual max count as well as id.
+3. Also generate $F_i = \frac{D^{\star}_i}{D_max_i}$
 
 ```{r, aggregateing allocation for individual across units}
-# Generate Z_il
-df_all_rho_long_Ail <- df_all_rho_long %>%
-  # select(IDil, rho, rank) %>%
-  mutate(Z_il = case_when(rank <= fl_teacher_increase_number ~ 1, TRUE ~ 0)) %>%
-  # select(IDil, rho, Z_il) %>%
-  left_join(df_all_rho %>% select(IDil, id, Dmax_i), by='IDil')
 
 # Generate D_i and F_i long
-df_all_rho_long_D_i <- df_all_rho_long_Ail %>%
-  select(id, rho, Dmax_i, Z_il) %>%
-  group_by(id, rho) %>%
-  summarize(D_i = sum(Z_il), Dmax_i = mean(Dmax_i),
-            F_i = D_i/Dmax_i) %>%
-  mutate(rho = as.numeric(rho)) %>%
-  arrange(id, rho)
+df_alloc_i_long <- df_queue_il_long %>%
+  select(!!sym(svr_rho), id_i, D_max_i, D_Wbin_il) %>%
+  group_by(id_i, !!sym(svr_rho)) %>%
+  summarize(D_star_i = sum(D_Wbin_il), D_max_i = mean(D_max_i),
+            F_i = D_star_i/D_max_i) %>%
+  mutate(!!sym(svr_rho) := as.numeric(!!sym(svr_rho))) %>%
+  arrange(id_i, !!sym(svr_rho))
 
-# Generate D_i Wide
-df_all_rho_D_i <- df_all_rho_long_D_i %>%
-  select(id, rho, F_i, Dmax_i) %>%
-  mutate(rho = as.numeric(rho)) %>%
+# df_alloc_i_wide is for visualization etc
+st_last_rho <- paste0(svr_rho, length(ar_rho))
+df_alloc_i_wide <- df_alloc_i_long %>%
+  select(id_i, !!sym(svr_rho), F_i, D_max_i) %>%
   pivot_wider(
-    names_from = 'rho',
+    names_from = svr_rho,
     values_from = 'F_i'
   )
-  
-# Rename rho columns and merge with key district attributes
-st_last_rho <- paste0('rho', length(ar_rho))
-df_all_rho_D_i <- df_all_rho_D_i %>%
-  rename_at(vars(num_range('', paste0(seq(1, length(ar_rho))))), 
-            funs(paste0("rho",.))) %>%
-  left_join(dfca %>% 
-              select(id, distcod, county, district, grspan,
-                     enrltot, teachers, avginc, testscr, stravg), 
-            by='id') %>%
-  select(id, distcod, county, district, grspan, avginc, testscr, enrltot, teachers, stravg, everything()) %>%
-  mutate(rho_diff = (!!sym(st_last_rho) - rho1))
 
-  # mutate(rho_diff = 
-  #          case_when(
-  #            (abs(!!sym(st_last_rho) - rho1) == 0) & (rho1 == 0) ~ -2,
-  #            (abs(!!sym(st_last_rho) - rho1) == 0) & (rho1 == 1) ~ 2,
-  #            TRUE ~ !!sym(st_last_rho) - rho1))
-  
+# Rename rho columns and merge with key district attributes
+ls_st_vars_casch_prep <- c('id_i', 'distcod', 'county', 'district', 'grspan', 'avginc', 'testscr',
+                           'enrltot', 'teachers', 'stravg')
+df_alloc_i_wide <- df_alloc_i_wide %>%
+  rename_at(vars(num_range('', paste0(seq(1, length(ar_rho))))),
+            funs(paste0(svr_rho,.))) %>%
+  left_join(df_casch_prep_i %>% select(one_of(ls_st_vars_casch_prep)),
+            by='id_i') %>% select(one_of(ls_st_vars_casch_prep), everything()) %>%
+  mutate(rho_diff = (!!sym(st_last_rho) - !!sym(paste0(svr_rho, '1'))))
+
 # Display Results
-kable(df_all_rho_D_i[1:420,] %>% mutate_if(is.numeric, round, 2)) %>%
+kable(df_alloc_i_wide[1:420,] %>% mutate_if(is.numeric, round, 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
@@ -394,9 +513,8 @@ kable(df_all_rho_D_i[1:420,] %>% mutate_if(is.numeric, round, 2)) %>%
 Given the allocations we have, not
 
 ```{r summarize by lambda}
-
-df <- df_all_rho_long_D_i
-vars.group <- c('rho')
+df <- df_alloc_i_long
+vars.group <- c(svr_rho)
 var.numeric <- 'F_i'
 str.stats.group <- 'allperc'
 ar.perc <- c(0.01, seq(0.05,0.95,by=0.05), 0.99)
@@ -411,11 +529,28 @@ kable(df_table_grp_stats) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-# Resource Equivalent Variations
+# DF5: Resource Equivalent Variations (df_rev_il)
 
-Resource Equivalent Variation, compare against evenly increasing allocation by the same percentage across all schools. 
+For REV generate cumulative utility up to the ith individual's lth allocation, cumulating over all individuals and allocations below the the current ilth rank. 
 
-## Compare Total Resource Usages
+1. *svr_v_cumu_l*: utility summation within individual up to lth allocation, no outter power
+    * $\lambda >0$: this is increasing in additional allocation
+    * $\lambda <0$: this is decreasing in additional allocations
+2. *svr_v_cumu_il_rksrt*: utility cumulative sum (inner sum), by ranking, across individuals, utility from all allocations up to the current rank, no outter power
+    * $\lambda >0$: this is increasing in additional allocation
+    * $\lambda <0$: this is decreasing in additional allocations
+3. *svr_v_cumu_il_rksrt_outter*: utility cumulative, overall sum with outter power, outter power resets signs for both to positive
+    * $\lambda >0$: this is increasing in additional allocation
+    * $\lambda <0$: this is increasing in additional allocations
+
+```{r}
+# Shared Names
+svr_v_cumu_l <- 'v_sum_l'
+svr_v_cumu_il_rksrt <- 'v_sum_il_rk'
+svr_v_cumu_il_rksrt_outter <- 'v_sum_il_rk_out'
+```
+
+## Check Compare Total Resource Usages
 
 Check the following:
 
@@ -425,60 +560,195 @@ Check the following:
 
 ```{r}
 # Total optimal allocation each row, should equal to fl_teacher_increase_number
-df_all_rho_long_D_i %>%
-  group_by(rho) %>%
-  summarize(sum_D_i = sum(D_i)) %>%
-  mutate(summ_D_i_correct = case_when(fl_teacher_increase_number == sum_D_i ~ 1,
+df_alloc_i_long %>%
+  group_by(!!sym(svr_rho)) %>%
+  summarize(sum_D_star_i = sum(D_star_i)) %>%
+  mutate(summ_D_i_correct = case_when(fl_teacher_increase_number == sum_D_star_i ~ 1,
                                       TRUE ~ 0 ))
 
 # What is the uniform allocation total
-dfca %>% summarize(sum_Dunif_i = sum(Dunif_i))
+df_casch_prep_i %>% summarize(sum_D_o_i = sum(D_o_i))
 ```
 
-## Within School Cumulative Sum
+*df_rev_il_long* based on df_input_il, this does include the REV number, but includes aggregate utility cumulative summed at each rank position point. 
 
-To build up overall value, calculate the utility contribution of school to overall functional form, at each increment of teacher.
- 
-Generate the $il$ aggregated at $i$ level utility component dataframe:
+1. $\lambda$
+2. $\text{ID}_{il}$: unique id for individual/allocation id
+3. $Q_{il}$: allocation rank for the lth discrete allocation level for ith person.
+4. $V_{il}$: aggregate utility up to the ith indiviudal lth allocation cumulative summing up to the rank
 
-1. by each school 
-2. within each school, value of each additional teacher
-3. within each school, row by row, cumulative sum of value of additional techer
-4. within each school, row by row, common individual school functional form
+Resource Equivalent Variation, compare against evenly increasing allocation by the same percentage across all schools.
 
-Do not actually have to do "cumulative sum" here, they are already done. Just use the already generated A_il, alphia_il and beta_i.
+## Testing Optimal Allocation One Rho
 
 ```{r}
-df_all_rho_long_Ail
+# Some fl_lambda
+it_lambda_ctr <- 4
+fl_lambda <- ar_rho[it_lambda_ctr]
 ```
 
-## Utility for Any Observed Allocation 
+### Utility Uniform Allocation
 
-Merge the data utility component dataframe with the random/uniform allocation frame. And simple sum for total utility. 
+Merge the data utility component dataframe with the random/uniform allocation frame. And simple sum for total utility.
 
 1. Select from main file id column and observed/unif/random allocation colummn
 2. Merge main left_join with utility component dataframe, only keep on row
 3. Simple Sum and Outter power form to generate overall utility from observed allocations
 
-## Utility from Optimal Allocations
+```{r}
+# Utility for Uniform Allocations
+df_casch_prep_i_testlam <- df_input_ib %>% mutate(v_unif_i = beta_i*((A_i_l0+alpha_o_i)^fl_lambda))
+# view(df_casch_prep_i_testlam %>% select(id_i, v_unif_i, Omega_i, theta_i, D_o_i))
+# Aggregate planner utility from uniform allocation
+fl_util_unif_alloc_testlam <- df_casch_prep_i_testlam %>% summarize(v_sum_unif_i = sum(v_unif_i)^(1/fl_lambda)) %>% pull()
+# Print
+cat('Utility from Uniform Allocation', '\n')
+print(fl_util_unif_alloc_testlam)
+```
 
-The goal is to generate a different optimal allocation level for each $\widehat{W}$ level of aggregate resources, should be increasing with $\widehat{W}$.
+### Utility at Zero Allocation each i
 
-This is trickier than for binary allocation, because here there is the problem of double counting if I simply cumulatively sum up the utility component dataframe. 
+Creating *df_rev_Di0_i*, i specific df. Long frame optimal queue data, additionally, also the raw dataframe with utility evaluated for each without additional allocations, given base allocations, no outter power.
 
-So the process will be to first do simple cumulative sum, and then generate $\widehat{W}$ increment by increment double counted values, and then substract their values from the cumulative sum. This is the slightly challenging part. How to figure out at each $\widehat{W}$, how many of the elements in the targeting queue below $Q_{il} \le \widehat{W}$ should be dropped?
+```{r}
+# Step 1
+# base no additional allocation utility, no outter power
+# select D_il == 1, A_il here is utility without additional allocations
+df_rev_Di0_i_onerho <- df_input_il %>% 
+                        filter(D_il == 1) %>%
+                        select(id_i, beta_i, A_il) %>%
+                        mutate(v_zero_i = beta_i*((A_il)^fl_lambda))
+# view(df_queue_il_long %>% filter(!!sym(svr_rho) == it_lambda_ctr & id_i==1))
+# view(df_rev_Di0_i_onerho %>% filter(id_i==1))
+# view(df_queue_il_long %>% filter(!!sym(svr_rho) == it_lambda_ctr) %>% mutate(v_zero_i = beta_i*((A_il)^fl_lambda), v_A_plus_alpha_i = beta_i*((A_il+alpha_il)^fl_lambda) ) %>% filter(id_i==1), title='onerho')
+
+# Step 2: From the Util without allocation file generate id, rank and util_sumi_uptol columns.
+df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>% select(id_i, v_zero_i)
+
+# Step 3
+df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>% mutate(!!sym(svr_inpalc) := 0)
+
+# Step 4
+df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>% 
+                        mutate(!!sym(svr_v_cumu_l) := v_zero_i) %>% 
+                        select(id_i, !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+```
 
 
+### Utility Cumulative from Optimal Allocation
+
+To build up overall value, calculate the utility contribution of school to overall functional form, at each increment of teacher. Just use the already generated A_il, alphia_il and beta_i.
+
+1. Consider Utility Calculations for both $Z_{il}=1$ and $Z_{il}=0$. Remember $Z_{il}$ is $0$ or $1$, $1$ is rank is below resource available. Do not need to compute utility for above resource availability. WHen summing, need to consider both $0$ and $1$. For $1$, sum calculated by 2 and 3. FOr $0$, count up schools not receiving allocations, and evaluate utility with allocation equal to zero, and sum up.
+2. Calculate *util_cumu_i_uptol*, individual component utility, including all allocations up to $l$.
+3. Use [ff_panel_cumsum_grouplast](https://fanwangecon.github.io/REconTools/reference/ff_panel_cumsum_grouplast.html) from [REconTools](https://fanwangecon.github.io/REconTools/) to cumulative sum the *util_cumu_i_uptol* corresponding to the highest ranked position.
+
+Note that *df_rev_Ail* dataframe is long, includes all rho results.
+
+We want to compute utility at each ascending rank level. And find at which rank level utility from Optimal allocation equals to utility from uniform allocation.
+
+1. Utility at each rank, which is the sum of schools with additional allocations and without additioanl allocations
+2. Find the break even point
+
+#### Utility for Schools with Additional Allocations
+
+First, let's do summation directly only based on *df_queue_il_long*, including schools that have nonzero allocations, ranking from first in queue for an additional teacher spot to last.
+
+This is insufficient, because the cumulative sum will not include schools that have not received any additional allocations.
+
+```{r}
+# Steps 1 and 2
+df_rev_il_long_onerho_wrong <- df_queue_il_long %>% 
+                            filter(!!sym(svr_rho) == it_lambda_ctr & D_Wbin_il == 1) %>% 
+                            mutate(!!sym(svr_v_cumu_l) :=  beta_i*((A_il+alpha_il)^fl_lambda))
+
+# Step 3, only for one rho
+df_rev_il_long_onerho_wrong <- df_rev_il_long_onerho_wrong %>% 
+                        select(id_i, !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+df_rev_il_long_onerho_wrong <- ff_panel_cumsum_grouplast(df_rev_il_long_onerho_wrong,
+                                               svr_id='id_i', svr_x=svr_inpalc, svr_y=svr_v_cumu_l,
+                                               svr_cumsumtop = svr_v_cumu_il_rksrt,
+                                               stat='sum', quick=TRUE)
+
+# Outter power
+df_rev_il_long_onerho_wrong <- df_rev_il_long_onerho_wrong %>% 
+                        mutate(!!sym(svr_v_cumu_il_rksrt_outter) := 
+                                 (!!sym(svr_v_cumu_il_rksrt))^(1/fl_lambda))
+```
 
 
+#### Utility for Schools without and with Additional Allocations
+
+But the above calculation is not fully sufficient, because we are not including into the utility evaluations at all schools that do not have any additional teacher allocation. Unlike in the binary case, where we could difference away and ignore individuals without allocations kind of, here we can not because the alternative is uniform allocation. So we need to consider, add up utility from all.
+
+Can not simply reuse code from before, because need to compute this dynamically. starting with zero allocations.
+
+1. Below, grab the util with allocation zero values
+2. Set rank, which [ff_panel_cumsum_grouplast](https://fanwangecon.github.io/REconTools/reference/ff_panel_cumsum_grouplast.html) will sort by, to zero, for when allocations are zero, other allocation rank smallest value is 1.
+3. Rename util_alloc_zero to have the same name as utility no outter power column in *df_rev_Ail_long*
+4. Stack base no alloc and opti queue files
 
 
+```{r}
+# Same steps as above
+df_rev_il_long_onerho <- df_queue_il_long %>% 
+                            filter(!!sym(svr_rho) == it_lambda_ctr & D_Wbin_il == 1) %>% 
+                            mutate(!!sym(svr_v_cumu_l) := beta_i*((A_il+alpha_il)^fl_lambda)) %>%
+                            select(id_i, !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+# Now combine dataframes
+df_rev_il_long_onerho <- rbind(df_rev_Di0_i_onerho, df_rev_il_long_onerho)
+# view(df_rev_il_long_onerho %>% filter(id_i==1) %>% arrange(!!sym(svr_v_cumu_l))) 
 
+# TEST monotinicity
+rank_max_min_val <- df_rev_il_long_onerho %>% 
+  arrange(id_i, !!sym(svr_inpalc)) %>% group_by(id_i) %>%
+  mutate(util_sumi_uptol_min = min(abs(!!sym(svr_v_cumu_l)))) %>%
+  filter(util_sumi_uptol_min == abs(!!sym(svr_v_cumu_l))) %>%
+  ungroup() %>%
+  summarize(rank_max = max(!!sym(svr_inpalc))) %>% pull()
+if (rank_max_min_val != 0 & rank_max_min_val != fl_teacher_increase_number){
+  # rank_max_min_val = 0 if lambda > 0 
+  # rank_max_min_val = fl_teacher_increase_number if lambda < 0 
+  stop('Fatal Error D_il = 0, inner power indi util abs value not smallest')
+}
 
+# Run cum sum function
+df_rev_il_long_onerho <- df_rev_il_long_onerho %>% 
+                            select(id_i, !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+df_rev_il_long_onerho <- ff_panel_cumsum_grouplast(df_rev_il_long_onerho,
+                                                   svr_id='id_i', svr_x=svr_inpalc, svr_y=svr_v_cumu_l,
+                                                   svr_cumsumtop = svr_v_cumu_il_rksrt,
+                                                   stat='sum', quick=TRUE)
 
+# Drop rank zero where utility order could look strange
+# The results are a little bit strange looking, but correct
+# if lambda < 0, at rank = 0, adding up components of inner sum, v_sum_il_rk at first increasing adding through all rank = 0 
+# but after reach rank = 1, v_sum_il_rk starts decreasing, because each incremental allocation with lambda<0 power has lower
+# value compared to less allocation. When generating outter power rank = 0 when sorted is at first decreasing, then increasing
+# after reach rank = 1, do not need to keep rank =0, drop them after cumsum, needed only for proper cumsum calculations. 
+df_rev_il_long_onerho <- df_rev_il_long_onerho %>% filter(!!sym(svr_inpalc) != 0)
+# view(df_rev_il_long_onerho %>% filter(id_i==1) %>% arrange(!!sym(svr_v_cumu_l))) 
 
+# Outter power
+df_rev_Ail_onerho <- df_rev_il_long_onerho %>% 
+  mutate(!!sym(svr_v_cumu_il_rksrt_outter) := (!!sym(svr_v_cumu_il_rksrt))^(1/fl_lambda))
+# view(df_rev_Ail_onerho %>% filter(id_i==1) %>% arrange(!!sym(svr_v_cumu_l)))
+# view(df_rev_Ail_onerho %>% arrange(Q_il)) 
+```
 
+#### Compute REV
 
+Now, given the current utility given optimal allocation with a particular preference, we can find REV. We simply look for the level of allocation needed (which $Q_{il}$) point where the corresponding $V$ utility level equals the utility form uniform allocation. 
+
+```{r}
+# Note column !!sym(svr_v_cumu_il_rksrt_outter) by construction is sorted and increasing
+# if it is not sorted an increasing big problem. 
+it_w_exp_min <- min(df_rev_Ail_onerho %>% filter(!!sym(svr_v_cumu_il_rksrt_outter) >= fl_util_unif_alloc_testlam) %>%
+  pull(!!sym(svr_inpalc)))
+fl_REV <- 1 - (it_w_exp_min/fl_teacher_increase_number)  
+# Print
+print(paste0('fl_REV:', fl_REV))
+```
 
 
 

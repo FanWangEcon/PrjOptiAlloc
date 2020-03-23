@@ -118,7 +118,8 @@ return(list(df_opti_alloc_all_rho = df_opti_alloc_all_rho,
 ffp_opt_anlyz_rhgin_bin <- function(df, svr_id_i,
                                     svr_A_i = 'A', svr_alpha_i = 'alpha', svr_beta_i = 'beta',
                                     ar_rho = 0.5,
-                                    svr_inpalc = 'opti_alloc_queue',
+                                    svr_rho = 'lambda',
+                                    svr_inpalc = 'rank',
                                     svr_expout = 'opti_exp_outcome') {
 #' Theorem 1, Binary Optimal Allocation solution, loop along a vector of planner inequality preference (lambda)
 #'
@@ -132,6 +133,7 @@ ffp_opt_anlyz_rhgin_bin <- function(df, svr_id_i,
 #' @param svr_alpha_i string name of the alpha_i variable, individual specific elasticity information
 #' @param svr_beta_i string name of the beta_i variable, relative preference weight for each child
 #' @param ar_rho array preferences for equality for the planner
+#' @param svr_rho string variable name for the planne inequality aversion variable, initially rho, then called lambda
 #' @param svr_inpalc string variable name for newly generated input optimal allocation
 #' @param svr_expout string variable name for newly generated expected outcome
 #' @return a list with a dataframe and an array
@@ -183,7 +185,7 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
   # _on stands for optimal nutritional choices
   # _eh stands for expected height
   tb_opti_allocate_wth_key <- tb_with_rank %>% select(one_of(svr_id_i,'queue_rank')) %>%
-                                rename(!!paste0('rho_c', it_rho_ctr, '_rk') := !!sym('queue_rank'))
+                                rename(!!paste0(svr_rho, '_c', it_rho_ctr, '_rk') := !!sym('queue_rank'))
 
   # n. merge optimal allocaiton results from different planner preference
   df_all_rho <- df_all_rho %>% left_join(tb_opti_allocate_wth_key, by=svr_id_i)
@@ -194,10 +196,10 @@ print(summary(df_all_rho))
 str(df_all_rho)
 
 # Make Longer
-st_bisec_prefix <- 'rho_c'
-svr_abfafb_long_name <- 'rho'
+st_bisec_prefix <- paste0(svr_rho, '_c')
+svr_abfafb_long_name <- svr_rho
 svr_bisect_iter <- 'nothing'
-svr_number_col <- 'rank'
+svr_number_col <- svr_inpalc
 df_all_rho_long <- df_all_rho %>%
   pivot_longer(
     cols = starts_with(st_bisec_prefix),
@@ -209,7 +211,7 @@ df_all_rho_long <- df_all_rho %>%
 # Generate min and max rank for each given the specturm of rho
 # note rank_max = highest rank reachest, lowest number
 df_rank_min_max <- df_all_rho_long %>% group_by(!!sym(svr_id_i)) %>%
-      summarise(rank_max = min(rank), rank_min = max(rank), avg_rank = mean(rank))
+      summarise(rank_max = min(!!sym(svr_number_col)), rank_min = max(!!sym(svr_number_col)), avg_rank = mean(!!sym(svr_number_col)))
 
 # Join min and max rank info to wide dataframe
 df_all_rho <- df_all_rho %>% inner_join(df_rank_min_max)
@@ -219,7 +221,7 @@ df_all_rho <- df_all_rho %>%
       select(!!sym(svr_id_i), !!sym(svr_A_i), !!sym(svr_alpha_i), !!sym(svr_beta_i), rank_min, rank_max, avg_rank, everything())
 
 df_all_rho_long <- df_all_rho_long %>%
-      select(!!sym(svr_id_i), !!sym(svr_A_i), !!sym(svr_alpha_i), !!sym(svr_beta_i), rho, rank)
+      select(!!sym(svr_id_i), !!sym(svr_A_i), !!sym(svr_alpha_i), !!sym(svr_beta_i), !!sym(svr_rho), !!sym(svr_number_col))
 
 # Rank Variations
 # in case cases, if A and alpha are perfectly negatively correlated, there could be common ranking across rho.

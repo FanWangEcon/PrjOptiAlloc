@@ -11,7 +11,8 @@ ffp_opt_anlyz_rhgin_bin(
   svr_alpha_i = "alpha",
   svr_beta_i = "beta",
   ar_rho = 0.5,
-  svr_inpalc = "opti_alloc_queue",
+  svr_rho = "lambda",
+  svr_inpalc = "rank",
   svr_expout = "opti_exp_outcome"
 )
 }
@@ -27,6 +28,8 @@ ffp_opt_anlyz_rhgin_bin(
 \item{svr_beta_i}{string name of the beta_i variable, relative preference weight for each child}
 
 \item{ar_rho}{array preferences for equality for the planner}
+
+\item{svr_rho}{string variable name for the planne inequality aversion variable, initially rho, then called lambda}
 
 \item{svr_inpalc}{string variable name for newly generated input optimal allocation}
 
