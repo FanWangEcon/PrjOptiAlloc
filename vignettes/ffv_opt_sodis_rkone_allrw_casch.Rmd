@@ -151,7 +151,7 @@ fl_fi_max = 1.00
 fl_fa_max = 0.20
 # Rho values to consider
 # ar_rho = c(-100, -0.001,  0.95)
-ar_rho <- 1 - (10^(c(seq(-2,2, length.out=4))))
+ar_rho <- 1 - (10^(c(seq(-2,2, length.out=30))))
 ar_rho <- unique(ar_rho)
 ```
 
@@ -765,7 +765,7 @@ ffi_disc_v_alt <- function(fl_lambda, df_input_ib,
                            svr_A_i_l0 = 'A_i_l0', 
                            svr_alpha_o_i = 'alpha_o_i', 
                            svr_beta_i = 'beta_i'){
-  
+
     fl_util_alter_alloc <- df_input_ib %>% 
       mutate(v_unif_i = !!sym(svr_beta_i)*((!!sym(svr_A_i_l0) + !!sym(svr_alpha_o_i))^fl_lambda)) %>% 
       summarize(v_sum_unif_i = sum(v_unif_i)^(1/fl_lambda)) %>% 
@@ -804,14 +804,37 @@ Given $\lambda$, what is utility without additional allocations, not cumulative 
 ffi_disc_dizr_onerho <- function(fl_lambda, df_input_il,
                                  svr_id_i = 'id_i', 
                                  svr_D_il = 'D_il',
+                                 svr_inpalc = 'Q_il', 
                                  svr_A_il = 'A_il', 
-                                 svr_beta_i = 'beta_i'){
-
-    df_rev_Di0_i_onerho <- df_input_il %>% 
+                                 svr_beta_i = 'beta_i',
+                                 svr_v_cumu_l = 'v_sum_l'){
+    
+    # print(fl_lambda)
+    # print('S1')
+    # df_rev_Di0_i_onerho <- df_input_il %>% filter(!!sym(svr_D_il) == 1) 
+    # print(str(df_rev_Di0_i_onerho))
+    # 
+    # print('S2')
+    # df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>% select(!!sym(svr_id_i), !!sym(svr_beta_i), !!sym(svr_A_il)) 
+    # print(str(df_rev_Di0_i_onerho))
+    # 
+    # print('S3')
+    # df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>% mutate(!!sym(svr_v_cumu_l) := !!sym(svr_beta_i)*((!!sym(svr_A_il))^fl_lambda)) 
+    # print(str(df_rev_Di0_i_onerho))
+    # 
+    # print('S4')
+    # df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>% mutate(!!sym(svr_inpalc) := 0)
+    # print(str(df_rev_Di0_i_onerho))
+    # 
+    # print('S5')
+    # df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>% select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+    # print(str(df_rev_Di0_i_onerho))
+    
+    df_rev_Di0_i_onerho <- df_input_il %>%
       filter(!!sym(svr_D_il) == 1) %>%
       select(!!sym(svr_id_i), !!sym(svr_beta_i), !!sym(svr_A_il)) %>%
-      mutate(!!sym(svr_v_cumu_l) := !!sym(svr_beta_i)*((!!sym(svr_A_il))^fl_lambda), 
-             !!sym(svr_inpalc) := 0) %>% 
+      mutate(!!sym(svr_v_cumu_l) := !!sym(svr_beta_i)*((!!sym(svr_A_il))^fl_lambda),
+             !!sym(svr_inpalc) := 0) %>%
       select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
   
     return(df_rev_Di0_i_onerho)
@@ -860,10 +883,11 @@ ffi_disc_diall_onerho <- function(fl_lambda, df_queue_il,
                                   svr_v_cumu_l = 'v_sum_l',
                                   svr_v_cumu_il_rksrt = 'v_sum_il_rk',
                                   svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out'){
-
-  # A. Di=0 Utility for all
-  df_rev_dizr_i_onerho <- ffi_disc_dizr_onerho(fl_lambda, df_queue_il, svr_id_i, svr_D_il, svr_A_il, svr_beta_i)
   
+  # A. Di=0 Utility for all
+  df_rev_dizr_i_onerho <- ffi_disc_dizr_onerho(fl_lambda, df_queue_il, svr_id_i, svr_D_il, svr_inpalc, 
+                                               svr_A_il, svr_beta_i, svr_v_cumu_l)
+
   # B. Cumulative Within Person Utility Inner Power Di, only D_Wbin_il == 1, those within allocaiton bound
   df_rev_il_long_onerho <- df_queue_il %>% 
                               filter(!!sym(svr_D_Wbin_il) == 1) %>% 
@@ -934,6 +958,11 @@ ffi_disc_rev_onerho <- function(fl_lambda,
                                 svr_v_cumu_l = 'v_sum_l',
                                 svr_v_cumu_il_rksrt = 'v_sum_il_rk',
                                 svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out'){
+
+  if(length(fl_lambda)>1){
+    # lambda could be fed in an an array, with all identical values
+    fl_lambda <- fl_lambda[1]
+  }
   
   # A. Cumulative Aggregate Utility at Each Individual Allocation Rank
   df_rev_Ail_onerho <- ffi_disc_diall_onerho(fl_lambda, df_queue_il,
@@ -955,11 +984,11 @@ ffi_disc_rev_onerho <- function(fl_lambda,
 
 ```
 
-
 Test loop vs sapply results.
 
 ```{r}
 # Loop Results
+start_time_loop <- Sys.time()
 ar_util_rev_loop <- rep(NA, length(ar_rho))
 for (it_lambda_ctr in seq(1:length(ar_rho))) {
   fl_lambda <- ar_rho[it_lambda_ctr]
@@ -970,6 +999,8 @@ for (it_lambda_ctr in seq(1:length(ar_rho))) {
                           df_input_ib=df_input_ib,
                           df_queue_il=df_queue_il_long_onerho)  
 }
+end_time_loop <- Sys.time()
+print(paste0('LOOP loop time:', end_time_loop - start_time_loop))
 
 # Sapply Results
 df_queue_il_long_onerho <- df_queue_il_long %>% filter(!!sym(svr_rho) == 4)
@@ -986,6 +1017,40 @@ print(ar_util_rev_loop)
 ```
 
 
+### DPLYR Functionalize
 
+Call the *ffi_disc_rev_onerho* function, whose parameters include two dataframes *df_input_ib* and *df_queue_il*. *df_queue_ib* is invariant to $\lambda$, and *df_queue_il* differs depending on $\lambda$. 
 
+Group *df_queue_il_long* by $\lambda$ subgroups, and use *do anything* to call the *ffi_disc_rev_onerho* function.
 
+```{r}
+# add lambda value to queue_il_long, previously only key
+df_queue_il_long_lamval <- df_queue_il_long %>% 
+  mutate(lambda = as.numeric(lambda)) %>%
+  left_join((as_tibble(ar_rho) %>% 
+               rename(lambda_val = value) %>% 
+               rowid_to_column(var = "lambda")), 
+            by='lambda')
+
+# Evaluate REV
+start_time_nest <- Sys.time()
+ar_util_rev_loop <- df_queue_il_long_lamval %>% 
+  group_by(!!sym(svr_rho)) %>%
+  do(rev = ffi_disc_rev_onerho(fl_lambda = .$lambda_val,
+                                fl_teacher_increase_number = fl_teacher_increase_number,
+                                df_input_ib = df_input_ib, df_queue_il = .,
+                                svr_A_i_l0 = 'A_i_l0', svr_alpha_o_i = 'alpha_o_i', 
+                                svr_id_i = 'id_i', 
+                                svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
+                                svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
+                                svr_v_cumu_l = 'v_sum_l',
+                                svr_v_cumu_il_rksrt = 'v_sum_il_rk',
+                                svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out')) %>%
+  unnest()
+
+end_time_nest <- Sys.time()
+print(paste0('DPLYR nested loop time:', end_time_nest - start_time_nest))
+print('ar_util_rev_loop')
+print(ar_util_rev_loop)
+
+```
