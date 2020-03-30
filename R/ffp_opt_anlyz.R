@@ -3,7 +3,7 @@ ffp_opt_anlyz_rhgin <- function(df, svr_id_i,
                                 fl_N_agg, ar_rho,
                                 svr_inpalc = 'optiallocate',
                                 svr_expout = 'opti_exp_outcome') {
-#' Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (lambda)
+#' Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (rho)
 #'
 #' @description
 #' Works with linear allocation problems. The function
@@ -116,12 +116,13 @@ return(list(df_opti_alloc_all_rho = df_opti_alloc_all_rho,
 }
 
 ffp_opt_anlyz_rhgin_bin <- function(df, svr_id_i,
-                                    svr_A_i = 'A', svr_alpha_i = 'alpha', svr_beta_i = 'beta',
-                                    ar_rho = 0.5,
-                                    svr_rho = 'lambda',
-                                    svr_inpalc = 'rank',
-                                    svr_expout = 'opti_exp_outcome') {
-#' Theorem 1, Binary Optimal Allocation solution, loop along a vector of planner inequality preference (lambda)
+                                      svr_A_i = 'A', svr_alpha_i = 'alpha', svr_beta_i = 'beta',
+                                      ar_rho = 0.5,
+                                      svr_rho = 'rho',
+                                      svr_inpalc = 'rank',
+                                      svr_expout = 'opti_exp_outcome',
+                                      verbose = FALSE) {
+#' Theorem 1, Binary Optimal Allocation solution, loop along a vector of planner inequality preference (rho)
 #'
 #' @description
 #' Works with binary allocation problems. The function
@@ -133,7 +134,7 @@ ffp_opt_anlyz_rhgin_bin <- function(df, svr_id_i,
 #' @param svr_alpha_i string name of the alpha_i variable, individual specific elasticity information
 #' @param svr_beta_i string name of the beta_i variable, relative preference weight for each child
 #' @param ar_rho array preferences for equality for the planner
-#' @param svr_rho string variable name for the planne inequality aversion variable, initially rho, then called lambda
+#' @param svr_rho string variable name for the planne inequality aversion variable, initially rho, then called rho
 #' @param svr_inpalc string variable name for newly generated input optimal allocation
 #' @param svr_expout string variable name for newly generated expected outcome
 #' @return a list with a dataframe and an array
@@ -165,8 +166,6 @@ ffp_opt_anlyz_rhgin_bin <- function(df, svr_id_i,
 #' head(df_all_rho_long, 15)
 #' summary(df_all_rho_long)
 
-
-
 ar_A <- df %>% pull(!!sym(svr_A_i))
 ar_alpha <- df %>% pull(!!sym(svr_alpha_i))
 ar_beta <- df %>% pull(!!sym(svr_beta_i))
@@ -192,8 +191,10 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
 }
 
 # o. print results
-print(summary(df_all_rho))
-str(df_all_rho)
+if (verbose) {
+  summary(df_all_rho)
+  str(df_all_rho)
+}
 
 # Make Longer
 st_bisec_prefix <- paste0(svr_rho, '_c')

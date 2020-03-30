@@ -297,6 +297,9 @@ head(tb_key_alpha_A_beta, 32)
 # Optimal Linear Allocations
 
 ```{r Set Allocation Parameters}
+
+svr_inpalc <- 'opti_alloc_queue'
+
 # Child Count
 it_obs = dim(tb_opti_unique)[1]
 
@@ -318,7 +321,7 @@ ls_bin_solu_all_rhos <-
   ffp_opt_anlyz_rhgin_bin(tb_key_alpha_A_beta, svr_id_i = 'id',
                           svr_A_i = 'A', svr_alpha_i = 'alpha', svr_beta_i = 'beta',
                           ar_rho = ar_rho,
-                          svr_inpalc = 'opti_alloc_queue',
+                          svr_inpalc = svr_inpalc,
                           svr_expout = 'opti_exp_outcome')
 
 df_all_rho <- ls_bin_solu_all_rhos$df_all_rho
@@ -343,23 +346,23 @@ df_opt_lalonde_training_wage <- df_all_rho
 usethis::use_data(df_opt_lalonde_training_wage, df_opt_lalonde_training_wage, overwrite = TRUE)
 ```
 
-## Change in Rank along Lambda
+## Change in Rank along rho
 
 ```{r graph of rank change, fig.height = 4, fig.width = 7, fig.align = "center"}
 
-# generate dataframe of lambda
+# generate dataframe of rho
 mt_combine <- cbind(ar_rho)
-colnames(mt_combine) <- c('lambda')
+colnames(mt_combine) <- c('rho_val')
 
 # get rank when wage rho = 1
 df_all_rho_rho_c1 <- df_all_rho %>% select(id, rho_c1_rk_wage)
 
 # rho really means rho index
-tb_lambda <- as_tibble(mt_combine) %>% rowid_to_column(var = "rho")
+tb_rho <- as_tibble(mt_combine) %>% rowid_to_column(var = "rho")
 
 # Merge
 df_all_rho_long <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>%
-                      left_join(tb_lambda, by='rho') %>%
+                      left_join(tb_rho, by='rho') %>%
                       left_join(df_all_rho_rho_c1, by='id')
 
 # Select subset to graph
@@ -374,7 +377,7 @@ df_rank_graph <- df_all_rho_long %>%
                            (id == 131) |  # utilitarian rank = 601
                            (id == 3610)   # utilitarian rank = 701
                              ) %>%
-                    mutate(one_minus_lambda = 1 - lambda) %>%
+                    mutate(one_minus_rho = 1 - rho_val) %>%
                     mutate(rho_c1_rk_wage = factor(rho_c1_rk_wage))
 
 df_rank_graph$rho_c1_rk_wage
@@ -400,7 +403,7 @@ title_line2 <- sprintf("How Do Allocation Rankings (Targeting Queue) Shift with 
 
 # Graph Results--Draw
 line.plot <- df_rank_graph %>%
-  ggplot(aes(x=one_minus_lambda, y=rank,
+  ggplot(aes(x=one_minus_rho, y=!!sym(svr_inpalc),
              group=fct_rev(id),
              colour=fct_rev(id),
              size=2)) +
@@ -415,8 +418,6 @@ line.plot <- df_rank_graph %>%
   theme_bw()
 
 print(line.plot)
-
-
 ```
 
 ## Bump Plot for Optimal Binary Allocations

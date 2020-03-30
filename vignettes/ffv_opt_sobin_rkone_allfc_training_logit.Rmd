@@ -242,6 +242,9 @@ lapply(ls_st_xs,
 Invoke the binary optimal allocation function *ffp_opt_anlyz_rhgin_bin* that loops over rhos.
 
 ```{r}
+
+svr_inpalc <- 'rank'
+
 beta_i <- rep(1/dim(dft)[1], times=dim(dft)[1])
 dft <- cbind(dft, beta_i)
 ar_rho = c(-100, -0.001,  0.95)
@@ -252,8 +255,9 @@ ls_bin_solu_all_rhos <-
   ffp_opt_anlyz_rhgin_bin(dft, svr_id_i = 'id',
                           svr_A_i = 'A_i', svr_alpha_i = 'alpha_i', svr_beta_i = 'beta_i',
                           ar_rho = ar_rho,
-                          svr_inpalc = 'opti_alloc_queue',
-                          svr_expout = 'opti_exp_outcome')
+                          svr_inpalc = svr_inpalc,
+                          svr_expout = 'opti_exp_outcome', 
+                          verbose = TRUE)
 
 df_all_rho <- ls_bin_solu_all_rhos$df_all_rho
 df_all_rho_long <- ls_bin_solu_all_rhos$df_all_rho_long
@@ -263,23 +267,23 @@ it_how_many_vary_rank <- sum(df_all_rho$rank_max - df_all_rho$rank_min)
 it_how_many_vary_rank
 ```
 
-## Change in Rank along Lambda
+## Change in Rank along rho
 
 ```{r graph of rank change, fig.height = 4, fig.width = 7, fig.align = "center"}
 
-# generate dataframe of lambda
+# generate dataframe of rho
 mt_combine <- cbind(ar_rho)
-colnames(mt_combine) <- c('lambda')
+colnames(mt_combine) <- c('rho_val')
 
 # get rank when wage rho = 1
 df_all_rho_rho_c1 <- df_all_rho %>% select(id, rho_c1_rk)
 
 # rho really means rho index
-tb_lambda <- as_tibble(mt_combine) %>% rowid_to_column(var = "rho")
+tb_rho <- as_tibble(mt_combine) %>% rowid_to_column(var = "rho")
 
 # Merge
 df_all_rho_long <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>%
-                      left_join(tb_lambda, by='rho') %>%
+                      left_join(tb_rho, by='rho') %>%
                       left_join(df_all_rho_rho_c1, by='id')
 
 # Select subset to graph
@@ -294,7 +298,7 @@ df_rank_graph <- df_all_rho_long %>%
                            (id == 206) |  # utilitarian rank = 601
                            (id == 272)   # utilitarian rank = 701
                              ) %>%
-                    mutate(one_minus_lambda = 1 - lambda) %>%
+                    mutate(one_minus_rho = 1 - rho_val) %>%
                     mutate(rho_c1_rk = factor(rho_c1_rk))
 
 df_rank_graph$rho_c1_rk
@@ -320,7 +324,7 @@ title_line2 <- sprintf("How Do Allocation Rankings (Targeting Queue) Shift with 
 
 # Graph Results--Draw
 line.plot <- df_rank_graph %>%
-  ggplot(aes(x=one_minus_lambda, y=rank,
+  ggplot(aes(x=one_minus_rho, y=!!sym(svr_inpalc),
              group=fct_rev(id),
              colour=fct_rev(id), size=2)) +
   # geom_line(aes(linetype =fct_rev(id)), size=0.75) +

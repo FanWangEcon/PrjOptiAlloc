@@ -81,10 +81,10 @@ tb_onevar <- as_tibble(mt_rev) %>% rename_all(~c(ar_st_varnames)) %>%
                 arrange(optimal)
 
 it_w_res <- sum(ar_it_obs)
-fl_lambda <- ar_rho
+fl_rho <- ar_rho
 
 # Generate util observed and util unobserved columns
-tb_onevar <- tb_onevar %>% mutate(utility = beta*((A+alpha)^fl_lambda - A^fl_lambda)) %>%
+tb_onevar <- tb_onevar %>% mutate(utility = beta*((A+alpha)^fl_rho - A^fl_rho)) %>%
                            mutate(util_ob = case_when(observed == 1 ~ utility,
                                                       TRUE ~ 0 )) %>%
                            mutate(util_notob = case_when(observed == 0 ~ utility,

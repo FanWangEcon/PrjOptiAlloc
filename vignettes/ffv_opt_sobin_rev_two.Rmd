@@ -50,13 +50,13 @@ data(df_opt_lalonde_training_wage)
 dfj <- df_opt_lalonde_training_employ %>% left_join(df_opt_lalonde_training_wage, by = 'id')
 
 # drop the .y variables, clean the .x out
-dfj <- dfj %>% select(-contains(".y")) %>% 
+dfj <- dfj %>% select(-contains(".y")) %>%
           rename_at(vars(ends_with(".x")), funs(str_replace(., ".x", "")))
 
 # order and organize variables
-dfj <- dfj %>% select(id, 
+dfj <- dfj %>% select(id,
                       starts_with("A_"), starts_with("alpha_"), starts_with("beta_"),
-                      contains("rank"), contains("rho"), 
+                      contains("rank"), contains("rho"),
                       everything())
 
 # treatment column to numeric
@@ -79,21 +79,21 @@ ar_beta_employ <- dfj %>% pull(beta_i_employ)
 
 ar_rev_wage <- rep(0, length(ar_rho))
 ar_rev_employ <- rep(0, length(ar_rho))
-  
+
 for (it_rho_ctr in seq(1, length(ar_rho))) {
-  
+
   fl_rho <- ar_rho[it_rho_ctr]
-  
+
   svr_rho_wage <- paste0('rho_c', it_rho_ctr, '_rk_wage')
   svr_rho_employ  <- paste0('rho_c', it_rho_ctr, '_rk_employ')
-  
+
   ar_queue_optimal_wage <- dfj %>% pull(svr_rho_wage)
   ar_queue_optimal_employ <- dfj %>% pull(svr_rho_employ)
-  
+
   ar_rev_wage[it_rho_ctr] <- ffp_opt_sobin_rev(ar_queue_optimal_wage, ar_bin_observed,
                                                ar_A_wage, ar_alpha_wage, ar_beta_wage,
                                                fl_rho)
-  
+
   ar_rev_employ[it_rho_ctr] <- ffp_opt_sobin_rev(ar_queue_optimal_employ, ar_bin_observed,
                                                  ar_A_employ, ar_alpha_employ, ar_beta_employ,
                                                  fl_rho)
@@ -108,7 +108,7 @@ Compute REV giving observable and ranking
 
 ```{r }
 # Use the just generated optimal ranking above
-fl_lambda <- fl_rho
+fl_rho <- fl_rho
 
 ar_it_obs <- ar_bin_observed
 ar_opti_r <- ar_queue_optimal_employ
@@ -125,7 +125,7 @@ tb_onevar <- as_tibble(mt_rev) %>% rename_all(~c(ar_st_varnames)) %>%
 it_w_res <- sum(ar_it_obs)
 
 # Generate util observed and util unobserved columns
-tb_onevar <- tb_onevar %>% mutate(utility = beta*((A+alpha)^fl_lambda - A^fl_lambda)) %>%
+tb_onevar <- tb_onevar %>% mutate(utility = beta*((A+alpha)^fl_rho - A^fl_rho)) %>%
                            mutate(util_ob = case_when(observed == 1 ~ utility,
                                                       TRUE ~ 0 )) %>%
                            mutate(util_notob = case_when(observed == 0 ~ utility,

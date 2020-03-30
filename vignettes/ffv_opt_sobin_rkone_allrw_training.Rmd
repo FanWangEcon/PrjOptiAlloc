@@ -58,13 +58,13 @@ data(df_opt_lalonde_training_wage)
 dfj <- df_opt_lalonde_training_employ %>% left_join(df_opt_lalonde_training_wage, by = 'id')
 
 # drop the .y variables, clean the .x out
-dfj <- dfj %>% select(-contains(".y")) %>% 
+dfj <- dfj %>% select(-contains(".y")) %>%
           rename_at(vars(ends_with(".x")), funs(str_replace(., ".x", "")))
 
 # order and organize variables
-dfj <- dfj %>% select(id, 
+dfj <- dfj %>% select(id,
                       starts_with("A_"), starts_with("alpha_"), starts_with("beta_"),
-                      contains("rank"), contains("rho"), 
+                      contains("rank"), contains("rho"),
                       everything())
 
 # treatment column to numeric
@@ -98,21 +98,21 @@ ar_beta_employ <- dfj %>% pull(beta_i_employ)
 
 ar_rev_wage <- rep(0, length(ar_rho))
 ar_rev_employ <- rep(0, length(ar_rho))
-  
+
 for (it_rho_ctr in seq(1, length(ar_rho))) {
-  
+
   fl_rho <- ar_rho[it_rho_ctr]
-  
+
   svr_rho_employ  <- paste0('rho_c', it_rho_ctr, '_rk_employ')
   svr_rho_wage <- paste0('rho_c', it_rho_ctr, '_rk_wage')
-  
+
   ar_queue_optimal_wage <- dfj %>% pull(svr_rho_wage)
   ar_queue_optimal_employ <- dfj %>% pull(svr_rho_employ)
-  
+
   ar_rev_wage[it_rho_ctr] <- ffp_opt_sobin_rev(ar_queue_optimal_wage, ar_bin_observed,
                                                ar_A_wage, ar_alpha_wage, ar_beta_wage,
                                                fl_rho)
-  
+
   ar_rev_employ[it_rho_ctr] <- ffp_opt_sobin_rev(ar_queue_optimal_employ, ar_bin_observed,
                                                  ar_A_employ, ar_alpha_employ, ar_beta_employ,
                                                  fl_rho)
@@ -122,10 +122,10 @@ print(ar_rev_employ)
 
 # combine results
 mt_combine <- cbind(ar_rho, ar_rev_wage*100, ar_rev_employ*100)
-colnames(mt_combine) <- c('lambda', 'rev_expected_wage', 'rev_employment_prob')
+colnames(mt_combine) <- c('rho', 'rev_expected_wage', 'rev_employment_prob')
 tb_rev_wage_employ <- as_tibble(mt_combine) %>% rowid_to_column(var = "eval")
-# Transform x-scale to 1-lambda
-tb_rev_wage_employ <- tb_rev_wage_employ %>% mutate(one_minus_lambda = 1 - lambda)
+# Transform x-scale to 1-rho
+tb_rev_wage_employ <- tb_rev_wage_employ %>% mutate(one_minus_rho = 1 - rho)
 
 # Reshape to long
 tb_rev_wage_employ_long <- tb_rev_wage_employ %>%
@@ -152,10 +152,10 @@ title_line1 <- sprintf("Percentage of Training Spots Misallocated, NSW Lalonda (
 title_line2 <- sprintf("REV (Resource Equivalent Variation) Along Planner Spectrum")
 
 # Graph Results--Draw
-line.plot <- tb_rev_wage_employ_long %>% 
-  ggplot(aes(x=one_minus_lambda, y=rev,
-             group=Outcome, 
-             colour=Outcome, size=2)) + 
+line.plot <- tb_rev_wage_employ_long %>%
+  ggplot(aes(x=one_minus_rho, y=rev,
+             group=Outcome,
+             colour=Outcome, size=2)) +
   geom_line(size=0.75) +
   geom_vline(xintercept=c(1), linetype="dotted") +
   labs(title = paste0(title_line1, '\n', title_line2),
@@ -169,7 +169,7 @@ print(line.plot)
 ```
 # Analysis of A and alpha
 
-Generate some tables where the distributions of $A$ and $\alpha$ are compared. 
+Generate some tables where the distributions of $A$ and $\alpha$ are compared.
 
 ## Scatter Plots
 
@@ -188,11 +188,11 @@ return(scatter)
 }
 
 # Plot over multiple
-ggplot.A.alpha(df = dfj, 
+ggplot.A.alpha(df = dfj,
                svr_alpha = 'alpha_i_wage', svr_A = "A_i_wage",
                slb_title = 'A_i and alpha_i, wage')
 
-ggplot.A.alpha(df = dfj, 
+ggplot.A.alpha(df = dfj,
                svr_alpha = 'alpha_i_employ', svr_A = "A_i_employ",
                slb_title = 'Employment A_i and alpha_i Joint Distribution')
 
@@ -204,14 +204,14 @@ What is the distribution of A given alpha. This is relevant in the linear regres
 ```{r, fig.height = 4, fig.width = 7, fig.align = "center"}
 # Keep only relevant columns, and reshape data
 dfj_hist <- dfj %>% select(id, A_i_wage, alpha_i_wage)
-dfj_hist$alpha_i_wage <- factor(dfj_hist$alpha_i_wage) 
+dfj_hist$alpha_i_wage <- factor(dfj_hist$alpha_i_wage)
 dfj_hist$alpha_i_wage <- factor(dfj_hist$alpha_i_wage, labels = c('Age <= 23\nalpha_i=$454', 'Age > 23\nalpha_i=$1071'))
 
 
 title_line1 <- sprintf("Wage A_i Distribution (Linear Wage), NSW Training Lalonda (AER, 1986)")
 title_line2 <- sprintf("By Two Unique Levels of alpha_i: for Age <= 23 and for Age > 23")
 
-# Graph 
+# Graph
 dfj_hist %>% ggplot(aes(x=A_i_wage, fill=alpha_i_wage)) +
       geom_density( color="#e9ecef", alpha=0.6, position = 'identity') +
       scale_fill_manual(values=c("#69b3a2", "#404080")) +
@@ -223,9 +223,9 @@ dfj_hist %>% ggplot(aes(x=A_i_wage, fill=alpha_i_wage)) +
 ```
 
 
-# Min and Max Rank Change Across Lambda
+# Min and Max Rank Change Across rho
 
-The max calculated by ffp_opt_anlyz_rhgin_bin is the top rank, small in number. The min calculated by the function is the lowest ranked, largest number. 
+The max calculated by ffp_opt_anlyz_rhgin_bin is the top rank, small in number. The min calculated by the function is the lowest ranked, largest number.
 
 ## Histogram Plots and Table highest Rank Reached
 
@@ -255,14 +255,14 @@ dfj_highest_long <- dfj_highest_long %>%
                               highestrank <= 297 & highestrank > 100 ~ "Top E 101 to 297",
                               highestrank > 297 ~ "Top F > 297"))
 
-# Graph 
+# Graph
 dfj_highest_long %>% ggplot(aes(x=highestrank, fill=employvswwage)) +
       geom_histogram(color="#e9ecef", alpha=0.6, position = 'identity') +
       scale_fill_manual(values=c("#69b3a2", "#404080")) +
       labs(fill="")
 
 # Table
-dfj_highest_long %>% group_by(employvswwage, highestrank_grp) %>% 
+dfj_highest_long %>% group_by(employvswwage, highestrank_grp) %>%
                 summarize(count = n())
 ```
 
@@ -301,14 +301,14 @@ dfj_gap_long <- dfj_gap_long %>%
                               rank_gap <= 400 & rank_gap > 200 ~ "change E 201 to 400",
                               rank_gap > 400 ~ "change F more than 401"))
 
-# Graph 
+# Graph
 dfj_gap_long %>% ggplot(aes(x=rank_gap, fill=employvswwage)) +
       geom_histogram(color="#e9ecef", alpha=0.6, position = 'identity') +
       scale_fill_manual(values=c("#69b3a2", "#404080")) +
       labs(fill="")
 
 # Table
-dfj_gap_long %>% group_by(employvswwage, rank_gap_grp) %>% 
+dfj_gap_long %>% group_by(employvswwage, rank_gap_grp) %>%
                 summarize(count = n())
 ```
 
@@ -326,7 +326,7 @@ dfj_top10 <- dfj %>%
     mutate(dfj, max_rank_rhos = .)
 
 dfj_top10 <- dfj_top10 %>% filter(max_rank_rhos <= 10) %>%
-  select(id, age, educ, black, race, 
+  select(id, age, educ, black, race,
          rho_c1_rk_employ, rho_c16_rk_employ, rho_c30_rk_employ,
          rho_c1_rk_wage, rho_c16_rk_wage, rho_c30_rk_wage) %>%
   rename(emp_util = rho_c1_rk_employ,

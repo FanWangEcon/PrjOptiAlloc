@@ -261,7 +261,7 @@ ffi_binary_dplyrdo_func <- function(ls_row, fl_rho,
   ar_bl_rank_val <- (ar_rank_val >= 1)
   
   # Note need the negative multiple in front of array
-  ar_rank <- rank((-1)*ar_rank_val)
+  ar_rank <- rank((-1)*ar_rank_val, ties.method='min')
   it_rank <- sum(ar_bl_rank_val)
   
   return(list(it_rank=it_rank,
