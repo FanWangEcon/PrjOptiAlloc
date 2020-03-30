@@ -63,7 +63,7 @@ ffp_opt_sobin_target_row <- function(ls_row, fl_rho,
   # Not int he form of ranks, but in the form of values.
   # Not needed to compute value/rank row by row, one row is sufficient.
   ar_bl_rank_val <- (ar_fl_rank_val >= 1)
-  ar_it_rank <- rank(-ar_fl_rank_val)
+  ar_it_rank <- rank((-1)*ar_fl_rank_val, ties.method='min')
   it_rank <- sum(ar_bl_rank_val)
 
   # message(paste0('it_rank:', it_rank))
@@ -74,7 +74,7 @@ ffp_opt_sobin_target_row <- function(ls_row, fl_rho,
 }
 
 ffp_opt_sobin_rev <- function(ar_queue_optimal, ar_bin_observed,
-                              ar_A, ar_alpha, ar_beta, fl_lambda){
+                              ar_A, ar_alpha, ar_beta, fl_rho){
   #' Theorem 1, Equation 6, Resource Equivalent Variation
   #'
   #' @description
@@ -95,7 +95,7 @@ ffp_opt_sobin_rev <- function(ar_queue_optimal, ar_bin_observed,
   #' library(tibble)
   #' library(dplyr)
   #' library(tidyr)
-  #' fl_lambda <- -1
+  #' fl_rho <- -1
   #' ar_alpha <- c(0.1,1.5,2.5,4  ,9,1.2,3,2,8)
   #' ar_A <-     c(0.5,1.5,3.5,6.5,1.9,3,4,6,4)
   #' ar_beta <-  rep(0, length(ar_A)) + 1/length(ar_A)
@@ -114,7 +114,7 @@ ffp_opt_sobin_rev <- function(ar_queue_optimal, ar_bin_observed,
   #' }
   #' ar_bin_observed <- c(0,1,0,1,0,0,1,1,0)
   #' ar_queue_optimal <- ar_it_rank
-  #' ffp_opt_sobin_rev(ar_queue_optimal, ar_bin_observed, ar_A, ar_alpha, ar_beta, fl_lambda)
+  #' ffp_opt_sobin_rev(ar_queue_optimal, ar_bin_observed, ar_A, ar_alpha, ar_beta, fl_rho)
 
   # Set up Data Struture
   mt_rev <- cbind(seq(1,length(ar_queue_optimal)), ar_bin_observed, ar_queue_optimal,
@@ -124,7 +124,7 @@ ffp_opt_sobin_rev <- function(ar_queue_optimal, ar_bin_observed,
                   arrange(optimal)
 
   # Generate util observed and util unobserved columns
-  tb_onevar <- tb_onevar %>% mutate(utility = beta*((A+alpha)^fl_lambda - A^fl_lambda)) %>%
+  tb_onevar <- tb_onevar %>% mutate(utility = beta*((A+alpha)^fl_rho - A^fl_rho)) %>%
                              mutate(util_ob = case_when(observed == 1 ~ utility,
                                                         TRUE ~ 0 )) %>%
                              mutate(util_notob = case_when(observed == 0 ~ utility,
