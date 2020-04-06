@@ -1,0 +1,245 @@
+---
+title: DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Function)
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Function)}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+urlcolor: blue
+---
+
+# Discrete Optimal Allocation Allocate Teacher (Function)
+
+> Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAllo==c/)**
+
+
+This function produces the same results as [DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html). The differences are:
+
+1. the program here uses the dataframes created by the line by line file as Inputs
+2. the program here uses functions that are identical to the line by line function, but are saved in the R folder.
+
+This file, by invoking functions, is much shorter than the line by line program.
+
+
+```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
+rm(list = ls(all.names = TRUE))
+options(knitr.duplicate.label = 'allow')
+```
+```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
+library(dplyr)
+library(tidyr)
+library(tibble)
+library(stringr)
+library(broom)
+library(ggplot2)
+library(REconTools)
+
+library(PrjOptiAlloc)
+
+library(knitr)
+library(kableExtra)
+```
+
+
+## Load Pre-Generated Data
+
+These are data thata were generated in the [DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html) function. 
+
+```{r load data}
+# Load Data
+data(df_opt_caschool_prep_i)
+data(df_opt_caschool_input_il)
+data(df_opt_caschool_input_ib)
+
+# Show Variables
+str(df_opt_caschool_prep_i)
+str(df_opt_caschool_input_il)
+str(df_opt_caschool_input_ib)
+```
+
+## Solve All Districts Discrete Optimal Allocation Across Planner Preferences
+
+### Specify Policy Parameters
+
+Note that *input_il* function already is based on *fl_fi_max*. 
+
+```{r control policy}
+# 100 percent teacher at most per school, discretize floor as needed
+# This is not a parameter that matters here, already a part of the input_il function
+fl_fi_max = 1.00
+# 20 percent total additional of all teachers
+fl_fa_max = 0.20
+# What is the number of teachers we can increase by
+fl_teacher_increase_number <- sum(df_opt_caschool_prep_i$teachers)*fl_fa_max
+fl_teacher_increase_number <- floor(fl_teacher_increase_number)
+
+# Rho values to consider
+ar_rho <- 1 - (10^(c(seq(-2,2, length.out=4))))
+ar_rho <- unique(ar_rho)
+```
+
+### Optimal Queue and Allocations 
+
+Use the discrete allocation function across preference [ffp_opt_anlyz_rhgin_dis.html](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin_dis.html) function. This computes optimal allocation for multiple planner inequality aversion $\lambda$ parameters at the same time. Note that in the function $\lambda=\rho$.  
+
+```{r}
+ls_df_queue <- ffp_opt_anlyz_rhgin_dis(ar_rho,
+                                       fl_teacher_increase_number,
+                                       df_input_il = df_opt_caschool_input_il,
+                                       svr_rho = 'rho',
+                                       svr_id_i = 'id_i', svr_id_il = 'id_il',
+                                       svr_D_max_i = 'D_max_i', svr_D_il = 'D_il',
+                                       svr_D_star_i = 'D_star_i', svr_F_star_i = 'F_star_i',
+                                       svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
+                                       svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
+                                       svr_expout = 'opti_exp_outcome',
+                                       st_idcol_prefix = 'sid_',
+                                       bl_df_alloc_il = TRUE)
+df_queue_il_long <- ls_df_queue$df_queue_il_long
+df_queue_il_wide <- ls_df_queue$df_queue_il_wide
+df_alloc_i_long <- ls_df_queue$df_alloc_i_long
+df_alloc_il_long <- ls_df_queue$df_alloc_il_long
+```
+
+```{r}
+# Display Results
+print(df_queue_il_long)
+print(str(df_queue_il_long))
+print(df_queue_il_wide)
+print(str(df_queue_il_wide))
+print(df_alloc_i_long)
+print(str(df_alloc_i_long))
+print(df_alloc_il_long)
+```
+
+### REV Compute
+
+```{r}
+ar_util_rev_loop_func <- 
+  ffp_opt_anlyz_sodis_rev(ar_rho,
+                          fl_teacher_increase_number,
+                          df_input_ib = df_opt_caschool_input_ib,
+                          df_queue_il_long = df_queue_il_long,
+                          svr_rho = 'rho',
+                          svr_A_i_l0 = 'A_i_l0', svr_alpha_o_i = 'alpha_o_i',
+                          svr_id_i = 'id_i',
+                          svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
+                          svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
+                          svr_v_cumu_l = 'v_sum_l',
+                          svr_v_cumu_il_rksrt = 'v_sum_il_rk',
+                          svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out')
+```
+
+```{r}
+# Display Results
+print(ar_util_rev_loop_func)
+```
+
+
+## Optimal Allocation Among Subset of Districts
+
+### Select a Small Subset of Districts
+
+To generate some graphs and more easily readable results, rather than using all school districts, select some random subset of school districts from the existing data frames. 
+
+1. Select a random subset of district IDs
+2. New input df that only includes these IDs. 
+
+```{r discrete func test subset select}
+# select four school districts
+# cas = california schools
+it_O <- 4
+set.seed(1)
+df_cas_prep_sub_i <- df_opt_caschool_prep_i %>% filter(teachers <= 100 & teachers >= 50)
+df_cas_prep_sub_i <- df_cas_prep_sub_i[sample(dim(df_cas_prep_sub_i)[1], it_O, replace=FALSE),]
+ar_cas_id_selected <- df_cas_prep_sub_i %>% pull(id_i)
+
+# Select from il and ib only ids that are randomly selected
+df_cas_input_sub_il <- df_opt_caschool_input_il %>% filter(id_i %in% ar_cas_id_selected)
+df_cas_input_sub_ib <- df_opt_caschool_input_ib %>% filter(id_i %in% ar_cas_id_selected)
+
+# Print
+print(df_cas_prep_sub_i)
+print(df_cas_input_sub_ib)
+print(df_cas_input_sub_il)
+```
+
+Now we also have a new total number of teacher increase, no longer based on all districts. The policy here is to potentially increase each school district by *fl_fi_max*, already coded into the *input_il* file, so that can not change. The total number of available new teachers is *fl_fa_max* times the existing number of teachers in the selected districts overall
+
+```{r discrete func subset new res}
+fl_fa_max = 0.20
+# What is the number of teachers we can increase by
+fl_teacher_increase_sub_number <- sum(df_cas_prep_sub_i$teachers)*fl_fa_max
+fl_teacher_increase_sub_number <- floor(fl_teacher_increase_number)
+```
+
+### Optimal Queue, Allocations and REV
+
+Use the discrete allocation function across preference [ffp_opt_anlyz_rhgin_dis.html](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin_dis.html) function. This computes optimal allocation for multiple planner inequality aversion $\lambda$ parameters at the same time. Note that in the function $\lambda=\rho$.  
+
+```{r}
+# Rho values to consider
+ar_rho <- 1 - (10^(c(seq(-2,2, length.out=4))))
+ar_rho <- unique(ar_rho)
+
+# Optimal Allocation
+ls_df_sub_queue <- ffp_opt_anlyz_rhgin_dis(ar_rho, fl_teacher_increase_sub_number,
+                                           df_input_il = df_cas_input_sub_il,
+                                           bl_df_alloc_il = TRUE)
+df_queue_il_sub_long <- ls_df_sub_queue$df_queue_il_long
+df_queue_il_sub_wide <- ls_df_sub_queue$df_queue_il_wide
+df_alloc_i_long <- ls_df_sub_queue$df_alloc_i_long
+df_alloc_il_long <- ls_df_sub_queue$df_alloc_il_long
+
+# REV
+ar_util_rev_loop_func <- ffp_opt_anlyz_sodis_rev(ar_rho,fl_teacher_increase_sub_number,
+                                                 df_input_ib = df_cas_input_sub_ib,
+                                                 df_queue_il_long = df_queue_il_sub_long)
+```
+
+Show Results 
+
+```{r}
+# Display Results
+print(df_queue_il_sub_long)
+print(df_alloc_i_long)
+print(df_alloc_il_long)
+print(ar_util_rev_loop_func)
+```
+
+
+## Additional Statistics
+
+1. Predicted Expected Outcomes for each i given allocations
+2. Utility at each Queue rank point
+3. Gini Statistics based on allocations
+
+## Results Analysis
+
+Core graphical/tabular illustration of results across Many Individuals
+
+1. Mean and standard deviation of outcome, across $\lambda$, along with actual mean and standard deviation
+2. Gini of Allocations and Outcomes, across $\lambda$, along with observed of intended Gini of Allocation or Outcomes
+3. REV in percentages as well as in units of resources lost, across $\lambda$
+4. Tabular results already exists for this. Rank Data/chart:
+    - columns are $\lambda$ points
+    - colors identify individuals, each color appears multiple times due to multiple allocations for each individual
+    - show ranking changes as preference changes
+    - highligh only subset (1) of individuals
+    - Climbing chart? x axis is rank, y axis allocation for individual, but not sure why this would be useful. Perhaps useful for tabular outputs. Maybe only very small chart
+
+How should illustrative graph be shown with only 2 individuals?
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
