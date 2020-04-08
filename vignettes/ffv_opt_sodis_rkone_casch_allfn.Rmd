@@ -8,7 +8,7 @@ vignette: >
 urlcolor: blue
 ---
 
-# Discrete Optimal Allocation Allocate Teacher (Function)
+## Discrete Optimal Allocation Allocate Teacher (Function)
 
 > Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAllo==c/)**
 
@@ -40,8 +40,59 @@ library(knitr)
 library(kableExtra)
 ```
 
+### Hand Input Data Example
 
-## Load Pre-Generated Data
+Set Preference Array:
+
+```{r}
+ar_rho <- 1 - (10^(c(seq(-2,2, length.out=4))))
+ar_rho <- unique(ar_rho)
+it_w_agg <- 5
+```
+
+```{r}
+id_i    <- c(1,1,1,2,2,2,3,3,3)
+id_il   <- c(1,2,3,4,5,6,7,8,9)
+D_max_i <- c(3,3,3,3,3,3,3,3,3)
+D_il    <- c(1,2,3,1,2,3,1,2,3)
+
+A_il_i1 <- c(4,3,2,1)
+A_il_i2 <- c(2.7,2.2,1.5,1.1)
+A_il_i3 <- c(1.9,1.8,1.1,0.1)
+A_il <- c(A_il_i1[2:4], A_il_i2[2:4], A_il_i3[2:4])
+alpha_il <- c(diff(-A_il_i1), diff(-A_il_i2), diff(-A_il_i3))
+beta_i <- c(1/3,1/3,1/3,1/3,1/3,1/3,1/3,1/3,1/3)
+
+df_handinput_input_il <- as_tibble(cbind(id_i, id_il, D_max_i, D_il, A_il, alpha_il, beta_i))
+
+print(df_handinput_input_il)
+```
+
+
+```{r}
+ls_df_queue_hand <- ffp_opt_anlyz_rhgin_dis(ar_rho, it_w_agg,
+                                            bl_df_alloc_il = TRUE,
+                                            bl_return_V = TRUE,
+                                            bl_return_allQ_V = TRUE,
+                                            bl_return_inner_V = TRUE,
+                                            df_input_il = df_handinput_input_il)
+df_queue_il_long <- ls_df_queue_hand$df_queue_il_long
+df_queue_il_wide <- ls_df_queue_hand$df_queue_il_wide
+df_alloc_i_long  <- ls_df_queue_hand$df_alloc_i_long
+df_rho_gini  <- ls_df_queue_hand$df_rho_gini
+df_alloc_il_long <- ls_df_queue_hand$df_alloc_il_long
+```
+
+```{r}
+print(df_queue_il_long)
+print(df_queue_il_wide)
+print(df_alloc_i_long)
+print(df_rho_gini)
+print(df_alloc_il_long)
+```
+
+
+### Load Pre-Generated Data
 
 These are data thata were generated in the [DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html) function. 
 
@@ -57,9 +108,9 @@ str(df_opt_caschool_input_il)
 str(df_opt_caschool_input_ib)
 ```
 
-## Solve All Districts Discrete Optimal Allocation Across Planner Preferences
+### Solve All Districts Discrete Optimal Allocation Across Planner Preferences
 
-### Specify Policy Parameters
+#### Specify Policy Parameters
 
 Note that *input_il* function already is based on *fl_fi_max*. 
 
@@ -85,6 +136,7 @@ Use the discrete allocation function across preference [ffp_opt_anlyz_rhgin_dis.
 ```{r}
 ls_df_queue <- ffp_opt_anlyz_rhgin_dis(ar_rho,
                                        fl_teacher_increase_number,
+                                       bl_df_alloc_il = TRUE,
                                        df_input_il = df_opt_caschool_input_il,
                                        svr_rho = 'rho',
                                        svr_id_i = 'id_i', svr_id_il = 'id_il',
@@ -93,52 +145,46 @@ ls_df_queue <- ffp_opt_anlyz_rhgin_dis(ar_rho,
                                        svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
                                        svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
                                        svr_expout = 'opti_exp_outcome',
-                                       st_idcol_prefix = 'sid_',
-                                       bl_df_alloc_il = TRUE)
+                                       st_idcol_prefix = 'sid_')
 df_queue_il_long <- ls_df_queue$df_queue_il_long
 df_queue_il_wide <- ls_df_queue$df_queue_il_wide
 df_alloc_i_long <- ls_df_queue$df_alloc_i_long
+df_rho_gini  <- ls_df_queue$df_rho_gini
 df_alloc_il_long <- ls_df_queue$df_alloc_il_long
 ```
 
 ```{r}
 # Display Results
-print(df_queue_il_long)
-print(str(df_queue_il_long))
-print(df_queue_il_wide)
-print(str(df_queue_il_wide))
-print(df_alloc_i_long)
-print(str(df_alloc_i_long))
-print(df_alloc_il_long)
+print(head(df_queue_il_long, 10))
+# print(str(df_queue_il_long))
+print(head(df_queue_il_wide, 10))
+# print(str(df_queue_il_wide))
+print(head(df_alloc_i_long, 10))
+# print(str(df_queue_il_wide))
+print(df_rho_gini)
+# print(str(df_alloc_i_long))
+print(head(df_alloc_il_long, 10))
 ```
 
-### REV Compute
+#### REV Compute
 
 ```{r}
-ar_util_rev_loop_func <- 
+tb_rho_rev <- 
   ffp_opt_anlyz_sodis_rev(ar_rho,
                           fl_teacher_increase_number,
                           df_input_ib = df_opt_caschool_input_ib,
-                          df_queue_il_long = df_queue_il_long,
-                          svr_rho = 'rho',
-                          svr_A_i_l0 = 'A_i_l0', svr_alpha_o_i = 'alpha_o_i',
-                          svr_id_i = 'id_i',
-                          svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
-                          svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
-                          svr_v_cumu_l = 'v_sum_l',
-                          svr_v_cumu_il_rksrt = 'v_sum_il_rk',
-                          svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out')
+                          df_queue_il_long_with_V = df_queue_il_long)
 ```
 
 ```{r}
 # Display Results
-print(ar_util_rev_loop_func)
+print(tb_rho_rev)
 ```
 
 
-## Optimal Allocation Among Subset of Districts
+### Optimal Allocation Among Subset of Districts
 
-### Select a Small Subset of Districts
+#### Select a Small Subset of Districts
 
 To generate some graphs and more easily readable results, rather than using all school districts, select some random subset of school districts from the existing data frames. 
 
@@ -170,10 +216,10 @@ Now we also have a new total number of teacher increase, no longer based on all 
 fl_fa_max = 0.20
 # What is the number of teachers we can increase by
 fl_teacher_increase_sub_number <- sum(df_cas_prep_sub_i$teachers)*fl_fa_max
-fl_teacher_increase_sub_number <- floor(fl_teacher_increase_number)
+fl_teacher_increase_sub_number <- floor(fl_teacher_increase_sub_number)
 ```
 
-### Optimal Queue, Allocations and REV
+#### Optimal Queue, Allocations and REV
 
 Use the discrete allocation function across preference [ffp_opt_anlyz_rhgin_dis.html](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin_dis.html) function. This computes optimal allocation for multiple planner inequality aversion $\lambda$ parameters at the same time. Note that in the function $\lambda=\rho$.  
 
@@ -189,12 +235,13 @@ ls_df_sub_queue <- ffp_opt_anlyz_rhgin_dis(ar_rho, fl_teacher_increase_sub_numbe
 df_queue_il_sub_long <- ls_df_sub_queue$df_queue_il_long
 df_queue_il_sub_wide <- ls_df_sub_queue$df_queue_il_wide
 df_alloc_i_long <- ls_df_sub_queue$df_alloc_i_long
+df_rho_gini <- ls_df_sub_queue$df_rho_gini
 df_alloc_il_long <- ls_df_sub_queue$df_alloc_il_long
 
 # REV
 ar_util_rev_loop_func <- ffp_opt_anlyz_sodis_rev(ar_rho,fl_teacher_increase_sub_number,
                                                  df_input_ib = df_cas_input_sub_ib,
-                                                 df_queue_il_long = df_queue_il_sub_long)
+                                                 df_queue_il_long_with_V = df_queue_il_sub_long)
 ```
 
 Show Results 
@@ -203,18 +250,19 @@ Show Results
 # Display Results
 print(df_queue_il_sub_long)
 print(df_alloc_i_long)
+print(df_rho_gini)
 print(df_alloc_il_long)
 print(ar_util_rev_loop_func)
 ```
 
 
-## Additional Statistics
+### Additional Statistics
 
 1. Predicted Expected Outcomes for each i given allocations
 2. Utility at each Queue rank point
 3. Gini Statistics based on allocations
 
-## Results Analysis
+### Results Analysis
 
 Core graphical/tabular illustration of results across Many Individuals
 
