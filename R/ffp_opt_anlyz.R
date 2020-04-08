@@ -118,7 +118,7 @@ return(list(df_opti_alloc_all_rho = df_opti_alloc_all_rho,
 ffp_opt_anlyz_rhgin_bin <- function(df, svr_id_i,
                                       svr_A_i = 'A', svr_alpha_i = 'alpha', svr_beta_i = 'beta',
                                       ar_rho = 0.5,
-                                      svr_rho = 'rho',
+                                      svr_rho = 'rho', svr_rho_val = 'rho_val',
                                       svr_inpalc = 'rank',
                                       svr_expout = 'opti_exp_outcome',
                                       verbose = FALSE) {
@@ -134,7 +134,8 @@ ffp_opt_anlyz_rhgin_bin <- function(df, svr_id_i,
 #' @param svr_alpha_i string name of the alpha_i variable, individual specific elasticity information
 #' @param svr_beta_i string name of the beta_i variable, relative preference weight for each child
 #' @param ar_rho array preferences for equality for the planner
-#' @param svr_rho string variable name for the planne inequality aversion variable, initially rho, then called rho
+#' @param svr_rho string variable name for the index planner inequality aversion variable, initially rho, then called rho, this is the index variable, index for each one of the rho values
+#' @param svr_rho_val string variable name for the value of the planner inequality aversion variable
 #' @param svr_inpalc string variable name for newly generated input optimal allocation
 #' @param svr_expout string variable name for newly generated expected outcome
 #' @return a list with a dataframe and an array
@@ -175,6 +176,7 @@ df_all_rho <- df
 # A. First Loop over Planner Preference
 # Generate Rank Order
 for (it_rho_ctr in seq(1,length(ar_rho))) {
+
   rho = ar_rho[it_rho_ctr]
 
   queue_rank <- ffp_opt_sobin_target_row(df[1,], rho, ar_A, ar_alpha, ar_beta, svr_A_i, svr_alpha_i, svr_beta_i)$ar_it_rank
@@ -183,7 +185,7 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
   # m. Keep for df collection individual key + optimal allocation
   # _on stands for optimal nutritional choices
   # _eh stands for expected height
-  tb_opti_allocate_wth_key <- tb_with_rank %>% select(one_of(svr_id_i,'queue_rank')) %>%
+  tb_opti_allocate_wth_key <- tb_with_rank %>% select(one_of(svr_id_i, 'queue_rank')) %>%
                                 rename(!!paste0(svr_rho, '_c', it_rho_ctr, '_rk') := !!sym('queue_rank'))
 
   # n. merge optimal allocaiton results from different planner preference
@@ -207,7 +209,8 @@ df_all_rho_long <- df_all_rho %>%
     names_to = c(svr_abfafb_long_name, svr_bisect_iter),
     names_pattern = paste0(st_bisec_prefix, "(.*)_(.*)"),
     values_to = svr_number_col
-  )
+  ) %>%
+  mutate(!!sym(svr_rho) := as.numeric(!!sym(svr_rho)))
 
 # Generate min and max rank for each given the specturm of rho
 # note rank_max = highest rank reachest, lowest number
@@ -217,12 +220,18 @@ df_rank_min_max <- df_all_rho_long %>% group_by(!!sym(svr_id_i)) %>%
 # Join min and max rank info to wide dataframe
 df_all_rho <- df_all_rho %>% inner_join(df_rank_min_max)
 
-# Variables Ordering
-df_all_rho <- df_all_rho %>%
-      select(!!sym(svr_id_i), !!sym(svr_A_i), !!sym(svr_alpha_i), !!sym(svr_beta_i), rank_min, rank_max, avg_rank, everything())
-
+# add in a column for rho value
 df_all_rho_long <- df_all_rho_long %>%
-      select(!!sym(svr_id_i), !!sym(svr_A_i), !!sym(svr_alpha_i), !!sym(svr_beta_i), !!sym(svr_rho), !!sym(svr_number_col))
+  left_join(as_tibble(ar_rho) %>%
+              rename_all(~c(svr_rho_val)) %>%
+              rowid_to_column(var = svr_rho),
+            by=svr_rho)
+
+ # Variables Ordering
+ df_all_rho <- df_all_rho %>%
+       select(!!sym(svr_id_i), !!sym(svr_A_i), !!sym(svr_alpha_i), !!sym(svr_beta_i), rank_min, rank_max, avg_rank, everything())
+ df_all_rho_long <- df_all_rho_long %>%
+       select(!!sym(svr_id_i), !!sym(svr_A_i), !!sym(svr_alpha_i), !!sym(svr_beta_i), !!sym(svr_rho), !!sym(svr_rho_val), !!sym(svr_number_col))
 
 # Rank Variations
 # in case cases, if A and alpha are perfectly negatively correlated, there could be common ranking across rho.
