@@ -166,9 +166,9 @@ Some parameters that can be determined regardless of actual data. Note that we w
 
 ```{r control policy}
 # 100 percent teacher at most per school, discretize floor as needed
-fl_fi_max = 1.00
+fl_fi_max = 0.10
 # 20 percent total additional of all teachers
-fl_fa_max = 0.20
+fl_fa_max = 0.02
 # Rho values to consider
 # ar_rho = c(-100, -0.001,  0.95)
 ar_rho <- 1 - (10^(c(seq(-2,2, length.out=4))))
@@ -744,12 +744,14 @@ This is not tested line by line earlier, but tested line by line in the REV sect
 ```{r}
 # value given optimal choices up to Q=W point.
 ffi_disc_value_star_q <- function(fl_rho, df_queue_il,
+                                  bl_return_allQ_V = FALSE,
+                                  bl_return_inner_V = FALSE,
                                   svr_id_i = 'id_i',
                                   svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
                                   svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
-                                  svr_v_cumu_l = 'v_sum_l',
-                                  svr_v_cumu_il_rksrt = 'v_sum_il_rk',
-                                  svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out'){
+                                  svr_V_cumu_l = 'V_sum_l',
+                                  svr_V_inner_Q_il = 'V_inner_Q_il',
+                                  svr_V_star_Q_il = 'V_star_Q_il'){
 
   if(length(fl_rho)>1){
     # rho could be fed in an an array, with all identical values
@@ -760,43 +762,51 @@ ffi_disc_value_star_q <- function(fl_rho, df_queue_il,
   df_rev_dizr_i_onerho <- df_queue_il %>%
       filter(!!sym(svr_D_il) == 1) %>%
       select(!!sym(svr_id_i), !!sym(svr_beta_i), !!sym(svr_A_il)) %>%
-      mutate(!!sym(svr_v_cumu_l) := !!sym(svr_beta_i)*((!!sym(svr_A_il))^fl_rho),
+      mutate(!!sym(svr_V_cumu_l) := !!sym(svr_beta_i)*((!!sym(svr_A_il))^fl_rho),
              !!sym(svr_inpalc) := 0) %>%
-      select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+      select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
 
   # A.2 Cumulative Within Person Utility Inner Power Di, only D_Wbin_il == 1, those within allocaiton bound
-  df_rev_il_long_onerho <- df_queue_il %>%
-                              filter(!!sym(svr_D_Wbin_il) == 1) %>%
-                              mutate(!!sym(svr_v_cumu_l) :=
+  if (bl_return_allQ_V) {
+    df_rev_il_long_onerho <- df_queue_il
+  } else {
+    # only evaluate up to resource
+    df_rev_il_long_onerho <- df_queue_il %>% filter(!!sym(svr_D_Wbin_il) == 1) 
+  }
+  df_rev_il_long_onerho <- df_rev_il_long_onerho %>%
+                              mutate(!!sym(svr_V_cumu_l) :=
                                        !!sym(svr_beta_i)*((!!sym(svr_A_il)+!!sym(svr_alpha_il))^fl_rho)) %>%
-                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
 
   # A.3 Run cum sum function
   df_rev_il_long_onerho <- rbind(df_rev_dizr_i_onerho, df_rev_il_long_onerho)
   df_rev_il_long_onerho <- df_rev_il_long_onerho %>%
-                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
   df_rev_il_long_onerho <- ff_panel_cumsum_grouplast(df_rev_il_long_onerho,
-                                                     svr_id=svr_id_i, svr_x=svr_inpalc, svr_y=svr_v_cumu_l,
-                                                     svr_cumsumtop = svr_v_cumu_il_rksrt,
+                                                     svr_id=svr_id_i, svr_x=svr_inpalc, svr_y=svr_V_cumu_l,
+                                                     svr_cumsumtop = svr_V_inner_Q_il,
                                                      stat='sum', quick=TRUE)
 
   # A.4 Outter power
   # Exclude Rank = 0, already used them to calculate total cumulative
   df_rev_il_long_onerho <- df_rev_il_long_onerho %>% filter(!!sym(svr_inpalc) != 0)
   df_rev_Ail_onerho <- df_rev_il_long_onerho %>%
-    mutate(!!sym(svr_v_cumu_il_rksrt_outter) := (!!sym(svr_v_cumu_il_rksrt))^(1/fl_rho))
+    mutate(!!sym(svr_V_star_Q_il) := (!!sym(svr_V_inner_Q_il))^(1/fl_rho))
     
     
   # Export: function is given rho, so no rho to export
-  df_rev_Ail_onerho <- df_rev_Ail_onerho %>%
-    select(!!sym(svr_inpalc), !!sym(svr_v_cumu_il_rksrt_outter))
+  svr_return_vars <- c(svr_inpalc, svr_V_star_Q_il)
+  if (bl_return_inner_V) {
+    svr_return_vars <- c(svr_inpalc, svr_V_cumu_l, svr_V_inner_Q_il, svr_V_star_Q_il)
+  } 
+  df_rev_Ail_onerho <- df_rev_Ail_onerho %>% select(one_of(svr_return_vars))
     
   # Return
   return(df_rev_Ail_onerho)
 }
 
 ```
-#### OPtimal Queue and Allocation Joint Function
+#### Optimal Queue and Allocation Joint Function
 
 Generate function. Organize parameters not by *i* or *il* specific parameters, but by parameter types:
 
@@ -813,13 +823,17 @@ Generate function. Organize parameters not by *i* or *il* specific parameters, b
 ffi_solve_queue_alloc <- function(ar_rho,
                                   fl_teacher_increase_number,
                                   df_input_il,
+                                  bl_return_V = TRUE,
+                                  bl_return_allQ_V = FALSE,
+                                  bl_return_inner_V = FALSE,
                                   svr_rho = 'rho', svr_rho_val = 'rho_val',
                                   svr_id_i = 'id_i', svr_id_il = 'id_il',
                                   svr_D_max_i = 'D_max_i', svr_D_il = 'D_il',
                                   svr_D_star_i = 'D_star_i', svr_F_star_i = 'F_star_i', svr_EH_star_i = 'EH_star_i',
                                   svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
                                   svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
-                                  svr_expout = 'opti_exp_outcome'){
+                                  svr_expout = 'opti_exp_outcome', 
+                                  svr_V_star_Q_il = 'V_star_Q_il'){
 
     # Step 1
     # Call function to Solve for Optimal Targeting Queue
@@ -831,26 +845,19 @@ ffi_solve_queue_alloc <- function(ar_rho,
                                             svr_inpalc = svr_inpalc,
                                             svr_expout = svr_expout,
                                             verbose = FALSE)
+    df_queue_il_long <- ls_df_queues$df_all_rho_long
+    df_queue_il_wide <- ls_df_queues$df_all_rho
 
     # Step 2
     # Allocations that would be below resource threshold.
-    df_queue_il_long <- ls_df_queues$df_all_rho_long %>%
+    df_queue_il_long <- df_queue_il_long %>%
       mutate(!!sym(svr_D_Wbin_il) :=
                case_when(!!sym(svr_inpalc) <= fl_teacher_increase_number ~ 1,
                          TRUE ~ 0)) %>%
       left_join(df_input_il %>%
                   select(!!sym(svr_id_i), !!sym(svr_id_il),
                          !!sym(svr_D_max_i), !!sym(svr_D_il)),
-                by=svr_id_il) %>%
-      select(!!sym(svr_rho), !!sym(svr_rho_val), 
-             !!sym(svr_id_i), !!sym(svr_id_il),
-             !!sym(svr_D_max_i), !!sym(svr_D_il),
-             !!sym(svr_inpalc), !!sym(svr_D_Wbin_il),
-             !!sym(svr_A_il), !!sym(svr_alpha_il), !!sym(svr_beta_i))
-
-    # Results from optimal targeting
-    # wide frame is mainly for visualization and analysis
-    df_queue_il_wide <- ls_df_queues$df_all_rho
+                by=svr_id_il)
 
     # Step 3
     # Optimal Allocation Discrete Levels
@@ -880,36 +887,39 @@ ffi_solve_queue_alloc <- function(ar_rho,
                case_when(!!sym(svr_D_star_i) == 0 ~ !!sym(svr_A_il), # no choice no allocation 
                          TRUE ~ !!sym(svr_A_il) + !!sym(svr_alpha_il)))
     
-    # Step 5, value at Q points
-    # Evaluate REV
-    ar_util_rev_loop <- df_alloc_i_long %>%
-      group_by(!!sym(svr_rho)) %>%
-      do(rev = ffi_disc_rev_onerho(fl_rho = .$rho_val,
-                                   fl_teacher_increase_number = fl_teacher_increase_number,
-                                   df_input_ib = df_input_ib, df_queue_il = .,
-                                   svr_A_i_l0 = svr_A_i_l0, svr_alpha_o_i = svr_alpha_o_i,
-                                   svr_id_i = svr_id_i,
-                                   svr_D_il = svr_D_il, svr_inpalc = svr_inpalc, svr_D_Wbin_il = svr_D_Wbin_il,
-                                   svr_A_il = svr_A_il, svr_alpha_il = svr_alpha_il, svr_beta_i = svr_beta_i,
-                                   svr_v_cumu_l = svr_v_cumu_l,
-                                   svr_v_cumu_il_rksrt = svr_v_cumu_il_rksrt,
-                                   svr_v_cumu_il_rksrt_outter = svr_v_cumu_il_rksrt_outter)$fl_REV) %>%
-      unnest()
+    # Step 5a, value at Q points
+    svr_return_list <- c(svr_rho, svr_rho_val, svr_id_i, svr_id_il, 
+                         svr_D_max_i, svr_D_il, svr_inpalc, svr_D_Wbin_il)
+    # svr_A_il, svr_alpha_il, svr_beta_i
     
-    ffi_disc_value_star_q(fl_rho, df_queue_il,
-                                  svr_id_i = 'id_i',
-                                  svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
-                                  svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
-                                  svr_v_cumu_l = 'v_sum_l',
-                                  svr_v_cumu_il_rksrt = 'v_sum_il_rk',
-                                  svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out')
+    if (bl_return_V){
+      mt_util_rev_loop <- df_queue_il_long %>%
+        group_by(!!sym(svr_rho)) %>% 
+        do(rev = ffi_disc_value_star_q(fl_rho = .[[svr_rho_val]], 
+                                       df_queue_il = ., 
+                                       bl_return_allQ_V = bl_return_allQ_V, 
+                                       bl_return_inner_V = bl_return_inner_V,
+                                       svr_id_i = svr_id_i,
+                                       svr_D_il = svr_D_il, svr_inpalc = svr_inpalc, svr_D_Wbin_il = svr_D_Wbin_il,
+                                       svr_A_il = svr_A_il, svr_alpha_il = svr_alpha_il, svr_beta_i = svr_beta_i,
+                                       svr_V_star_Q_il = svr_V_star_Q_il)) %>%
+            unnest()
+      # Step 5b, merge values to queue df
+      df_queue_il_long <- df_queue_il_long %>% left_join(mt_util_rev_loop, 
+                                     by=setNames(c(svr_rho, svr_inpalc), c(svr_rho, svr_inpalc))) %>%
+                          select(one_of(svr_return_list), starts_with('V_'))
+    } else {
+      # Step 5c, no value return
+      df_queue_il_long <- df_queue_il_long %>% select(one_of(svr_return_list))
+    }
     
     # Step 6
     # Sort columns
     df_alloc_i_long <- df_alloc_i_long %>%
-      select(!!sym(svr_id_i), !!sym(svr_rho), !!sym(svr_rho_val),
+      select(!!sym(svr_rho), !!sym(svr_rho_val),
+             !!sym(svr_id_i),
              !!sym(svr_D_max_i), !!sym(svr_D_star_i), !!sym(svr_F_star_i), !!sym(svr_EH_star_i))
-      
+
     return(list(df_queue_il_long=df_queue_il_long,
                 df_queue_il_wide=df_queue_il_wide,
                 df_alloc_i_long=df_alloc_i_long))
@@ -923,34 +933,64 @@ Test call Function.
 ls_df_queue_alloc <- ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il)
 df_queue_il_long_func <- ls_df_queue_alloc$df_queue_il_long
 df_queue_il_wide_func <- ls_df_queue_alloc$df_queue_il_wide
+mt_util_rev_loop <- ls_df_queue_alloc$mt_util_rev_loop
 df_alloc_i_long_func <- ls_df_queue_alloc$df_alloc_i_long
 
 # Compare with Non-Function Inovke
 # if 0 below, no difference
 sum(df_queue_il_long$Q_il - df_queue_il_long_func$Q_il)
-sum(df_queue_il_long$Q_il - df_queue_il_long_func$Q_il)
 sum(df_alloc_i_long$D_star_i - df_alloc_i_long_func$D_star_i)
 ```
 
+
+Test return with V or not, with inner V or not, solve up to all Q or not
+```{r}
+# when bl_return_V = FALSE, other two don't matter
+bl_return_V <- FALSE
+head(ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il, 
+                           bl_return_V=bl_return_V)$df_queue_il_long, 10)
+
+# by default, no inner only up to resource
+bl_return_V <- TRUE
+head(ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il, 
+                           bl_return_V=bl_return_V)$df_queue_il_long, 10)
+
+# by default, no inner only up to resource
+bl_return_V <- TRUE
+bl_return_inner_V <- TRUE
+head(ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il, 
+                           bl_return_V=bl_return_V,
+                           bl_return_inner_V=bl_return_inner_V)$df_queue_il_long, 10)
+
+# by default, inner values as well as all values even if D_Wbin_il = 0 
+# This takes much more time.
+bl_return_V <- TRUE
+bl_return_inner_V <- TRUE
+bl_return_allQ_V <- TRUE
+head(ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il, 
+                           bl_return_V=bl_return_V,
+                           bl_return_inner_V=bl_return_inner_V,
+                           bl_return_allQ_V=bl_return_allQ_V)$df_queue_il_long, 10)
+```
 ## DF5: Resource Equivalent Variations (df_rev_il)
 
 For REV generate cumulative utility up to the ith individual's lth allocation, cumulating over all individuals and allocations below the the current ilth rank.
 
-1. *svr_v_cumu_l*: utility summation within individual up to lth allocation, no outter power
+1. *svr_V_cumu_l*: utility summation within individual up to lth allocation, no outter power
     * $\rho >0$: this is increasing in additional allocation
     * $\rho <0$: this is decreasing in additional allocations
-2. *svr_v_cumu_il_rksrt*: utility cumulative sum (inner sum), by ranking, across individuals, utility from all allocations up to the current rank, no outter power
+2. *svr_V_inner_Q_il*: utility cumulative sum (inner sum), by ranking, across individuals, utility from all allocations up to the current rank, no outter power
     * $\rho >0$: this is increasing in additional allocation
     * $\rho <0$: this is decreasing in additional allocations
-3. *svr_v_cumu_il_rksrt_outter*: utility cumulative, overall sum with outter power, outter power resets signs for both to positive
+3. *svr_V_star_Q_il*: utility cumulative, overall sum with outter power, outter power resets signs for both to positive
     * $\rho >0$: this is increasing in additional allocation
     * $\rho <0$: this is increasing in additional allocations
 
 ```{r}
 # Shared Names
-svr_v_cumu_l <- 'v_sum_l'
-svr_v_cumu_il_rksrt <- 'v_sum_il_rk'
-svr_v_cumu_il_rksrt_outter <- 'v_sum_il_rk_out'
+svr_V_cumu_l <- 'V_sum_l'
+svr_V_inner_Q_il <- 'V_inner_Q_il'
+svr_V_star_Q_il <- 'V_star_Q_il'
 ```
 
 ### Check Compare Total Resource Usages
@@ -1033,8 +1073,8 @@ df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>% mutate(!!sym(svr_inpalc) := 0)
 
 # Step 4
 df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>%
-                        mutate(!!sym(svr_v_cumu_l) := v_zero_i) %>%
-                        select(id_i, !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+                        mutate(!!sym(svr_V_cumu_l) := v_zero_i) %>%
+                        select(id_i, !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
 ```
 
 
@@ -1063,20 +1103,20 @@ This is insufficient, because the cumulative sum will not include schools that h
 # Steps 1 and 2
 df_rev_il_long_onerho_wrong <- df_queue_il_long %>%
                             filter(!!sym(svr_rho) == it_rho_ctr & D_Wbin_il == 1) %>%
-                            mutate(!!sym(svr_v_cumu_l) :=  beta_i*((A_il+alpha_il)^fl_rho))
+                            mutate(!!sym(svr_V_cumu_l) :=  beta_i*((A_il+alpha_il)^fl_rho))
 
 # Step 3, only for one rho
 df_rev_il_long_onerho_wrong <- df_rev_il_long_onerho_wrong %>%
-                        select(id_i, !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+                        select(id_i, !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
 df_rev_il_long_onerho_wrong <- ff_panel_cumsum_grouplast(df_rev_il_long_onerho_wrong,
-                                               svr_id='id_i', svr_x=svr_inpalc, svr_y=svr_v_cumu_l,
-                                               svr_cumsumtop = svr_v_cumu_il_rksrt,
+                                               svr_id='id_i', svr_x=svr_inpalc, svr_y=svr_V_cumu_l,
+                                               svr_cumsumtop = svr_V_inner_Q_il,
                                                stat='sum', quick=TRUE)
 
 # Outter power
 df_rev_il_long_onerho_wrong <- df_rev_il_long_onerho_wrong %>%
-                        mutate(!!sym(svr_v_cumu_il_rksrt_outter) :=
-                                 (!!sym(svr_v_cumu_il_rksrt))^(1/fl_rho))
+                        mutate(!!sym(svr_V_star_Q_il) :=
+                                 (!!sym(svr_V_inner_Q_il))^(1/fl_rho))
 ```
 
 
@@ -1096,17 +1136,17 @@ Can not simply reuse code from before, because need to compute this dynamically.
 # Same steps as above
 df_rev_il_long_onerho <- df_queue_il_long %>%
                             filter(!!sym(svr_rho) == it_rho_ctr & D_Wbin_il == 1) %>%
-                            mutate(!!sym(svr_v_cumu_l) := beta_i*((A_il+alpha_il)^fl_rho)) %>%
-                            select(id_i, !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+                            mutate(!!sym(svr_V_cumu_l) := beta_i*((A_il+alpha_il)^fl_rho)) %>%
+                            select(id_i, !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
 # Now combine dataframes
 df_rev_il_long_onerho <- rbind(df_rev_Di0_i_onerho, df_rev_il_long_onerho)
-# view(df_rev_il_long_onerho %>% filter(id_i==1) %>% arrange(!!sym(svr_v_cumu_l)))
+# view(df_rev_il_long_onerho %>% filter(id_i==1) %>% arrange(!!sym(svr_V_cumu_l)))
 
 # TEST monotinicity
 rank_max_min_val <- df_rev_il_long_onerho %>%
   arrange(id_i, !!sym(svr_inpalc)) %>% group_by(id_i) %>%
-  mutate(util_sumi_uptol_min = min(abs(!!sym(svr_v_cumu_l)))) %>%
-  filter(util_sumi_uptol_min == abs(!!sym(svr_v_cumu_l))) %>%
+  mutate(util_sumi_uptol_min = min(abs(!!sym(svr_V_cumu_l)))) %>%
+  filter(util_sumi_uptol_min == abs(!!sym(svr_V_cumu_l))) %>%
   ungroup() %>%
   summarize(rank_max = max(!!sym(svr_inpalc))) %>% pull()
 if (rank_max_min_val != 0 & rank_max_min_val != fl_teacher_increase_number){
@@ -1117,25 +1157,25 @@ if (rank_max_min_val != 0 & rank_max_min_val != fl_teacher_increase_number){
 
 # Run cum sum function
 df_rev_il_long_onerho <- df_rev_il_long_onerho %>%
-                            select(id_i, !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+                            select(id_i, !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
 df_rev_il_long_onerho <- ff_panel_cumsum_grouplast(df_rev_il_long_onerho,
-                                                   svr_id='id_i', svr_x=svr_inpalc, svr_y=svr_v_cumu_l,
-                                                   svr_cumsumtop = svr_v_cumu_il_rksrt,
+                                                   svr_id='id_i', svr_x=svr_inpalc, svr_y=svr_V_cumu_l,
+                                                   svr_cumsumtop = svr_V_inner_Q_il,
                                                    stat='sum', quick=TRUE)
 
 # Drop rank zero where utility order could look strange
 # The results are a little bit strange looking, but correct
-# if rho < 0, at rank = 0, adding up components of inner sum, v_sum_il_rk at first increasing adding through all rank = 0
-# but after reach rank = 1, v_sum_il_rk starts decreasing, because each incremental allocation with rho<0 power has lower
+# if rho < 0, at rank = 0, adding up components of inner sum, V_inner_Q_il at first increasing adding through all rank = 0
+# but after reach rank = 1, V_inner_Q_il starts decreasing, because each incremental allocation with rho<0 power has lower
 # value compared to less allocation. When generating outter power rank = 0 when sorted is at first decreasing, then increasing
 # after reach rank = 1, do not need to keep rank =0, drop them after cumsum, needed only for proper cumsum calculations.
 df_rev_il_long_onerho <- df_rev_il_long_onerho %>% filter(!!sym(svr_inpalc) != 0)
-# view(df_rev_il_long_onerho %>% filter(id_i==1) %>% arrange(!!sym(svr_v_cumu_l)))
+# view(df_rev_il_long_onerho %>% filter(id_i==1) %>% arrange(!!sym(svr_V_cumu_l)))
 
 # Outter power
 df_rev_Ail_onerho <- df_rev_il_long_onerho %>%
-  mutate(!!sym(svr_v_cumu_il_rksrt_outter) := (!!sym(svr_v_cumu_il_rksrt))^(1/fl_rho))
-# view(df_rev_Ail_onerho %>% filter(id_i==1) %>% arrange(!!sym(svr_v_cumu_l)))
+  mutate(!!sym(svr_V_star_Q_il) := (!!sym(svr_V_inner_Q_il))^(1/fl_rho))
+# view(df_rev_Ail_onerho %>% filter(id_i==1) %>% arrange(!!sym(svr_V_cumu_l)))
 # view(df_rev_Ail_onerho %>% arrange(Q_il))
 ```
 
@@ -1144,9 +1184,9 @@ df_rev_Ail_onerho <- df_rev_il_long_onerho %>%
 Now, given the current utility given optimal allocation with a particular preference, we can find REV. We simply look for the level of allocation needed (which $Q_{il}$) point where the corresponding $V$ utility level equals the utility form uniform allocation.
 
 ```{r}
-# Note column !!sym(svr_v_cumu_il_rksrt_outter) by construction is sorted and increasing
+# Note column !!sym(svr_V_star_Q_il) by construction is sorted and increasing
 # if it is not sorted an increasing big problem.
-it_w_exp_min <- min(df_rev_Ail_onerho %>% filter(!!sym(svr_v_cumu_il_rksrt_outter) >= fl_util_unif_alloc_testlam) %>%
+it_w_exp_min <- min(df_rev_Ail_onerho %>% filter(!!sym(svr_V_star_Q_il) >= fl_util_unif_alloc_testlam) %>%
   pull(!!sym(svr_inpalc)))
 fl_REV <- 1 - (it_w_exp_min/fl_teacher_increase_number)
 # Print
@@ -1210,7 +1250,7 @@ ffi_disc_dizr_onerho <- function(fl_rho, df_input_il,
                                  svr_inpalc = 'Q_il',
                                  svr_A_il = 'A_il',
                                  svr_beta_i = 'beta_i',
-                                 svr_v_cumu_l = 'v_sum_l'){
+                                 svr_V_cumu_l = 'V_sum_l'){
 
     # print(fl_rho)
     # print('S1')
@@ -1222,7 +1262,7 @@ ffi_disc_dizr_onerho <- function(fl_rho, df_input_il,
     # print(str(df_rev_Di0_i_onerho))
     #
     # print('S3')
-    # df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>% mutate(!!sym(svr_v_cumu_l) := !!sym(svr_beta_i)*((!!sym(svr_A_il))^fl_rho))
+    # df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>% mutate(!!sym(svr_V_cumu_l) := !!sym(svr_beta_i)*((!!sym(svr_A_il))^fl_rho))
     # print(str(df_rev_Di0_i_onerho))
     #
     # print('S4')
@@ -1230,15 +1270,15 @@ ffi_disc_dizr_onerho <- function(fl_rho, df_input_il,
     # print(str(df_rev_Di0_i_onerho))
     #
     # print('S5')
-    # df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>% select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+    # df_rev_Di0_i_onerho <- df_rev_Di0_i_onerho %>% select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
     # print(str(df_rev_Di0_i_onerho))
 
     df_rev_Di0_i_onerho <- df_input_il %>%
       filter(!!sym(svr_D_il) == 1) %>%
       select(!!sym(svr_id_i), !!sym(svr_beta_i), !!sym(svr_A_il)) %>%
-      mutate(!!sym(svr_v_cumu_l) := !!sym(svr_beta_i)*((!!sym(svr_A_il))^fl_rho),
+      mutate(!!sym(svr_V_cumu_l) := !!sym(svr_beta_i)*((!!sym(svr_A_il))^fl_rho),
              !!sym(svr_inpalc) := 0) %>%
-      select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+      select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
 
     return(df_rev_Di0_i_onerho)
 }
@@ -1278,40 +1318,40 @@ The function below generates a new cumulative aggregate Utility at each allocati
 # ffi_disc_Diall_onerho: function, discrete, allocation D_i_all = 1 to D_max, all, one rho (rho)
 # This function invokes two functions, project function ffi_disc_Di0_onerho, and REconTools Function ff_panel_cumsum_grouplast.
 # df_queue_il is obtained from df_queue_il_long, for only one rho
-# Note that svr_v_cumu_l, svr_v_cumu_il_rksrt, svr_v_cumu_il_rksrt_outter are generated by function, all other are input variables
+# Note that svr_V_cumu_l, svr_V_inner_Q_il, svr_V_star_Q_il are generated by function, all other are input variables
 ffi_disc_diall_onerho <- function(fl_rho, df_queue_il,
                                   svr_id_i = 'id_i',
                                   svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
                                   svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
-                                  svr_v_cumu_l = 'v_sum_l',
-                                  svr_v_cumu_il_rksrt = 'v_sum_il_rk',
-                                  svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out'){
+                                  svr_V_cumu_l = 'V_sum_l',
+                                  svr_V_inner_Q_il = 'V_inner_Q_il',
+                                  svr_V_star_Q_il = 'V_star_Q_il'){
 
   # A. Di=0 Utility for all
   df_rev_dizr_i_onerho <- ffi_disc_dizr_onerho(fl_rho, df_queue_il, svr_id_i, svr_D_il, svr_inpalc,
-                                               svr_A_il, svr_beta_i, svr_v_cumu_l)
+                                               svr_A_il, svr_beta_i, svr_V_cumu_l)
 
   # B. Cumulative Within Person Utility Inner Power Di, only D_Wbin_il == 1, those within allocaiton bound
   df_rev_il_long_onerho <- df_queue_il %>%
                               filter(!!sym(svr_D_Wbin_il) == 1) %>%
-                              mutate(!!sym(svr_v_cumu_l) :=
+                              mutate(!!sym(svr_V_cumu_l) :=
                                        !!sym(svr_beta_i)*((!!sym(svr_A_il)+!!sym(svr_alpha_il))^fl_rho)) %>%
-                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
 
   # C. Run cum sum function
   df_rev_il_long_onerho <- rbind(df_rev_dizr_i_onerho, df_rev_il_long_onerho)
   df_rev_il_long_onerho <- df_rev_il_long_onerho %>%
-                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
   df_rev_il_long_onerho <- ff_panel_cumsum_grouplast(df_rev_il_long_onerho,
-                                                     svr_id=svr_id_i, svr_x=svr_inpalc, svr_y=svr_v_cumu_l,
-                                                     svr_cumsumtop = svr_v_cumu_il_rksrt,
+                                                     svr_id=svr_id_i, svr_x=svr_inpalc, svr_y=svr_V_cumu_l,
+                                                     svr_cumsumtop = svr_V_inner_Q_il,
                                                      stat='sum', quick=TRUE)
 
   # C. Outter power
   # Exclude Rank = 0, already used them to calculate total cumulative
   df_rev_il_long_onerho <- df_rev_il_long_onerho %>% filter(!!sym(svr_inpalc) != 0)
   df_rev_Ail_onerho <- df_rev_il_long_onerho %>%
-    mutate(!!sym(svr_v_cumu_il_rksrt_outter) := (!!sym(svr_v_cumu_il_rksrt))^(1/fl_rho))
+    mutate(!!sym(svr_V_star_Q_il) := (!!sym(svr_V_inner_Q_il))^(1/fl_rho))
 
   # Return
   return(df_rev_Ail_onerho)
@@ -1336,12 +1376,12 @@ ls_util_diall_sapply <- sapply(ar_rho, ffi_disc_diall_onerho, df_queue_il=df_que
 
 # Compare and Print
 print('ls_util_diall_loop[[2]][[\'v_sum_l\']][1]')
-print(ls_util_diall_loop[[2]][['v_sum_l']][1])
+print(ls_util_diall_loop[[2]][['V_sum_l']][1])
 print('ls_util_diall_sapply[[\'v_sum_l\',2]][1]')
-print(ls_util_diall_sapply[['v_sum_l',2]][1])
+print(ls_util_diall_sapply[['V_sum_l',2]][1])
 
-ls_util_diall_loop[[2]][['v_sum_l']][1] - ls_util_diall_sapply[['v_sum_l',2]][1]
-ls_util_diall_loop[[2]][['v_sum_l']][111] - ls_util_diall_sapply[['v_sum_l',2]][111]
+ls_util_diall_loop[[2]][['V_sum_l']][1] - ls_util_diall_sapply[['V_sum_l',2]][1]
+ls_util_diall_loop[[2]][['V_sum_l']][111] - ls_util_diall_sapply[['V_sum_l',2]][111]
 ```
 
 #### Utility Alternative and Optimal Comparison, Compute REV
@@ -1358,9 +1398,9 @@ ffi_disc_rev_onerho_test <- function(fl_rho,
                                 svr_id_i = 'id_i',
                                 svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
                                 svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
-                                svr_v_cumu_l = 'v_sum_l',
-                                svr_v_cumu_il_rksrt = 'v_sum_il_rk',
-                                svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out'){
+                                svr_V_cumu_l = 'V_sum_l',
+                                svr_V_inner_Q_il = 'V_inner_Q_il',
+                                svr_V_star_Q_il = 'V_star_Q_il'){
 
   if(length(fl_rho)>1){
     # rho could be fed in an an array, with all identical values
@@ -1377,7 +1417,7 @@ ffi_disc_rev_onerho_test <- function(fl_rho,
 
   # C. Generate rho specific REV
   it_w_exp_min <- min(df_rev_Ail_onerho %>%
-                        filter(!!sym(svr_v_cumu_il_rksrt_outter) >= fl_util_alter_alloc) %>%
+                        filter(!!sym(svr_V_star_Q_il) >= fl_util_alter_alloc) %>%
                         pull(!!sym(svr_inpalc)))
   fl_REV <- 1 - (it_w_exp_min/fl_teacher_increase_number)
 
@@ -1435,65 +1475,30 @@ Group *df_queue_il_long* by $\rho$ subgroups, and use *do anything* to call the 
 # This function invokes two functions, project function ffi_disc_Di0_onerho, and REconTools Function ff_panel_cumsum_grouplast.
 ffi_disc_rev_onerho <- function(fl_rho,
                                 fl_teacher_increase_number,
-                                df_input_ib, df_queue_il,
+                                df_input_ib, df_queue_il_with_V,
                                 svr_A_i_l0 = 'A_i_l0', svr_alpha_o_i = 'alpha_o_i',
-                                svr_id_i = 'id_i',
-                                svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
-                                svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
-                                svr_v_cumu_l = 'v_sum_l',
-                                svr_v_cumu_il_rksrt = 'v_sum_il_rk',
-                                svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out'){
-
+                                svr_inpalc = 'Q_il',
+                                svr_beta_i = 'beta_i',
+                                svr_V_star_Q_il = 'V_star_Q_il'){
   if(length(fl_rho)>1){
     # rho could be fed in an an array, with all identical values
     fl_rho <- fl_rho[1]
   }
 
-  # A.1 Di=0 Utility for all
-  df_rev_dizr_i_onerho <- df_queue_il %>%
-      filter(!!sym(svr_D_il) == 1) %>%
-      select(!!sym(svr_id_i), !!sym(svr_beta_i), !!sym(svr_A_il)) %>%
-      mutate(!!sym(svr_v_cumu_l) := !!sym(svr_beta_i)*((!!sym(svr_A_il))^fl_rho),
-             !!sym(svr_inpalc) := 0) %>%
-      select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
-
-  # A.2 Cumulative Within Person Utility Inner Power Di, only D_Wbin_il == 1, those within allocaiton bound
-  df_rev_il_long_onerho <- df_queue_il %>%
-                              filter(!!sym(svr_D_Wbin_il) == 1) %>%
-                              mutate(!!sym(svr_v_cumu_l) :=
-                                       !!sym(svr_beta_i)*((!!sym(svr_A_il)+!!sym(svr_alpha_il))^fl_rho)) %>%
-                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
-
-  # A.3 Run cum sum function
-  df_rev_il_long_onerho <- rbind(df_rev_dizr_i_onerho, df_rev_il_long_onerho)
-  df_rev_il_long_onerho <- df_rev_il_long_onerho %>%
-                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
-  df_rev_il_long_onerho <- ff_panel_cumsum_grouplast(df_rev_il_long_onerho,
-                                                     svr_id=svr_id_i, svr_x=svr_inpalc, svr_y=svr_v_cumu_l,
-                                                     svr_cumsumtop = svr_v_cumu_il_rksrt,
-                                                     stat='sum', quick=TRUE)
-
-  # A.4 Outter power
-  # Exclude Rank = 0, already used them to calculate total cumulative
-  df_rev_il_long_onerho <- df_rev_il_long_onerho %>% filter(!!sym(svr_inpalc) != 0)
-  df_rev_Ail_onerho <- df_rev_il_long_onerho %>%
-    mutate(!!sym(svr_v_cumu_il_rksrt_outter) := (!!sym(svr_v_cumu_il_rksrt))^(1/fl_rho))
-
   # B. Aggregate utility given Alternative Allocation
   fl_util_alter_alloc <- df_input_ib %>%
-      mutate(v_unif_i = !!sym(svr_beta_i)*((!!sym(svr_A_i_l0) + !!sym(svr_alpha_o_i))^fl_rho)) %>%
-      summarize(v_sum_unif_i = sum(v_unif_i)^(1/fl_rho)) %>%
+      mutate(v_altern_i = !!sym(svr_beta_i)*((!!sym(svr_A_i_l0) + !!sym(svr_alpha_o_i))^fl_rho)) %>%
+      summarize(v_altern_unif_i = sum(v_altern_i)^(1/fl_rho)) %>%
       pull()
 
   # C. Generate rho specific REV
-  it_w_exp_min <- min(df_rev_Ail_onerho %>%
-                        filter(!!sym(svr_v_cumu_il_rksrt_outter) >= fl_util_alter_alloc) %>%
+  it_w_exp_min <- min(df_queue_il_with_V %>%
+                        filter(!!sym(svr_V_star_Q_il) >= fl_util_alter_alloc) %>%
                         pull(!!sym(svr_inpalc)))
   fl_REV <- 1 - (it_w_exp_min/fl_teacher_increase_number)
 
   # Return
-  return(list(df_rev_Ail_onerho=df_rev_Ail_onerho,
-              it_w_exp_min=it_w_exp_min,
+  return(list(it_w_exp_min=it_w_exp_min,
               fl_REV=fl_REV))
 }
 
@@ -1504,57 +1509,52 @@ ffi_disc_rev_onerho <- function(fl_rho,
 ```{r}
 ffi_disc_rev <- function(ar_rho,
                          fl_teacher_increase_number,
-                         df_input_ib, df_queue_il_long,
-                         svr_rho = 'rho',
+                         df_input_ib, df_queue_il_long_with_V,
+                         svr_rho = 'rho', svr_rho_val = 'rho_val',
                          svr_A_i_l0 = 'A_i_l0', svr_alpha_o_i = 'alpha_o_i',
-                         svr_id_i = 'id_i',
-                         svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
-                         svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
-                         svr_v_cumu_l = 'v_sum_l',
-                         svr_v_cumu_il_rksrt = 'v_sum_il_rk',
-                         svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out'){
-
-    # add rho value to queue_il_long, previously only key
-    df_queue_il_long_lamval <- df_queue_il_long %>%
-      mutate(!!sym(svr_rho) := as.numeric(!!sym(svr_rho))) %>%
-      left_join((as_tibble(ar_rho) %>%
-                   rename(rho_val = value) %>%
-                   rowid_to_column(var = svr_rho)),
-                by=svr_rho)
+                         svr_inpalc = 'Q_il',
+                         svr_beta_i = 'beta_i',
+                         svr_V_star_Q_il = 'V_star_Q_il'){
 
     # Evaluate REV
-    start_time_nest <- Sys.time()
-    ar_util_rev_loop <- df_queue_il_long_lamval %>%
+    ar_util_rev_loop <- df_queue_il_long_with_V %>%
       group_by(!!sym(svr_rho)) %>%
-      do(rev = ffi_disc_rev_onerho(fl_rho = .$rho_val,
+      do(rev = ffi_disc_rev_onerho(fl_rho = .[[svr_rho_val]],
                                    fl_teacher_increase_number = fl_teacher_increase_number,
-                                   df_input_ib = df_input_ib, df_queue_il = .,
+                                   df_input_ib = df_input_ib, df_queue_il_with_V = .,
                                    svr_A_i_l0 = svr_A_i_l0, svr_alpha_o_i = svr_alpha_o_i,
-                                   svr_id_i = svr_id_i,
-                                   svr_D_il = svr_D_il, svr_inpalc = svr_inpalc, svr_D_Wbin_il = svr_D_Wbin_il,
-                                   svr_A_il = svr_A_il, svr_alpha_il = svr_alpha_il, svr_beta_i = svr_beta_i,
-                                   svr_v_cumu_l = svr_v_cumu_l,
-                                   svr_v_cumu_il_rksrt = svr_v_cumu_il_rksrt,
-                                   svr_v_cumu_il_rksrt_outter = svr_v_cumu_il_rksrt_outter)$fl_REV) %>%
-      unnest()
-
+                                   svr_inpalc = svr_inpalc, 
+                                   svr_beta_i = svr_beta_i,
+                                   svr_V_star_Q_il = svr_V_star_Q_il)$fl_REV) %>%
+      unnest() %>% pull()
+    
+    # Return Matrix
+    mt_rho_rev <- cbind(ar_rho, ar_util_rev_loop)
+    colnames(mt_rho_rev) <- c(svr_rho_val,'REV')
+    tb_rho_rev <- as_tibble(mt_rho_rev) %>% rowid_to_column(var = svr_rho)
+    
 # Retrun
-return(ar_util_rev_loop)
+return(tb_rho_rev)
 }
 ```
 
 Call Function.
 
 ```{r call function}
+# the func version supercede the earlier versions, because they have some more outputs
+# but the nonfunction version have additional variables inside needed for line by line code
+df_queue_il_long <- df_queue_il_long_func
+df_alloc_i_long <- df_alloc_i_long_func
 
 # Solve for REV
 start_time_nest <- Sys.time()
-ar_util_rev_loop_func <- ffi_disc_rev(ar_rho, fl_teacher_increase_number, df_input_ib, df_queue_il_long)
+tb_rho_rev <- ffi_disc_rev(ar_rho, fl_teacher_increase_number, df_input_ib, df_queue_il_long)
+ar_util_rev_loop_func <- tb_rho_rev %>% pull(REV)
 end_time_nest <- Sys.time()
 print(paste0('DPLYR nested loop time:', end_time_nest - start_time_nest))
-print('ar_util_rev_loop')
-print(ar_util_rev_loop)
+print('ar_util_rev_loop_func')
+print(ar_util_rev_loop_func)
 
 # Compare Results, if 0 match
-sum(ar_util_rev_loop - ar_util_rev_loop_func$rev)
+sum(ar_util_rev_loop - ar_util_rev_loop_func)
 ```
