@@ -98,11 +98,23 @@ For **df_queue_il_long**, same as *df_input_il*, but add:
 2. $\rho$: actual rho values
 3. $Q_{il}$: allocation rank for the lth discrete allocation level for ith person.
 4. $D^{\widehat{W},\text{BIN}}_{il}$: $0$ or $1$, given $\widehat{W}$, whether individual $i^{th}$ $l^{th}$ allocation is allocated.
-5. $V^{Q}_{il}$: value given optimal choices at queue point
+5. $V^{Q}_{il}$: *V_star_Q_il* value given optimal choices at queue point
 
 For **df_queue_il_wide**, same as *df_input_il*, but add:
 
 1. Add *teachers*, *enrltot*, and *theta_i*
+
+#### The *df_value_il* Dataframe
+
+This is the optimal allocation dataframe where each row is a queue rank, and each column is an individual. Each cell stores at this allocation queue rank, how many units have been allocated to individual i. This is a cumulative sum result. Obtained by calling REconTool's function [ff_panel_expand_longrosterwide](https://fanwangecon.github.io/REconTools/reference/ff_panel_expand_longrosterwide.html).
+
+1. $\rho$
+2. $\text{Q}$: Current Queue index
+3. $D^{\star, \widehat{W}=Q}_{i}$: separate columns for each $i$ optimal allocation for $i^{th}$ person,when  $\widehat{W}=Q$
+
+This if generated, would be merged into *df_queue_il_long* afterwards. But df_queue_il does not necessarily need to generate this. 
+
+Optionally, can generate this for all *Q_il* points, or only at Queue ranks where $D^{\widehat{W},\text{BIN}}_{il} = 1$. 
 
 ### The *df_alloc_i* Dataframe
 
@@ -116,13 +128,6 @@ For **df_queue_il_wide**, same as *df_input_il*, but add:
 6. $F^{\star, \widehat{W}}_{i}$: $\frac{D^{\star, \widehat{W}}_{i}}{D^{\text{max}}_{i}}$
 7. $EH^{\star, \widehat{Q}}_{i}$: expected outcome given optimal allocations/choices
 
-### The *df_alloc_il* Dataframe
-
-This is the optimal allocation dataframe where each row is a queue rank, and each column is an individual. Each cell stores at this allocation queue rank, how many units have been allocated to individual i. This is a cumulative sum result. Obtained by calling REconTool's function [ff_panel_expand_longrosterwide](https://fanwangecon.github.io/REconTools/reference/ff_panel_expand_longrosterwide.html).
-
-1. $\rho$
-2. $\text{Q}$: Current Queue index
-3. $D^{\star, \widehat{W}=Q}_{i}$: separate columns for each $i$ optimal allocation for $i^{th}$ person,when  $\widehat{W}=Q$
 
 ### The *mt_rev* Dataframe
 
@@ -732,6 +737,65 @@ df_alloc_i_long_func <- ffi_solve_alloc(df_queue_il_long_func)
 sum(df_alloc_i_long$D_star_i - df_alloc_i_long_func$D_star_i)
 ```
 
+#### Given df_queue_il generate df_value_il
+
+This is not tested line by line earlier, but tested line by line in the REV section later.
+
+```{r}
+# value given optimal choices up to Q=W point.
+ffi_disc_value_star_q <- function(fl_rho, df_queue_il,
+                                  svr_id_i = 'id_i',
+                                  svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
+                                  svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
+                                  svr_v_cumu_l = 'v_sum_l',
+                                  svr_v_cumu_il_rksrt = 'v_sum_il_rk',
+                                  svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out'){
+
+  if(length(fl_rho)>1){
+    # rho could be fed in an an array, with all identical values
+    fl_rho <- fl_rho[1]
+  }
+
+  # A.1 Di=0 Utility for all
+  df_rev_dizr_i_onerho <- df_queue_il %>%
+      filter(!!sym(svr_D_il) == 1) %>%
+      select(!!sym(svr_id_i), !!sym(svr_beta_i), !!sym(svr_A_il)) %>%
+      mutate(!!sym(svr_v_cumu_l) := !!sym(svr_beta_i)*((!!sym(svr_A_il))^fl_rho),
+             !!sym(svr_inpalc) := 0) %>%
+      select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+
+  # A.2 Cumulative Within Person Utility Inner Power Di, only D_Wbin_il == 1, those within allocaiton bound
+  df_rev_il_long_onerho <- df_queue_il %>%
+                              filter(!!sym(svr_D_Wbin_il) == 1) %>%
+                              mutate(!!sym(svr_v_cumu_l) :=
+                                       !!sym(svr_beta_i)*((!!sym(svr_A_il)+!!sym(svr_alpha_il))^fl_rho)) %>%
+                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+
+  # A.3 Run cum sum function
+  df_rev_il_long_onerho <- rbind(df_rev_dizr_i_onerho, df_rev_il_long_onerho)
+  df_rev_il_long_onerho <- df_rev_il_long_onerho %>%
+                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_v_cumu_l))
+  df_rev_il_long_onerho <- ff_panel_cumsum_grouplast(df_rev_il_long_onerho,
+                                                     svr_id=svr_id_i, svr_x=svr_inpalc, svr_y=svr_v_cumu_l,
+                                                     svr_cumsumtop = svr_v_cumu_il_rksrt,
+                                                     stat='sum', quick=TRUE)
+
+  # A.4 Outter power
+  # Exclude Rank = 0, already used them to calculate total cumulative
+  df_rev_il_long_onerho <- df_rev_il_long_onerho %>% filter(!!sym(svr_inpalc) != 0)
+  df_rev_Ail_onerho <- df_rev_il_long_onerho %>%
+    mutate(!!sym(svr_v_cumu_il_rksrt_outter) := (!!sym(svr_v_cumu_il_rksrt))^(1/fl_rho))
+    
+    
+  # Export: function is given rho, so no rho to export
+  df_rev_Ail_onerho <- df_rev_Ail_onerho %>%
+    select(!!sym(svr_inpalc), !!sym(svr_v_cumu_il_rksrt_outter))
+    
+  # Return
+  return(df_rev_Ail_onerho)
+}
+
+```
 #### OPtimal Queue and Allocation Joint Function
 
 Generate function. Organize parameters not by *i* or *il* specific parameters, but by parameter types:
@@ -762,7 +826,7 @@ ffi_solve_queue_alloc <- function(ar_rho,
     ls_df_queues <- ffp_opt_anlyz_rhgin_bin(df_input_il,
                                             svr_id_i = svr_id_il,
                                             svr_A_i = svr_A_il, svr_alpha_i = svr_alpha_il, svr_beta_i = svr_beta_i,
-                                            ar_rho = ar_rho,
+                                            ar_rho = ar_rho, svr_rho_val = svr_rho_val,
                                             svr_rho = svr_rho,
                                             svr_inpalc = svr_inpalc,
                                             svr_expout = svr_expout,
@@ -778,7 +842,7 @@ ffi_solve_queue_alloc <- function(ar_rho,
                   select(!!sym(svr_id_i), !!sym(svr_id_il),
                          !!sym(svr_D_max_i), !!sym(svr_D_il)),
                 by=svr_id_il) %>%
-      select(!!sym(svr_rho),
+      select(!!sym(svr_rho), !!sym(svr_rho_val), 
              !!sym(svr_id_i), !!sym(svr_id_il),
              !!sym(svr_D_max_i), !!sym(svr_D_il),
              !!sym(svr_inpalc), !!sym(svr_D_Wbin_il),
@@ -791,13 +855,13 @@ ffi_solve_queue_alloc <- function(ar_rho,
     # Step 3
     # Optimal Allocation Discrete Levels
     df_alloc_i_long <- df_queue_il_long %>%
-      select(!!sym(svr_rho), !!sym(svr_id_i),
+      select(!!sym(svr_rho), !!sym(svr_rho_val), !!sym(svr_id_i),
              !!sym(svr_D_max_i), !!sym(svr_D_Wbin_il)) %>%
       group_by(!!sym(svr_id_i), !!sym(svr_rho)) %>%
-      summarize(!!sym(svr_D_max_i)  := mean(!!sym(svr_D_max_i)),
+      summarize(!!sym(svr_rho_val)  := mean(!!sym(svr_rho_val)),
+                !!sym(svr_D_max_i)  := mean(!!sym(svr_D_max_i)),
                 !!sym(svr_D_star_i) := sum(!!sym(svr_D_Wbin_il)),
                 !!sym(svr_F_star_i) := (!!sym(svr_D_star_i)/!!sym(svr_D_max_i))) %>%
-      mutate(!!sym(svr_rho) := as.numeric(!!sym(svr_rho))) %>%
       arrange(!!sym(svr_id_i), !!sym(svr_rho))
     
     # Step 4
@@ -816,14 +880,33 @@ ffi_solve_queue_alloc <- function(ar_rho,
                case_when(!!sym(svr_D_star_i) == 0 ~ !!sym(svr_A_il), # no choice no allocation 
                          TRUE ~ !!sym(svr_A_il) + !!sym(svr_alpha_il)))
     
+    # Step 5, value at Q points
+    # Evaluate REV
+    ar_util_rev_loop <- df_alloc_i_long %>%
+      group_by(!!sym(svr_rho)) %>%
+      do(rev = ffi_disc_rev_onerho(fl_rho = .$rho_val,
+                                   fl_teacher_increase_number = fl_teacher_increase_number,
+                                   df_input_ib = df_input_ib, df_queue_il = .,
+                                   svr_A_i_l0 = svr_A_i_l0, svr_alpha_o_i = svr_alpha_o_i,
+                                   svr_id_i = svr_id_i,
+                                   svr_D_il = svr_D_il, svr_inpalc = svr_inpalc, svr_D_Wbin_il = svr_D_Wbin_il,
+                                   svr_A_il = svr_A_il, svr_alpha_il = svr_alpha_il, svr_beta_i = svr_beta_i,
+                                   svr_v_cumu_l = svr_v_cumu_l,
+                                   svr_v_cumu_il_rksrt = svr_v_cumu_il_rksrt,
+                                   svr_v_cumu_il_rksrt_outter = svr_v_cumu_il_rksrt_outter)$fl_REV) %>%
+      unnest()
     
-    # Step 5
-    # merge in value for rho, planner inequality aversion
+    ffi_disc_value_star_q(fl_rho, df_queue_il,
+                                  svr_id_i = 'id_i',
+                                  svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
+                                  svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
+                                  svr_v_cumu_l = 'v_sum_l',
+                                  svr_v_cumu_il_rksrt = 'v_sum_il_rk',
+                                  svr_v_cumu_il_rksrt_outter = 'v_sum_il_rk_out')
+    
+    # Step 6
+    # Sort columns
     df_alloc_i_long <- df_alloc_i_long %>%
-      left_join(as_tibble(ar_rho) %>% 
-                  rename_all(~c(svr_rho_val)) %>% 
-                  rowid_to_column(var = svr_rho),
-                by=svr_rho) %>%
       select(!!sym(svr_id_i), !!sym(svr_rho), !!sym(svr_rho_val),
              !!sym(svr_D_max_i), !!sym(svr_D_star_i), !!sym(svr_F_star_i), !!sym(svr_EH_star_i))
       
@@ -1343,7 +1426,9 @@ Call the *ffi_disc_rev_onerho* function, whose parameters include two dataframes
 
 Group *df_queue_il_long* by $\rho$ subgroups, and use *do anything* to call the *ffi_disc_rev_onerho* function.
 
-#### Single Function onerho
+
+
+#### Generate value *mt_rev*
 
 ```{r}
 # ffi_disc_Diall_onerho: function, discrete, allocation D_i = 1 to D_max, one rho (rho)
