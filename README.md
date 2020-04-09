@@ -75,19 +75,39 @@ The exciting thing here is that welfare calculation traditionally has been mainl
 
 For the more equality focused planner, the top two ranked could be the two kids who were be expected to be the shortest without the nutrition. For the more efficiency minded planner, the top two ranked could be the two kids for whom additional nutrient have the greatest marginal effects. As we shift along the  preference spectrum from the Utilitarian to the Rawlsian, the rankings of each of the 10 individuals on the optimal targeting queue shift.
 
+# 4 Optimal Allocation Discrete Problems
 
-# 3 Optimal Allocation Continuous Linear Problems
+## 4.1 Binary Allocations
+
+This works out the binary allocation problem using the *mtcars* dateaset.
+
+1. [**line by line vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_car.html): data to estimation to optimal allocation to planner preference to gini
+
+## 4.2 Discrete Allocation
+
+This works out the discrete allocation problem using the *caschool* dataset. We study allocating additional (homogeneous) teachers to schools.
+
+1. [**line by line vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html): data to estimation to optimal allocation with various planner preference
+2. [**call functions vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allfn.html): shorter file that calls functions in */R* folder.
+
+## 4.3 Allocation Examples
+
+1. [**Wage and Job Training vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_training_wage.html)
+2. [**Employment and Job Training vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allfc_training_logit.html)
+3. [**Birth Weight and Doctor's Visits vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_wgt.html)
+
+# 5 Optimal Allocation Continuous Linear Problems
 
 Linear Optimal Allocations for the *N_i* and *H_i* problem. Optimal constrained resource allocation given continuous linear estimation results. The continuous linear estimation results could be based on causal reduced form estimation, or production function estimation results.
 
-## 2.1 Allocation Function
+## 5.1 Allocation Function
 
 Taking estimation results as function parameters, we solve the optimal allocation problem using the function below.
 
 1. [**function reference**](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_solin_relow.html): solves optimal allocations given linear estimates
 2. [**function testing vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow.html): illustrate function math steps
 
-## 2.2 Allocation Start to End
+## 5.2 Allocation Start to End
 
 Here, to illustrate all steps, we start from loading in data, estimate, allocate and analyze. This is the full vignette that shows all steps to. The steps here become three parts. First, get estimates from estimation function from some existing research project. Second, use our [optimal allocation function](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow.html)/algoritm given estimation results. Third, analyze allocation results's implications for equality of allocations.
 
@@ -96,16 +116,23 @@ These functions show in practice how the various tools can be used in sequence t
 1. [**line by line**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow_allrw.html): data to estimation to optimal allocation to planner preference to gini
 2. [**call functions**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow_allfn.html): from data to gini call functions calling various functions in sequence.
 
-## 2.3 Saved Allocation Examples
+## 5.3 Saved Allocation Examples
 
 To make the allocation results transparent, we store example allocation results from the [Height and Protein](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html) data, which has slightly more than 1000 observations.
 
 1. [**data reference**](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop.html): reference file describing example allocation data.
 2. [**rda data file**](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop.rda): download the rda datafile and open in R to review example allocation results
 
-# 3 Support Files
+# 6 Optimal Allocation Decreasing Returns Log Linear Problem
 
-## 3.1 Generate Regression Results Examples
+Decreasing returns, log linear problem solutions.
+
+1. [**bisection testing vignette**](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffv_opt_solog_bisec_allrw.html): solves optimal allocations given linear estimates
+2. [**nutrition allocation vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solog_asame_allrw.html): illustrate function math steps
+
+# 7 Support Files
+
+## 7.1 Generate Regression Results Examples
 
 First, we generate some regression results. These provide the optimal allocation problems with parameter inputs.
 
@@ -113,7 +140,7 @@ First, we generate some regression results. These provide the optimal allocation
     - Data generation function: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html) \| [save data vignette](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html)
     - Saved data file: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda)
 
-## 3.2 Allocation Distributional Analysis
+## 7.2 Allocation Distributional Analysis
 
 1. **Planner Preference and Gini**: variety of planner elasticity and resulting allocation gini
     - Data generation function: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin.html) \| [save data vignette](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_anlyz_rhgin.html)
