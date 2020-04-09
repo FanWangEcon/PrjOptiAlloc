@@ -7,6 +7,20 @@ ffp_opt_sodis_value <- function(fl_rho, df_queue_il,
                                 svr_V_cumu_l = 'V_sum_l',
                                 svr_V_inner_Q_il = 'V_inner_Q_il',
                                 svr_V_star_Q_il = 'V_star_Q_il'){
+#' Value at each W point along Queue, given optimal allocation
+#'
+#' @description
+#' After solving for optimal allocating queue, at each Q point, which corresponds to
+#' different level of aggregate resources available, show the value given optimal choices
+#' this is an array of values, at each Q point. Potentially output for all Q. Or
+#' only show this for all queue points up to the actual resource limit, D_Wbin_il = 1.
+#'
+#' @author Fan Wang, \url{http://fanwangecon.github.io}
+#' @references
+#' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sodis_value.html}
+#' \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html}
+#' @export
+#'
 
   if(length(fl_rho)>1){
     # rho could be fed in an an array, with all identical values
@@ -77,6 +91,17 @@ ffp_opt_anlyz_rhgin_dis <- function(ar_rho,
                                     svr_expout = 'opti_exp_outcome',
                                     svr_V_star_Q_il = 'V_star_Q_il',
                                     st_idcol_prefix = 'sid_'){
+  #' Discrete Optimal Allocations, Queue, and Values
+  #'
+  #' @description
+  #' Optimal ALlocation Queues for Discrete Problems, Allocation Amount, Value
+  #'
+  #' @author Fan Wang, \url{http://fanwangecon.github.io}
+  #' @references
+  #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin_dis.html}
+  #' \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html}
+  #' @export
+  #'
 
     # Step 1
     # Call function to Solve for Optimal Targeting Queue
@@ -300,6 +325,18 @@ ffp_opt_sodis_rev <- function(fl_rho,
                                 svr_inpalc = 'Q_il',
                                 svr_beta_i = 'beta_i',
                                 svr_V_star_Q_il = 'V_star_Q_il'){
+  #' Discrete Problem Resource Equivalent Variation
+  #'
+  #' @description
+  #' The function uses the Value already computed along the Queue
+  #'
+  #' @author Fan Wang, \url{http://fanwangecon.github.io}
+  #' @references
+  #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sodis_rev.html}
+  #' \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html}
+  #' @export
+  #'
+
   if(length(fl_rho)>1){
     # rho could be fed in an an array, with all identical values
     fl_rho <- fl_rho[1]
@@ -452,6 +489,18 @@ ffp_opt_anlyz_sodis_rev <- function(ar_rho,
                                     svr_inpalc = 'Q_il',
                                     svr_beta_i = 'beta_i',
                                     svr_V_star_Q_il = 'V_star_Q_il'){
+  #' Discrete Problem Resource Equivalent Variation Multiple Rhos
+  #'
+  #' @description
+  #' The function uses the Value already computed along the Queue computes over
+  #' multiple values of inequality aversion.
+  #'
+  #' @author Fan Wang, \url{http://fanwangecon.github.io}
+  #' @references
+  #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_sodis_rev.html}
+  #' \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html}
+  #' @export
+  #'
 
     # Evaluate REV
     ar_util_rev_loop <- df_queue_il_long_with_V %>%

@@ -117,7 +117,7 @@ return(list(df_opti_alloc_all_rho = df_opti_alloc_all_rho,
 
 ffp_opt_anlyz_rhgin_bin <- function(df, svr_id_i,
                                       svr_A_i = 'A', svr_alpha_i = 'alpha', svr_beta_i = 'beta',
-                                      ar_rho = 0.5,
+                                      ar_rho = c(0.5,0.1,-1,-20),
                                       svr_rho = 'rho', svr_rho_val = 'rho_val',
                                       svr_inpalc = 'rank',
                                       svr_expout = 'opti_exp_outcome',
