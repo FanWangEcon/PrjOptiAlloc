@@ -2,8 +2,12 @@
 
 export(ffp_opt_anlyz_rhgin)
 export(ffp_opt_anlyz_rhgin_bin)
+export(ffp_opt_anlyz_rhgin_dis)
+export(ffp_opt_anlyz_sodis_rev)
 export(ffp_opt_sobin_rev)
 export(ffp_opt_sobin_target_row)
+export(ffp_opt_sodis_rev)
+export(ffp_opt_sodis_value)
 export(ffp_opt_solin_relow)
 export(ffy_opt_dtgch_cbem4)
 export(ffy_opt_ghthm_dk)

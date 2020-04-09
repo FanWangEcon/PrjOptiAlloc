@@ -2,7 +2,7 @@
 % Please edit documentation in R/ffp_opt_anlyz.R
 \name{ffp_opt_anlyz_rhgin_bin}
 \alias{ffp_opt_anlyz_rhgin_bin}
-\title{Theorem 1, Binary Optimal Allocation solution, loop along a vector of planner inequality preference (lambda)}
+\title{Theorem 1, Binary Optimal Allocation solution, loop along a vector of planner inequality preference (rho)}
 \usage{
 ffp_opt_anlyz_rhgin_bin(
   df,
@@ -10,10 +10,12 @@ ffp_opt_anlyz_rhgin_bin(
   svr_A_i = "A",
   svr_alpha_i = "alpha",
   svr_beta_i = "beta",
-  ar_rho = 0.5,
-  svr_rho = "lambda",
+  ar_rho = c(0.5, 0.1, -1, -20),
+  svr_rho = "rho",
+  svr_rho_val = "rho_val",
   svr_inpalc = "rank",
-  svr_expout = "opti_exp_outcome"
+  svr_expout = "opti_exp_outcome",
+  verbose = FALSE
 )
 }
 \arguments{
@@ -29,7 +31,9 @@ ffp_opt_anlyz_rhgin_bin(
 
 \item{ar_rho}{array preferences for equality for the planner}
 
-\item{svr_rho}{string variable name for the planne inequality aversion variable, initially rho, then called lambda}
+\item{svr_rho}{string variable name for the index planner inequality aversion variable, initially rho, then called rho, this is the index variable, index for each one of the rho values}
+
+\item{svr_rho_val}{string variable name for the value of the planner inequality aversion variable}
 
 \item{svr_inpalc}{string variable name for newly generated input optimal allocation}
 

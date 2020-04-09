@@ -87,7 +87,10 @@
       <a href="../articles/ffv_opt_sobin_rkone_allrw_wgt.html">BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sodis_rkone_allrw_casch.html">DISCRETE--Discrete Provision Optimal Allocation Solution (Line by Line)</a>
+      <a href="../articles/ffv_opt_sodis_rkone_casch_allfn.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Function)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_sodis_rkone_casch_allrw.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_solin_relow.html">LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest</a>
@@ -97,6 +100,9 @@
     </li>
     <li>
       <a href="../articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_solog_asame_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Analytical Common Alpha</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_solog_bisec_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)</a>
@@ -773,48 +779,50 @@
 <a class="sourceLine" id="cb58-2" title="2"><span class="st">              </span><span class="kw">select</span>(<span class="kw">one_of</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Index'</span>, <span class="st">'age'</span>, <span class="st">'lwt'</span>, <span class="st">'race'</span>, <span class="st">'smoke'</span>, <span class="st">'ptl'</span>, <span class="st">'ht'</span>, <span class="st">'ui'</span>, ar_st_varnames)))</a>
 <a class="sourceLine" id="cb58-3" title="3"></a>
 <a class="sourceLine" id="cb58-4" title="4"><span class="co"># Need to only include the smokers here</span></a>
-<a class="sourceLine" id="cb58-5" title="5">tb_key_alpha_A_beta &lt;-<span class="st"> </span>tb_key_alpha_A_beta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(smoke <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb58-6" title="6"></a>
-<a class="sourceLine" id="cb58-7" title="7"><span class="co"># Unique beta, A, and alpha check</span></a>
-<a class="sourceLine" id="cb58-8" title="8">tb_opti_unique &lt;-<span class="st"> </span>tb_key_alpha_A_beta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(<span class="op">!!!</span><span class="kw">syms</span>(ar_st_varnames)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb58-9" title="9"><span class="st">                    </span><span class="kw">arrange</span>(<span class="op">!!!</span><span class="kw">syms</span>(ar_st_varnames)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb58-10" title="10"><span class="st">                    </span><span class="kw">summarise</span>(<span class="dt">n_obs_group=</span><span class="kw">n</span>())</a>
-<a class="sourceLine" id="cb58-11" title="11"></a>
-<a class="sourceLine" id="cb58-12" title="12"><span class="co"># Show cars</span></a>
-<a class="sourceLine" id="cb58-13" title="13"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tb_key_alpha_A_beta, <span class="dv">32</span>)</a></code></pre></div>
-<pre><code>##    Index age lwt race smoke ptl ht ui     alpha        A        beta
-## 1     87  20 105    1     1   0  0  0 -471.8059 3389.928 0.005291005
-## 2     88  21 108    1     1   0  0  1 -471.8059 2827.819 0.005291005
-## 3     89  18 107    1     1   0  0  1 -471.8059 2835.143 0.005291005
-## 4     94  29 123    1     1   0  0  0 -471.8059 3426.841 0.005291005
-## 5     95  26 113    1     1   0  0  0 -471.8059 3398.834 0.005291005
-## 6    100  18 100    1     1   0  0  0 -471.8059 3377.800 0.005291005
-## 7    101  18 100    1     1   0  0  0 -471.8059 3377.800 0.005291005
-## 8    103  25 118    1     1   0  0  0 -471.8059 3422.212 0.005291005
-## 9    105  28 120    1     1   0  0  0 -471.8059 3418.814 0.005291005
-## 10   113  17 122    1     1   0  0  0 -471.8059 3467.914 0.005291005
-## 11   115  26 168    2     1   0  0  0 -407.0641 3113.095 0.005291005
-## 12   118  24  90    1     1   1  0  0 -471.8059 3034.067 0.005291005
-## 13   119  35 121    2     1   1  0  0 -407.0641 2612.864 0.005291005
-## 14   123  29 140    1     1   0  0  0 -471.8059 3493.577 0.005291005
-## 15   124  19 138    1     1   0  0  0 -471.8059 3523.224 0.005291005
-## 16   125  27 124    1     1   0  0  0 -471.8059 3438.266 0.005291005
-## 17   126  31 215    1     1   0  0  0 -471.8059 3780.500 0.005291005
-## 18   127  33 109    1     1   0  0  0 -471.8059 3356.882 0.005291005
-## 19   128  21 185    2     1   0  0  0 -407.0641 3198.580 0.005291005
-## 20   132  18  90    1     1   0  0  1 -471.8059 2768.407 0.005291005
-## 21   133  18  90    1     1   0  0  1 -471.8059 2768.407 0.005291005
-## 22   137  22  85    3     1   0  0  0   29.2642 2841.417 0.005291005
-## 23   140  22 130    1     1   0  0  0 -471.8059 3480.570 0.005291005
-## 24   141  30  95    1     1   0  0  0 -471.8059 3313.173 0.005291005
-## 25   144  21 110    3     1   0  0  1   29.2642 2373.171 0.005291005
-## 26   154  26 133    3     1   2  0  0   29.2642 2964.453 0.005291005
-## 27   159  28 250    3     1   0  0  0   29.2642 3466.648 0.005291005
-## 28   162  22 112    1     1   2  0  0 -471.8059 3359.513 0.005291005
-## 29   163  31 150    3     1   0  0  0   29.2642 3062.834 0.005291005
-## 30   164  23 115    3     1   0  0  0   29.2642 2955.436 0.005291005
-## 31   167  16 135    1     1   0  0  0 -471.8059 3522.697 0.005291005
-## 32   170  32 134    1     1   1  0  0 -471.8059 3176.796 0.005291005</code></pre>
+<a class="sourceLine" id="cb58-5" title="5"><span class="co"># tb_key_alpha_A_beta &lt;- tb_key_alpha_A_beta %&gt;% filter(smoke == 1)</span></a>
+<a class="sourceLine" id="cb58-6" title="6"><span class="co"># Randomly select 30 people</span></a>
+<a class="sourceLine" id="cb58-7" title="7"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb58-8" title="8">it_include &lt;-<span class="st"> </span><span class="dv">30</span></a>
+<a class="sourceLine" id="cb58-9" title="9">tb_key_alpha_A_beta &lt;-<span class="st"> </span>tb_key_alpha_A_beta[<span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(tb_key_alpha_A_beta)[<span class="dv">1</span>], it_include, <span class="dt">replace=</span><span class="ot">FALSE</span>),]</a>
+<a class="sourceLine" id="cb58-10" title="10"></a>
+<a class="sourceLine" id="cb58-11" title="11"><span class="co"># Unique beta, A, and alpha check</span></a>
+<a class="sourceLine" id="cb58-12" title="12">tb_opti_unique &lt;-<span class="st"> </span>tb_key_alpha_A_beta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(<span class="op">!!!</span><span class="kw">syms</span>(ar_st_varnames)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb58-13" title="13"><span class="st">                    </span><span class="kw">arrange</span>(<span class="op">!!!</span><span class="kw">syms</span>(ar_st_varnames)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb58-14" title="14"><span class="st">                    </span><span class="kw">summarise</span>(<span class="dt">n_obs_group=</span><span class="kw">n</span>())</a>
+<a class="sourceLine" id="cb58-15" title="15"></a>
+<a class="sourceLine" id="cb58-16" title="16"><span class="co"># Show cars</span></a>
+<a class="sourceLine" id="cb58-17" title="17"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tb_key_alpha_A_beta, <span class="dv">32</span>)</a></code></pre></div>
+<pre><code>##     Index age lwt race smoke ptl ht ui     alpha        A        beta
+## 159    43  27 130    2     0   0  0  1 -407.0641 2390.034 0.005291005
+## 179    69  23 110    1     1   1  0  0 -471.8059 3116.330 0.005291005
+## 14     99  30 107    3     0   1  0  1   29.2642 2045.668 0.005291005
+## 170    57  15 110    1     0   0  0  0 -471.8059 3428.306 0.005291005
+## 50    137  22  85    3     1   0  0  0   29.2642 2841.417 0.005291005
+## 118   214  28 130    3     0   0  0  0   29.2642 2995.571 0.005291005
+## 43    130  23 130    2     0   0  0  0 -407.0641 2975.170 0.005291005
+## 187    82  23  94    3     1   0  0  0   29.2642 2872.998 0.005291005
+## 184    78  14 101    3     1   1  0  0   29.2642 2652.249 0.005291005
+## 153    34  19 112    1     1   0  0  1 -471.8059 2851.021 0.005291005
+## 90    184  22 125    1     0   0  0  0 -471.8059 3460.941 0.005291005
+## 91    185  24 133    1     0   0  0  0 -471.8059 3484.847 0.005291005
+## 178    68  17 120    1     1   0  0  0 -471.8059 3460.063 0.005291005
+## 92    186  21 134    3     0   0  0  0   29.2642 3037.523 0.005291005
+## 137    17  23  97    3     0   0  0  1   29.2642 2314.638 0.005291005
+## 99    193  19 147    1     1   0  0  0 -471.8059 3558.555 0.005291005
+## 72    163  31 150    3     1   0  0  0   29.2642 3062.834 0.005291005
+## 26    112  28 167    1     0   0  0  0 -471.8059 3603.319 0.005291005
+## 7      92  22 118    1     0   0  0  0 -471.8059 3433.462 0.005291005
+## 186    81  14 100    3     0   0  0  0   29.2642 2930.301 0.005291005
+## 175    63  23 120    3     0   0  0  0   29.2642 2975.064 0.005291005
+## 164    49  18 148    3     0   0  0  0   29.2642 3103.732 0.005291005
+## 78    170  32 134    1     1   1  0  0 -471.8059 3176.796 0.005291005
+## 81    174  22 131    1     0   0  0  0 -471.8059 3484.495 0.005291005
+## 183    77  26 190    1     1   0  0  0 -471.8059 3701.109 0.005291005
+## 103   199  24 110    3     0   1  0  0   29.2642 2650.081 0.005291005
+## 117   213  14 135    1     0   0  0  0 -471.8059 3530.197 0.005291005
+## 76    168  18 229    2     0   0  0  0 -407.0641 3382.558 0.005291005
+## 143    24  25 115    3     0   0  0  0   29.2642 2947.936 0.005291005
+## 32    118  24  90    1     1   1  0  0 -471.8059 3034.067 0.005291005</code></pre>
 </div>
 </div>
 <div id="optimal-linear-allocations" class="section level1">
@@ -833,170 +841,50 @@
 <a class="sourceLine" id="cb60-8" title="8">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">200</span>, <span class="dv">-100</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="dv">-25</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">25</span>, <span class="dv">-5</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">-1</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">1</span>, <span class="fl">-0.01</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.01</span>, <span class="fl">0.25</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.25</span>, <span class="fl">0.90</span>, <span class="dt">length.out=</span><span class="dv">5</span>))</a>
 <a class="sourceLine" id="cb60-9" title="9">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="dv">-5</span>, <span class="dv">-1</span>, <span class="fl">0.1</span>, <span class="fl">0.6</span>, <span class="fl">0.99</span>)</a>
 <a class="sourceLine" id="cb60-10" title="10">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="dv">-10</span>, <span class="dv">-1</span>, <span class="fl">0.05</span>, <span class="fl">0.9</span>)</a>
-<a class="sourceLine" id="cb60-11" title="11">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(ar_rho)</a></code></pre></div>
+<a class="sourceLine" id="cb60-11" title="11">ar_rho &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>(<span class="dv">10</span><span class="op">^</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">2</span>, <span class="dt">length.out=</span><span class="dv">10</span>))))</a>
+<a class="sourceLine" id="cb60-12" title="12">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="dv">-10</span>, <span class="dv">-1</span>, <span class="fl">-0.5</span>, <span class="fl">-0.1</span>, <span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.20</span>,  <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb60-13" title="13">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">110</span>, <span class="dv">-90</span>, <span class="dt">length.out=</span><span class="dv">10</span>), <span class="dv">-50</span>, <span class="dv">10</span>, <span class="dv">-1</span>, <span class="fl">-0.5</span>, <span class="fl">-0.1</span>, <span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.20</span>,  <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb60-14" title="14">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(ar_rho)</a></code></pre></div>
 </div>
 <div id="optimal-binary-allocation-crs" class="section level2">
 <h2 class="hasAnchor">
 <a href="#optimal-binary-allocation-crs" class="anchor"></a>Optimal binary Allocation (CRS)</h2>
 <p>This also works with any CRS CES.</p>
 <div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1"><span class="co"># Optimal Linear Equation</span></a>
-<a class="sourceLine" id="cb61-2" title="2"></a>
-<a class="sourceLine" id="cb61-3" title="3"><span class="co"># Pull arrays out</span></a>
-<a class="sourceLine" id="cb61-4" title="4">ar_A &lt;-<span class="st"> </span>tb_key_alpha_A_beta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(A)</a>
-<a class="sourceLine" id="cb61-5" title="5">ar_alpha &lt;-<span class="st"> </span>tb_key_alpha_A_beta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(alpha)</a>
-<a class="sourceLine" id="cb61-6" title="6">ar_beta &lt;-<span class="st"> </span>tb_key_alpha_A_beta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(beta)</a>
-<a class="sourceLine" id="cb61-7" title="7"></a>
-<a class="sourceLine" id="cb61-8" title="8"><span class="co"># Define Function for each individual m, with hard coded arrays</span></a>
-<a class="sourceLine" id="cb61-9" title="9">ffi_binary_dplyrdo_func &lt;-<span class="st"> </span><span class="cf">function</span>(ls_row, fl_rho, <span class="dt">bl_old=</span><span class="ot">FALSE</span>){</a>
-<a class="sourceLine" id="cb61-10" title="10">  <span class="co"># @param bl_old, weather to use old incorrect solution</span></a>
-<a class="sourceLine" id="cb61-11" title="11">  <span class="co"># hard coded inputs are:</span></a>
-<a class="sourceLine" id="cb61-12" title="12">  <span class="co"># 1, ar_A</span></a>
-<a class="sourceLine" id="cb61-13" title="13">  <span class="co"># 2, ar_alpha</span></a>
-<a class="sourceLine" id="cb61-14" title="14">  <span class="co"># 3, ar_beta</span></a>
-<a class="sourceLine" id="cb61-15" title="15">  <span class="co"># note follow https://fanwangecon.github.io/R4Econ/support/function/fs_applysapplymutate.html</span></a>
-<a class="sourceLine" id="cb61-16" title="16"></a>
-<a class="sourceLine" id="cb61-17" title="17">  fl_alpha &lt;-<span class="st"> </span>ls_row<span class="op">$</span>alpha</a>
-<a class="sourceLine" id="cb61-18" title="18">  fl_A &lt;-<span class="st"> </span>ls_row<span class="op">$</span>A</a>
-<a class="sourceLine" id="cb61-19" title="19">  fl_beta &lt;-<span class="st"> </span>ls_row<span class="op">$</span>beta</a>
-<a class="sourceLine" id="cb61-20" title="20"></a>
-<a class="sourceLine" id="cb61-21" title="21">  <span class="cf">if</span> (bl_old) {</a>
-<a class="sourceLine" id="cb61-22" title="22"></a>
-<a class="sourceLine" id="cb61-23" title="23">    <span class="co"># the equation below is like doubly wrong I think, should be 1/(fl_rho-1)</span></a>
-<a class="sourceLine" id="cb61-24" title="24">    bl_old_wrong =<span class="st"> </span><span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb61-25" title="25">    <span class="cf">if</span> (bl_old_wrong) {</a>
-<a class="sourceLine" id="cb61-26" title="26">      ar_left &lt;-<span class="st"> </span>((ar_A <span class="op">+</span><span class="st"> </span>ar_alpha)<span class="op">/</span>(fl_A <span class="op">+</span><span class="st"> </span>fl_alpha))</a>
-<a class="sourceLine" id="cb61-27" title="27">      ar_right &lt;-<span class="st"> </span>((ar_alpha<span class="op">*</span>ar_beta)<span class="op">/</span>(fl_alpha<span class="op">*</span>fl_beta))<span class="op">^</span>(<span class="dv">1</span><span class="op">/</span>(<span class="dv">1</span><span class="op">-</span>fl_rho))</a>
-<a class="sourceLine" id="cb61-28" title="28">      ar_full &lt;-<span class="st"> </span>ar_left<span class="op">*</span>ar_right</a>
-<a class="sourceLine" id="cb61-29" title="29">      ar_indicator &lt;-<span class="st"> </span>(ar_full <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb61-30" title="30">    } <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb61-31" title="31">      ar_left &lt;-<span class="st"> </span>((ar_A <span class="op">+</span><span class="st"> </span>ar_alpha)<span class="op">/</span>(fl_A <span class="op">+</span><span class="st"> </span>fl_alpha))</a>
-<a class="sourceLine" id="cb61-32" title="32">      ar_right &lt;-<span class="st"> </span>((ar_alpha<span class="op">*</span>ar_beta)<span class="op">/</span>(fl_alpha<span class="op">*</span>fl_beta))<span class="op">^</span>(<span class="dv">1</span><span class="op">/</span>(fl_rho<span class="dv">-1</span>))</a>
-<a class="sourceLine" id="cb61-33" title="33">      ar_full &lt;-<span class="st"> </span>ar_left<span class="op">*</span>ar_right</a>
-<a class="sourceLine" id="cb61-34" title="34">      ar_indicator &lt;-<span class="st"> </span>(ar_full <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb61-35" title="35">    }</a>
-<a class="sourceLine" id="cb61-36" title="36"></a>
-<a class="sourceLine" id="cb61-37" title="37">  } <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb61-38" title="38">      ar_left &lt;-<span class="st"> </span>(</a>
-<a class="sourceLine" id="cb61-39" title="39">                  ((ar_A <span class="op">+</span><span class="st"> </span>ar_alpha)<span class="op">^</span>fl_rho <span class="op">-</span><span class="st"> </span>(ar_A)<span class="op">^</span>fl_rho)</a>
-<a class="sourceLine" id="cb61-40" title="40">                  <span class="op">/</span></a>
-<a class="sourceLine" id="cb61-41" title="41"><span class="st">                  </span>((fl_A <span class="op">+</span><span class="st"> </span>fl_alpha)<span class="op">^</span>fl_rho <span class="op">-</span><span class="st"> </span>(fl_A)<span class="op">^</span>fl_rho)</a>
-<a class="sourceLine" id="cb61-42" title="42">                 )</a>
-<a class="sourceLine" id="cb61-43" title="43">      ar_right &lt;-<span class="st"> </span>((ar_beta)<span class="op">/</span>(fl_beta))</a>
-<a class="sourceLine" id="cb61-44" title="44">      ar_full &lt;-<span class="st"> </span>ar_left<span class="op">*</span>ar_right</a>
-<a class="sourceLine" id="cb61-45" title="45">      ar_indicator &lt;-<span class="st"> </span>(ar_full <span class="op">&gt;=</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb61-46" title="46">  }</a>
-<a class="sourceLine" id="cb61-47" title="47"></a>
-<a class="sourceLine" id="cb61-48" title="48">  it_rank &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(ar_indicator)</a>
-<a class="sourceLine" id="cb61-49" title="49">  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span>(it_rank)</a>
-<a class="sourceLine" id="cb61-50" title="50">}</a>
-<a class="sourceLine" id="cb61-51" title="51"><span class="kw">ffi_binary_dplyrdo_func</span>(tb_key_alpha_A_beta[<span class="dv">1</span>,], <span class="dv">0</span>)</a></code></pre></div>
-<pre><code>## [1] NA</code></pre>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1"><span class="co"># accumulate allocation results</span></a>
-<a class="sourceLine" id="cb63-2" title="2">tb_opti_alloc_all_rho &lt;-<span class="st"> </span>tb_key_alpha_A_beta</a>
+<a class="sourceLine" id="cb61-2" title="2">svr_inpalc &lt;-<span class="st"> 'rank'</span></a>
+<a class="sourceLine" id="cb61-3" title="3"></a>
+<a class="sourceLine" id="cb61-4" title="4"><span class="co"># Solve with Function</span></a>
+<a class="sourceLine" id="cb61-5" title="5">ls_bin_solu_all_rhos &lt;-</a>
+<a class="sourceLine" id="cb61-6" title="6"><span class="st">  </span><span class="kw"><a href="../reference/ffp_opt_anlyz_rhgin_bin.html">ffp_opt_anlyz_rhgin_bin</a></span>(tb_key_alpha_A_beta, <span class="dt">svr_id_i =</span> <span class="st">'Index'</span>,</a>
+<a class="sourceLine" id="cb61-7" title="7">                          <span class="dt">svr_A_i =</span> <span class="st">'A'</span>, <span class="dt">svr_alpha_i =</span> <span class="st">'alpha'</span>, <span class="dt">svr_beta_i =</span> <span class="st">'beta'</span>,</a>
+<a class="sourceLine" id="cb61-8" title="8">                          <span class="dt">ar_rho =</span> ar_rho,</a>
+<a class="sourceLine" id="cb61-9" title="9">                          <span class="dt">svr_inpalc =</span> svr_inpalc,</a>
+<a class="sourceLine" id="cb61-10" title="10">                          <span class="dt">svr_expout =</span> <span class="st">'opti_exp_outcome'</span>)</a></code></pre></div>
+<pre><code>## Joining, by = "Index"</code></pre>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1">tb_opti_alloc_all_rho &lt;-<span class="st"> </span>ls_bin_solu_all_rhos<span class="op">$</span>df_all_rho</a>
+<a class="sourceLine" id="cb63-2" title="2">tb_opti_alloc_all_rho_long &lt;-<span class="st"> </span>ls_bin_solu_all_rhos<span class="op">$</span>df_all_rho_long</a>
 <a class="sourceLine" id="cb63-3" title="3"></a>
-<a class="sourceLine" id="cb63-4" title="4"><span class="co"># A. First Loop over Planner Preference</span></a>
-<a class="sourceLine" id="cb63-5" title="5"><span class="co"># Generate Rank Order</span></a>
-<a class="sourceLine" id="cb63-6" title="6"><span class="cf">for</span> (it_rho_ctr <span class="cf">in</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">1</span>,<span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(ar_rho))) {</a>
-<a class="sourceLine" id="cb63-7" title="7">  rho =<span class="st"> </span>ar_rho[it_rho_ctr]</a>
-<a class="sourceLine" id="cb63-8" title="8"></a>
-<a class="sourceLine" id="cb63-9" title="9">  queue_rank &lt;-<span class="st"> </span>tb_key_alpha_A_beta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb63-10" title="10"><span class="st">                              </span><span class="kw">do</span>(<span class="dt">rk =</span> <span class="kw">ffi_binary_dplyrdo_func</span>(., rho)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb63-11" title="11"><span class="st">                              </span><span class="kw">unnest</span>(rk) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(rk)</a>
-<a class="sourceLine" id="cb63-12" title="12"></a>
-<a class="sourceLine" id="cb63-13" title="13">  tb_with_rank &lt;-<span class="st"> </span>tb_key_alpha_A_beta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_column</span>(queue_rank)</a>
-<a class="sourceLine" id="cb63-14" title="14"></a>
-<a class="sourceLine" id="cb63-15" title="15">  <span class="co"># m. Keep for df collection individual key + optimal allocation</span></a>
-<a class="sourceLine" id="cb63-16" title="16">  <span class="co"># _on stands for optimal nutritional choices</span></a>
-<a class="sourceLine" id="cb63-17" title="17">  <span class="co"># _eh stands for expected height</span></a>
-<a class="sourceLine" id="cb63-18" title="18">  tb_opti_allocate_wth_key &lt;-<span class="st"> </span>tb_with_rank <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">one_of</span>(<span class="st">'Index'</span>,<span class="st">'queue_rank'</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb63-19" title="19"><span class="st">                                </span><span class="kw">rename</span>(<span class="op">!!</span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, it_rho_ctr, <span class="st">'_rk'</span>) <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="op">!!</span><span class="kw">sym</span>(<span class="st">'queue_rank'</span>))</a>
-<a class="sourceLine" id="cb63-20" title="20"></a>
-<a class="sourceLine" id="cb63-21" title="21">  <span class="co"># n. merge optimal allocaiton results from different planner preference</span></a>
-<a class="sourceLine" id="cb63-22" title="22">  tb_opti_alloc_all_rho &lt;-<span class="st"> </span>tb_opti_alloc_all_rho <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(tb_opti_allocate_wth_key, <span class="dt">by=</span><span class="st">'Index'</span>)</a>
-<a class="sourceLine" id="cb63-23" title="23">}</a>
-<a class="sourceLine" id="cb63-24" title="24"></a>
-<a class="sourceLine" id="cb63-25" title="25"><span class="co"># o. print results</span></a>
-<a class="sourceLine" id="cb63-26" title="26"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(tb_opti_alloc_all_rho))</a></code></pre></div>
-<pre><code>##      Index             age             lwt             race           smoke  
-##  Min.   :  4.00   Min.   :14.00   Min.   : 80.0   Min.   :1.000   Min.   :1  
-##  1st Qu.: 59.25   1st Qu.:19.00   1st Qu.:107.2   1st Qu.:1.000   1st Qu.:1  
-##  Median :102.00   Median :22.00   Median :120.0   Median :1.000   Median :1  
-##  Mean   :105.92   Mean   :22.95   Mean   :128.1   Mean   :1.459   Mean   :1  
-##  3rd Qu.:151.50   3rd Qu.:26.00   3rd Qu.:137.2   3rd Qu.:2.000   3rd Qu.:1  
-##  Max.   :224.00   Max.   :35.00   Max.   :250.0   Max.   :3.000   Max.   :1  
-##                                                                              
-##       ptl               ht                ui             alpha        
-##  Min.   :0.0000   Min.   :0.00000   Min.   :0.0000   Min.   :-471.81  
-##  1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.:0.0000   1st Qu.:-471.81  
-##  Median :0.0000   Median :0.00000   Median :0.0000   Median :-471.81  
-##  Mean   :0.3108   Mean   :0.06757   Mean   :0.1757   Mean   :-381.80  
-##  3rd Qu.:0.0000   3rd Qu.:0.00000   3rd Qu.:0.0000   3rd Qu.:-407.06  
-##  Max.   :3.0000   Max.   :1.00000   Max.   :1.0000   Max.   :  29.26  
-##                                                                       
-##        A             beta            rho_c1_rk     rho_c2_rk    
-##  Min.   :2104   Min.   :0.005291   Min.   : NA   Min.   : 1.00  
-##  1st Qu.:2892   1st Qu.:0.005291   1st Qu.: NA   1st Qu.:10.00  
-##  Median :3207   Median :0.005291   Median : NA   Median :25.50  
-##  Mean   :3154   Mean   :0.005291   Mean   :NaN   Mean   :27.51  
-##  3rd Qu.:3449   3rd Qu.:0.005291   3rd Qu.: NA   3rd Qu.:43.75  
-##  Max.   :4109   Max.   :0.005291   Max.   : NA   Max.   :62.00  
-##                                    NA's   :74                   
-##    rho_c3_rk       rho_c4_rk       rho_c5_rk    
-##  Min.   : 1.00   Min.   : 1.00   Min.   : 1.00  
-##  1st Qu.:10.00   1st Qu.:10.00   1st Qu.:10.00  
-##  Median :25.50   Median :25.50   Median :26.00  
-##  Mean   :27.51   Mean   :27.51   Mean   :27.51  
-##  3rd Qu.:43.75   3rd Qu.:43.75   3rd Qu.:44.00  
-##  Max.   :62.00   Max.   :62.00   Max.   :62.00  
-## </code></pre>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(tb_opti_alloc_all_rho)</a></code></pre></div>
-<pre><code>## 'data.frame':    74 obs. of  16 variables:
-##  $ Index    : int  87 88 89 94 95 100 101 103 105 113 ...
-##  $ age      : int  20 21 18 29 26 18 18 25 28 17 ...
-##  $ lwt      : int  105 108 107 123 113 100 100 118 120 122 ...
-##  $ race     : int  1 1 1 1 1 1 1 1 1 1 ...
-##  $ smoke    : int  1 1 1 1 1 1 1 1 1 1 ...
-##  $ ptl      : int  0 0 0 0 0 0 0 0 0 0 ...
-##  $ ht       : int  0 0 0 0 0 0 0 0 0 0 ...
-##  $ ui       : int  0 1 1 0 0 0 0 0 0 0 ...
-##  $ alpha    : num  -472 -472 -472 -472 -472 ...
-##  $ A        : num  3390 2828 2835 3427 3399 ...
-##  $ beta     : num  0.00529 0.00529 0.00529 0.00529 0.00529 ...
-##  $ rho_c1_rk: int  NA NA NA NA NA NA NA NA NA NA ...
-##  $ rho_c2_rk: int  38 9 10 43 39 37 37 42 40 49 ...
-##  $ rho_c3_rk: int  36 6 8 41 37 35 35 40 38 49 ...
-##  $ rho_c4_rk: int  32 6 7 37 33 31 31 36 34 46 ...
-##  $ rho_c5_rk: int  28 6 7 33 29 27 27 32 30 39 ...</code></pre>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" title="1"><span class="co"># Make Longer</span></a>
-<a class="sourceLine" id="cb67-2" title="2">st_bisec_prefix &lt;-<span class="st"> 'rho_c'</span></a>
-<a class="sourceLine" id="cb67-3" title="3">svr_abfafb_long_name &lt;-<span class="st"> 'rho'</span></a>
-<a class="sourceLine" id="cb67-4" title="4">svr_bisect_iter &lt;-<span class="st"> 'nothing'</span></a>
-<a class="sourceLine" id="cb67-5" title="5">svr_number_col &lt;-<span class="st"> 'rank'</span></a>
-<a class="sourceLine" id="cb67-6" title="6">tb_opti_alloc_all_rho_long &lt;-<span class="st"> </span>tb_opti_alloc_all_rho <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb67-7" title="7"><span class="st">  </span><span class="kw">pivot_longer</span>(</a>
-<a class="sourceLine" id="cb67-8" title="8">    <span class="dt">cols =</span> <span class="kw">starts_with</span>(st_bisec_prefix),</a>
-<a class="sourceLine" id="cb67-9" title="9">    <span class="dt">names_to =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(svr_abfafb_long_name, svr_bisect_iter),</a>
-<a class="sourceLine" id="cb67-10" title="10">    <span class="dt">names_pattern =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(st_bisec_prefix, <span class="st">"(.*)_(.*)"</span>),</a>
-<a class="sourceLine" id="cb67-11" title="11">    <span class="dt">values_to =</span> svr_number_col</a>
-<a class="sourceLine" id="cb67-12" title="12">  )</a></code></pre></div>
+<a class="sourceLine" id="cb63-4" title="4"><span class="co"># Converge rho to numeric so the graph below sorts along x-axis properly </span></a>
+<a class="sourceLine" id="cb63-5" title="5">tb_opti_alloc_all_rho_long &lt;-<span class="st"> </span>tb_opti_alloc_all_rho_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">rho_num =</span> <span class="kw"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(rho))</a>
+<a class="sourceLine" id="cb63-6" title="6"></a>
+<a class="sourceLine" id="cb63-7" title="7"><span class="co"># Merge to get Race Data</span></a>
+<a class="sourceLine" id="cb63-8" title="8">tb_opti_alloc_all_rho_long &lt;-<span class="st"> </span>tb_opti_alloc_all_rho_long <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb63-9" title="9"><span class="st">  </span><span class="kw">left_join</span>(tb_key_alpha_A_beta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(Index, race), <span class="dt">by=</span><span class="st">'Index'</span>)</a></code></pre></div>
 <div id="bump-plot-for-optimal-binary-allocations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#bump-plot-for-optimal-binary-allocations" class="anchor"></a>Bump Plot for Optimal Binary Allocations</h3>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" title="1">tb_opti_alloc_all_rho_long <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb68-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> rho, <span class="dt">y =</span> rank, <span class="dt">group =</span> Index)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb68-3" title="3"><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">color =</span> race, <span class="dt">alpha =</span> <span class="dv">1</span>), <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb68-4" title="4"><span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">color =</span> race, <span class="dt">alpha =</span> <span class="dv">1</span>), <span class="dt">size =</span> <span class="dv">4</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb68-5" title="5"><span class="st">    </span><span class="kw">scale_x_discrete</span>(<span class="dt">expand =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.85</span>,<span class="dv">0</span>))<span class="op">+</span></a>
-<a class="sourceLine" id="cb68-6" title="6"><span class="st">    </span><span class="kw">scale_y_reverse</span>(<span class="dt">breaks =</span> <span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(tb_opti_alloc_all_rho_long))<span class="op">+</span></a>
-<a class="sourceLine" id="cb68-7" title="7"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"none"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb68-8" title="8"><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Equality vs Efficiency"</span>,</a>
-<a class="sourceLine" id="cb68-9" title="9">         <span class="dt">y =</span> <span class="st">"Rank"</span>,</a>
-<a class="sourceLine" id="cb68-10" title="10">         <span class="dt">title =</span> <span class="st">"Binary Deallocation Rank, Weight and Smokng"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb68-11" title="11"><span class="st">    </span><span class="kw"><a href="../reference/ffy_opt_ghthm_dk.html">ffy_opt_ghthm_dk</a></span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb68-12" title="12"><span class="st">    </span><span class="kw">geom_text</span>(<span class="dt">data =</span>tb_opti_alloc_all_rho,<span class="kw">aes</span>(<span class="dt">y=</span>rho_c1_rk,<span class="dt">x=</span><span class="fl">0.6</span>,<span class="dt">label=</span>Index),<span class="dt">hjust=</span><span class="st">"right"</span>)</a></code></pre></div>
-<pre><code>## Warning: Removed 74 rows containing missing values (geom_path).</code></pre>
-<pre><code>## Warning: Removed 74 rows containing missing values (geom_point).</code></pre>
-<pre><code>## Warning: Removed 74 rows containing missing values (geom_text).</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" title="1">tb_opti_alloc_all_rho_long <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb64-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> rho_num, <span class="dt">y =</span> <span class="op">!!</span><span class="kw">sym</span>(svr_inpalc), <span class="dt">group =</span> Index)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb64-3" title="3"><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">color =</span> race, <span class="dt">alpha =</span> <span class="dv">1</span>), <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb64-4" title="4"><span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">color =</span> race, <span class="dt">alpha =</span> <span class="dv">1</span>), <span class="dt">size =</span> <span class="dv">4</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb64-5" title="5"><span class="st">    </span><span class="kw">scale_x_discrete</span>(<span class="dt">expand =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.85</span>,<span class="dv">0</span>))<span class="op">+</span></a>
+<a class="sourceLine" id="cb64-6" title="6"><span class="st">    </span><span class="kw">scale_y_reverse</span>(<span class="dt">breaks =</span> <span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(tb_opti_alloc_all_rho_long))<span class="op">+</span></a>
+<a class="sourceLine" id="cb64-7" title="7"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"none"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb64-8" title="8"><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Equality vs Efficiency"</span>,</a>
+<a class="sourceLine" id="cb64-9" title="9">         <span class="dt">y =</span> <span class="st">"Rank"</span>,</a>
+<a class="sourceLine" id="cb64-10" title="10">         <span class="dt">title =</span> <span class="st">"Binary Deallocation Rank, Weight and Smokng"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb64-11" title="11"><span class="st">    </span><span class="kw"><a href="../reference/ffy_opt_ghthm_dk.html">ffy_opt_ghthm_dk</a></span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb64-12" title="12"><span class="st">    </span><span class="kw">geom_text</span>(<span class="dt">data =</span>tb_opti_alloc_all_rho,<span class="kw">aes</span>(<span class="dt">y=</span>rho_c1_rk,<span class="dt">x=</span><span class="fl">0.6</span>,<span class="dt">label=</span>Index),<span class="dt">hjust=</span><span class="st">"right"</span>)</a></code></pre></div>
 <p><img src="ffv_opt_sobin_rkone_allrw_wgt_files/figure-html/binary%20allocation%20bump%20plot-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 </div>

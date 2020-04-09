@@ -87,7 +87,10 @@
       <a href="articles/ffv_opt_sobin_rkone_allrw_wgt.html">BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)</a>
     </li>
     <li>
-      <a href="articles/ffv_opt_sodis_rkone_allrw_casch.html">DISCRETE--Discrete Provision Optimal Allocation Solution (Line by Line)</a>
+      <a href="articles/ffv_opt_sodis_rkone_casch_allfn.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Function)</a>
+    </li>
+    <li>
+      <a href="articles/ffv_opt_sodis_rkone_casch_allrw.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)</a>
     </li>
     <li>
       <a href="articles/ffv_opt_solin_relow.html">LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest</a>
@@ -97,6 +100,9 @@
     </li>
     <li>
       <a href="articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
+    </li>
+    <li>
+      <a href="articles/ffv_opt_solog_asame_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Analytical Common Alpha</a>
     </li>
     <li>
       <a href="articles/ffv_opt_solog_bisec_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)</a>
@@ -192,13 +198,46 @@ devtools::install_github("fanwangecon/REconTools")</code></pre>
 <p>For the more equality focused planner, the top two ranked could be the two kids who were be expected to be the shortest without the nutrition. For the more efficiency minded planner, the top two ranked could be the two kids for whom additional nutrient have the greatest marginal effects. As we shift along the preference spectrum from the Utilitarian to the Rawlsian, the rankings of each of the 10 individuals on the optimal targeting queue shift.</p>
 </div>
 </div>
-<div id="3-optimal-allocation-continuous-linear-problems" class="section level1">
+<div id="4-optimal-allocation-discrete-problems" class="section level1">
 <h1 class="hasAnchor">
-<a href="#3-optimal-allocation-continuous-linear-problems" class="anchor"></a>3 Optimal Allocation Continuous Linear Problems</h1>
-<p>Linear Optimal Allocations for the <em>N_i</em> and <em>H_i</em> problem. Optimal constrained resource allocation given continuous linear estimation results. The continuous linear estimation results could be based on causal reduced form estimation, or production function estimation results.</p>
-<div id="21-allocation-function" class="section level2">
+<a href="#4-optimal-allocation-discrete-problems" class="anchor"></a>4 Optimal Allocation Discrete Problems</h1>
+<div id="41-binary-allocations" class="section level2">
 <h2 class="hasAnchor">
-<a href="#21-allocation-function" class="anchor"></a>2.1 Allocation Function</h2>
+<a href="#41-binary-allocations" class="anchor"></a>4.1 Binary Allocations</h2>
+<p>This works out the binary allocation problem using the <em>mtcars</em> dateaset.</p>
+<ol>
+<li>
+<a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_car.html"><strong>line by line vignette</strong></a>: data to estimation to optimal allocation to planner preference to gini</li>
+</ol>
+</div>
+<div id="42-discrete-allocation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#42-discrete-allocation" class="anchor"></a>4.2 Discrete Allocation</h2>
+<p>This works out the discrete allocation problem using the <em>caschool</em> dataset. We study allocating additional (homogeneous) teachers to schools.</p>
+<ol>
+<li>
+<a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html"><strong>line by line vignette</strong></a>: data to estimation to optimal allocation with various planner preference</li>
+<li>
+<a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allfn.html"><strong>call functions vignette</strong></a>: shorter file that calls functions in <em>/R</em> folder.</li>
+</ol>
+</div>
+<div id="43-allocation-examples" class="section level2">
+<h2 class="hasAnchor">
+<a href="#43-allocation-examples" class="anchor"></a>4.3 Allocation Examples</h2>
+<ol>
+<li><a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_training_wage.html"><strong>Wage and Job Training vignette</strong></a></li>
+<li><a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allfc_training_logit.html"><strong>Employment and Job Training vignette</strong></a></li>
+<li><a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_wgt.html"><strong>Birth Weight and Doctor’s Visits vignette</strong></a></li>
+</ol>
+</div>
+</div>
+<div id="5-optimal-allocation-continuous-linear-problems" class="section level1">
+<h1 class="hasAnchor">
+<a href="#5-optimal-allocation-continuous-linear-problems" class="anchor"></a>5 Optimal Allocation Continuous Linear Problems</h1>
+<p>Linear Optimal Allocations for the <em>N_i</em> and <em>H_i</em> problem. Optimal constrained resource allocation given continuous linear estimation results. The continuous linear estimation results could be based on causal reduced form estimation, or production function estimation results.</p>
+<div id="51-allocation-function" class="section level2">
+<h2 class="hasAnchor">
+<a href="#51-allocation-function" class="anchor"></a>5.1 Allocation Function</h2>
 <p>Taking estimation results as function parameters, we solve the optimal allocation problem using the function below.</p>
 <ol>
 <li>
@@ -207,9 +246,9 @@ devtools::install_github("fanwangecon/REconTools")</code></pre>
 <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow.html"><strong>function testing vignette</strong></a>: illustrate function math steps</li>
 </ol>
 </div>
-<div id="22-allocation-start-to-end" class="section level2">
+<div id="52-allocation-start-to-end" class="section level2">
 <h2 class="hasAnchor">
-<a href="#22-allocation-start-to-end" class="anchor"></a>2.2 Allocation Start to End</h2>
+<a href="#52-allocation-start-to-end" class="anchor"></a>5.2 Allocation Start to End</h2>
 <p>Here, to illustrate all steps, we start from loading in data, estimate, allocate and analyze. This is the full vignette that shows all steps to. The steps here become three parts. First, get estimates from estimation function from some existing research project. Second, use our <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow.html">optimal allocation function</a>/algoritm given estimation results. Third, analyze allocation results’s implications for equality of allocations.</p>
 <p>These functions show in practice how the various tools can be used in sequence to solve and anlyze the optimal allocation problem.</p>
 <ol>
@@ -219,9 +258,9 @@ devtools::install_github("fanwangecon/REconTools")</code></pre>
 <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow_allfn.html"><strong>call functions</strong></a>: from data to gini call functions calling various functions in sequence.</li>
 </ol>
 </div>
-<div id="23-saved-allocation-examples" class="section level2">
+<div id="53-saved-allocation-examples" class="section level2">
 <h2 class="hasAnchor">
-<a href="#23-saved-allocation-examples" class="anchor"></a>2.3 Saved Allocation Examples</h2>
+<a href="#53-saved-allocation-examples" class="anchor"></a>5.3 Saved Allocation Examples</h2>
 <p>To make the allocation results transparent, we store example allocation results from the <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html">Height and Protein</a> data, which has slightly more than 1000 observations.</p>
 <ol>
 <li>
@@ -231,12 +270,23 @@ devtools::install_github("fanwangecon/REconTools")</code></pre>
 </ol>
 </div>
 </div>
-<div id="3-support-files" class="section level1">
+<div id="6-optimal-allocation-decreasing-returns-log-linear-problem" class="section level1">
 <h1 class="hasAnchor">
-<a href="#3-support-files" class="anchor"></a>3 Support Files</h1>
-<div id="31-generate-regression-results-examples" class="section level2">
+<a href="#6-optimal-allocation-decreasing-returns-log-linear-problem" class="anchor"></a>6 Optimal Allocation Decreasing Returns Log Linear Problem</h1>
+<p>Decreasing returns, log linear problem solutions.</p>
+<ol>
+<li>
+<a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffv_opt_solog_bisec_allrw.html"><strong>bisection testing vignette</strong></a>: solves optimal allocations given linear estimates</li>
+<li>
+<a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solog_asame_allrw.html"><strong>nutrition allocation vignette</strong></a>: illustrate function math steps</li>
+</ol>
+</div>
+<div id="7-support-files" class="section level1">
+<h1 class="hasAnchor">
+<a href="#7-support-files" class="anchor"></a>7 Support Files</h1>
+<div id="71-generate-regression-results-examples" class="section level2">
 <h2 class="hasAnchor">
-<a href="#31-generate-regression-results-examples" class="anchor"></a>3.1 Generate Regression Results Examples</h2>
+<a href="#71-generate-regression-results-examples" class="anchor"></a>7.1 Generate Regression Results Examples</h2>
 <p>First, we generate some regression results. These provide the optimal allocation problems with parameter inputs.</p>
 <ol>
 <li>
@@ -250,9 +300,9 @@ devtools::install_github("fanwangecon/REconTools")</code></pre>
 </li>
 </ol>
 </div>
-<div id="32-allocation-distributional-analysis" class="section level2">
+<div id="72-allocation-distributional-analysis" class="section level2">
 <h2 class="hasAnchor">
-<a href="#32-allocation-distributional-analysis" class="anchor"></a>3.2 Allocation Distributional Analysis</h2>
+<a href="#72-allocation-distributional-analysis" class="anchor"></a>7.2 Allocation Distributional Analysis</h2>
 <ol>
 <li>
 <strong>Planner Preference and Gini</strong>: variety of planner elasticity and resulting allocation gini

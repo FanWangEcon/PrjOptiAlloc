@@ -10,8 +10,6 @@ urlcolor: blue
 
 # Discrete Optimal Allocation Allocate Teacher (Line by Line)
 
-> Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAllo==c/)**
-
 ## Data Structures
 
 The california school dataset, the effect of teacher ratio on student scores. The overall structure is:

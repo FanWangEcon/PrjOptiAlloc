@@ -87,7 +87,10 @@
       <a href="../articles/ffv_opt_sobin_rkone_allrw_wgt.html">BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sodis_rkone_allrw_casch.html">DISCRETE--Discrete Provision Optimal Allocation Solution (Line by Line)</a>
+      <a href="../articles/ffv_opt_sodis_rkone_casch_allfn.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Function)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_sodis_rkone_casch_allrw.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_solin_relow.html">LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest</a>
@@ -97,6 +100,9 @@
     </li>
     <li>
       <a href="../articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_solog_asame_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Analytical Common Alpha</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_solog_bisec_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)</a>
@@ -937,273 +943,151 @@
 <div id="optimal-linear-allocations" class="section level1">
 <h1 class="hasAnchor">
 <a href="#optimal-linear-allocations" class="anchor"></a>Optimal Linear Allocations</h1>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1"><span class="co"># Child Count</span></a>
-<a class="sourceLine" id="cb58-2" title="2">it_obs =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(tb_opti_unique)[<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb58-3" title="3"></a>
-<a class="sourceLine" id="cb58-4" title="4"><span class="co"># Vector of Planner Preference</span></a>
-<a class="sourceLine" id="cb58-5" title="5">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="fl">0.8</span>)</a>
-<a class="sourceLine" id="cb58-6" title="6">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">50</span>, <span class="dv">-25</span>, <span class="dv">-10</span>)</a>
-<a class="sourceLine" id="cb58-7" title="7">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="dv">-5</span>, <span class="dv">-1</span>, <span class="fl">0.1</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>)</a>
-<a class="sourceLine" id="cb58-8" title="8"><span class="co"># ar_rho &lt;- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))</span></a>
-<a class="sourceLine" id="cb58-9" title="9"><span class="co"># ar_rho &lt;- c(-100, -5, -1, 0.1, 0.6, 0.99)</span></a>
-<a class="sourceLine" id="cb58-10" title="10"><span class="co"># ar_rho &lt;- c(-20, -1, 0.05, 0.9)</span></a>
-<a class="sourceLine" id="cb58-11" title="11"><span class="co"># ar_rho &lt;- c(-50, -40, -30, -20, -15, -10, -7.5, -5,-3,-2,-1)</span></a>
-<a class="sourceLine" id="cb58-12" title="12"><span class="co"># ar_rho = c(-100, -0.001,  0.95)</span></a>
-<a class="sourceLine" id="cb58-13" title="13">ar_rho =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="fl">-0.001</span>,  <span class="fl">0.95</span>)</a>
-<a class="sourceLine" id="cb58-14" title="14">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">200</span>, <span class="dv">-100</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="dv">-25</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">25</span>, <span class="dv">-5</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">-1</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">1</span>, <span class="fl">-0.01</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.01</span>, <span class="fl">0.25</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.25</span>, <span class="fl">0.90</span>, <span class="dt">length.out=</span><span class="dv">5</span>))</a>
-<a class="sourceLine" id="cb58-15" title="15">ar_rho &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>(<span class="dv">10</span><span class="op">^</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">2</span>, <span class="dt">length.out=</span><span class="dv">30</span>))))</a>
-<a class="sourceLine" id="cb58-16" title="16">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(ar_rho)</a>
-<a class="sourceLine" id="cb58-17" title="17"></a>
-<a class="sourceLine" id="cb58-18" title="18">ls_bin_solu_all_rhos &lt;-</a>
-<a class="sourceLine" id="cb58-19" title="19"><span class="st">  </span><span class="kw"><a href="../reference/ffp_opt_anlyz_rhgin_bin.html">ffp_opt_anlyz_rhgin_bin</a></span>(tb_key_alpha_A_beta, <span class="dt">svr_id_i =</span> <span class="st">'id'</span>,</a>
-<a class="sourceLine" id="cb58-20" title="20">                          <span class="dt">svr_A_i =</span> <span class="st">'A'</span>, <span class="dt">svr_alpha_i =</span> <span class="st">'alpha'</span>, <span class="dt">svr_beta_i =</span> <span class="st">'beta'</span>,</a>
-<a class="sourceLine" id="cb58-21" title="21">                          <span class="dt">ar_rho =</span> ar_rho,</a>
-<a class="sourceLine" id="cb58-22" title="22">                          <span class="dt">svr_inpalc =</span> <span class="st">'opti_alloc_queue'</span>,</a>
-<a class="sourceLine" id="cb58-23" title="23">                          <span class="dt">svr_expout =</span> <span class="st">'opti_exp_outcome'</span>)</a></code></pre></div>
-<pre><code>##        id              trt              age             educ      
-##  Min.   :   1.0   Min.   :0.0000   Min.   :17.00   Min.   : 3.00  
-##  1st Qu.: 181.2   1st Qu.:0.0000   1st Qu.:19.00   1st Qu.: 9.00  
-##  Median : 361.5   Median :0.0000   Median :23.00   Median :10.00  
-##  Mean   : 854.4   Mean   :0.4114   Mean   :24.52   Mean   :10.27  
-##  3rd Qu.:1458.5   3rd Qu.:1.0000   3rd Qu.:27.00   3rd Qu.:11.00  
-##  Max.   :4110.0   Max.   :1.0000   Max.   :55.00   Max.   :16.00  
-##       race            marr           nodeg             re78      
-##  Min.   :0.000   Min.   :0.000   Min.   :0.0000   Min.   :    0  
-##  1st Qu.:1.000   1st Qu.:0.000   1st Qu.:1.0000   1st Qu.:    0  
-##  Median :1.000   Median :0.000   Median :1.0000   Median : 3952  
-##  Mean   :1.011   Mean   :0.162   Mean   :0.7798   Mean   : 5455  
-##  3rd Qu.:1.000   3rd Qu.:0.000   3rd Qu.:1.0000   3rd Qu.: 8772  
-##  Max.   :2.000   Max.   :1.000   Max.   :1.0000   Max.   :60308  
-##      alpha              A              beta            rho_c1_rk    
-##  Min.   :0.4538   Min.   :3.673   Min.   :0.001385   Min.   :  1.0  
-##  1st Qu.:0.4538   1st Qu.:4.433   1st Qu.:0.001385   1st Qu.:183.0  
-##  Median :0.4538   Median :4.970   Median :0.001385   Median :363.0  
-##  Mean   :0.5538   Mean   :5.146   Mean   :0.001385   Mean   :363.8  
-##  3rd Qu.:0.4538   3rd Qu.:5.687   3rd Qu.:0.001385   3rd Qu.:543.0  
-##  Max.   :1.0708   Max.   :9.420   Max.   :0.001385   Max.   :722.0  
-##    rho_c2_rk       rho_c3_rk       rho_c4_rk       rho_c5_rk    
-##  Min.   :  1.0   Min.   :  1.0   Min.   :  1.0   Min.   :  1.0  
-##  1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0  
-##  Median :363.0   Median :363.0   Median :363.0   Median :363.0  
-##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
-##  3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0  
-##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
-##    rho_c6_rk       rho_c7_rk       rho_c8_rk       rho_c9_rk    
-##  Min.   :  1.0   Min.   :  1.0   Min.   :  1.0   Min.   :  1.0  
-##  1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0  
-##  Median :363.0   Median :363.0   Median :363.0   Median :363.0  
-##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
-##  3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0  
-##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
-##    rho_c10_rk      rho_c11_rk      rho_c12_rk      rho_c13_rk   
-##  Min.   :  1.0   Min.   :  1.0   Min.   :  1.0   Min.   :  1.0  
-##  1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0  
-##  Median :363.0   Median :363.0   Median :363.0   Median :363.0  
-##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
-##  3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0  
-##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
-##    rho_c14_rk      rho_c15_rk      rho_c16_rk      rho_c17_rk   
-##  Min.   :  1.0   Min.   :  1.0   Min.   :  1.0   Min.   :  1.0  
-##  1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0   1st Qu.:181.2  
-##  Median :363.0   Median :363.0   Median :363.0   Median :362.0  
-##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
-##  3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0  
-##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
-##    rho_c18_rk      rho_c19_rk      rho_c20_rk      rho_c21_rk   
-##  Min.   :  1.0   Min.   :  1.0   Min.   :  2.0   Min.   :  2.0  
-##  1st Qu.:191.0   1st Qu.:181.5   1st Qu.:182.0   1st Qu.:182.2  
-##  Median :362.0   Median :362.0   Median :362.0   Median :364.0  
-##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
-##  3rd Qu.:541.8   3rd Qu.:542.0   3rd Qu.:542.0   3rd Qu.:545.0  
-##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
-##    rho_c22_rk      rho_c23_rk      rho_c24_rk      rho_c25_rk   
-##  Min.   :  2.0   Min.   :  2.0   Min.   :  2.0   Min.   :  2.0  
-##  1st Qu.:192.0   1st Qu.:185.0   1st Qu.:184.0   1st Qu.:183.0  
-##  Median :363.0   Median :374.0   Median :366.0   Median :366.0  
-##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
-##  3rd Qu.:545.5   3rd Qu.:546.0   3rd Qu.:546.0   3rd Qu.:542.0  
-##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
-##    rho_c26_rk      rho_c27_rk      rho_c28_rk      rho_c29_rk   
-##  Min.   :  2.0   Min.   :  2.0   Min.   :  2.0   Min.   :  2.0  
-##  1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0   1st Qu.:183.0  
-##  Median :364.0   Median :364.0   Median :364.0   Median :364.0  
-##  Mean   :363.8   Mean   :363.8   Mean   :363.8   Mean   :363.8  
-##  3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0   3rd Qu.:543.0  
-##  Max.   :722.0   Max.   :722.0   Max.   :722.0   Max.   :722.0  
-##    rho_c30_rk   
-##  Min.   :  2.0  
-##  1st Qu.:183.0  
-##  Median :364.0  
-##  Mean   :363.8  
-##  3rd Qu.:543.0  
-##  Max.   :722.0  
-## 'data.frame':    722 obs. of  41 variables:
-##  $ id        : int  1 2 3 4 5 6 7 8 9 10 ...
-##  $ trt       : int  0 0 0 0 0 0 0 0 0 0 ...
-##  $ age       : int  23 26 22 34 18 45 18 27 24 34 ...
-##  $ educ      : int  10 12 9 9 9 11 9 12 8 11 ...
-##  $ race      : num  1 0 1 1 1 1 1 1 0 1 ...
-##  $ marr      : int  0 0 0 0 0 0 0 0 0 1 ...
-##  $ nodeg     : int  1 0 1 1 1 1 1 0 1 1 ...
-##  $ re78      : num  0 12384 0 14051 10740 ...
-##  $ alpha     : num  0.454 0.454 0.454 0.454 0.454 ...
-##  $ A         : num  4.71 6.84 4.37 4.13 4.19 ...
-##  $ beta      : num  0.00139 0.00139 0.00139 0.00139 0.00139 ...
-##  $ rho_c1_rk : int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c2_rk : int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c3_rk : int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c4_rk : int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c5_rk : int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c6_rk : int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c7_rk : int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c8_rk : int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c9_rk : int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c10_rk: int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c11_rk: int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c12_rk: int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c13_rk: int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c14_rk: int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c15_rk: int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c16_rk: int  392 689 278 178 223 483 223 499 545 68 ...
-##  $ rho_c17_rk: int  391 689 269 162 208 483 208 499 545 68 ...
-##  $ rho_c18_rk: int  375 689 252 146 191 473 191 490 543 85 ...
-##  $ rho_c19_rk: int  362 689 231 112 170 460 170 476 530 199 ...
-##  $ rho_c20_rk: int  345 688 198 86 136 451 136 469 522 316 ...
-##  $ rho_c21_rk: int  320 686 186 68 114 437 114 459 515 366 ...
-##  $ rho_c22_rk: int  308 682 169 64 111 432 111 450 512 445 ...
-##  $ rho_c23_rk: int  304 675 167 61 108 416 108 440 505 481 ...
-##  $ rho_c24_rk: int  297 674 166 61 106 407 106 426 498 485 ...
-##  $ rho_c25_rk: int  289 674 164 61 106 401 106 419 497 491 ...
-##  $ rho_c26_rk: int  284 673 164 61 106 400 106 417 496 494 ...
-##  $ rho_c27_rk: int  284 673 163 61 106 399 106 417 496 495 ...
-##  $ rho_c28_rk: int  284 673 163 61 106 399 106 416 495 496 ...
-##  $ rho_c29_rk: int  284 673 163 61 106 399 106 416 495 496 ...
-##  $ rho_c30_rk: int  284 673 163 61 106 399 106 416 495 496 ...</code></pre>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1">svr_inpalc &lt;-<span class="st"> 'opti_alloc_queue'</span></a>
+<a class="sourceLine" id="cb58-2" title="2"></a>
+<a class="sourceLine" id="cb58-3" title="3"><span class="co"># Child Count</span></a>
+<a class="sourceLine" id="cb58-4" title="4">it_obs =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(tb_opti_unique)[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb58-5" title="5"></a>
+<a class="sourceLine" id="cb58-6" title="6"><span class="co"># Vector of Planner Preference</span></a>
+<a class="sourceLine" id="cb58-7" title="7">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb58-8" title="8">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">50</span>, <span class="dv">-25</span>, <span class="dv">-10</span>)</a>
+<a class="sourceLine" id="cb58-9" title="9">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="dv">-5</span>, <span class="dv">-1</span>, <span class="fl">0.1</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb58-10" title="10"><span class="co"># ar_rho &lt;- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))</span></a>
+<a class="sourceLine" id="cb58-11" title="11"><span class="co"># ar_rho &lt;- c(-100, -5, -1, 0.1, 0.6, 0.99)</span></a>
+<a class="sourceLine" id="cb58-12" title="12"><span class="co"># ar_rho &lt;- c(-20, -1, 0.05, 0.9)</span></a>
+<a class="sourceLine" id="cb58-13" title="13"><span class="co"># ar_rho &lt;- c(-50, -40, -30, -20, -15, -10, -7.5, -5,-3,-2,-1)</span></a>
+<a class="sourceLine" id="cb58-14" title="14"><span class="co"># ar_rho = c(-100, -0.001,  0.95)</span></a>
+<a class="sourceLine" id="cb58-15" title="15">ar_rho =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="fl">-0.001</span>,  <span class="fl">0.95</span>)</a>
+<a class="sourceLine" id="cb58-16" title="16">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">200</span>, <span class="dv">-100</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">100</span>, <span class="dv">-25</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">25</span>, <span class="dv">-5</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">-1</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">1</span>, <span class="fl">-0.01</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.01</span>, <span class="fl">0.25</span>, <span class="dt">length.out=</span><span class="dv">5</span>), <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.25</span>, <span class="fl">0.90</span>, <span class="dt">length.out=</span><span class="dv">5</span>))</a>
+<a class="sourceLine" id="cb58-17" title="17">ar_rho &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>(<span class="dv">10</span><span class="op">^</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">2</span>, <span class="dt">length.out=</span><span class="dv">30</span>))))</a>
+<a class="sourceLine" id="cb58-18" title="18">ar_rho &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(ar_rho)</a>
+<a class="sourceLine" id="cb58-19" title="19"></a>
+<a class="sourceLine" id="cb58-20" title="20">svr_rho_val &lt;-<span class="st"> 'rho_val'</span></a>
+<a class="sourceLine" id="cb58-21" title="21">ls_bin_solu_all_rhos &lt;-</a>
+<a class="sourceLine" id="cb58-22" title="22"><span class="st">  </span><span class="kw"><a href="../reference/ffp_opt_anlyz_rhgin_bin.html">ffp_opt_anlyz_rhgin_bin</a></span>(tb_key_alpha_A_beta,</a>
+<a class="sourceLine" id="cb58-23" title="23">                          <span class="dt">svr_id_i =</span> <span class="st">'id'</span>,</a>
+<a class="sourceLine" id="cb58-24" title="24">                          <span class="dt">svr_A_i =</span> <span class="st">'A'</span>, <span class="dt">svr_alpha_i =</span> <span class="st">'alpha'</span>, <span class="dt">svr_beta_i =</span> <span class="st">'beta'</span>,</a>
+<a class="sourceLine" id="cb58-25" title="25">                          <span class="dt">ar_rho =</span> ar_rho, </a>
+<a class="sourceLine" id="cb58-26" title="26">                          <span class="dt">svr_rho =</span> <span class="st">'rho'</span>, <span class="dt">svr_rho_val =</span> svr_rho_val,</a>
+<a class="sourceLine" id="cb58-27" title="27">                          <span class="dt">svr_inpalc =</span> svr_inpalc,</a>
+<a class="sourceLine" id="cb58-28" title="28">                          <span class="dt">svr_expout =</span> <span class="st">'opti_exp_outcome'</span>)</a></code></pre></div>
 <pre><code>## Joining, by = "id"</code></pre>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1">df_all_rho &lt;-<span class="st"> </span>ls_bin_solu_all_rhos<span class="op">$</span>df_all_rho</a>
-<a class="sourceLine" id="cb61-2" title="2">df_all_rho_long &lt;-<span class="st"> </span>ls_bin_solu_all_rhos<span class="op">$</span>df_all_rho_long</a>
-<a class="sourceLine" id="cb61-3" title="3"></a>
-<a class="sourceLine" id="cb61-4" title="4"><span class="co"># How many people have different ranks across rhos</span></a>
-<a class="sourceLine" id="cb61-5" title="5">it_how_many_vary_rank &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(df_all_rho<span class="op">$</span>rank_max <span class="op">-</span><span class="st"> </span>df_all_rho<span class="op">$</span>rank_min)</a>
-<a class="sourceLine" id="cb61-6" title="6">it_how_many_vary_rank</a></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" title="1">df_all_rho &lt;-<span class="st"> </span>ls_bin_solu_all_rhos<span class="op">$</span>df_all_rho</a>
+<a class="sourceLine" id="cb60-2" title="2">df_all_rho_long &lt;-<span class="st"> </span>ls_bin_solu_all_rhos<span class="op">$</span>df_all_rho_long</a>
+<a class="sourceLine" id="cb60-3" title="3"></a>
+<a class="sourceLine" id="cb60-4" title="4"><span class="co"># How many people have different ranks across rhos</span></a>
+<a class="sourceLine" id="cb60-5" title="5">it_how_many_vary_rank &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(df_all_rho<span class="op">$</span>rank_max <span class="op">-</span><span class="st"> </span>df_all_rho<span class="op">$</span>rank_min)</a>
+<a class="sourceLine" id="cb60-6" title="6">it_how_many_vary_rank</a></code></pre></div>
 <pre><code>## [1] -98120</code></pre>
 <div id="save-results" class="section level2">
 <h2 class="hasAnchor">
 <a href="#save-results" class="anchor"></a>Save Results</h2>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1"><span class="co"># Change Variable names so that this can becombined with logit file later</span></a>
-<a class="sourceLine" id="cb63-2" title="2">df_all_rho &lt;-<span class="st"> </span>df_all_rho <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename_at</span>(<span class="kw">vars</span>(<span class="kw">starts_with</span>(<span class="st">"rho_"</span>)), <span class="kw">funs</span>(<span class="kw">str_replace</span>(., <span class="st">"rk"</span>, <span class="st">"rk_wage"</span>)))</a>
-<a class="sourceLine" id="cb63-3" title="3">df_all_rho &lt;-<span class="st"> </span>df_all_rho <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">A_i_wage =</span> A, <span class="dt">alpha_i_wage =</span> alpha, <span class="dt">beta_i_wage =</span> beta,</a>
-<a class="sourceLine" id="cb63-4" title="4">                                    <span class="dt">rank_min_wage =</span> rank_min, <span class="dt">rank_max_wage =</span> rank_max, <span class="dt">avg_rank_wage =</span> avg_rank)</a>
-<a class="sourceLine" id="cb63-5" title="5"></a>
-<a class="sourceLine" id="cb63-6" title="6"><span class="co"># Save File</span></a>
-<a class="sourceLine" id="cb63-7" title="7">df_opt_lalonde_training_wage &lt;-<span class="st"> </span>df_all_rho</a>
-<a class="sourceLine" id="cb63-8" title="8">usethis<span class="op">::</span><span class="kw"><a href="https://usethis.r-lib.org/reference/use_data.html">use_data</a></span>(df_opt_lalonde_training_wage, df_opt_lalonde_training_wage, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" title="1"><span class="co"># Change Variable names so that this can becombined with logit file later</span></a>
+<a class="sourceLine" id="cb62-2" title="2">df_all_rho &lt;-<span class="st"> </span>df_all_rho <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename_at</span>(<span class="kw">vars</span>(<span class="kw">starts_with</span>(<span class="st">"rho_"</span>)), <span class="kw">funs</span>(<span class="kw">str_replace</span>(., <span class="st">"rk"</span>, <span class="st">"rk_wage"</span>)))</a>
+<a class="sourceLine" id="cb62-3" title="3">df_all_rho &lt;-<span class="st"> </span>df_all_rho <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">A_i_wage =</span> A, <span class="dt">alpha_i_wage =</span> alpha, <span class="dt">beta_i_wage =</span> beta,</a>
+<a class="sourceLine" id="cb62-4" title="4">                                    <span class="dt">rank_min_wage =</span> rank_min, <span class="dt">rank_max_wage =</span> rank_max, <span class="dt">avg_rank_wage =</span> avg_rank)</a>
+<a class="sourceLine" id="cb62-5" title="5"></a>
+<a class="sourceLine" id="cb62-6" title="6"><span class="co"># Save File</span></a>
+<a class="sourceLine" id="cb62-7" title="7">df_opt_lalonde_training_wage &lt;-<span class="st"> </span>df_all_rho</a>
+<a class="sourceLine" id="cb62-8" title="8">usethis<span class="op">::</span><span class="kw"><a href="https://usethis.r-lib.org/reference/use_data.html">use_data</a></span>(df_opt_lalonde_training_wage, df_opt_lalonde_training_wage, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## &lt;U+2714&gt; Setting active project to 'C:/Users/fan/PrjOptiAlloc'</code></pre>
 <pre><code>## Warning: Saving duplicates only once: 'df_opt_lalonde_training_wage'</code></pre>
 <pre><code>## &lt;U+2714&gt; Saving 'df_opt_lalonde_training_wage' to 'data/df_opt_lalonde_training_wage.rda'</code></pre>
 </div>
-<div id="change-in-rank-along-lambda" class="section level2">
+<div id="change-in-rank-along-rho" class="section level2">
 <h2 class="hasAnchor">
-<a href="#change-in-rank-along-lambda" class="anchor"></a>Change in Rank along Lambda</h2>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" title="1"><span class="co"># generate dataframe of lambda</span></a>
-<a class="sourceLine" id="cb67-2" title="2">mt_combine &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(ar_rho)</a>
-<a class="sourceLine" id="cb67-3" title="3"><span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(mt_combine) &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'lambda'</span>)</a>
-<a class="sourceLine" id="cb67-4" title="4"></a>
-<a class="sourceLine" id="cb67-5" title="5"><span class="co"># get rank when wage rho = 1</span></a>
-<a class="sourceLine" id="cb67-6" title="6">df_all_rho_rho_c1 &lt;-<span class="st"> </span>df_all_rho <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(id, rho_c1_rk_wage)</a>
-<a class="sourceLine" id="cb67-7" title="7"></a>
-<a class="sourceLine" id="cb67-8" title="8"><span class="co"># rho really means rho index</span></a>
-<a class="sourceLine" id="cb67-9" title="9">tb_lambda &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(mt_combine) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowid_to_column</span>(<span class="dt">var =</span> <span class="st">"rho"</span>)</a>
-<a class="sourceLine" id="cb67-10" title="10"></a>
-<a class="sourceLine" id="cb67-11" title="11"><span class="co"># Merge</span></a>
-<a class="sourceLine" id="cb67-12" title="12">df_all_rho_long &lt;-<span class="st"> </span>df_all_rho_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">rho =</span> <span class="kw"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(rho)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb67-13" title="13"><span class="st">                      </span><span class="kw">left_join</span>(tb_lambda, <span class="dt">by=</span><span class="st">'rho'</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb67-14" title="14"><span class="st">                      </span><span class="kw">left_join</span>(df_all_rho_rho_c1, <span class="dt">by=</span><span class="st">'id'</span>)</a>
-<a class="sourceLine" id="cb67-15" title="15"></a>
-<a class="sourceLine" id="cb67-16" title="16"><span class="co"># Select subset to graph</span></a>
-<a class="sourceLine" id="cb67-17" title="17">df_rank_graph &lt;-<span class="st"> </span>df_all_rho_long <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb67-18" title="18"><span class="st">                    </span><span class="kw">mutate</span>(<span class="dt">id =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(id)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb67-19" title="19"><span class="st">                    </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>((id <span class="op">==</span><span class="st"> </span><span class="dv">200</span>) <span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 1</span></a>
-<a class="sourceLine" id="cb67-20" title="20"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">110</span>) <span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 101</span></a>
-<a class="sourceLine" id="cb67-21" title="21"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">95</span>)  <span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 201</span></a>
-<a class="sourceLine" id="cb67-22" title="22"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">217</span>) <span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 301</span></a>
-<a class="sourceLine" id="cb67-23" title="23"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">2741</span>)<span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 401</span></a>
-<a class="sourceLine" id="cb67-24" title="24"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">101</span>) <span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 501</span></a>
-<a class="sourceLine" id="cb67-25" title="25"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">131</span>) <span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 601</span></a>
-<a class="sourceLine" id="cb67-26" title="26"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">3610</span>)   <span class="co"># utilitarian rank = 701</span></a>
-<a class="sourceLine" id="cb67-27" title="27">                             ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb67-28" title="28"><span class="st">                    </span><span class="kw">mutate</span>(<span class="dt">one_minus_lambda =</span> <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>lambda) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb67-29" title="29"><span class="st">                    </span><span class="kw">mutate</span>(<span class="dt">rho_c1_rk_wage =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(rho_c1_rk_wage))</a>
-<a class="sourceLine" id="cb67-30" title="30"></a>
-<a class="sourceLine" id="cb67-31" title="31">df_rank_graph<span class="op">$</span>rho_c1_rk_wage</a></code></pre></div>
-<pre><code>##   [1] 201 201 201 201 201 201 201 201 201 201 201 201 201 201 201 201 201 201
-##  [19] 201 201 201 201 201 201 201 201 201 201 201 201 509 509 509 509 509 509
-##  [37] 509 509 509 509 509 509 509 509 509 509 509 509 509 509 509 509 509 509
-##  [55] 509 509 509 509 509 509 101 101 101 101 101 101 101 101 101 101 101 101
+<a href="#change-in-rank-along-rho" class="anchor"></a>Change in Rank along rho</h2>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" title="1"><span class="co"># get rank when wage rho = 1</span></a>
+<a class="sourceLine" id="cb66-2" title="2">df_all_rho_rho_c1 &lt;-<span class="st"> </span>df_all_rho <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(id, rho_c1_rk_wage)</a>
+<a class="sourceLine" id="cb66-3" title="3"></a>
+<a class="sourceLine" id="cb66-4" title="4"><span class="co"># Merge</span></a>
+<a class="sourceLine" id="cb66-5" title="5">df_all_rho_long &lt;-<span class="st"> </span>df_all_rho_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">rho =</span> <span class="kw"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(rho)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb66-6" title="6"><span class="st">                      </span><span class="kw">left_join</span>(df_all_rho_rho_c1, <span class="dt">by=</span><span class="st">'id'</span>)</a>
+<a class="sourceLine" id="cb66-7" title="7"></a>
+<a class="sourceLine" id="cb66-8" title="8"><span class="co"># Select subset to graph</span></a>
+<a class="sourceLine" id="cb66-9" title="9">df_rank_graph &lt;-<span class="st"> </span>df_all_rho_long <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb66-10" title="10"><span class="st">                    </span><span class="kw">mutate</span>(<span class="dt">id =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(id)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb66-11" title="11"><span class="st">                    </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>((id <span class="op">==</span><span class="st"> </span><span class="dv">200</span>) <span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 1</span></a>
+<a class="sourceLine" id="cb66-12" title="12"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">110</span>) <span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 101</span></a>
+<a class="sourceLine" id="cb66-13" title="13"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">95</span>)  <span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 201</span></a>
+<a class="sourceLine" id="cb66-14" title="14"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">217</span>) <span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 301</span></a>
+<a class="sourceLine" id="cb66-15" title="15"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">2741</span>)<span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 401</span></a>
+<a class="sourceLine" id="cb66-16" title="16"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">101</span>) <span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 501</span></a>
+<a class="sourceLine" id="cb66-17" title="17"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">131</span>) <span class="op">|</span><span class="st">  </span><span class="co"># utilitarian rank = 601</span></a>
+<a class="sourceLine" id="cb66-18" title="18"><span class="st">                           </span>(id <span class="op">==</span><span class="st"> </span><span class="dv">3610</span>)   <span class="co"># utilitarian rank = 701</span></a>
+<a class="sourceLine" id="cb66-19" title="19">                             ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb66-20" title="20"><span class="st">                    </span><span class="kw">mutate</span>(<span class="dt">one_minus_rho =</span> <span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="op">!!</span><span class="kw">sym</span>(svr_rho_val)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb66-21" title="21"><span class="st">                    </span><span class="kw">mutate</span>(<span class="dt">rho_c1_rk_wage =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(rho_c1_rk_wage))</a>
+<a class="sourceLine" id="cb66-22" title="22"></a>
+<a class="sourceLine" id="cb66-23" title="23">df_rank_graph<span class="op">$</span>rho_c1_rk_wage</a></code></pre></div>
+<pre><code>##   [1] 198 198 198 198 198 198 198 198 198 198 198 198 198 198 198 198 198 198
+##  [19] 198 198 198 198 198 198 198 198 198 198 198 198 500 500 500 500 500 500
+##  [37] 500 500 500 500 500 500 500 500 500 500 500 500 500 500 500 500 500 500
+##  [55] 500 500 500 500 500 500 101 101 101 101 101 101 101 101 101 101 101 101
 ##  [73] 101 101 101 101 101 101 101 101 101 101 101 101 101 101 101 101 101 101
-##  [91] 603 603 603 603 603 603 603 603 603 603 603 603 603 603 603 603 603 603
-## [109] 603 603 603 603 603 603 603 603 603 603 603 603 1   1   1   1   1   1  
+##  [91] 599 599 599 599 599 599 599 599 599 599 599 599 599 599 599 599 599 599
+## [109] 599 599 599 599 599 599 599 599 599 599 599 599 1   1   1   1   1   1  
 ## [127] 1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1  
-## [145] 1   1   1   1   1   1   316 316 316 316 316 316 316 316 316 316 316 316
-## [163] 316 316 316 316 316 316 316 316 316 316 316 316 316 316 316 316 316 316
+## [145] 1   1   1   1   1   1   301 301 301 301 301 301 301 301 301 301 301 301
+## [163] 301 301 301 301 301 301 301 301 301 301 301 301 301 301 301 301 301 301
 ## [181] 701 701 701 701 701 701 701 701 701 701 701 701 701 701 701 701 701 701
 ## [199] 701 701 701 701 701 701 701 701 701 701 701 701 407 407 407 407 407 407
 ## [217] 407 407 407 407 407 407 407 407 407 407 407 407 407 407 407 407 407 407
 ## [235] 407 407 407 407 407 407
-## Levels: 1 101 201 316 407 509 603 701</code></pre>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1">df_rank_graph<span class="op">$</span>id &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(df_rank_graph<span class="op">$</span>rho_c1_rk_wage,</a>
-<a class="sourceLine" id="cb69-2" title="2">                           <span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Rank= 1 when λ=0.99'</span>, <span class="co">#200</span></a>
-<a class="sourceLine" id="cb69-3" title="3">                                      <span class="st">'Rank= 101 when λ=0.99'</span>, <span class="co">#110</span></a>
-<a class="sourceLine" id="cb69-4" title="4">                                      <span class="st">'Rank= 201 when λ=0.99'</span>, <span class="co">#95</span></a>
-<a class="sourceLine" id="cb69-5" title="5">                                      <span class="st">'Rank= 301 when λ=0.99'</span>, <span class="co">#217</span></a>
-<a class="sourceLine" id="cb69-6" title="6">                                      <span class="st">'Rank= 401 when λ=0.99'</span>, <span class="co">#274</span></a>
-<a class="sourceLine" id="cb69-7" title="7">                                      <span class="st">'Rank= 501 when λ=0.99'</span>, <span class="co">#101</span></a>
-<a class="sourceLine" id="cb69-8" title="8">                                      <span class="st">'Rank= 601 when λ=0.99'</span>, <span class="co">#131</span></a>
-<a class="sourceLine" id="cb69-9" title="9">                                      <span class="st">'Rank= 701 when λ=0.99'</span> <span class="co">#3610</span></a>
-<a class="sourceLine" id="cb69-10" title="10">                                       ))</a>
-<a class="sourceLine" id="cb69-11" title="11"></a>
-<a class="sourceLine" id="cb69-12" title="12"><span class="co"># x-labels</span></a>
-<a class="sourceLine" id="cb69-13" title="13">x.labels &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'λ=0.99'</span>, <span class="st">'λ=0.90'</span>, <span class="st">'λ=0'</span>, <span class="st">'λ=-10'</span>, <span class="st">'λ=-100'</span>)</a>
-<a class="sourceLine" id="cb69-14" title="14">x.breaks &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.01</span>, <span class="fl">0.10</span>, <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb69-15" title="15"></a>
-<a class="sourceLine" id="cb69-16" title="16"><span class="co"># title line 2</span></a>
-<a class="sourceLine" id="cb69-17" title="17">title_line1 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"LINEAR WAGE: Optimal Tageting Queue, NSW Lalonda (AER, 1986)"</span>)</a>
-<a class="sourceLine" id="cb69-18" title="18">title_line2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"How Do Allocation Rankings (Targeting Queue) Shift with λ?"</span>)</a>
-<a class="sourceLine" id="cb69-19" title="19"></a>
-<a class="sourceLine" id="cb69-20" title="20"><span class="co"># Graph Results--Draw</span></a>
-<a class="sourceLine" id="cb69-21" title="21">line.plot &lt;-<span class="st"> </span>df_rank_graph <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb69-22" title="22"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>one_minus_lambda, <span class="dt">y=</span>rank,</a>
-<a class="sourceLine" id="cb69-23" title="23">             <span class="dt">group=</span><span class="kw">fct_rev</span>(id),</a>
-<a class="sourceLine" id="cb69-24" title="24">             <span class="dt">colour=</span><span class="kw">fct_rev</span>(id),</a>
-<a class="sourceLine" id="cb69-25" title="25">             <span class="dt">size=</span><span class="dv">2</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb69-26" title="26"><span class="st">  </span><span class="co"># geom_line(aes(linetype =fct_rev(id)), size=0.75) +</span></a>
-<a class="sourceLine" id="cb69-27" title="27"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size=</span><span class="fl">0.75</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb69-28" title="28"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>), <span class="dt">linetype=</span><span class="st">"dotted"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb69-29" title="29"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(title_line1, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>, title_line2),</a>
-<a class="sourceLine" id="cb69-30" title="30">       <span class="dt">x =</span> <span class="st">'log10 Rescale of λ, Log10(λ)</span><span class="ch">\n</span><span class="st">λ=1 Utilitarian, λ=-infty Rawlsian'</span>,</a>
-<a class="sourceLine" id="cb69-31" title="31">       <span class="dt">y =</span> <span class="st">'Optimal Targeting Queue Rank (1=highest)'</span>,</a>
-<a class="sourceLine" id="cb69-32" title="32">       <span class="dt">caption =</span> <span class="st">'Training RCT with 297 treated, 425 untreated. Optimal Binary Targeting Queue.'</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb69-33" title="33"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans=</span><span class="st">'log10'</span>, <span class="dt">labels =</span> x.labels, <span class="dt">breaks =</span> x.breaks) <span class="op">+</span></a>
-<a class="sourceLine" id="cb69-34" title="34"><span class="st">  </span><span class="kw">theme_bw</span>()</a>
-<a class="sourceLine" id="cb69-35" title="35"></a>
-<a class="sourceLine" id="cb69-36" title="36"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(line.plot)</a></code></pre></div>
+## Levels: 1 101 198 301 407 500 599 701</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" title="1">df_rank_graph<span class="op">$</span>id &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(df_rank_graph<span class="op">$</span>rho_c1_rk_wage,</a>
+<a class="sourceLine" id="cb68-2" title="2">                           <span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Rank= 1 when λ=0.99'</span>, <span class="co">#200</span></a>
+<a class="sourceLine" id="cb68-3" title="3">                                      <span class="st">'Rank= 101 when λ=0.99'</span>, <span class="co">#110</span></a>
+<a class="sourceLine" id="cb68-4" title="4">                                      <span class="st">'Rank= 201 when λ=0.99'</span>, <span class="co">#95</span></a>
+<a class="sourceLine" id="cb68-5" title="5">                                      <span class="st">'Rank= 301 when λ=0.99'</span>, <span class="co">#217</span></a>
+<a class="sourceLine" id="cb68-6" title="6">                                      <span class="st">'Rank= 401 when λ=0.99'</span>, <span class="co">#274</span></a>
+<a class="sourceLine" id="cb68-7" title="7">                                      <span class="st">'Rank= 501 when λ=0.99'</span>, <span class="co">#101</span></a>
+<a class="sourceLine" id="cb68-8" title="8">                                      <span class="st">'Rank= 601 when λ=0.99'</span>, <span class="co">#131</span></a>
+<a class="sourceLine" id="cb68-9" title="9">                                      <span class="st">'Rank= 701 when λ=0.99'</span> <span class="co">#3610</span></a>
+<a class="sourceLine" id="cb68-10" title="10">                                       ))</a>
+<a class="sourceLine" id="cb68-11" title="11"></a>
+<a class="sourceLine" id="cb68-12" title="12"><span class="co"># x-labels</span></a>
+<a class="sourceLine" id="cb68-13" title="13">x.labels &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'λ=0.99'</span>, <span class="st">'λ=0.90'</span>, <span class="st">'λ=0'</span>, <span class="st">'λ=-10'</span>, <span class="st">'λ=-100'</span>)</a>
+<a class="sourceLine" id="cb68-14" title="14">x.breaks &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.01</span>, <span class="fl">0.10</span>, <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb68-15" title="15"></a>
+<a class="sourceLine" id="cb68-16" title="16"><span class="co"># title line 2</span></a>
+<a class="sourceLine" id="cb68-17" title="17">title_line1 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"LINEAR WAGE: Optimal Tageting Queue, NSW Lalonda (AER, 1986)"</span>)</a>
+<a class="sourceLine" id="cb68-18" title="18">title_line2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"How Do Allocation Rankings (Targeting Queue) Shift with λ?"</span>)</a>
+<a class="sourceLine" id="cb68-19" title="19"></a>
+<a class="sourceLine" id="cb68-20" title="20"><span class="co"># Graph Results--Draw</span></a>
+<a class="sourceLine" id="cb68-21" title="21">line.plot &lt;-<span class="st"> </span>df_rank_graph <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb68-22" title="22"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>one_minus_rho, <span class="dt">y=</span><span class="op">!!</span><span class="kw">sym</span>(svr_inpalc),</a>
+<a class="sourceLine" id="cb68-23" title="23">             <span class="dt">group=</span><span class="kw">fct_rev</span>(id),</a>
+<a class="sourceLine" id="cb68-24" title="24">             <span class="dt">colour=</span><span class="kw">fct_rev</span>(id),</a>
+<a class="sourceLine" id="cb68-25" title="25">             <span class="dt">size=</span><span class="dv">2</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb68-26" title="26"><span class="st">  </span><span class="co"># geom_line(aes(linetype =fct_rev(id)), size=0.75) +</span></a>
+<a class="sourceLine" id="cb68-27" title="27"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size=</span><span class="fl">0.75</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb68-28" title="28"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>), <span class="dt">linetype=</span><span class="st">"dotted"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb68-29" title="29"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(title_line1, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>, title_line2),</a>
+<a class="sourceLine" id="cb68-30" title="30">       <span class="dt">x =</span> <span class="st">'log10 Rescale of λ, Log10(λ)</span><span class="ch">\n</span><span class="st">λ=1 Utilitarian, λ=-infty Rawlsian'</span>,</a>
+<a class="sourceLine" id="cb68-31" title="31">       <span class="dt">y =</span> <span class="st">'Optimal Targeting Queue Rank (1=highest)'</span>,</a>
+<a class="sourceLine" id="cb68-32" title="32">       <span class="dt">caption =</span> <span class="st">'Training RCT with 297 treated, 425 untreated. Optimal Binary Targeting Queue.'</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb68-33" title="33"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans=</span><span class="st">'log10'</span>, <span class="dt">labels =</span> x.labels, <span class="dt">breaks =</span> x.breaks) <span class="op">+</span></a>
+<a class="sourceLine" id="cb68-34" title="34"><span class="st">  </span><span class="kw">theme_bw</span>()</a>
+<a class="sourceLine" id="cb68-35" title="35"></a>
+<a class="sourceLine" id="cb68-36" title="36"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(line.plot)</a></code></pre></div>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_wage_files/figure-html/graph%20of%20rank%20change-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div id="bump-plot-for-optimal-binary-allocations" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bump-plot-for-optimal-binary-allocations" class="anchor"></a>Bump Plot for Optimal Binary Allocations</h2>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" title="1"><span class="co"># tb_opti_alloc_all_rho_long %&gt;%</span></a>
-<a class="sourceLine" id="cb70-2" title="2"><span class="co">#   ggplot(aes(x = rho, y = rank, group = id)) +</span></a>
-<a class="sourceLine" id="cb70-3" title="3"><span class="co">#     geom_line(aes(color = race, alpha = 1), size = 2) +</span></a>
-<a class="sourceLine" id="cb70-4" title="4"><span class="co">#     geom_point(aes(color = race, alpha = 1), size = 4) +</span></a>
-<a class="sourceLine" id="cb70-5" title="5"><span class="co">#     scale_x_discrete(expand = c(0.85,0))+</span></a>
-<a class="sourceLine" id="cb70-6" title="6"><span class="co">#     scale_y_reverse(breaks = 1:nrow(tb_opti_alloc_all_rho_long))+</span></a>
-<a class="sourceLine" id="cb70-7" title="7"><span class="co">#     theme(legend.position = "none") +</span></a>
-<a class="sourceLine" id="cb70-8" title="8"><span class="co">#     labs(x = "Equality vs Efficiency",</span></a>
-<a class="sourceLine" id="cb70-9" title="9"><span class="co">#          y = "Rank",</span></a>
-<a class="sourceLine" id="cb70-10" title="10"><span class="co">#          title = "Binary Allocation Rank, which untrained to receive training first") +</span></a>
-<a class="sourceLine" id="cb70-11" title="11"><span class="co">#     ffy_opt_ghthm_dk() +</span></a>
-<a class="sourceLine" id="cb70-12" title="12"><span class="co">#     geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=id),hjust="right")</span></a></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1"><span class="co"># tb_opti_alloc_all_rho_long %&gt;%</span></a>
+<a class="sourceLine" id="cb69-2" title="2"><span class="co">#   ggplot(aes(x = rho, y = rank, group = id)) +</span></a>
+<a class="sourceLine" id="cb69-3" title="3"><span class="co">#     geom_line(aes(color = race, alpha = 1), size = 2) +</span></a>
+<a class="sourceLine" id="cb69-4" title="4"><span class="co">#     geom_point(aes(color = race, alpha = 1), size = 4) +</span></a>
+<a class="sourceLine" id="cb69-5" title="5"><span class="co">#     scale_x_discrete(expand = c(0.85,0))+</span></a>
+<a class="sourceLine" id="cb69-6" title="6"><span class="co">#     scale_y_reverse(breaks = 1:nrow(tb_opti_alloc_all_rho_long))+</span></a>
+<a class="sourceLine" id="cb69-7" title="7"><span class="co">#     theme(legend.position = "none") +</span></a>
+<a class="sourceLine" id="cb69-8" title="8"><span class="co">#     labs(x = "Equality vs Efficiency",</span></a>
+<a class="sourceLine" id="cb69-9" title="9"><span class="co">#          y = "Rank",</span></a>
+<a class="sourceLine" id="cb69-10" title="10"><span class="co">#          title = "Binary Allocation Rank, which untrained to receive training first") +</span></a>
+<a class="sourceLine" id="cb69-11" title="11"><span class="co">#     ffy_opt_ghthm_dk() +</span></a>
+<a class="sourceLine" id="cb69-12" title="12"><span class="co">#     geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=id),hjust="right")</span></a></code></pre></div>
 </div>
 </div>
   </div>
@@ -1235,7 +1119,7 @@
       <li>
 <a href="#optimal-linear-allocations">Optimal Linear Allocations</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#save-results">Save Results</a></li>
-      <li><a href="#change-in-rank-along-lambda">Change in Rank along Lambda</a></li>
+      <li><a href="#change-in-rank-along-rho">Change in Rank along rho</a></li>
       <li><a href="#bump-plot-for-optimal-binary-allocations">Bump Plot for Optimal Binary Allocations</a></li>
       </ul>
 </li>

@@ -2,7 +2,7 @@
 % Please edit documentation in R/ffp_opt_anlyz.R
 \name{ffp_opt_anlyz_rhgin}
 \alias{ffp_opt_anlyz_rhgin}
-\title{Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (lambda)}
+\title{Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (rho)}
 \usage{
 ffp_opt_anlyz_rhgin(
   df,

@@ -251,12 +251,14 @@ ar_rho = c(-100, -0.001,  0.95)
 ar_rho <- 1 - (10^(c(seq(-2,2, length.out=30))))
 ar_rho <- unique(ar_rho)
 
+svr_rho_val <- 'rho_val'
 ls_bin_solu_all_rhos <-
   ffp_opt_anlyz_rhgin_bin(dft, svr_id_i = 'id',
                           svr_A_i = 'A_i', svr_alpha_i = 'alpha_i', svr_beta_i = 'beta_i',
                           ar_rho = ar_rho,
+                          svr_rho = 'rho', svr_rho_val = svr_rho_val,
                           svr_inpalc = svr_inpalc,
-                          svr_expout = 'opti_exp_outcome', 
+                          svr_expout = 'opti_exp_outcome',
                           verbose = TRUE)
 
 df_all_rho <- ls_bin_solu_all_rhos$df_all_rho
@@ -270,22 +272,11 @@ it_how_many_vary_rank
 ## Change in Rank along rho
 
 ```{r graph of rank change, fig.height = 4, fig.width = 7, fig.align = "center"}
-
-# generate dataframe of rho
-mt_combine <- cbind(ar_rho)
-colnames(mt_combine) <- c('rho_val')
-
 # get rank when wage rho = 1
 df_all_rho_rho_c1 <- df_all_rho %>% select(id, rho_c1_rk)
-
-# rho really means rho index
-tb_rho <- as_tibble(mt_combine) %>% rowid_to_column(var = "rho")
-
 # Merge
 df_all_rho_long <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>%
-                      left_join(tb_rho, by='rho') %>%
                       left_join(df_all_rho_rho_c1, by='id')
-
 # Select subset to graph
 df_rank_graph <- df_all_rho_long %>%
                     mutate(id = factor(id)) %>%
@@ -298,7 +289,7 @@ df_rank_graph <- df_all_rho_long %>%
                            (id == 206) |  # utilitarian rank = 601
                            (id == 272)   # utilitarian rank = 701
                              ) %>%
-                    mutate(one_minus_rho = 1 - rho_val) %>%
+                    mutate(one_minus_rho = 1 - !!sym(svr_rho_val)) %>%
                     mutate(rho_c1_rk = factor(rho_c1_rk))
 
 df_rank_graph$rho_c1_rk

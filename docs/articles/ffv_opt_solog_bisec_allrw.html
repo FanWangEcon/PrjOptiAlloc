@@ -87,7 +87,10 @@
       <a href="../articles/ffv_opt_sobin_rkone_allrw_wgt.html">BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sodis_rkone_allrw_casch.html">DISCRETE--Discrete Provision Optimal Allocation Solution (Line by Line)</a>
+      <a href="../articles/ffv_opt_sodis_rkone_casch_allfn.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Function)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_sodis_rkone_casch_allrw.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_solin_relow.html">LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest</a>
@@ -97,6 +100,9 @@
     </li>
     <li>
       <a href="../articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_solog_asame_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Analytical Common Alpha</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_solog_bisec_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)</a>
@@ -269,12 +275,12 @@
 <a class="sourceLine" id="cb5-14" title="14"><span class="co"># display</span></a>
 <a class="sourceLine" id="cb5-15" title="15"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(tb_states_choices_dense)</a></code></pre></div>
 <pre><code>##     indi_id         ar_nn_a       ar_nn_alpha          choices   
-##  Min.   :171.0   Min.   :4.328   Min.   :0.006687   Min.   :  0  
-##  1st Qu.:351.0   1st Qu.:4.344   1st Qu.:0.009251   1st Qu.: 25  
-##  Median :552.0   Median :4.349   Median :0.012090   Median : 50  
-##  Mean   :539.2   Mean   :4.350   Mean   :0.010955   Mean   : 50  
-##  3rd Qu.:716.0   3rd Qu.:4.355   3rd Qu.:0.012090   3rd Qu.: 75  
-##  Max.   :963.0   Max.   :4.376   Max.   :0.013940   Max.   :100</code></pre>
+##  Min.   :253.0   Min.   :4.313   Min.   :0.006687   Min.   :  0  
+##  1st Qu.:464.0   1st Qu.:4.333   1st Qu.:0.009251   1st Qu.: 25  
+##  Median :644.0   Median :4.349   Median :0.012090   Median : 50  
+##  Mean   :633.7   Mean   :4.342   Mean   :0.010875   Mean   : 50  
+##  3rd Qu.:880.0   3rd Qu.:4.351   3rd Qu.:0.013940   3rd Qu.: 75  
+##  Max.   :916.0   Max.   :4.359   Max.   :0.013940   Max.   :100</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">kable</span>(tb_states_choices_ttest) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb7-2" title="2"><span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">bootstrap_options =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</a></code></pre></div>
 <table class="table table table-striped table-hover table-condensed table-responsive">
@@ -295,10 +301,10 @@ choices
 <tbody>
 <tr>
 <td style="text-align:right;">
-130
+877
 </td>
 <td style="text-align:right;">
-4.344310
+4.345463
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -309,10 +315,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-130
+877
 </td>
 <td style="text-align:right;">
-4.344310
+4.345463
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -323,10 +329,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-130
+877
 </td>
 <td style="text-align:right;">
-4.344310
+4.345463
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -337,10 +343,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-123
+579
 </td>
 <td style="text-align:right;">
-4.369424
+4.357030
 </td>
 <td style="text-align:right;">
 0.0092514
@@ -351,94 +357,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-123
+579
 </td>
 <td style="text-align:right;">
-4.369424
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-123
-</td>
-<td style="text-align:right;">
-4.369424
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-349
-</td>
-<td style="text-align:right;">
-4.338373
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-349
-</td>
-<td style="text-align:right;">
-4.338373
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-349
-</td>
-<td style="text-align:right;">
-4.338373
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-975
-</td>
-<td style="text-align:right;">
-4.345739
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-975
-</td>
-<td style="text-align:right;">
-4.345739
+4.357030
 </td>
 <td style="text-align:right;">
 0.0092514
@@ -449,10 +371,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-975
+579
 </td>
 <td style="text-align:right;">
-4.345739
+4.357030
 </td>
 <td style="text-align:right;">
 0.0092514
@@ -463,13 +385,13 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-213
+739
 </td>
 <td style="text-align:right;">
-4.346288
+4.340730
 </td>
 <td style="text-align:right;">
-0.0139396
+0.0066867
 </td>
 <td style="text-align:right;">
 0
@@ -477,13 +399,13 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-213
+739
 </td>
 <td style="text-align:right;">
-4.346288
+4.340730
 </td>
 <td style="text-align:right;">
-0.0139396
+0.0066867
 </td>
 <td style="text-align:right;">
 50
@@ -491,13 +413,13 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-213
+739
 </td>
 <td style="text-align:right;">
-4.346288
+4.340730
 </td>
 <td style="text-align:right;">
-0.0139396
+0.0066867
 </td>
 <td style="text-align:right;">
 100
@@ -505,52 +427,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-77
+827
 </td>
 <td style="text-align:right;">
-4.324314
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-77
-</td>
-<td style="text-align:right;">
-4.324314
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-77
-</td>
-<td style="text-align:right;">
-4.324314
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-486
-</td>
-<td style="text-align:right;">
-4.334671
+4.331032
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -561,10 +441,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-486
+827
 </td>
 <td style="text-align:right;">
-4.334671
+4.331032
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -575,10 +455,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-486
+827
 </td>
 <td style="text-align:right;">
-4.334671
+4.331032
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -589,10 +469,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-837
+638
 </td>
 <td style="text-align:right;">
-4.342133
+4.321351
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -603,10 +483,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-837
+638
 </td>
 <td style="text-align:right;">
-4.342133
+4.321351
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -617,10 +497,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-837
+638
 </td>
 <td style="text-align:right;">
-4.342133
+4.321351
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -631,10 +511,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-28
+862
 </td>
 <td style="text-align:right;">
-4.349835
+4.367127
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -645,10 +525,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-28
+862
 </td>
 <td style="text-align:right;">
-4.349835
+4.367127
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -659,13 +539,139 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-28
+862
 </td>
 <td style="text-align:right;">
-4.349835
+4.367127
 </td>
 <td style="text-align:right;">
 0.0139396
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+820
+</td>
+<td style="text-align:right;">
+4.333234
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+820
+</td>
+<td style="text-align:right;">
+4.333234
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+820
+</td>
+<td style="text-align:right;">
+4.333234
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+141
+</td>
+<td style="text-align:right;">
+4.330786
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+141
+</td>
+<td style="text-align:right;">
+4.330786
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+141
+</td>
+<td style="text-align:right;">
+4.330786
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+729
+</td>
+<td style="text-align:right;">
+4.343769
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+729
+</td>
+<td style="text-align:right;">
+4.343769
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+729
+</td>
+<td style="text-align:right;">
+4.343769
+</td>
+<td style="text-align:right;">
+0.0120902
 </td>
 <td style="text-align:right;">
 100
@@ -745,10 +751,10 @@ dplyr_eval
 <tbody>
 <tr>
 <td style="text-align:right;">
-130
+877
 </td>
 <td style="text-align:right;">
-4.344310
+4.345463
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -762,10 +768,10 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-130
+877
 </td>
 <td style="text-align:right;">
-4.344310
+4.345463
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -774,15 +780,15 @@ dplyr_eval
 50
 </td>
 <td style="text-align:right;">
--44385.13
+-44374.85
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-130
+877
 </td>
 <td style="text-align:right;">
-4.344310
+4.345463
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -791,15 +797,15 @@ dplyr_eval
 100
 </td>
 <td style="text-align:right;">
--88858.65
+-88838.10
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-123
+579
 </td>
 <td style="text-align:right;">
-4.369424
+4.357030
 </td>
 <td style="text-align:right;">
 0.0092514
@@ -813,112 +819,10 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-123
+579
 </td>
 <td style="text-align:right;">
-4.369424
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--57906.93
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-123
-</td>
-<td style="text-align:right;">
-4.369424
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--115944.50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-349
-</td>
-<td style="text-align:right;">
-4.338373
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-349
-</td>
-<td style="text-align:right;">
-4.338373
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--44438.11
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-349
-</td>
-<td style="text-align:right;">
-4.338373
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--88964.59
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-975
-</td>
-<td style="text-align:right;">
-4.345739
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-975
-</td>
-<td style="text-align:right;">
-4.345739
+4.357030
 </td>
 <td style="text-align:right;">
 0.0092514
@@ -927,15 +831,15 @@ dplyr_eval
 50
 </td>
 <td style="text-align:right;">
--58182.97
+-58051.21
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-975
+579
 </td>
 <td style="text-align:right;">
-4.345739
+4.357030
 </td>
 <td style="text-align:right;">
 0.0092514
@@ -944,18 +848,18 @@ dplyr_eval
 100
 </td>
 <td style="text-align:right;">
--116496.72
+-116233.13
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-213
+739
 </td>
 <td style="text-align:right;">
-4.346288
+4.340730
 </td>
 <td style="text-align:right;">
-0.0139396
+0.0066867
 </td>
 <td style="text-align:right;">
 0
@@ -966,95 +870,44 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-213
+739
 </td>
 <td style="text-align:right;">
-4.346288
+4.340730
 </td>
 <td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--38399.77
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-213
-</td>
-<td style="text-align:right;">
-4.346288
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--76869.72
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-77
-</td>
-<td style="text-align:right;">
-4.324314
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-77
-</td>
-<td style="text-align:right;">
-4.324314
-</td>
-<td style="text-align:right;">
-0.0120902
+0.0066867
 </td>
 <td style="text-align:right;">
 50
 </td>
 <td style="text-align:right;">
--44563.79
+-80839.78
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-77
+739
 </td>
 <td style="text-align:right;">
-4.324314
+4.340730
 </td>
 <td style="text-align:right;">
-0.0120902
+0.0066867
 </td>
 <td style="text-align:right;">
 100
 </td>
 <td style="text-align:right;">
--89215.93
+-161880.02
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-486
+827
 </td>
 <td style="text-align:right;">
-4.334671
+4.331032
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -1068,10 +921,10 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-486
+827
 </td>
 <td style="text-align:right;">
-4.334671
+4.331032
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -1080,15 +933,15 @@ dplyr_eval
 50
 </td>
 <td style="text-align:right;">
--44471.16
+-44503.69
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-486
+827
 </td>
 <td style="text-align:right;">
-4.334671
+4.331032
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -1097,15 +950,15 @@ dplyr_eval
 100
 </td>
 <td style="text-align:right;">
--89030.70
+-89095.74
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-837
+638
 </td>
 <td style="text-align:right;">
-4.342133
+4.321351
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -1119,10 +972,10 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-837
+638
 </td>
 <td style="text-align:right;">
-4.342133
+4.321351
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -1131,15 +984,15 @@ dplyr_eval
 50
 </td>
 <td style="text-align:right;">
--44404.55
+-44590.33
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-837
+638
 </td>
 <td style="text-align:right;">
-4.342133
+4.321351
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -1148,15 +1001,15 @@ dplyr_eval
 100
 </td>
 <td style="text-align:right;">
--88897.49
+-89269.00
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-28
+862
 </td>
 <td style="text-align:right;">
-4.349835
+4.367127
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -1170,10 +1023,10 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-28
+862
 </td>
 <td style="text-align:right;">
-4.349835
+4.367127
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -1182,15 +1035,15 @@ dplyr_eval
 50
 </td>
 <td style="text-align:right;">
--38372.41
+-38239.29
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-28
+862
 </td>
 <td style="text-align:right;">
-4.349835
+4.367127
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -1199,7 +1052,160 @@ dplyr_eval
 100
 </td>
 <td style="text-align:right;">
--76815.01
+-76548.88
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+820
+</td>
+<td style="text-align:right;">
+4.333234
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+820
+</td>
+<td style="text-align:right;">
+4.333234
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-80961.49
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+820
+</td>
+<td style="text-align:right;">
+4.333234
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-162123.59
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+141
+</td>
+<td style="text-align:right;">
+4.330786
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+141
+</td>
+<td style="text-align:right;">
+4.330786
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-44505.89
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+141
+</td>
+<td style="text-align:right;">
+4.330786
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-89100.14
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+729
+</td>
+<td style="text-align:right;">
+4.343769
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+729
+</td>
+<td style="text-align:right;">
+4.343769
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-44389.95
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+729
+</td>
+<td style="text-align:right;">
+4.343769
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-88868.30
 </td>
 </tr>
 </tbody>
@@ -1219,18 +1225,18 @@ dplyr_eval
 <pre><code>## [1] 900   5</code></pre>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(tb_states_choices_dense_eval)</a></code></pre></div>
 <pre><code>##     indi_id           fl_a          fl_alpha             fl_n    
-##  Min.   :171.0   Min.   :4.328   Min.   :0.006687   Min.   :  0  
-##  1st Qu.:351.0   1st Qu.:4.344   1st Qu.:0.009251   1st Qu.: 25  
-##  Median :552.0   Median :4.349   Median :0.012090   Median : 50  
-##  Mean   :539.2   Mean   :4.350   Mean   :0.010955   Mean   : 50  
-##  3rd Qu.:716.0   3rd Qu.:4.355   3rd Qu.:0.012090   3rd Qu.: 75  
-##  Max.   :963.0   Max.   :4.376   Max.   :0.013940   Max.   :100  
+##  Min.   :253.0   Min.   :4.313   Min.   :0.006687   Min.   :  0  
+##  1st Qu.:464.0   1st Qu.:4.333   1st Qu.:0.009251   1st Qu.: 25  
+##  Median :644.0   Median :4.349   Median :0.012090   Median : 50  
+##  Mean   :633.7   Mean   :4.342   Mean   :0.010875   Mean   : 50  
+##  3rd Qu.:880.0   3rd Qu.:4.351   3rd Qu.:0.013940   3rd Qu.: 75  
+##  Max.   :916.0   Max.   :4.359   Max.   :0.013940   Max.   :100  
 ##    dplyr_eval     
-##  Min.   :-161744  
-##  1st Qu.: -73629  
-##  Median : -48970  
-##  Mean   : -51645  
-##  3rd Qu.: -24230  
+##  Min.   :-162791  
+##  1st Qu.: -74361  
+##  Median : -49343  
+##  Mean   : -53615  
+##  3rd Qu.: -24520  
 ##  Max.   :    100</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">lineplot &lt;-<span class="st"> </span>tb_states_choices_dense_eval <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb15-2" title="2"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>fl_n, <span class="dt">y=</span>dplyr_eval)) <span class="op">+</span></a>
@@ -1432,7 +1438,7 @@ dplyr_eval
 ##  8       8  4.34  0.00669         0       100        100   -161980. 0.0621
 ##  9       9  4.36  0.0139          0       100        100    -76632. 0.130 
 ## 10      10  4.33  0.0121          0       100        100    -89034. 0.112 
-## # … with 146 more variables: f_p &lt;dbl&gt;, f_p_t_f_a &lt;dbl&gt;, bisec_a_1 &lt;dbl&gt;,
+## # ... with 146 more variables: f_p &lt;dbl&gt;, f_p_t_f_a &lt;dbl&gt;, bisec_a_1 &lt;dbl&gt;,
 ## #   bisec_b_1 &lt;dbl&gt;, bisec_fa_1 &lt;dbl&gt;, bisec_fb_1 &lt;dbl&gt;, bisec_a_2 &lt;dbl&gt;,
 ## #   bisec_b_2 &lt;dbl&gt;, bisec_fa_2 &lt;dbl&gt;, bisec_fb_2 &lt;dbl&gt;, bisec_a_3 &lt;dbl&gt;,
 ## #   bisec_b_3 &lt;dbl&gt;, bisec_fa_3 &lt;dbl&gt;, bisec_fb_3 &lt;dbl&gt;, bisec_a_4 &lt;dbl&gt;,
@@ -1457,7 +1463,7 @@ dplyr_eval
 ## #   bisec_b_22 &lt;dbl&gt;, bisec_fa_22 &lt;dbl&gt;, bisec_fb_22 &lt;dbl&gt;, bisec_a_23 &lt;dbl&gt;,
 ## #   bisec_b_23 &lt;dbl&gt;, bisec_fa_23 &lt;dbl&gt;, bisec_fb_23 &lt;dbl&gt;, bisec_a_24 &lt;dbl&gt;,
 ## #   bisec_b_24 &lt;dbl&gt;, bisec_fa_24 &lt;dbl&gt;, bisec_fb_24 &lt;dbl&gt;, bisec_a_25 &lt;dbl&gt;,
-## #   bisec_b_25 &lt;dbl&gt;, …</code></pre>
+## #   bisec_b_25 &lt;dbl&gt;, ...</code></pre>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'input allocated total sum: '</span>, <span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(tb_states_choices_bisec <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(p))))</a></code></pre></div>
 <pre><code>## [1] "input allocated total sum: 100.000000033469"</code></pre>
 </div>
@@ -1483,26 +1489,26 @@ dplyr_eval
 <a class="sourceLine" id="cb28-15" title="15"></a>
 <a class="sourceLine" id="cb28-16" title="16"><span class="co"># print</span></a>
 <a class="sourceLine" id="cb28-17" title="17"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(tb_states_choices_bisec_long)</a></code></pre></div>
-<pre><code>##     indi_id            fl_a          fl_alpha              p          
-##  Min.   :  63.0   Min.   :4.312   Min.   :0.006687   Min.   :0.06187  
-##  1st Qu.: 425.0   1st Qu.:4.321   1st Qu.:0.006687   1st Qu.:0.06194  
-##  Median : 718.0   Median :4.342   Median :0.009251   Median :0.08609  
-##  Mean   : 624.1   Mean   :4.336   Mean   :0.009263   Mean   :0.08595  
-##  3rd Qu.: 852.0   3rd Qu.:4.351   3rd Qu.:0.012090   3rd Qu.:0.11155  
-##  Max.   :1026.0   Max.   :4.353   Max.   :0.013940   Max.   :0.12961  
+<pre><code>##     indi_id           fl_a          fl_alpha              p          
+##  Min.   :300.0   Min.   :4.325   Min.   :0.006687   Min.   :0.06206  
+##  1st Qu.:382.0   1st Qu.:4.336   1st Qu.:0.012090   1st Qu.:0.11184  
+##  Median :675.0   Median :4.340   Median :0.012090   Median :0.11217  
+##  Mean   :585.4   Mean   :4.344   Mean   :0.011791   Mean   :0.10949  
+##  3rd Qu.:728.0   3rd Qu.:4.353   3rd Qu.:0.013940   3rd Qu.:0.12937  
+##  Max.   :852.0   Max.   :4.365   Max.   :0.013940   Max.   :0.12992  
 ##       f_p               f_p_t_f_a            varname         
-##  Min.   :-2.148e-06   Min.   :-1.231e-12   Length:1332       
-##  1st Qu.:-4.302e-07   1st Qu.:-4.406e-13   Class :character  
-##  Median : 3.890e-07   Median : 8.089e-13   Mode  :character  
-##  Mean   :-6.500e-08   Mean   : 6.674e-13                     
-##  3rd Qu.: 6.898e-07   3rd Qu.: 1.692e-12                     
-##  Max.   : 1.108e-06   Max.   : 2.470e-12                     
+##  Min.   :-6.744e-07   Min.   :-4.027e-13   Length:1332       
+##  1st Qu.:-2.991e-07   1st Qu.:-2.985e-13   Class :character  
+##  Median : 2.658e-08   Median : 3.059e-14   Mode  :character  
+##  Mean   : 1.899e-07   Mean   : 1.018e-12                     
+##  3rd Qu.: 5.906e-07   3rd Qu.: 1.117e-12                     
+##  Max.   : 1.695e-06   Max.   : 6.852e-12                     
 ##   biseciter             value           
-##  Length:1332        Min.   :-162592.26  
+##  Length:1332        Min.   :-162109.26  
 ##  Class :character   1st Qu.:      0.00  
-##  Mode  :character   Median :      0.06  
-##                     Mean   :  -1691.33  
-##                     3rd Qu.:      0.11  
+##  Mode  :character   Median :      0.09  
+##                     Mean   :  -1283.80  
+##                     3rd Qu.:      0.13  
 ##                     Max.   :    100.00</code></pre>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tb_states_choices_bisec_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">one_of</span>(<span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span>)), <span class="dv">30</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 30 x 6
@@ -1518,22 +1524,22 @@ dplyr_eval
 ##  8     852  4.35  0.00925 fb      1          -58101.
 ##  9     852  4.35  0.00925 a       2               0 
 ## 10     852  4.35  0.00925 b       2              25 
-## # … with 20 more rows</code></pre>
+## # ... with 20 more rows</code></pre>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">tail</a></span>(tb_states_choices_bisec_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">one_of</span>(<span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span>)), <span class="dv">30</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 30 x 6
-##    indi_id  fl_a fl_alpha varname biseciter       value
-##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;           &lt;dbl&gt;
-##  1     457  4.32  0.00669 fa      29         0.000152  
-##  2     457  4.32  0.00669 fb      29        -0.000149  
-##  3     457  4.32  0.00669 a       30         0.0619    
-##  4     457  4.32  0.00669 b       30         0.0619    
-##  5     457  4.32  0.00669 fa      30         0.00000192
-##  6     457  4.32  0.00669 fb      30        -0.000149  
-##  7     457  4.32  0.00669 a       31         0.0619    
-##  8     457  4.32  0.00669 b       31         0.0619    
-##  9     457  4.32  0.00669 fa      31         0.00000192
-## 10     457  4.32  0.00669 fb      31        -0.0000733 
-## # … with 20 more rows</code></pre>
+##    indi_id  fl_a fl_alpha varname biseciter      value
+##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+##  1     300  4.33  0.00669 fa      29         0.000258 
+##  2     300  4.33  0.00669 fb      29        -0.0000429
+##  3     300  4.33  0.00669 a       30         0.0621   
+##  4     300  4.33  0.00669 b       30         0.0621   
+##  5     300  4.33  0.00669 fa      30         0.000107 
+##  6     300  4.33  0.00669 fb      30        -0.0000429
+##  7     300  4.33  0.00669 a       31         0.0621   
+##  8     300  4.33  0.00669 b       31         0.0621   
+##  9     300  4.33  0.00669 fa      31         0.0000322
+## 10     300  4.33  0.00669 fb      31        -0.0000429
+## # ... with 20 more rows</code></pre>
 </div>
 <div id="table-twovery-very-long-to-wider-again" class="section level4">
 <h4 class="hasAnchor">
@@ -1548,25 +1554,25 @@ dplyr_eval
 <a class="sourceLine" id="cb34-7" title="7"></a>
 <a class="sourceLine" id="cb34-8" title="8"><span class="co"># print</span></a>
 <a class="sourceLine" id="cb34-9" title="9"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(tb_states_choices_bisec_wider)</a></code></pre></div>
-<pre><code>##     indi_id            fl_a          fl_alpha              p          
-##  Min.   :  63.0   Min.   :4.312   Min.   :0.006687   Min.   :0.06187  
-##  1st Qu.: 425.0   1st Qu.:4.321   1st Qu.:0.006687   1st Qu.:0.06194  
-##  Median : 718.0   Median :4.342   Median :0.009251   Median :0.08609  
-##  Mean   : 624.1   Mean   :4.336   Mean   :0.009263   Mean   :0.08595  
-##  3rd Qu.: 852.0   3rd Qu.:4.351   3rd Qu.:0.012090   3rd Qu.:0.11155  
-##  Max.   :1026.0   Max.   :4.353   Max.   :0.013940   Max.   :0.12961  
+<pre><code>##     indi_id           fl_a          fl_alpha              p          
+##  Min.   :300.0   Min.   :4.325   Min.   :0.006687   Min.   :0.06206  
+##  1st Qu.:382.0   1st Qu.:4.336   1st Qu.:0.012090   1st Qu.:0.11184  
+##  Median :675.0   Median :4.340   Median :0.012090   Median :0.11217  
+##  Mean   :585.4   Mean   :4.344   Mean   :0.011791   Mean   :0.10949  
+##  3rd Qu.:728.0   3rd Qu.:4.353   3rd Qu.:0.013940   3rd Qu.:0.12937  
+##  Max.   :852.0   Max.   :4.365   Max.   :0.013940   Max.   :0.12992  
 ##       f_p               f_p_t_f_a           biseciter               a          
-##  Min.   :-2.148e-06   Min.   :-1.231e-12   Length:333         Min.   :0.00000  
-##  1st Qu.:-4.302e-07   1st Qu.:-4.406e-13   Class :character   1st Qu.:0.00000  
-##  Median : 3.890e-07   Median : 8.089e-13   Mode  :character   Median :0.06190  
-##  Mean   :-6.500e-08   Mean   : 6.674e-13                      Mean   :0.06021  
-##  3rd Qu.: 6.898e-07   3rd Qu.: 1.692e-12                      3rd Qu.:0.08612  
-##  Max.   : 1.108e-06   Max.   : 2.470e-12                      Max.   :0.12961  
+##  Min.   :-6.744e-07   Min.   :-4.027e-13   Length:333         Min.   :0.00000  
+##  1st Qu.:-2.991e-07   1st Qu.:-2.985e-13   Class :character   1st Qu.:0.00000  
+##  Median : 2.658e-08   Median : 3.059e-14   Mode  :character   Median :0.10986  
+##  Mean   : 1.899e-07   Mean   : 1.018e-12                      Mean   :0.07784  
+##  3rd Qu.: 5.906e-07   3rd Qu.: 1.117e-12                      3rd Qu.:0.11217  
+##  Max.   : 1.695e-06   Max.   : 6.852e-12                      Max.   :0.12992  
 ##        b                   fa                  fb            
-##  Min.   :  0.06187   Min.   :  0.00000   Min.   :-162592.26  
-##  1st Qu.:  0.06256   1st Qu.:  0.00031   1st Qu.:   -214.06  
-##  Median :  0.11155   Median :  0.14555   Median :     -0.15  
-##  Mean   :  5.46562   Mean   : 30.26111   Mean   :  -6801.09  
+##  Min.   :  0.06206   Min.   :  0.00000   Min.   :-162109.26  
+##  1st Qu.:  0.11208   1st Qu.:  0.00031   1st Qu.:    -74.62  
+##  Median :  0.12937   Median :  0.10474   Median :     -0.20  
+##  Mean   :  5.48324   Mean   : 29.09184   Mean   :  -5169.86  
 ##  3rd Qu.:  0.19531   3rd Qu.:100.00000   3rd Qu.:      0.00  
 ##  Max.   :100.00000   Max.   :100.00000   Max.   :      0.00</code></pre>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tb_states_choices_bisec_wider <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">one_of</span>(<span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span>)), <span class="dv">30</span>)</a></code></pre></div>
@@ -1583,22 +1589,22 @@ dplyr_eval
 ##  8     852  4.35  0.00925 7             0   0.781   100    -808.
 ##  9     852  4.35  0.00925 8             0   0.391   100    -354.
 ## 10     852  4.35  0.00925 9             0   0.195   100    -127.
-## # … with 20 more rows</code></pre>
+## # ... with 20 more rows</code></pre>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">tail</a></span>(tb_states_choices_bisec_wider <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">one_of</span>(<span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span>)), <span class="dv">30</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 30 x 8
-##    indi_id  fl_a fl_alpha biseciter      a      b     fa       fb
-##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
-##  1     457  4.32  0.00669 7         0      0.781  100    -1164.  
-##  2     457  4.32  0.00669 8         0      0.391  100     -532.  
-##  3     457  4.32  0.00669 9         0      0.195  100     -216.  
-##  4     457  4.32  0.00669 10        0      0.0977 100      -57.7 
-##  5     457  4.32  0.00669 11        0.0488 0.0977  21.2    -57.7 
-##  6     457  4.32  0.00669 12        0.0488 0.0732  21.2    -18.3 
-##  7     457  4.32  0.00669 13        0.0610 0.0732   1.46   -18.3 
-##  8     457  4.32  0.00669 14        0.0610 0.0671   1.46    -8.41
-##  9     457  4.32  0.00669 15        0.0610 0.0641   1.46    -3.47
-## 10     457  4.32  0.00669 16        0.0610 0.0626   1.46    -1.01
-## # … with 20 more rows</code></pre>
+##    indi_id  fl_a fl_alpha biseciter      a      b     fa        fb
+##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;
+##  1     300  4.33  0.00669 7         0      0.781  100    -1162.   
+##  2     300  4.33  0.00669 8         0      0.391  100     -530.   
+##  3     300  4.33  0.00669 9         0      0.195  100     -215.   
+##  4     300  4.33  0.00669 10        0      0.0977 100      -57.4  
+##  5     300  4.33  0.00669 11        0.0488 0.0977  21.3    -57.4  
+##  6     300  4.33  0.00669 12        0.0488 0.0732  21.3    -18.0  
+##  7     300  4.33  0.00669 13        0.0610 0.0732   1.65   -18.0  
+##  8     300  4.33  0.00669 14        0.0610 0.0671   1.65    -8.20 
+##  9     300  4.33  0.00669 15        0.0610 0.0641   1.65    -3.27 
+## 10     300  4.33  0.00669 16        0.0610 0.0626   1.65    -0.813
+## # ... with 20 more rows</code></pre>
 </div>
 </div>
 <div id="graph-bisection-iteration-results" class="section level3">

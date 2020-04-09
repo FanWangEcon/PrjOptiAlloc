@@ -130,7 +130,10 @@ includes min and max rank. Based on wage regression." />
       <a href="../articles/ffv_opt_sobin_rkone_allrw_wgt.html">BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sodis_rkone_allrw_casch.html">DISCRETE--Discrete Provision Optimal Allocation Solution (Line by Line)</a>
+      <a href="../articles/ffv_opt_sodis_rkone_casch_allfn.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Function)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_sodis_rkone_casch_allrw.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_solin_relow.html">LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest</a>
@@ -140,6 +143,9 @@ includes min and max rank. Based on wage regression." />
     </li>
     <li>
       <a href="../articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_solog_asame_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Analytical Common Alpha</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_solog_bisec_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)</a>
@@ -188,102 +194,102 @@ includes min and max rank. Based on wage regression.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_lalonde_training_wage</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_opt_lalonde_training_wage</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt;    id A_i_wage alpha_i_wage beta_i_wage rank_min_wage rank_max_wage
-#&gt; 1   1 4.705623    0.4537963 0.001385042           392           284
+#&gt; 1   1 4.705623    0.4537963 0.001385042           386           278
 #&gt; 2   2 6.842885    0.4537963 0.001385042           689           673
-#&gt; 3   3 4.373738    0.4537963 0.001385042           278           163
+#&gt; 3   3 4.373738    0.4537963 0.001385042           274           159
 #&gt; 4   4 4.129823    0.4537963 0.001385042           178            61
-#&gt; 5   5 4.192084    0.4537963 0.001385042           223           106
+#&gt; 5   5 4.192084    0.4537963 0.001385042           207            90
 #&gt; 6   6 5.057681    0.4537963 0.001385042           483           399
-#&gt; 7   7 4.192084    0.4537963 0.001385042           223           106
-#&gt; 8   8 5.096506    0.4537963 0.001385042           499           416
+#&gt; 7   7 4.192084    0.4537963 0.001385042           207            90
+#&gt; 8   8 5.096506    0.4537963 0.001385042           496           413
 #&gt; 9   9 5.445291    0.4537963 0.001385042           545           495
 #&gt; 10 10 5.450645    1.0708127 0.001385042           496            68
 #&gt;    avg_rank_wage trt age educ race marr nodeg      re78 rho_c1_rk_wage
-#&gt; 1       356.1000   0  23   10    1    0     1     0.000            392
+#&gt; 1       350.1000   0  23   10    1    0     1     0.000            386
 #&gt; 2       684.5000   0  26   12    0    0     0 12383.680            689
-#&gt; 3       235.5333   0  22    9    1    0     1     0.000            278
+#&gt; 3       231.5333   0  22    9    1    0     1     0.000            274
 #&gt; 4       132.4667   0  34    9    1    0     1 14051.160            178
-#&gt; 5       178.2667   0  18    9    1    0     1 10740.080            223
+#&gt; 5       162.2667   0  18    9    1    0     1 10740.080            207
 #&gt; 6       456.1333   0  45   11    1    0     1 11796.470            483
-#&gt; 7       178.2667   0  18    9    1    0     1  9227.052            223
-#&gt; 8       473.1333   0  27   12    1    0     0  3552.268            499
+#&gt; 7       162.2667   0  18    9    1    0     1  9227.052            207
+#&gt; 8       470.1333   0  27   12    1    0     0  3552.268            496
 #&gt; 9       528.8000   0  24    8    0    0     1 10569.270            545
 #&gt; 10      216.7000   0  34   11    1    1     1  6040.335             68
 #&gt;    rho_c2_rk_wage rho_c3_rk_wage rho_c4_rk_wage rho_c5_rk_wage rho_c6_rk_wage
-#&gt; 1             392            392            392            392            392
+#&gt; 1             386            386            386            386            386
 #&gt; 2             689            689            689            689            689
-#&gt; 3             278            278            278            278            278
+#&gt; 3             274            274            274            274            274
 #&gt; 4             178            178            178            178            178
-#&gt; 5             223            223            223            223            223
+#&gt; 5             207            207            207            207            207
 #&gt; 6             483            483            483            483            483
-#&gt; 7             223            223            223            223            223
-#&gt; 8             499            499            499            499            499
+#&gt; 7             207            207            207            207            207
+#&gt; 8             496            496            496            496            496
 #&gt; 9             545            545            545            545            545
 #&gt; 10             68             68             68             68             68
 #&gt;    rho_c7_rk_wage rho_c8_rk_wage rho_c9_rk_wage rho_c10_rk_wage rho_c11_rk_wage
-#&gt; 1             392            392            392             392             392
+#&gt; 1             386            386            386             386             386
 #&gt; 2             689            689            689             689             689
-#&gt; 3             278            278            278             278             278
+#&gt; 3             274            274            274             274             274
 #&gt; 4             178            178            178             178             178
-#&gt; 5             223            223            223             223             223
+#&gt; 5             207            207            207             207             207
 #&gt; 6             483            483            483             483             483
-#&gt; 7             223            223            223             223             223
-#&gt; 8             499            499            499             499             499
+#&gt; 7             207            207            207             207             207
+#&gt; 8             496            496            496             496             496
 #&gt; 9             545            545            545             545             545
 #&gt; 10             68             68             68              68              68
 #&gt;    rho_c12_rk_wage rho_c13_rk_wage rho_c14_rk_wage rho_c15_rk_wage
-#&gt; 1              392             392             392             392
+#&gt; 1              386             386             386             386
 #&gt; 2              689             689             689             689
-#&gt; 3              278             278             278             278
+#&gt; 3              274             274             274             274
 #&gt; 4              178             178             178             178
-#&gt; 5              223             223             223             223
+#&gt; 5              207             207             207             207
 #&gt; 6              483             483             483             483
-#&gt; 7              223             223             223             223
-#&gt; 8              499             499             499             499
+#&gt; 7              207             207             207             207
+#&gt; 8              496             496             496             496
 #&gt; 9              545             545             545             545
 #&gt; 10              68              68              68              68
 #&gt;    rho_c16_rk_wage rho_c17_rk_wage rho_c18_rk_wage rho_c19_rk_wage
-#&gt; 1              392             391             375             362
+#&gt; 1              386             385             369             356
 #&gt; 2              689             689             689             689
-#&gt; 3              278             269             252             231
+#&gt; 3              274             265             248             227
 #&gt; 4              178             162             146             112
-#&gt; 5              223             208             191             170
+#&gt; 5              207             192             175             154
 #&gt; 6              483             483             473             460
-#&gt; 7              223             208             191             170
-#&gt; 8              499             499             490             476
+#&gt; 7              207             192             175             154
+#&gt; 8              496             496             487             473
 #&gt; 9              545             545             543             530
 #&gt; 10              68              68              85             199
 #&gt;    rho_c20_rk_wage rho_c21_rk_wage rho_c22_rk_wage rho_c23_rk_wage
-#&gt; 1              345             320             308             304
+#&gt; 1              339             314             302             298
 #&gt; 2              688             686             682             675
-#&gt; 3              198             186             169             167
+#&gt; 3              194             182             165             163
 #&gt; 4               86              68              64              61
-#&gt; 5              136             114             111             108
+#&gt; 5              120              98              95              92
 #&gt; 6              451             437             432             416
-#&gt; 7              136             114             111             108
-#&gt; 8              469             459             450             440
+#&gt; 7              120              98              95              92
+#&gt; 8              466             456             447             437
 #&gt; 9              522             515             512             505
 #&gt; 10             316             366             445             481
 #&gt;    rho_c24_rk_wage rho_c25_rk_wage rho_c26_rk_wage rho_c27_rk_wage
-#&gt; 1              297             289             284             284
+#&gt; 1              291             283             278             278
 #&gt; 2              674             674             673             673
-#&gt; 3              166             164             164             163
+#&gt; 3              162             160             160             159
 #&gt; 4               61              61              61              61
-#&gt; 5              106             106             106             106
+#&gt; 5               90              90              90              90
 #&gt; 6              407             401             400             399
-#&gt; 7              106             106             106             106
-#&gt; 8              426             419             417             417
+#&gt; 7               90              90              90              90
+#&gt; 8              423             416             414             414
 #&gt; 9              498             497             496             496
 #&gt; 10             485             491             494             495
 #&gt;    rho_c28_rk_wage rho_c29_rk_wage rho_c30_rk_wage
-#&gt; 1              284             284             284
+#&gt; 1              278             278             278
 #&gt; 2              673             673             673
-#&gt; 3              163             163             163
+#&gt; 3              159             159             159
 #&gt; 4               61              61              61
-#&gt; 5              106             106             106
+#&gt; 5               90              90              90
 #&gt; 6              399             399             399
-#&gt; 7              106             106             106
-#&gt; 8              416             416             416
+#&gt; 7               90              90              90
+#&gt; 8              413             413             413
 #&gt; 9              495             495             495
 #&gt; 10             496             496             496</div></pre>
   </div>

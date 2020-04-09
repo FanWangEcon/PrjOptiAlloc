@@ -11,9 +11,11 @@ articles:
   ffv_opt_sobin_rkone_allrw_training: ffv_opt_sobin_rkone_allrw_training.html
   ffv_opt_sobin_rkone_allrw_training_wage: ffv_opt_sobin_rkone_allrw_training_wage.html
   ffv_opt_sobin_rkone_allrw_wgt: ffv_opt_sobin_rkone_allrw_wgt.html
-  ffv_opt_sodis_rkone_allrw_casch: ffv_opt_sodis_rkone_allrw_casch.html
+  ffv_opt_sodis_rkone_casch_allfn: ffv_opt_sodis_rkone_casch_allfn.html
+  ffv_opt_sodis_rkone_casch_allrw: ffv_opt_sodis_rkone_casch_allrw.html
   ffv_opt_solin_relow: ffv_opt_solin_relow.html
   ffv_opt_solin_relow_allfn: ffv_opt_solin_relow_allfn.html
   ffv_opt_solin_relow_allrw: ffv_opt_solin_relow_allrw.html
+  ffv_opt_solog_asame_allrw: ffv_opt_solog_asame_allrw.html
   ffv_opt_solog_bisec_allrw: ffv_opt_solog_bisec_allrw.html
 

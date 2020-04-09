@@ -10,7 +10,7 @@ ffp_opt_sobin_rev(
   ar_A,
   ar_alpha,
   ar_beta,
-  fl_lambda
+  fl_rho
 )
 }
 \arguments{
@@ -34,7 +34,7 @@ This does not solve for the full solution, just the targeting queue, individual 
 library(tibble)
 library(dplyr)
 library(tidyr)
-fl_lambda <- -1
+fl_rho <- -1
 ar_alpha <- c(0.1,1.5,2.5,4  ,9,1.2,3,2,8)
 ar_A <-     c(0.5,1.5,3.5,6.5,1.9,3,4,6,4)
 ar_beta <-  rep(0, length(ar_A)) + 1/length(ar_A)
@@ -53,7 +53,7 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
 }
 ar_bin_observed <- c(0,1,0,1,0,0,1,1,0)
 ar_queue_optimal <- ar_it_rank
-ffp_opt_sobin_rev(ar_queue_optimal, ar_bin_observed, ar_A, ar_alpha, ar_beta, fl_lambda)
+ffp_opt_sobin_rev(ar_queue_optimal, ar_bin_observed, ar_A, ar_alpha, ar_beta, fl_rho)
 }
 \references{
 \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sobin_rev.html}

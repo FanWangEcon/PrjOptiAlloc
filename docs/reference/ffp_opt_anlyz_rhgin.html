@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (lambda) — ffp_opt_anlyz_rhgin • PrjOptiAlloc</title>
+<title>Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (rho) — ffp_opt_anlyz_rhgin • PrjOptiAlloc</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,7 @@
 
 
 
-<meta property="og:title" content="Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (lambda) — ffp_opt_anlyz_rhgin" />
+<meta property="og:title" content="Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (rho) — ffp_opt_anlyz_rhgin" />
 <meta property="og:description" content="Works with linear allocation problems. The function
 invokes ffp_opt_solin_relow, has parameters that are also required for that function.
 The addition here is *fl_rho* becomes *ar_rho*" />
@@ -131,7 +131,10 @@ The addition here is *fl_rho* becomes *ar_rho*" />
       <a href="../articles/ffv_opt_sobin_rkone_allrw_wgt.html">BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sodis_rkone_allrw_casch.html">DISCRETE--Discrete Provision Optimal Allocation Solution (Line by Line)</a>
+      <a href="../articles/ffv_opt_sodis_rkone_casch_allfn.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Function)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_sodis_rkone_casch_allrw.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_solin_relow.html">LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest</a>
@@ -141,6 +144,9 @@ The addition here is *fl_rho* becomes *ar_rho*" />
     </li>
     <li>
       <a href="../articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
+    </li>
+    <li>
+      <a href="../articles/ffv_opt_solog_asame_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Analytical Common Alpha</a>
     </li>
     <li>
       <a href="../articles/ffv_opt_solog_bisec_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)</a>
@@ -163,7 +169,7 @@ The addition here is *fl_rho* becomes *ar_rho*" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (lambda)</h1>
+    <h1>Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (rho)</h1>
     
     <div class="hidden name"><code>ffp_opt_anlyz_rhgin.Rd</code></div>
     </div>
@@ -329,14 +335,14 @@ The addition here is *fl_rho* becomes *ar_rho*</p>
 #&gt;  Mean   :79.10           Mean   :79.10           Mean   :79.10          
 #&gt;  3rd Qu.:79.87           3rd Qu.:79.87           3rd Qu.:79.87          
 #&gt;  Max.   :84.61           Max.   :84.61           Max.   :84.61          </div><div class='input'><span class='no'>mt_gini</span> <span class='kw'>&lt;-</span> <span class='no'>ls_lin_solu_all_rhos</span>$<span class='no'>mt_gini</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mt_gini</span>)</div><div class='output co'>#&gt;    it_rho_ctr    optiallocate       outcome        planner_elas   
-#&gt;  Min.   :1.00   Min.   :0.1893   Min.   :0.9861   Min.   :0.7029  
-#&gt;  1st Qu.:2.25   1st Qu.:0.1893   1st Qu.:0.9861   1st Qu.:0.7376  
-#&gt;  Median :3.50   Median :0.1903   Median :0.9862   Median :1.1014  
-#&gt;  Mean   :3.50   Mean   :0.2199   Mean   :0.9884   Mean   :1.1173  
-#&gt;  3rd Qu.:4.75   3rd Qu.:0.2355   3rd Qu.:0.9908   3rd Qu.:1.3863  
-#&gt;  Max.   :6.00   Max.   :0.3098   Max.   :0.9933   Max.   :1.6740  
-#&gt;  NA's   :6      NA's   :6        NA's   :6                        </div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mt_gini</span>)</div><div class='output co'>#&gt;    it_rho_ctr    optiallocate       outcome          planner_elas   
+#&gt;  Min.   :1.00   Min.   :0.6902   Min.   :0.006735   Min.   :0.7029  
+#&gt;  1st Qu.:2.25   1st Qu.:0.7645   1st Qu.:0.009164   1st Qu.:0.7376  
+#&gt;  Median :3.50   Median :0.8097   Median :0.013847   Median :1.1014  
+#&gt;  Mean   :3.50   Mean   :0.7801   Mean   :0.011644   Mean   :1.1173  
+#&gt;  3rd Qu.:4.75   3rd Qu.:0.8107   3rd Qu.:0.013905   3rd Qu.:1.3863  
+#&gt;  Max.   :6.00   Max.   :0.8107   Max.   :0.013908   Max.   :1.6740  
+#&gt;  NA's   :6      NA's   :6        NA's   :6                          </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
