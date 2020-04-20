@@ -13,7 +13,7 @@ ffp_opt_anlyz_rhgin <- function(df, svr_id_i,
 #' @param df tibble data table including variables using svr names below each row is potentially an individual who will receive alternative allocations
 #' @param svr_id_i string name of the identify key for each i, to make sure merging happens properly
 #' @param svr_A_i string name of the A_i variable, dot product of covariates and coefficients
-#' @param svr_alpha_i string name of the alpha_i variable, individual specific elasticity information
+#' @param svr_alpha_i string name of the alpha_i variable, individual-specific (marginal-effects)
 #' @param svr_beta_i string name of the beta_i variable, relative preference weight for each child
 #' @param fl_N_agg float total resource avaible for allocation, if not specific, sum by svr_N_i
 #' @param ar_rho array preferences for equality for the planner

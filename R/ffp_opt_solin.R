@@ -10,7 +10,7 @@ ffp_opt_solin_relow <- function(df, svr_A_i, svr_alpha_i, svr_beta_i, fl_N_agg,
 #'
 #' @param df tibble data table including variables using svr names below each row is potentially an individual who will receive alternative allocations
 #' @param svr_A_i string name of the A_i variable, dot product of covariates and coefficients
-#' @param svr_alpha_i string name of the alpha_i variable, individual specific elasticity information
+#' @param svr_alpha_i string name of the alpha_i variable, individual specific marginal-effects
 #' @param svr_beta_i string name of the beta_i variable, relative preference weight for each child
 #' @param fl_N_agg float total resource avaible for allocation, if not specific, sum by svr_N_i
 #' @param fl_rho float preference for equality for the planner
