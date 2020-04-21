@@ -25,18 +25,18 @@ rm(list = ls(all.names = TRUE))
 options(knitr.duplicate.label = 'allow')
 ```
 ```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
-library(dplyr)
-library(tidyr)
 library(tibble)
 library(forcats)
 library(ggplot2)
 
 library(REconTools)
-
 library(PrjOptiAlloc)
 
 library(knitr)
 library(kableExtra)
+
+library(tidyr)
+library(dplyr)
 
 # spn_file <- 'C:/Users/fan/PrjOptiAlloc/vignettes/ffv_opt_n2_fn'
 # knitr::purl(paste0(spn_file, '.Rmd'), output=paste0(spn_file, ".R"), documentation = 1)

@@ -64,27 +64,27 @@ if (knitr::is_latex_output()) {
 }
 
 # Get Current File Path
-spt_file_current <- knitr::current_input(dir = TRUE)
-print(paste0('spt_file_current:',spt_file_current))
-
-sfc_prj='/PrjOptiAlloc'
-sph_gitpages_root='https://fanwangecon.github.io/'
-sph_github_root='https://github.com/FanWangEcon/'
-sph_branch='/master'
-sph_pdf='/htmlpdfr'
-sph_html='/htmlpdfr'
-sph_r='/htmlpdfr'
-
-spt_root <- 'C:/Users/fan/PrjOptiAlloc/'
-spn_prj_rmd <- gsub(spt_root, "", spt_file_current)
-spt_rmd_path <- paste0('/',dirname(spn_prj_rmd))
-
-st_fullpath_noname <- dirname(spt_file_current)
-st_fullpath_nosufx <- sub('\\.Rmd$', '', spt_file_current)
-st_file_wno_suffix <- sub('\\.Rmd$', '', basename(spt_file_current))
-print(paste0('st_fullpath_noname:', st_fullpath_noname))
-print(paste0('st_fullpath_nosufx:', st_fullpath_nosufx))
-print(paste0('st_file_wno_suffix:', st_file_wno_suffix))
+# spt_file_current <- knitr::current_input(dir = TRUE)
+# print(paste0('spt_file_current:',spt_file_current))
+#
+# sfc_prj='/PrjOptiAlloc'
+# sph_gitpages_root='https://fanwangecon.github.io/'
+# sph_github_root='https://github.com/FanWangEcon/'
+# sph_branch='/master'
+# sph_pdf='/htmlpdfr'
+# sph_html='/htmlpdfr'
+# sph_r='/htmlpdfr'
+#
+# spt_root <- 'C:/Users/fan/PrjOptiAlloc/'
+# spn_prj_rmd <- gsub(spt_root, "", spt_file_current)
+# spt_rmd_path <- paste0('/',dirname(spn_prj_rmd))
+#
+# st_fullpath_noname <- dirname(spt_file_current)
+# st_fullpath_nosufx <- sub('\\.Rmd$', '', spt_file_current)
+# st_file_wno_suffix <- sub('\\.Rmd$', '', basename(spt_file_current))
+# print(paste0('st_fullpath_noname:', st_fullpath_noname))
+# print(paste0('st_fullpath_nosufx:', st_fullpath_nosufx))
+# print(paste0('st_file_wno_suffix:', st_file_wno_suffix))
 
 text_shared_preamble_one <- paste0("Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAlloc/)**")
 text_shared_preamble_two <- ""
