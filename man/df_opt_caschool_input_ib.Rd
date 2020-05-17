@@ -4,7 +4,9 @@
 \name{df_opt_caschool_input_ib}
 \alias{df_opt_caschool_input_ib}
 \title{Test Dataset California Test Score Data: \strong{IB Frame}, Alternative Allocation}
-\format{csv}
+\format{
+csv
+}
 \source{
 \url{https://fmwww.bc.edu/ec-p/data/stockwatson/caschool.des}
 \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html}

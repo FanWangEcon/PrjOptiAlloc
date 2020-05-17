@@ -4,7 +4,9 @@
 \name{df_opt_caschool_input_il}
 \alias{df_opt_caschool_input_il}
 \title{Test Dataset California Test Score Data: \strong{IL Frame}, Generated Effect Each Additional Allocation}
-\format{csv}
+\format{
+csv
+}
 \source{
 \url{https://fmwww.bc.edu/ec-p/data/stockwatson/caschool.des}
 \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html}

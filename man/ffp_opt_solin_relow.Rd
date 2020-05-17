@@ -20,7 +20,7 @@ ffp_opt_solin_relow(
 
 \item{svr_A_i}{string name of the A_i variable, dot product of covariates and coefficients}
 
-\item{svr_alpha_i}{string name of the alpha_i variable, individual specific elasticity information}
+\item{svr_alpha_i}{string name of the alpha_i variable, individual specific marginal-effects}
 
 \item{svr_beta_i}{string name of the beta_i variable, relative preference weight for each child}
 

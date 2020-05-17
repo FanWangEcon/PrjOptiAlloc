@@ -4,7 +4,9 @@
 \name{df_opt_nccrimes}
 \alias{df_opt_nccrimes}
 \title{Test Dataset North Carolina Crimes}
-\format{csv}
+\format{
+csv
+}
 \source{
 \url{https://www.jstor.org/stable/2109893?}
 }

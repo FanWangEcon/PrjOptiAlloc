@@ -49,6 +49,11 @@ library(kableExtra)
 
 Generate four categories by initial height and mother's education levels combinations.
 
+```{r}
+spt_img_save <- '../_img/'
+spt_img_save_draft <- 'C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/HgtOptiAlloDraft/_img/'
+```
+
 ```{r Load Packages and Process Data}
 # Load Data
 data(df_opt_lalonde_training_employ)
@@ -148,24 +153,50 @@ x.labels <- c('λ=0.99', 'λ=0.90', 'λ=0', 'λ=-10', 'λ=-100')
 x.breaks <- c(0.01, 0.10, 1, 10, 100)
 
 # title line 2
-title_line1 <- sprintf("Percentage of Training Spots Misallocated, NSW Lalonda (AER, 1986)")
-title_line2 <- sprintf("REV (Resource Equivalent Variation) Along Planner Spectrum")
+# title_line1 <- sprintf("Percentage of Training Spots Misallocated, NSW Lalonde (AER, 1986)")
+# title_line2 <- sprintf("REV (Resource Equivalent Variation) Along Planner Spectrum")
+
+title_line1 <- sprintf("Share of resources lost (misallocation) at varying inequality averion (λ) levels")
+title_line2 <- sprintf("Compare observed (random) allocations to optimal allocations")
+title_line3 <- sprintf("Expenditure (Resource) Minimization to achieve same welfare as welfare at observed allocations")
+
+# Relabel Variable
+Outcome_levels <- c(rev = "employment_prob")
+tb_rev_wage_employ_long <- tb_rev_wage_employ_long %>% 
+  filter(Outcome == 'employment_prob') %>%
+  mutate(Outcome = as_factor(Outcome)) %>%
+  mutate(Outcome = fct_recode(Outcome_levels, !!!Outcome_levels))
 
 # Graph Results--Draw
-line.plot <- tb_rev_wage_employ_long %>%
+line.plot <- tb_rev_wage_employ_long %>% 
   ggplot(aes(x=one_minus_rho, y=rev,
              group=Outcome,
              colour=Outcome, size=2)) +
   geom_line(size=0.75) +
   geom_vline(xintercept=c(1), linetype="dotted") +
-  labs(title = paste0(title_line1, '\n', title_line2),
+  labs(subtitle = paste0(title_line1, '\n', title_line2, '\n', title_line3),
        x = 'log10 Rescale of λ, Log10(λ)\nλ=1 Utilitarian, λ=-infty Rawlsian',
-       y = 'Misallocation Percentage = REV',
-       caption = 'Training RCT with 297 treated, 425 untreated. Reallocate 297 training spots.') +
+       y = 'Misallocation Percentage = REV (Resource Equivalent Variations)',
+       caption = 'Optimally allocate 297 training spots among 722 individuals. Data from Lalonde (AER, 1986).') +
   scale_x_continuous(trans='log10', labels = x.labels, breaks = x.breaks) +
-  theme_bw()
+  theme_bw(base_size=8)
 
+# Labeling
+line.plot$labels$colour <- "REV"  
+
+# Print
 print(line.plot)
+
+snm_cnts <- 'Lalonde_employ_rev.png'
+png(paste0(spt_img_save, snm_cnts),
+      width = 135, height = 86, units='mm', res = 300, pointsize=7)
+print(line.plot)
+dev.off()
+png(paste0(spt_img_save_draft, snm_cnts),
+      width = 135, height = 86, units='mm', res = 300, 
+    pointsize=5)
+print(line.plot)
+dev.off()
 ```
 # Analysis of A and alpha
 
@@ -208,7 +239,7 @@ dfj_hist$alpha_i_wage <- factor(dfj_hist$alpha_i_wage)
 dfj_hist$alpha_i_wage <- factor(dfj_hist$alpha_i_wage, labels = c('Age <= 23\nalpha_i=$454', 'Age > 23\nalpha_i=$1071'))
 
 
-title_line1 <- sprintf("Wage A_i Distribution (Linear Wage), NSW Training Lalonda (AER, 1986)")
+title_line1 <- sprintf("Wage A_i Distribution (Linear Wage), NSW Training Lalonde (AER, 1986)")
 title_line2 <- sprintf("By Two Unique Levels of alpha_i: for Age <= 23 and for Age > 23")
 
 # Graph
@@ -349,7 +380,7 @@ st_out_tex <- kable(dfj_top10, "latex")
 print(st_out_tex)
 # File out
 # fileConn <- file("./../../_file/tex/tex_sample_a_tab.tex")
-fileConn <- file("C:/users/fan/HgtOptiAlloDraft/_tab/lalonda_wage_employ_top10.tex")
+fileConn <- file("C:/users/fan/HgtOptiAlloDraft/_tab/Lalonde_wage_employ_top10.tex")
 writeLines(st_out_tex, fileConn)
 close(fileConn)
 

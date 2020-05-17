@@ -4,7 +4,9 @@
 \name{df_opt_lalonde_training}
 \alias{df_opt_lalonde_training}
 \title{Test Dataset Job Training Effects Lalonde AER 1986}
-\format{csv}
+\format{
+csv
+}
 \source{
 \url{https://www.jstor.org/stable/1806062?}
 }

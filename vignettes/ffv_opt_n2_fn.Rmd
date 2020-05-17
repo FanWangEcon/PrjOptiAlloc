@@ -10,6 +10,20 @@ vignette: >
 
 # Optimal Allocation Between Two Individuals
 
+```{r global_options, include = FALSE}
+# try(source("../.Rprofile"))
+rm(list = ls(all.names = TRUE))
+# Load Libraries
+library(stats)
+library(tidyr)
+library(stringr)
+library(broom)
+library(ggplot2)
+library(dplyr)
+```
+
+`r text_shared_preamble_one`
+
 Determine how to optimally allocate resources between two individuals. There are two structures:
 
 1. Allocating bounded continuous resources between two indivdiuals, where the effects of resources could be heterogeneous and the costs of resources could differ. This problem is solved by the [bounded continuous optimal allocation function](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin.html)
@@ -19,28 +33,6 @@ For both problems, we cans solve the optimal allocation problem given different 
 
 The goal below is to generate the data input structure for these two problems in a comparable way. Generate problem solutions by calling the discrete and continuous optimal functions we have created, and generate additional outputs needed to visualize and understand the model solution. The goal is to link the results here to the basics of 2 dimensional indifference and resource sets, and illustrate how the solutions here complete each other, and add to existing results.
 
-
-```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
-rm(list = ls(all.names = TRUE))
-options(knitr.duplicate.label = 'allow')
-```
-```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
-library(tibble)
-library(forcats)
-library(ggplot2)
-
-library(REconTools)
-library(PrjOptiAlloc)
-
-library(knitr)
-library(kableExtra)
-
-library(tidyr)
-library(dplyr)
-
-# spn_file <- 'C:/Users/fan/PrjOptiAlloc/vignettes/ffv_opt_n2_fn'
-# knitr::purl(paste0(spn_file, '.Rmd'), output=paste0(spn_file, ".R"), documentation = 1)
-```
 
 ## Input and Output
 
@@ -189,15 +181,28 @@ ls_out_n2
 ### Generate A and alpha
 
 These parameters persist and are used throughout the rest of the file for allocation allocations. Parameters are more or less shared by discrete and continuous parameters.
-
 ```{r}
+spt_img_save <- '../_img/'
+spt_img_save_draft <- 'C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/HgtOptiAlloDraft/_img/'
+```
+```{r}
+
 # Draw data
 fl_beta_1 = 0.5
 fl_beta_2 = 1-fl_beta_1
 fl_w_dollar = 100
 it_w_units_avg = 5
 it_rand_seed <- sample(10^7, 1, replace=T)
+
+it_w_units_avg = 5
 it_rand_seed <- 8135788
+
+# it_w_units_avg = 5
+# it_rand_seed <- 1234
+
+# it_w_units_avg = 4
+# it_rand_seed <- 449879812
+
 it_N <- 2
 ls_out_n2 <- suppressMessages(
   ffi_draw_n_alpha(fl_w_dollar=fl_w_dollar, 
@@ -235,8 +240,8 @@ fl_EH_max_1 = fl_A_1 + fl_D_max_1*fl_alpha_1
 fl_EH_max_2 = fl_A_2 + fl_D_max_2*fl_alpha_2
 # max_dollar 
 fl_w_dollar_max = fl_price*it_w_max
-ar_w_dollars_strike_at_disc <- seq(0, fl_w_dollar_max, length.out=(it_w_max))
-ar_w_dollars_solve_at_disc <- seq(0, fl_w_dollar_max, length.out=100)
+ar_w_dollars_strike_at_disc <- seq(0, fl_w_dollar_max, length.out=(it_w_max+1))
+ar_w_dollars_solve_at_disc <- seq(0, fl_w_dollar_max, length.out=(it_w_max*6)+1)
 
 # print 
 print(paste0('it_rand_seed:',it_rand_seed))
@@ -370,7 +375,7 @@ ls_mt_strike_eh_cts <-
           ar_D_1l <- (ar_EH1 - fl_A_1)/fl_alpha_1
           ar_D_2l <- (ar_EH2 - fl_A_2)/fl_alpha_2
         
-          fl_w_units <- (fl_w_dollars/fl_price)
+          fl_w_units <- (fl_w_dollars/(fl_price))
           mt_strike_eh_cts <- 
             cbind(fl_w_dollars, fl_w_units, 
                   ar_EH1, ar_EH2, ar_D_1l, ar_D_2l)
@@ -399,7 +404,7 @@ fl_dis_w <- (it_w_units_avg + 1)
 fl_cts_w <- fl_dis_w # common price
 ar_rho <- c(0.5, -5)
 ar_rho <- c(0.99, -0.01, -100)
-ar_rho <- c(0.99, -0.01, -6)
+# ar_rho <- c(0.99, -0.01, -6)
 # ar_rho <- 1 - (10^(c(seq(-2,2, length.out=20))))
 ```
 
@@ -484,16 +489,16 @@ Build up continuous input frame
 ```{r}
 # ID and max Discrete Allocation
 # Note the problem here does not explicity 
-mt_cts <- cbind(c(1,2), 
+mt_cts_Aalphabeta <- cbind(c(1,2), 
                 c(fl_A_1, fl_A_2),
                 c(fl_alpha_1, fl_alpha_2),
                 c(fl_beta_1, fl_beta_2))
-colnames(mt_cts) <- c('id_i', 'A_i', 'alpha_i', 'beta_i')      
-tb_cts <- as_tibble(mt_cts)
+colnames(mt_cts_Aalphabeta) <- c('id_i', 'A_i', 'alpha_i', 'beta_i')      
+tb_cts_Aalphabeta <- as_tibble(mt_cts_Aalphabeta)
 ```
 
 ```{r}
-df <- tb_cts
+df <- tb_cts_Aalphabeta
 svr_id_i <- 'id_i'
 svr_A_i <- 'A_i'
 svr_alpha_i <- 'alpha_i'
@@ -629,13 +634,15 @@ tb_all_points <- tb_all_points %>%
 summary(tb_all_points)
 ```
 
-#### Generate Indifference Curves at Selected Points
+## Generate Indifference Curves at Selected Points
 
 ```{r}
+library(dplyr, pos=length(search()))
+
 # A as x-axis, need bounds on A
 fl_A_min = 0.01
 fl_A_max = it_D_1l+it_D_1l/2
-it_A_grid = 10000
+it_A_grid = 1000
 
 # Define parameters
 # ar_lambda <- 1 - (10^(c(seq(-2,2, length.out=3))))
@@ -643,10 +650,10 @@ ar_beta <- fl_beta_1
 
 # Select v_points 
 # Indifference at three points, min, max and middle of allocations
+# & (rho_val == ar_rho[2])
 mt_v_star_rho_val <- tb_all_points %>% 
-  filter(outtype == 'optimal' & 
-           (w_units == 5 ) 
-         # & (rho_val == ar_rho[2])
+  filter((outtype == 'optimal') & 
+           (w_units %in% round(seq(2,it_w_max-2,length.out=3)))
          ) %>%
   select(w_units, vartype, rho_val, val_at_choices)
 
@@ -865,21 +872,339 @@ plt_indiff_disc <-
 print(plt_indiff)
 ```
 
+#### Discrete Expected Outcomes Grid
+
+```{r}
+# Data
+tb_dis <- tb_all_points %>% filter(vartype=='discrete' & rho_val == 9999) %>%
+  mutate(rho_val_str = case_when(rho_val == 9999 ~ 'Feasible')) 
+tb_dis_frontier <- tb_all_points %>% 
+  filter(vartype=='discrete' & rho_val == 9999) 
+tb_dis_idif <- df_indiff %>% filter(vartype == 'discrete') %>% 
+  filter(rho_val == -0.01) %>% 
+  mutate(rho_val = as_factor(rho_val),
+         beta_1 = as_factor(beta_1),
+         val_at_choices = as_factor(val_at_choices))
+
+# Plot 1: Indifference Simple (too many lines confusing)
+plt_indiff_oneline <- tb_dis_idif %>% 
+  ggplot(aes(x=EH_1l, y=EH_2l)) +
+  geom_point(size=0.5)
+
+# Plot 2: Indifference Simple (too many lines confusing)
+plt_frontier <- geom_line(data = tb_dis_frontier,
+                          aes(x=EH_1l, y=EH_2l, group=w_units), 
+                          colour = "black", linetype = "dashed")
+
+# Plot 1 + 2 + 3: Choice + Indiff
+plt_disc_paper <- 
+  plt_indiff_oneline + 
+  plt_frontier + 
+  geom_point(data = tb_dis,
+              aes(x=EH_1l, y=EH_2l,
+                  colour=rho_val_str,
+                  shape=rho_val_str,
+                  size=rho_val_str))
+                  # 
+
+# Plot Axis Setting
+plt_disc_paper <- plt_disc_paper + 
+  xlim(min(tb_dis$EH_1l)-0.4, max(tb_dis$EH_1l)+0.4) + 
+  ylim(min(tb_dis$EH_2l)-0.4, max(tb_dis$EH_2l)+0.4)
+
+# Labeling
+plt_disc_paper$labels$colour <- ""  
+plt_disc_paper$labels$shape <- ""  
+# st_title <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels')
+st_subtitle <- paste0('Red Dots = the maximum feasible expected outcomes grid (rectilinear)\n',
+                      'Black Solid Lines = indifference curves for λ=-0.01\n', 
+                      'Black Dashed Lines = discrete aggregate resource levels')
+st_caption <- paste0('Expected Outcome Two People Example')
+st_x_label <- expression(EH[1]~'('~D[1]~'): '~Expected~Outcome~Allocation~Recipient~1)
+st_y_label <- expression(EH[2]~'('~D[2]~'): '~Expected~Outcome~Allocation~Recipient~2)
+plt_disc_paper <- plt_disc_paper +   
+  labs(subtitle = st_subtitle, 
+       x = st_x_label, 
+       y = st_y_label, 
+       caption = st_caption) +
+  theme_bw(base_size=8) +
+  scale_size_manual(values=c(7,6,6,4)) + 
+  guides(size=FALSE)
+  
+  # scale_color_manual(values=c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF'))+
+  #
+
+
+# Save Plot
+snm_disc <- 'disc_exp_out_grid.png'
+png(paste0(spt_img_save, snm_disc),
+      width = 135, height = 86, units='mm', res = 300,
+    pointsize=5)
+print(plt_disc_paper)
+dev.off()
+png(paste0(spt_img_save_draft, snm_disc),
+      width = 135, height = 86, units='mm', res = 300,
+    pointsize=5)
+print(plt_disc_paper)
+dev.off()
+# Prin here
+print(plt_disc_paper)
+```
+
 #### Discrete Utility and Choices Jointly 
 
-```{r, widh}
-plt_indiff_disc + 
-  geom_jitter(data = tb_all_points %>%filter(vartype=='discrete'),
-              aes(x=EH_1l, y=EH_2l, colour=rho_val, shape=rho_val),
-              size=7, width = 0)
+```{r}
+# Data
+tb_dis <- tb_all_points %>% filter(vartype=='discrete') %>%
+  mutate(rho_val_str = case_when(rho_val == 9999 ~ 'Feasible',
+                                TRUE ~ paste0('λ=',rho_val))) 
+tb_dis_frontier <- tb_all_points %>% 
+  filter(vartype=='discrete' & rho_val == 9999) 
+tb_dis_idif <- df_indiff %>% filter(vartype == 'discrete') %>% 
+  filter(rho_val == -0.01) %>% 
+  mutate(rho_val = as_factor(rho_val),
+         beta_1 = as_factor(beta_1),
+         val_at_choices = as_factor(val_at_choices))
+
+# Plot 1: Indifference Simple (too many lines confusing)
+plt_indiff_oneline <- tb_dis_idif %>% 
+  ggplot(aes(x=EH_1l, y=EH_2l)) +
+  geom_point(size=0.5)
+
+# Plot 2: Indifference Simple (too many lines confusing)
+plt_frontier <- geom_line(data = tb_dis_frontier,
+                          aes(x=EH_1l, y=EH_2l, group=w_units), 
+                          colour = "gray", linetype = "dashed")
+
+# Plot 1 + 2 + 3: Choice + Indiff
+plt_disc_paper <- 
+  plt_indiff_oneline + 
+  plt_frontier + 
+  geom_point(data = tb_dis,
+              aes(x=EH_1l, y=EH_2l,
+                  colour=rho_val_str,
+                  shape=rho_val_str,
+                  size=rho_val_str))
+                  # 
+
+# Plot Axis Setting
+plt_disc_paper <- plt_disc_paper + 
+  xlim(min(tb_dis$EH_1l)-0.4, max(tb_dis$EH_1l)+0.4) + 
+  ylim(min(tb_dis$EH_2l)-0.4, max(tb_dis$EH_2l)+0.4)
+
+# Labeling
+plt_disc_paper$labels$colour <- "λ Levels"  
+plt_disc_paper$labels$shape <- "λ Levels"  
+# st_title <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels')
+st_subtitle <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels\n',
+                      'Black Solid Lines = indifference curves for λ=-0.01\n', 
+                      'Gray Dashed Lines = discrete aggregate resource levels')
+st_caption <- paste0('Expected Outcome Two People Example')
+st_x_label <- expression(EH[1]~'('~D[1]~'): '~Expected~Outcome~Allocation~Recipient~1)
+st_y_label <- expression(EH[2]~'('~D[2]~'): '~Expected~Outcome~Allocation~Recipient~2)
+plt_disc_paper <- plt_disc_paper +   
+  labs(subtitle = st_subtitle, 
+       x = st_x_label, 
+       y = st_y_label, 
+       caption = st_caption) +
+  theme_bw(base_size=8) +
+  scale_size_manual(values=c(7,6,6,4)) + 
+  guides(size=FALSE)
+  
+  # scale_color_manual(values=c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF'))+
+  #
+
+
+# Save Plot
+snm_disc <- 'disc_resource_expansion_path.png'
+png(paste0(spt_img_save, snm_disc),
+      width = 135, height = 86, units='mm', res = 300,
+    pointsize=5)
+print(plt_disc_paper)
+dev.off()
+png(paste0(spt_img_save_draft, snm_disc),
+      width = 135, height = 86, units='mm', res = 300,
+    pointsize=5)
+print(plt_disc_paper)
+dev.off()
+# Prin here
+print(plt_disc_paper)
+```
+
+#### Continuous Expected Outcomes Grid
+
+```{r}
+# Data
+tb_cts <- tb_all_points %>% filter(vartype=='discrete') %>%
+  filter(rho_val != 9999) %>%
+  mutate(rho_val_str = case_when(rho_val == 9999 ~ 'Feasible Choices',
+                                 TRUE ~ paste0('λ=',rho_val))) 
+tb_cts_frontier <- tb_all_points %>% 
+  filter(vartype=='continuous' & rho_val == 9999) 
+tb_cts_idif <- df_indiff %>% filter(vartype == 'continuous') %>% 
+  filter(rho_val == -0.01) %>% 
+  mutate(rho_val = as_factor(rho_val),
+         beta_1 = as_factor(beta_1),
+         val_at_choices = as_factor(val_at_choices))
+
+# Plot 1: Indiff Plot Limited Lines
+plt_indiff_cts_oneline <- tb_cts_idif %>% 
+  ggplot(aes(x=EH_1l, y=EH_2l)) +
+  geom_point(size=0.5)
+
+# Plot 2: Indifference Simple (too many lines confusing)
+plt_frontier_cts <- geom_line(data = tb_cts_frontier,
+                          aes(x=EH_1l, y=EH_2l, group=w_units), 
+                          colour = "black", linetype = "dashed")
+
+# Plot 1 + 2 + 3: Choice + Indiff
+plt_cnts_paper <- plt_indiff_cts_oneline + plt_frontier_cts
+
+# Plot Axis Setting
+plt_cnts_paper <- plt_cnts_paper + 
+  xlim(min(tb_cts$EH_1l-0.4), max(tb_cts$EH_1l+0.4)) + 
+  ylim(min(tb_cts$EH_2l-0.4), max(tb_cts$EH_2l+0.4))
+
+# Labeling
+plt_cnts_paper$labels$colour <- "λ Levels"  
+plt_cnts_paper$labels$shape <- "λ Levels"  
+st_subtitle <- paste0('Rectangular bounds on choices\n',
+                      'Black Solid Lines = indifference curves for λ=-0.01\n', 
+                      'Black Dashed Lines = selected aggregate resource levels')
+# st_title <- paste0('Bounded Continuous Choice Resource Expansion Path with N=2')
+# st_subtitle <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels')
+st_caption <- paste0('Expected Outcome Two People Example')
+st_x_label <- expression(EH[1]~'('~C[1]~'): '~Expected~Outcome~Recipient~1)
+st_y_label <- expression(EH[2]~'('~C[2]~'): '~Expected~Outcome~Recipient~2)
+plt_cnts_paper <- plt_cnts_paper +   
+  labs(subtitle = st_subtitle, 
+       x = st_x_label, 
+       y = st_y_label, 
+       caption = st_caption) +
+  theme_bw(base_size=8)
+
+# Save Plot
+snm_cnts <- 'cts_exp_out_grid.png'
+png(paste0(spt_img_save, snm_cnts),
+      width = 135, height = 86, units='mm', res = 300, pointsize=7)
+print(plt_cnts_paper)
+dev.off()
+png(paste0(spt_img_save_draft, snm_cnts),
+      width = 135, height = 86, units='mm', res = 300, 
+    pointsize=5)
+print(plt_cnts_paper)
+dev.off()
+# Prin here  
+print(plt_cnts_paper)  
 ```
 
 #### Continuous Utility and Choices Jointly 
 
-```{r, widh}
-plt_indiff_cts + 
-  geom_jitter(data = tb_all_points %>%filter(vartype=='continuous'),
-              aes(x=EH_1l, y=EH_2l, colour=rho_val, shape=rho_val),
-              size=7, width = 0)
+```{r}
+# Data
+tb_cts <- tb_all_points %>% filter(vartype=='continuous') %>%
+  filter(rho_val != 9999) %>%
+  mutate(rho_val_str = case_when(rho_val == 9999 ~ 'Feasible Choices',
+                                 TRUE ~ paste0('λ=',rho_val))) 
+tb_cts_frontier <- tb_all_points %>% 
+  filter(vartype=='continuous' & rho_val == 9999) 
+tb_cts_idif <- df_indiff %>% filter(vartype == 'continuous') %>% 
+  filter(rho_val == -0.01) %>% 
+  mutate(rho_val = as_factor(rho_val),
+         beta_1 = as_factor(beta_1),
+         val_at_choices = as_factor(val_at_choices))
+
+# Plot 1: Indiff Plot Limited Lines
+plt_indiff_cts_oneline <- tb_cts_idif %>% 
+  ggplot(aes(x=EH_1l, y=EH_2l)) +
+  geom_point(size=0.5)
+
+# Plot 2: Indifference Simple (too many lines confusing)
+plt_frontier_cts <- geom_line(data = tb_cts_frontier,
+                          aes(x=EH_1l, y=EH_2l, group=w_units), 
+                          colour = "gray", linetype = "dashed")
+
+# Plot 1 + 2 + 3: Choice + Indiff
+plt_cnts_paper <- plt_indiff_cts_oneline + plt_frontier_cts + 
+  geom_point(data = tb_cts,
+             aes(x=EH_1l, y=EH_2l, colour=rho_val_str, shape=rho_val_str),
+             size=2, width = 0)
+
+# Plot Axis Setting
+plt_cnts_paper <- plt_cnts_paper + 
+  xlim(min(tb_cts$EH_1l-0.4), max(tb_cts$EH_1l+0.4)) + 
+  ylim(min(tb_cts$EH_2l-0.4), max(tb_cts$EH_2l+0.4))
+
+# Labeling
+plt_cnts_paper$labels$colour <- "λ Levels"  
+plt_cnts_paper$labels$shape <- "λ Levels"  
+st_subtitle <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels\n',
+                      'Black Solid Lines = indifference curves for λ=-0.01\n', 
+                      'Gray Dashed Lines = selected aggregate resource levels')
+# st_title <- paste0('Bounded Continuous Choice Resource Expansion Path with N=2')
+# st_subtitle <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels')
+st_caption <- paste0('Expected Outcome Two People Example')
+st_x_label <- expression(EH[1]~'('~C[1]~'): '~Expected~Outcome~Recipient~1)
+st_y_label <- expression(EH[2]~'('~C[2]~'): '~Expected~Outcome~Recipient~2)
+plt_cnts_paper <- plt_cnts_paper +   
+  labs(subtitle = st_subtitle, 
+       x = st_x_label, 
+       y = st_y_label, 
+       caption = st_caption) +
+  theme_bw(base_size=8)
+
+# Save Plot
+snm_cnts <- 'cnts_resource_expansion_path.png'
+png(paste0(spt_img_save, snm_cnts),
+      width = 135, height = 86, units='mm', res = 300, pointsize=7)
+print(plt_cnts_paper)
+dev.off()
+png(paste0(spt_img_save_draft, snm_cnts),
+      width = 135, height = 86, units='mm', res = 300, 
+    pointsize=5)
+print(plt_cnts_paper)
+dev.off()
+# Prin here  
+print(plt_cnts_paper)  
+```
+
+
+```{r}
+ar_w_solve_at_disc <- seq(1,18)
+it_alpha_1l_zr <- 10
+it_alpha_2l_zr <- 10
+for (it_w in ar_w_solve_at_disc){
   
+  ar_cur_w_ehlt_combo <- c()
+  ar_cur_w_unit_combo <- c()
+  
+  for (it_1l in seq(1, it_alpha_1l_zr)){
+    fl_eh_1l <- ar_eh_1l_zr[it_1l]
+    
+    for (it_2l in seq(1, it_alpha_2l_zr)){
+      fl_eh_2l <- ar_eh_2l_zr[it_2l]
+      
+      # included alloca = 0 at L162
+      it_1l_2l_sum <- (it_1l-1) + (it_2l-1)
+      if (it_1l_2l_sum == it_w){
+        # at this point, EH_1 and EH_2
+        
+        # Aggregate Resource is Fully Distributed
+        ar_cur_w_ehlt_combo <- c(ar_cur_w_ehlt_combo, fl_eh_1l, fl_eh_2l)
+        ar_cur_w_unit_combo <- c(ar_cur_w_unit_combo, it_1l-1, it_2l-1)
+        
+      }
+    }
+  }
+  
+  dim(ar_cur_w_unit_combo) <- c(2, length(ar_cur_w_unit_combo)/2)
+  print(ar_cur_w_unit_combo)
+  
+  it_compo_one <- min(min(it_w + 1, min(it_alpha_1l_zr, it_alpha_2l_zr)))
+  it_compo_two <- -(max(0, it_w - (min(it_alpha_1l_zr, it_alpha_2l_zr) + 1)))
+  print(paste0('iit_compo_one:', it_compo_one, ', it_compo_two:', it_compo_two, 
+               ', it_compo_one_two:', it_compo_one + it_compo_two))
+}
+
+
 ```

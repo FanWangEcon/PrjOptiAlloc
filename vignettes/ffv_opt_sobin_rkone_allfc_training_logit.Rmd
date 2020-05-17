@@ -47,6 +47,11 @@ library(PrjOptiAlloc)
 
 ## Get Data
 
+```{r}
+spt_img_save <- '../_img/'
+spt_img_save_draft <- 'C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/HgtOptiAlloDraft/_img/'
+```
+
 ```{r data set up}
 data(df_opt_lalonde_training)
 # dft stands for dataframe training
@@ -76,8 +81,6 @@ dft <- dft %>%
              case_when(age <= 20 ~ 1,
                        age > 20 & age <= 26 ~ 2,
                        age > 26 ~ 3))
-
-
 
 dft$trt <- factor(dft$trt, levels = c(0,1), labels = c("ntran", "train"))
 
@@ -188,19 +191,45 @@ dft_graph <- dft
 dft_graph$age_m2 <- factor(dft_graph$age_m2, labels = c('Age <= 23', 'Age > 23'))
 
 # Titling
-title_line1 <- sprintf("Employment A_i and alpha_i (Logit), NSW Training Lalonda (AER, 1986)")
-title_line2 <- sprintf("Individual Specific alpha_i from Nonlinearity")
+title_line1 <- sprintf("Each circle (cross) represents an individual <= age 23 (> age 23)")
+title_line2 <- sprintf("Heterogeneous expected outcome (employment probability) with and without training")
+title_line3 <- sprintf("Heterogeneity from logistic regression nonlinearity and heterogeneous age group effects")
+title <- expression('The joint distribution of'~A[i]~'and'~alpha[i]~','~'Logistic Regression, Lalonde (AER, 1986)')
+caption <- paste0('Logistic regression predictions of the employment effects of a training RCT. Data from Lalonde (AER, 1986).')
+# Labels
+st_x_label <- expression(A[i]~', '~Probability~of~Employment~without~Training~','~'P(train=0)')
+st_y_label <- expression(alpha[i]~','~Marginal~Effects~of~Training~','~'P(train=1) - P(train=0)')
 
 # Binary Marginal Effects and Prediction without Binary
-scatter <- dft_graph %>% ggplot(aes(x=A_i)) +
-      geom_point(aes(y=alpha_i, color=factor(age_m2)), size=4, shape=4) +
+plt_A_alpha <- dft_graph %>% ggplot(aes(x=A_i)) +
+      geom_point(aes(y=alpha_i,
+                     color=factor(age_m2),
+                     shape=factor(age_m2)), size=4) +
       geom_abline(intercept = 0, slope = 1) + # 45 degree line
       scale_colour_manual(values=c("#69b3a2", "#404080")) +
-      labs(title = paste0(title_line1, '\n', title_line2),
-           x = 'A_i = Prob of Employment no Training)',
-           y = 'alpha_i = P(train=1) - P(train=0)',
-           caption = paste0('Logit Employment on training. Control for age, educ, race. Age <= 23 or > 23 interaction.'))
-print(scatter)
+      labs(subtitle = paste0(title_line1,'\n', title_line2, '\n', title_line3),
+           x = st_x_label,
+           y = st_y_label,
+           caption = caption) +
+      theme_bw(base_size=8) +
+      scale_shape_manual(values=c(1, 4)) + 
+      guides(color=FALSE)
+
+# Labeling
+plt_A_alpha$labels$shape <- "Age Subgroups"  
+
+print(plt_A_alpha)
+
+snm_cnts <- 'Lalonde_employ_A_alpha.png'
+png(paste0(spt_img_save, snm_cnts),
+      width = 135, height = 86, units='mm', res = 300, pointsize=7)
+print(plt_A_alpha)
+dev.off()
+png(paste0(spt_img_save_draft, snm_cnts),
+      width = 135, height = 86, units='mm', res = 300, 
+    pointsize=5)
+print(plt_A_alpha)
+dev.off()
 ```
 
 ## X variables and A and alpha
@@ -295,14 +324,14 @@ df_rank_graph <- df_all_rho_long %>%
 df_rank_graph$rho_c1_rk
 
 df_rank_graph$id <- factor(df_rank_graph$rho_c1_rk,
-                           labels = c('Rank= 1 when λ=0.99', #200
-                                      'Rank= 101 when λ=0.99', #110
-                                      'Rank= 201 when λ=0.99', #95
-                                      'Rank= 301 when λ=0.99', #217
-                                      'Rank= 401 when λ=0.99', #274
-                                      'Rank= 501 when λ=0.99', #101
-                                      'Rank= 601 when λ=0.99', #131
-                                      'Rank= 701 when λ=0.99' #3610
+                           labels = c('Rank= 1  ', #200
+                                      'Rank= 101', #110
+                                      'Rank= 201', #95
+                                      'Rank= 301', #217
+                                      'Rank= 401', #274
+                                      'Rank= 501', #101
+                                      'Rank= 601', #131
+                                      'Rank= 701' #3610
                                        ))
 
 # x-labels
@@ -310,8 +339,9 @@ x.labels <- c('λ=0.99', 'λ=0.90', 'λ=0', 'λ=-10', 'λ=-100')
 x.breaks <- c(0.01, 0.10, 1, 10, 100)
 
 # title line 2
-title_line1 <- sprintf("EMPLOY LOGIT: Optimal Tageting Queue, NSW Lalonda (AER, 1986)")
-title_line2 <- sprintf("How Do Allocation Rankings (Targeting Queue) Shift with λ?")
+title_line1 <- sprintf("Positions on the optimal binary allocation queue at varying inequality averion (λ) levels")
+title_line2 <- sprintf("Colored lines = different individuals from the NSW training dataset")
+title_line3 <- sprintf("Track ranking changes for eight individuals ranked 1, 101, ..., 701 at λ=0.99")
 
 # Graph Results--Draw
 line.plot <- df_rank_graph %>%
@@ -319,18 +349,31 @@ line.plot <- df_rank_graph %>%
              group=fct_rev(id),
              colour=fct_rev(id), size=2)) +
   # geom_line(aes(linetype =fct_rev(id)), size=0.75) +
-  geom_line(size=0.75) +
+  geom_line(size=0.5) +
   geom_vline(xintercept=c(1), linetype="dotted") +
-  labs(title = paste0(title_line1, '\n', title_line2),
-       x = 'log10 Rescale of λ, Log10(λ)\nλ=1 Utilitarian, λ=-infty Rawlsian',
-       y = 'Optimal Targeting Queue Rank (1=highest)',
-       caption = 'Training RCT with 297 treated, 425 untreated. Optimal Binary Targeting Queue.') +
+  labs(subtitle = paste0(title_line1, '\n', title_line2, '\n', title_line3),
+       x = 'log10 Rescale of λ, Log10(λ)\nλ=1 Utilitarian (Maximize Average), λ=-infty Rawlsian (Maximize Mininum)',
+       y = 'Optimal Allocation Queue Rank (1=highest)',
+       caption = 'Based on logistic regression of the employment effects of a training RCT. Data from Lalonde (AER, 1986).') +
   scale_x_continuous(trans='log10', labels = x.labels, breaks = x.breaks) +
-  theme_bw()
+  theme_bw(base_size=8)
 
+# Labeling
+line.plot$labels$colour <- "At λ=0.99, i's"  
+
+# Print
 print(line.plot)
 
-
+snm_cnts <- 'Lalonde_employ_rank.png'
+png(paste0(spt_img_save, snm_cnts),
+      width = 135, height = 86, units='mm', res = 300, pointsize=7)
+print(line.plot)
+dev.off()
+png(paste0(spt_img_save_draft, snm_cnts),
+      width = 135, height = 86, units='mm', res = 300, 
+    pointsize=5)
+print(line.plot)
+dev.off()
 ```
 
 ## Save Results

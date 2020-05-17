@@ -4,7 +4,9 @@
 \name{df_opt_caschool_prep_i}
 \alias{df_opt_caschool_prep_i}
 \title{Test Dataset California Test Score Data: \strong{PREP I Frame}, Select Input and Estimation Dates}
-\format{csv}
+\format{
+csv
+}
 \source{
 \url{https://fmwww.bc.edu/ec-p/data/stockwatson/caschool.des}
 \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html}

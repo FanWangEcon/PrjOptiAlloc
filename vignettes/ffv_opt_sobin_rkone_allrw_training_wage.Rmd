@@ -14,7 +14,7 @@ Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage 
 
 Test binary allocation queue with Lalonde training dataset. There are 722 observations, 297 in the treatment group, 425 in the control group.
 
-Following Lalonda, regressions are in terms of wage levels (not log wage)
+Following Lalonde, regressions are in terms of wage levels (not log wage)
 
 # Load Packages and Data
 
@@ -106,7 +106,7 @@ dft <- dft %>%
 
 ## Tabulate and Summarize Averages
 
-What is the average difference in wage between treatment and control, do they match what is reported in Lalonda (1986)?
+What is the average difference in wage between treatment and control, do they match what is reported in Lalonde (1986)?
 
 ```{r wage treatment effects}
 
@@ -159,7 +159,7 @@ dft %>%
 
 ```{r Regression Testing}
 
-# As noted in Lalonda (1986), functional form assumptions do not matter much
+# As noted in Lalonde (1986), functional form assumptions do not matter much
 # Dummies, treatment effect average about 801 dollars
 summary(lm(re78 ~ factor(age)
                   + factor(educ)
@@ -392,7 +392,7 @@ x.labels <- c('λ=0.99', 'λ=0.90', 'λ=0', 'λ=-10', 'λ=-100')
 x.breaks <- c(0.01, 0.10, 1, 10, 100)
 
 # title line 2
-title_line1 <- sprintf("LINEAR WAGE: Optimal Tageting Queue, NSW Lalonda (AER, 1986)")
+title_line1 <- sprintf("LINEAR WAGE: Optimal Tageting Queue, NSW Lalonde (AER, 1986)")
 title_line2 <- sprintf("How Do Allocation Rankings (Targeting Queue) Shift with λ?")
 
 # Graph Results--Draw

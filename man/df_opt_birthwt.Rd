@@ -4,7 +4,9 @@
 \name{df_opt_birthwt}
 \alias{df_opt_birthwt}
 \title{Test Dataset Birth Weight}
-\format{csv}
+\format{
+csv
+}
 \source{
 \url{https://onlinelibrary.wiley.com/doi/book/10.1002/9781118548387}
 }

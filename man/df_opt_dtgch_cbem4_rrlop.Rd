@@ -4,7 +4,9 @@
 \name{df_opt_dtgch_cbem4_rrlop}
 \alias{df_opt_dtgch_cbem4_rrlop}
 \title{Optimal Linear Allocation based on dtgch cbem4 solved by solin relow}
-\format{csv}
+\format{
+csv
+}
 \source{
 \url{https://www.sciencedirect.com/science/article/pii/S1570677X16300107}
 }

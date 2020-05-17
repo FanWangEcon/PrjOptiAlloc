@@ -4,7 +4,9 @@
 \name{df_opt_lalonde_training_wage}
 \alias{df_opt_lalonde_training_wage}
 \title{Lalonde AER 1986 with Wage Regression Allocation Queue Queue}
-\format{csv}
+\format{
+csv
+}
 \source{
 \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_training_wage.html}
 }

@@ -4,7 +4,9 @@
 \name{df_opt_dtgch_cbem4_rrlop_argin}
 \alias{df_opt_dtgch_cbem4_rrlop_argin}
 \title{Optimal Linear Allocation dtgch cbem4, solin relow, multiple rhos, GINI}
-\format{csv}
+\format{
+csv
+}
 \source{
 \url{https://www.sciencedirect.com/science/article/pii/S1570677X16300107}
 }

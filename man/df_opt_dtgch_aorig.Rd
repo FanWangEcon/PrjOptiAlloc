@@ -4,7 +4,9 @@
 \name{df_opt_dtgch_aorig}
 \alias{df_opt_dtgch_aorig}
 \title{Test Dataset Panel Height and Weight, Guatemala and Philippines, scrambled data, not actual.}
-\format{csv}
+\format{
+csv
+}
 \source{
 \url{https://www.sciencedirect.com/science/article/pii/S1570677X16300107}
 }

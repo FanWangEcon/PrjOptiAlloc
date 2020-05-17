@@ -4,7 +4,9 @@
 \name{df_opt_caschool}
 \alias{df_opt_caschool}
 \title{Test Dataset California Test Score Data}
-\format{csv}
+\format{
+csv
+}
 \source{
 \url{https://fmwww.bc.edu/ec-p/data/stockwatson/caschool.des}
 }
