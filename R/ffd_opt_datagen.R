@@ -1,4 +1,4 @@
-ffi_draw_n_alpha <- function(fl_w_dollar = 100,
+ffd_draw_n_alpha <- function(fl_w_dollar = 100,
                              it_w_units_avg = 5,
                              fl_eh_max_inc_i = 5,
                              fl_min_max_eh_inc_ratio = 1.5,

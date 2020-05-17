@@ -1,8 +1,8 @@
 ---
 title: Function Test Discrete Allocation with Linear Regression
 description: |
-  Test binary optimal allocation solution function from package. 
-  Use the the california student test score dataset, same as line by line.
+  Test binary optimal allocation solution function from package.
+  Use the California student test score dataset, same as line by line.
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Function Test Discrete Allocation with Linear Regression}
@@ -12,7 +12,7 @@ urlcolor: blue
 ---
 
 
-Test discrete optimal allocation solution line by line without function. Use the the california student test score dataset. Regress student English and Math test scores on Student-Teacher-Ratio. 
+Test discrete optimal allocation solution line by line without function. Use the California student test score dataset. Regress student English and Math test scores on Student-Teacher-Ratio.
 
 
 This function produces the same results as [DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html). The differences are:

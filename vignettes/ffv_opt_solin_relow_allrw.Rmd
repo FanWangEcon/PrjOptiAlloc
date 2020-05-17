@@ -2,7 +2,7 @@
 title: Line by Line Test Lower-Bounded Linear-Continuous Allocation with Linear Regression
 description: |
   Test the lower-bounded linear-continuous optimal allocation solution line by line without function. 
-  Use the guatemala-cebu scrambled nutrition and height early childhood data. 
+  Use the Guatemala-Cebu scrambled nutrition and height early childhood data. 
   Regress the effect of nutritional supplements on height.
 output: rmarkdown::html_vignette
 vignette: >
@@ -12,7 +12,7 @@ vignette: >
 urlcolor: blue
 ---
 
-Test lower-bounded linear-continuous optimal allocation solution line by line without function. Use the guatemala-cebu scrambled nutrition and height early childhood data. Regress the effect of nutritional supplements on height.
+Test lower-bounded linear-continuous optimal allocation solution line by line without function. Use the Guatemala-Cebu scrambled nutrition and height early childhood data. Regress the effect of nutritional supplements on height.
 
 The objective of this file is to solve the linear $N_i$ and $H_i$ problem without invoking any functions. This function first tested out the linear solution algorithm.
 

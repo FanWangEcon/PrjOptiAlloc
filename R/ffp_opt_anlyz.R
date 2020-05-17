@@ -3,7 +3,7 @@ ffp_opt_anlyz_rhgin <- function(df, svr_id_i,
                                 fl_N_agg, ar_rho,
                                 svr_inpalc = 'optiallocate',
                                 svr_expout = 'opti_exp_outcome') {
-#' Theorem 3, lower Bounded Linear Allocation solution, loop along a vector of planner inequality preference (rho)
+#' Theorem 2, Bounded Linear Allocation solution, loop along a vector of planner inequality preference (rho)
 #'
 #' @description
 #' Works with linear allocation problems. The function

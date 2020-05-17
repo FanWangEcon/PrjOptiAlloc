@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Test Dataset California Test Score Data: <strong>IB Frame</strong>, Alternative Allocation — df_opt_caschool_input_ib • Optimal Allocation</title>
+<title>Generate N=2 Data for Discrete and Bounded Continuous Examples — ffd_draw_n_alpha • Optimal Allocation</title>
 
 
 <!-- jquery -->
@@ -39,13 +39,8 @@
 
 
 
-<meta property="og:title" content="Test Dataset California Test Score Data: <strong>IB Frame</strong>, Alternative Allocation — df_opt_caschool_input_ib" />
-<meta property="og:description" content="\(\text{ID}_i\): individual id
-\(A_{i,l=0}\): A when considering the lth allocation for ith person, expected outcome without the lth allocation
-\(\alpha^{\text{o}}_{i}\): see df_casch_prep_i, observed/random/uniform allocation's marginal effect.
-Note since \(\alpha_{il}\) considers only additional allocation, with existing allocations embeded in \(D_{il}\),
-\(\alpha^{\text{o}}_{i}\) also only includes additional allocations that is not already embeded in \(\A_{i,l=0}\).
-\(\beta_{i}\): i specific preference" />
+<meta property="og:title" content="Generate N=2 Data for Discrete and Bounded Continuous Examples — ffd_draw_n_alpha" />
+<meta property="og:description" content="Generates arbitrary dataframes needed for discrete as well as continuous optimization problems when there are N individuals?" />
 
 
 
@@ -174,47 +169,69 @@ Note since \(\alpha_{il}\) considers only additional allocation, with existing a
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Test Dataset California Test Score Data: <strong>IB Frame</strong>, Alternative Allocation</h1>
-    <small class="dont-index">Source: <a href='https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/R/ffd_opt_caschool_input_ib.R'><code>R/ffd_opt_caschool_input_ib.R</code></a></small>
-    <div class="hidden name"><code>df_opt_caschool_input_ib.Rd</code></div>
+    <h1>Generate N=2 Data for Discrete and Bounded Continuous Examples</h1>
+    <small class="dont-index">Source: <a href='https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/R/ffd_opt_datagen.R'><code>R/ffd_opt_datagen.R</code></a></small>
+    <div class="hidden name"><code>ffd_draw_n_alpha.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>\(\text{ID}_i\): individual id
-\(A_{i,l=0}\): A when considering the lth allocation for ith person, expected outcome without the lth allocation
-\(\alpha^{\text{o}}_{i}\): see <em>df_casch_prep_i</em>, observed/random/uniform allocation's marginal effect.
-Note since \(\alpha_{il}\) considers only additional allocation, with existing allocations embeded in \(D_{il}\),
-\(\alpha^{\text{o}}_{i}\) also only includes additional allocations that is not already embeded in \(\A_{i,l=0}\).
-\(\beta_{i}\): i specific preference</p>
+    <p>Generates arbitrary dataframes needed for discrete as well as continuous optimization problems when there are N individuals?</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_caschool_input_ib</span>)</pre>
+    <pre class="usage"><span class='fu'>ffd_draw_n_alpha</span>(
+  <span class='kw'>fl_w_dollar</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>it_w_units_avg</span> <span class='kw'>=</span> <span class='fl'>5</span>,
+  <span class='kw'>fl_eh_max_inc_i</span> <span class='kw'>=</span> <span class='fl'>5</span>,
+  <span class='kw'>fl_min_max_eh_inc_ratio</span> <span class='kw'>=</span> <span class='fl'>1.5</span>,
+  <span class='kw'>fl_disc_cts_match_ratio</span> <span class='kw'>=</span> <span class='fl'>1.1</span>,
+  <span class='kw'>fl_A_i_alpha_i1_ratio</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>fl_A_i_relative_ratio</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+  <span class='kw'>it_N</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>it_rand_seed</span> <span class='kw'>=</span> <span class='fl'>123</span>
+)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>fl_w_dollar</th>
+      <td><p>float amount of aggregate resources in dollar for both individuals</p></td>
+    </tr>
+    <tr>
+      <th>it_w_units_avg</th>
+      <td><p>float number of goods for cts at max, approxi number for dis</p></td>
+    </tr>
+    <tr>
+      <th>fl_eh_max_inc_i</th>
+      <td><p>float maximum increase EH for one individual</p></td>
+    </tr>
+    <tr>
+      <th>fl_min_max_eh_inc_ratio</th>
+      <td><p>float ratio of maximum and minimum outcome increase</p></td>
+    </tr>
+    <tr>
+      <th>fl_disc_cts_match_ratio</th>
+      <td><p>float if 1, disc unit = it_w_units_avg</p></td>
+    </tr>
+    <tr>
+      <th>fl_A_i_alpha_i1_ratio</th>
+      <td><p>float A_i divide the alphi_il ratio, discrete set this</p></td>
+    </tr>
+    <tr>
+      <th>fl_A_i_relative_ratio</th>
+      <td><p>float Relative ratio of A between the two individuals</p></td>
+    </tr>
+    <tr>
+      <th>it_N</th>
+      <td><p>integer the number of individuals</p></td>
+    </tr>
+    <tr>
+      <th>it_rand_seed</th>
+      <td><p>integer random seed</p></td>
+    </tr>
+    </table>
 
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    <p>csv</p>
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
-
-    <p><a href='https://fmwww.bc.edu/ec-p/data/stockwatson/caschool.des'>https://fmwww.bc.edu/ec-p/data/stockwatson/caschool.des</a>
-<a href='https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html'>https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html</a></p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Stock, James H. and Mark W. Watson (2003) Introduction to Econometrics, Addison-Wesley Educational Publishers, chapter 4–7.</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_caschool_input_ib</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_opt_caschool_input_ib</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt;    id_i   A_i_l0 alpha_o_i      beta_i
-#&gt; 1     1 690.8000 0.0000000 0.002380952
-#&gt; 2     2 654.2762 0.0000000 0.002380952
-#&gt; 3     3 640.8497 0.3822603 0.002380952
-#&gt; 4     4 641.2885 0.0000000 0.002380952
-#&gt; 5     5 639.3850 0.2209635 0.002380952
-#&gt; 6     6 625.4803 0.0000000 0.002380952
-#&gt; 7     7 612.8571 0.0000000 0.002380952
-#&gt; 8     8 617.2157 0.4277498 0.002380952
-#&gt; 9     9 624.6470 0.0000000 0.002380952
-#&gt; 10   10 621.9968 0.3290873 0.002380952</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

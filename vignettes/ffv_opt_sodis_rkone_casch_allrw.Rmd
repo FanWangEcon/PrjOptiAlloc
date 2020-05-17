@@ -1,9 +1,9 @@
 ---
 title: Line by Line Discrete Allocation with Linear Regression
 description: |
-  Test discrete optimal allocation solution line by line without function. 
-  Use the the california student test score dataset. 
-  Regress student English and Math test scores on Student-Teacher-Ratio. 
+  Test discrete optimal allocation solution line by line without function.
+  Use the California student test score dataset.
+  Regress student English and Math test scores on Student-Teacher-Ratio.
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Line by Line Discrete Allocation with Linear Regression}
@@ -12,7 +12,7 @@ vignette: >
 urlcolor: blue
 ---
 
-Test discrete optimal allocation solution line by line without function. Use the the california student test score dataset. Regress student English and Math test scores on Student-Teacher-Ratio. 
+Test discrete optimal allocation solution line by line without function. Use the California student test score dataset. Regress student English and Math test scores on Student-Teacher-Ratio.
 
 ## Data Structures
 
@@ -114,9 +114,9 @@ This is the optimal allocation dataframe where each row is a queue rank, and eac
 2. $\text{Q}$: Current Queue index
 3. $D^{\star, \widehat{W}=Q}_{i}$: separate columns for each $i$ optimal allocation for $i^{th}$ person,when  $\widehat{W}=Q$
 
-This if generated, would be merged into *df_queue_il_long* afterwards. But df_queue_il does not necessarily need to generate this. 
+This if generated, would be merged into *df_queue_il_long* afterwards. But df_queue_il does not necessarily need to generate this.
 
-Optionally, can generate this for all *Q_il* points, or only at Queue ranks where $D^{\widehat{W},\text{BIN}}_{il} = 1$. 
+Optionally, can generate this for all *Q_il* points, or only at Queue ranks where $D^{\widehat{W},\text{BIN}}_{il} = 1$.
 
 ### The *df_alloc_i* Dataframe
 
@@ -137,7 +137,7 @@ REV matrix where each element is for a differen trho.
 
 1. $\text{IDX}_{\rho}$: index for rho
 2. $\rho$: actual rho values
-3. $\Delta^{\text{REV}}$: resource equivalent variation at each $\rho$ value. 
+3. $\Delta^{\text{REV}}$: resource equivalent variation at each $\rho$ value.
 
 ## Set-Up
 
@@ -357,7 +357,7 @@ df_casch_prep_i <- df_casch_prep_i %>% select(id_i, D_max_i, D_o_i, Omega_i, the
 ```{r}
 df_opt_caschool_prep_i <- df_casch_prep_i
 if (bl_save_rda) {
-  usethis::use_data(df_opt_caschool_prep_i, df_opt_caschool_prep_i, overwrite = TRUE) 
+  usethis::use_data(df_opt_caschool_prep_i, df_opt_caschool_prep_i, overwrite = TRUE)
 }
 ```
 
@@ -590,10 +590,10 @@ Generate the *df_alloc_il_long* file.
 svr_id_i <- 'id_i'
 svr_id_t <- svr_inpalc
 st_idcol_prefix <- 'sid_'
- 
+
 # Invoke Function
 ls_df_rosterwide <- ff_panel_expand_longrosterwide(
-  df_queue_il_long %>% filter(rho == 1) %>% 
+  df_queue_il_long %>% filter(rho == 1) %>%
     select(one_of(svr_id_i, svr_id_t)),
   svr_id_t, svr_id_i, st_idcol_prefix)
 
@@ -608,22 +608,22 @@ print(head(df_roster_wide_cumu_func,30))
 
 #### Multiple Rhos
 
-use do anything to solve for multiple rhos and stack. 
+use do anything to solve for multiple rhos and stack.
 
 ```{r}
 # Parameters
 svr_id_i <- 'id_i'
 svr_id_t <- svr_inpalc
 st_idcol_prefix <- 'sid_'
- 
+
 # Invoke Function
-df_alloc_il <- df_queue_il_long %>% 
-  select(one_of('rho', svr_id_i, svr_id_t)) %>% 
-  group_by(rho) %>% 
-  do(alloc_i_upto_Q = 
+df_alloc_il <- df_queue_il_long %>%
+  select(one_of('rho', svr_id_i, svr_id_t)) %>%
+  group_by(rho) %>%
+  do(alloc_i_upto_Q =
        ff_panel_expand_longrosterwide(df=.,
-                                      svr_id_t=svr_id_t, 
-                                      svr_id_i=svr_id_i, 
+                                      svr_id_t=svr_id_t,
+                                      svr_id_i=svr_id_i,
                                       st_idcol_prefix=st_idcol_prefix)$df_roster_wide_cumu) %>%
   unnest() %>% select(-one_of(paste0('rho', '1')))
 
@@ -781,7 +781,7 @@ ffi_disc_value_star_q <- function(fl_rho, df_queue_il,
     df_rev_il_long_onerho <- df_queue_il
   } else {
     # only evaluate up to resource
-    df_rev_il_long_onerho <- df_queue_il %>% filter(!!sym(svr_D_Wbin_il) == 1) 
+    df_rev_il_long_onerho <- df_queue_il %>% filter(!!sym(svr_D_Wbin_il) == 1)
   }
   df_rev_il_long_onerho <- df_rev_il_long_onerho %>%
                               mutate(!!sym(svr_V_cumu_l) :=
@@ -802,15 +802,15 @@ ffi_disc_value_star_q <- function(fl_rho, df_queue_il,
   df_rev_il_long_onerho <- df_rev_il_long_onerho %>% filter(!!sym(svr_inpalc) != 0)
   df_rev_Ail_onerho <- df_rev_il_long_onerho %>%
     mutate(!!sym(svr_V_star_Q_il) := (!!sym(svr_V_inner_Q_il))^(1/fl_rho))
-    
-    
+
+
   # Export: function is given rho, so no rho to export
   svr_return_vars <- c(svr_inpalc, svr_V_star_Q_il)
   if (bl_return_inner_V) {
     svr_return_vars <- c(svr_inpalc, svr_V_cumu_l, svr_V_inner_Q_il, svr_V_star_Q_il)
-  } 
+  }
   df_rev_Ail_onerho <- df_rev_Ail_onerho %>% select(one_of(svr_return_vars))
-    
+
   # Return
   return(df_rev_Ail_onerho)
 }
@@ -842,7 +842,7 @@ ffi_solve_queue_alloc <- function(ar_rho,
                                   svr_D_star_i = 'D_star_i', svr_F_star_i = 'F_star_i', svr_EH_star_i = 'EH_star_i',
                                   svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
                                   svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
-                                  svr_expout = 'opti_exp_outcome', 
+                                  svr_expout = 'opti_exp_outcome',
                                   svr_V_star_Q_il = 'V_star_Q_il'){
 
     # Step 1
@@ -880,34 +880,34 @@ ffi_solve_queue_alloc <- function(ar_rho,
                 !!sym(svr_D_star_i) := sum(!!sym(svr_D_Wbin_il)),
                 !!sym(svr_F_star_i) := (!!sym(svr_D_star_i)/!!sym(svr_D_max_i))) %>%
       arrange(!!sym(svr_id_i), !!sym(svr_rho))
-    
+
     # Step 4
     # Expected Outcome Given Optimal Choices
     # df_alloc_i_long -> left_join(df_input_il) -> Generate EH
     # Very straight forward, except need to deal with D_star_i = 0, merge D_star_i and di jointly
-    df_alloc_i_long <- df_alloc_i_long %>% 
-      mutate(D_star_i_zr1 = 
+    df_alloc_i_long <- df_alloc_i_long %>%
+      mutate(D_star_i_zr1 =
                case_when(!!sym(svr_D_star_i) == 0 ~ 1, # for merging where D_star = 0
-                         TRUE ~ !!sym(svr_D_star_i))) %>% 
-      left_join(df_input_il %>% 
-                  select(!!sym(svr_id_i), !!sym(svr_D_il), 
-                         !!sym(svr_A_il), !!sym(svr_alpha_il)), 
+                         TRUE ~ !!sym(svr_D_star_i))) %>%
+      left_join(df_input_il %>%
+                  select(!!sym(svr_id_i), !!sym(svr_D_il),
+                         !!sym(svr_A_il), !!sym(svr_alpha_il)),
                 by=setNames(c(svr_id_i, svr_D_il), c(svr_id_i, 'D_star_i_zr1'))) %>%
-      mutate(!!sym(svr_EH_star_i) := 
-               case_when(!!sym(svr_D_star_i) == 0 ~ !!sym(svr_A_il), # no choice no allocation 
+      mutate(!!sym(svr_EH_star_i) :=
+               case_when(!!sym(svr_D_star_i) == 0 ~ !!sym(svr_A_il), # no choice no allocation
                          TRUE ~ !!sym(svr_A_il) + !!sym(svr_alpha_il)))
-    
+
     # Step 5a, value at Q points
-    svr_return_list <- c(svr_rho, svr_rho_val, svr_id_i, svr_id_il, 
+    svr_return_list <- c(svr_rho, svr_rho_val, svr_id_i, svr_id_il,
                          svr_D_max_i, svr_D_il, svr_inpalc, svr_D_Wbin_il)
     # svr_A_il, svr_alpha_il, svr_beta_i
-    
+
     if (bl_return_V){
       mt_util_rev_loop <- df_queue_il_long %>%
-        group_by(!!sym(svr_rho)) %>% 
-        do(rev = ffi_disc_value_star_q(fl_rho = .[[svr_rho_val]], 
-                                       df_queue_il = ., 
-                                       bl_return_allQ_V = bl_return_allQ_V, 
+        group_by(!!sym(svr_rho)) %>%
+        do(rev = ffi_disc_value_star_q(fl_rho = .[[svr_rho_val]],
+                                       df_queue_il = .,
+                                       bl_return_allQ_V = bl_return_allQ_V,
                                        bl_return_inner_V = bl_return_inner_V,
                                        svr_id_i = svr_id_i,
                                        svr_D_il = svr_D_il, svr_inpalc = svr_inpalc, svr_D_Wbin_il = svr_D_Wbin_il,
@@ -915,14 +915,14 @@ ffi_solve_queue_alloc <- function(ar_rho,
                                        svr_V_star_Q_il = svr_V_star_Q_il)) %>%
             unnest()
       # Step 5b, merge values to queue df
-      df_queue_il_long <- df_queue_il_long %>% left_join(mt_util_rev_loop, 
+      df_queue_il_long <- df_queue_il_long %>% left_join(mt_util_rev_loop,
                                      by=setNames(c(svr_rho, svr_inpalc), c(svr_rho, svr_inpalc))) %>%
                           select(one_of(svr_return_list), starts_with('V_'))
     } else {
       # Step 5c, no value return
       df_queue_il_long <- df_queue_il_long %>% select(one_of(svr_return_list))
     }
-    
+
     # Step 6
     # Sort columns
     df_alloc_i_long <- df_alloc_i_long %>%
@@ -957,27 +957,27 @@ Test return with V or not, with inner V or not, solve up to all Q or not
 ```{r}
 # when bl_return_V = FALSE, other two don't matter
 bl_return_V <- FALSE
-head(ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il, 
+head(ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il,
                            bl_return_V=bl_return_V)$df_queue_il_long, 10)
 
 # by default, no inner only up to resource
 bl_return_V <- TRUE
-head(ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il, 
+head(ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il,
                            bl_return_V=bl_return_V)$df_queue_il_long, 10)
 
 # by default, no inner only up to resource
 bl_return_V <- TRUE
 bl_return_inner_V <- TRUE
-head(ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il, 
+head(ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il,
                            bl_return_V=bl_return_V,
                            bl_return_inner_V=bl_return_inner_V)$df_queue_il_long, 10)
 
-# by default, inner values as well as all values even if D_Wbin_il = 0 
+# by default, inner values as well as all values even if D_Wbin_il = 0
 # This takes much more time.
 bl_return_V <- TRUE
 bl_return_inner_V <- TRUE
 bl_return_allQ_V <- TRUE
-head(ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il, 
+head(ffi_solve_queue_alloc(ar_rho, fl_teacher_increase_number, df_input_il,
                            bl_return_V=bl_return_V,
                            bl_return_inner_V=bl_return_inner_V,
                            bl_return_allQ_V=bl_return_allQ_V)$df_queue_il_long, 10)
@@ -1533,16 +1533,16 @@ ffi_disc_rev <- function(ar_rho,
                                    fl_teacher_increase_number = fl_teacher_increase_number,
                                    df_input_ib = df_input_ib, df_queue_il_with_V = .,
                                    svr_A_i_l0 = svr_A_i_l0, svr_alpha_o_i = svr_alpha_o_i,
-                                   svr_inpalc = svr_inpalc, 
+                                   svr_inpalc = svr_inpalc,
                                    svr_beta_i = svr_beta_i,
                                    svr_V_star_Q_il = svr_V_star_Q_il)$fl_REV) %>%
       unnest() %>% pull()
-    
+
     # Return Matrix
     mt_rho_rev <- cbind(ar_rho, ar_util_rev_loop)
     colnames(mt_rho_rev) <- c(svr_rho_val,'REV')
     tb_rho_rev <- as_tibble(mt_rho_rev) %>% rowid_to_column(var = svr_rho)
-    
+
 # Retrun
 return(tb_rho_rev)
 }

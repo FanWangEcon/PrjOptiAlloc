@@ -2,7 +2,7 @@
 title: Function Test Lower-Bounded Linear-Continuous Allocation with Linear Regression
 description: |
   Test the lower-bounded linear-continuous optimal allocation solution function from package. 
-  Use the guatemala-cebu scrambled nutrition and height early childhood data, same as line by line.
+  Use the Guatemala-Cebu scrambled nutrition and height early childhood data, same as line by line.
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Function Test Lower-Bounded Linear-Continuous Allocation with Linear Regression}
@@ -11,7 +11,7 @@ vignette: >
 urlcolor: blue
 ---
 
-Test the lower-bounded linear-continuous optimal allocation solution function from package. Use the guatemala-cebu scrambled nutrition and height early childhood data, same as line by line.
+Test the lower-bounded linear-continuous optimal allocation solution function from package. Use the Guatemala-Cebu scrambled nutrition and height early childhood data, same as line by line.
 
 The objective of this file is to solve the linear $N_i$ and $H_i$ problem without invoking any functions. This function first tested out the linear solution algorithm.
 

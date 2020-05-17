@@ -1,4 +1,4 @@
-#' Lalonde AER 1986 with Wage Regression Allocation Queue Queue
+#' Lalonde AER 1986 with Wage Regression Allocation Queue
 #'
 #' appended onto the raw Lalonde binary targeting queue rank info based on different planner inequality aversion.
 #' includes min and max rank. Based on wage regression.

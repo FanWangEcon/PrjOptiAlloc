@@ -1,14 +1,34 @@
 [![HitCount](http://hits.dwyl.io/fanwangecon/PrjOptiAlloc.svg)](https://github.com/FanWangEcon/PrjOptiAlloc)  [![Star](https://img.shields.io/github/stars/fanwangecon/PrjOptiAlloc?style=social)](https://github.com/FanWangEcon/PrjOptiAlloc/stargazers) [![Fork](https://img.shields.io/github/forks/fanwangecon/PrjOptiAlloc?style=social)](https://github.com/FanWangEcon/PrjOptiAlloc/network/members) [![Star](https://img.shields.io/github/watchers/fanwangecon/PrjOptiAlloc?style=social)](https://github.com/FanWangEcon/PrjOptiAlloc/watchers)
 
-This is a research project [website](https://fanwangecon.github.io/PrjOptiAlloc/) for solving individual specific optimal allocation problems given estimation results. Various theorems from [Fan](https://fanwangecon.github.io/)'s [Optimal Allocation paper](http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) are implemented here as R code in one package that supports the paper. 
-
-See [here](https://github.com/FanWangEcon) for all of [Fan](https://fanwangecon.github.io/)'s public repositories. Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or problems.
+This is a research project [website](https://fanwangecon.github.io/PrjOptiAlloc/) for solving individual specific optimal allocation problems given estimation results. Various theorems from [Fan](https://fanwangecon.github.io/)'s [Optimal Allocation paper](http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) are implemented here as R code in one package that supports the paper.
 
 [![](https://img.shields.io/github/last-commit/fanwangecon/PrjOptiAlloc)](https://github.com/FanWangEcon/PrjOptiAlloc/commits/master) [![](https://img.shields.io/github/commit-activity/m/fanwangecon/PrjOptiAlloc)](https://github.com/FanWangEcon/PrjOptiAlloc/graphs/commit-activity) [![](https://img.shields.io/github/issues/fanwangecon/PrjOptiAlloc)](https://github.com/FanWangEcon/PrjOptiAlloc/issues) [![](https://img.shields.io/github/issues-pr/fanwangecon/PrjOptiAlloc)](https://github.com/FanWangEcon/PrjOptiAlloc/pulls)
 
-# Installation
+## Usage
+
+The [Paper](https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) tab contains the latest version of the optimal allocation paper. The [Slides](https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf) tab provides the latest version of the paper presentation file. The [News](https://fanwangecon.github.io/PrjOptiAlloc/news/index.html) tab provides update when code version changes.
+
+The [Functions](https://fanwangecon.github.io/PrjOptiAlloc/reference/index.html) tab provides a list of functions that implements discrete and bounded-continuous optimal allocation problems. It also provides estimation functions, data functions, and other support functions.
+
+The [Tutorials](https://fanwangecon.github.io/PrjOptiAlloc/articles/index.html) tab provides groups of vignettes that solve the various types of optimal allocation problems step by step from raw data to optimal allocation queues without invoking external functions. These step by step results are converted into ingredients of different [functions](https://fanwangecon.github.io/PrjOptiAlloc/reference/index.html). Some Vignettes solve for optimal allocation programs by calling these functions directly rather than solving step by step.
+
+## Data
+
+To demonstrate theorem intuitions graphically, the [Tutorials](https://fanwangecon.github.io/PrjOptiAlloc/articles/index.html) files provide numerical examples when the number of candidate recipients of allocations is equal to two. The tutorials in general use empirical data where the number of candidate recipients of allocations is larger than several hundred. For these problems, computational brute-force solutions suffer from factorially increase choice-sets and exponentially increasing state-spaces. The Theorems in the [Optimal Allocation paper](http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) provides closed-form solutions that are trivial to computationally implement for these otherwise computationally difficult allocation problems.
+
+Datasets used include:
+
+1. [R Testing Dataset Birth Weight](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_birthwt.html)
+2. [R Testing Dataset mtcars](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/mtcars.html)
+3. [California Test Score Data](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_caschool.html) from [Stock and Watson (2003)](https://www.amazon.com/dp/B00XIGZW9W/ref=dp-kindle-redirect?_encoding=UTF8&btkr=1)
+4. [NSW Job Training Data](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_caschool.html) from [Lalonde (1986)](https://www.jstor.org/stable/1806062?)
+5. [Guatemala and Philippines Nutrition and Height Data](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_aorig.html) from [Puentes el. al (2006)](https://www-sciencedirect-com.ezproxy.lib.uh.edu/science/article/pii/S1570677X16300107)
+
+## Installation
 
 The tools here depend on [base R](https://stat.ethz.ch/R-manual/R-devel/library/base/html/base-package.html), [tidyverse](https://www.tidyverse.org/) and [tidymodels](https://www.tidymodels.org/). After installing those, two packages should be installed, [fan](http://fanwangecon.github.io/)'s [REconTools](http://fanwangecon.github.io/REconTools/), which provides a number of support tools required, as well as this package itself [PrjOptiAllocs](http://fanwangecon.github.io/PrjOptiAlloc/). For installation help, see [devtools](http://r-pkgs.had.co.nz/intro.html).
+
+Installation will download all datasets, functions as well as vignettes associated with the project.
 
 ```
 # To Install the Programs in the R folder of the REconTools Repository
@@ -17,6 +37,10 @@ devtools::install_github("fanwangecon/PrjOptiAlloc")
 devtools::install_github("fanwangecon/REconTools")
 ```
 
+
+See [here](https://github.com/FanWangEcon) for all of [Fan](https://fanwangecon.github.io/)'s public repositories. Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or problems.
+
+<!--
 # General Idea
 
 We approach an estimation/allocation problem here is in three steps.
@@ -143,7 +167,7 @@ First, we generate some regression results. These provide the optimal allocation
 1. **Planner Preference and Gini**: variety of planner elasticity and resulting allocation gini
     - Data generation function: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin.html) \| [save data vignette](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_anlyz_rhgin.html)
     - Saved example (height linear) allocations: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop_allrh.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_allrh.rda)
-    - Saved example (height linear) gini: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop_argin.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_argin.rda)
+    - Saved example (height linear) gini: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop_argin.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_argin.rda) -->
 
 
 ----

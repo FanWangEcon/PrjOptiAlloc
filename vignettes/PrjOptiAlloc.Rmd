@@ -1,12 +1,154 @@
 ---
-title: "Introduction to Project Optimal Allocation"
+title: "Introduction to The Optimal Allocation Problem"
 description: >
   Get started with Project Optimal Allocation.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to Project Optimal Allocation}
+  %\VignetteIndexEntry{Introduction to The Optimal Allocation Problem}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-This is a package built with [pkgdown](https://pkgdown.r-lib.org/).
+## Premise
+
+Suppose there is an intervention scale-up for a nutritional intervention. Prior, an RCT showed that a nutritional intervention where children were provided with [bottles of proteins](https://doi.org/10.1016/j.ehb.2016.03.002) effectively increased height.
+
+Suppose an organization, such as the [World Food Program](https://www.wfpusa.org/) (WFP), is interested in distributing food aid to reduce stunting. [150 million](http://www.fao.org/state-of-food-security-nutrition) children under five years of age are stunted, but resources are limited. Given prior research, how should the WFP best allocate its limited resources?
+
+## Planner Preferences
+
+What is optimal might depend on the preferences of the planner? I use *CES preference aggregation* to allow for inequality aversions as well as bias:
+
+1. What is the WFP's *Inequality Aversion*?
+    + Trying to increase average height? (or reduce average stunting probability)
+    + Trying to increase height for those who are suffering from stunting the most?
+    + Or Trying to improve both average outcomes and outcomes for the worst?
+2. Does the WFP have a current *bias*?
+    + The WFP might be for the next year, focused on improving outcomes for girls, that is a bias for girls over boys
+    + The WFP might be focused on improving conditions in a set of countries for the next year, that is bias for individuals from these countries.
+3. What is the *expected outcome* of interest?
+    + Is height increase the objective?
+    + Is increasing height above the stunting threshold the objective?
+    + Are improving both wasting (low weight) and stunting jointly the objective?
+
+## Heterogeneities Among Candidate Recipients
+
+What is optimal might depend on prior estimates and observables on children? Needs and effectiveness are based on estimates and observables:
+
+1. *needs*: From admin and survey data, and using existing estimates, what is the expected level of height at two years of age for a child given the child's height at birth and parental information.
+2. *effectiveness*: Given prior estimates, and child observables, what is the expected effect of an additional bottle of nutritional supplement on this child's expected height at two years of age?
+3. *bounds*: What are the upper and lower bounds on how many bottles of protein shakes, or how many grams of protein intakes a child could take at the most or must take at the minimum?
+
+## From Estimation to Allocation
+
+We estimate some causal relationship between individual specific allocable input *V* and some outcome of interest *EH*. Finding causal estimates in reduced form or structural context is the main objective of most empirical papers. Generally, most research ends with finding what inputs/factors/policies matter, and how much they matter.
+
+What are the allocative implications of the causal estimates and observables? One way to think about this is that we might want to randomize in order to estimate causal effects, but given our estimates, how should we allocate among heterogeneous individuals the finite resources that we found to be beneficial.
+
+The key tradeoff here is between *needs* and *effectiveness*. What is the expected outcome without allocation (needs), and what are the expected effects of allocations *effectiveness*. These might be heterogeneous among individuals and might not coincide. The optimal allocation problem is computationally very intensive if we are to consider all possible combinations of allocations.
+
+## Optimal Allocation Queues
+
+The key concept that make the solutions possible is the *Optimal Allocation Queue*. It turns out, in both discrete and continuous cases, we can analytical solve for the optimal ranking in which individuals should begin and stop to receive allocations. These rankings, crucially, are invariant to resources when the marginal effects of allocations are nonincreasing. Nonincreasing marginal effects lead to resource (income) expansion paths do not bend backwards.
+
+One might think the allocation queue concept is not relevant for the continuous problems, because there, we need to figure out how much to provide to each individual, not just who should receive first or second. But it turns out that for the bounded-continuous problem, the solution is to first analytically find who should be the first individual to receive allocations. Then, there is an analytical function that maps total resource available to how much this first recipient should optimally receive as total resource availability increase. This function, it turns out, is a linear spline (when marginal returns are linear), and each successive knot of the spline is where the next individual in the optimal targeting queue begins to receive allocations.
+
+For the bounded-continuous problems, in the paper, I only discuss the linear case with constant-returns. When returns are decreasing, there are no analytical solutions. I do provide the solution to the log-linear problem using bisection in this vignette: [Loglinear Optimal Allocation Implicit Bisection Solution](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solog_bisec_allrw.html)
+
+<!--
+## 2.3 Brute-Force vs Analytical Solutions
+
+While the brute-force computational problem is infeasible to solve, the analytical solutions are instantaneous to implement even as the number of candidate recipient of allocations increase to large $N$.
+
+How to optimally allocate across individuals is a computationally difficult question to answer because if we want to allocate to $N$ individuals given $W$ units of resource, the choice set grows factorially with each additional individual, and the state space of the problem grows exponentially with each additional individual. How much the planner can allocate to each individual will be a function of the attributes of all other candidate recipients of allocations.
+
+Trying to solve this problem using brute-force comparison of all possible allocations is computational infeasible even with very small $N$. For example, if we have 700 individuals and 200 training spots, the number of possible combinations is $\frac{700!}{(700=200)!200!}$. This number can not be calculated by normal programs, it is significantly large than $10^{308}$, which is the maximum number allowed by double precision.
+
+# 3. Accessible Welfare Analysis
+
+## 3.1 Allocation and Misallocation
+
+With analytical results on what is optimal, we can also compute an interesting welfare measure, which the paper calls REV (resource equivalent variation).
+
+Suppose there are 10 bottles of protein, and 5 kids. If we randomly allocate, 5 kids will get the proteins. There are $\frac{10!}{5!5!}=252$ combinations of allocations. The random allocation is one of these 252 allocations. The optimal allocation is also one of these 252 allocations. The chance that the random allocation is optimal is 1 out of 252.
+
+But how far away is the random allocation away from the optimal? How much resource is wasted by not allocating more optimally?
+
+## 3.2 Resource Equivalent Variation
+
+To address this, we can use expenditure minimization. We can evaluate the utility of the planner given planner preferences at the observed allocations. Then we can solve for how much less resources is needed to achieve the same level of planner utility if we were allocating optimally? This is an analytical object because it is a function of the analytical optimal targeting queue.
+
+For the example here, we had 5 bottles, perhaps the planner have the same utility (given the equality of efficiency objective it has) if only 2 bottles were offered to the top 2 ranked individuals on the targeting queue. REV in this case would be $\frac{5-2}{5}=0.6$. 60 percent of the resource, we can say, is misallocated.
+
+The exciting thing here is that welfare calculation traditionally has been mainly a tool/concept that macro-economists use. The dominant concept is CEV (consumption equivalent variation). REV is applying in some sense a similar idea, but now to wide swaths of reduced form empirical estimation results. As a simple post estimation command, empirical researchers can evaluate the welfare implications of the observables they see given they estimates they find.
+
+## 3.3 From the Utilitarian to the Rawlsian
+
+For the more equality focused planner, the top two ranked could be the two kids who were be expected to be the shortest without the nutrition. For the more efficiency minded planner, the top two ranked could be the two kids for whom additional nutrient have the greatest marginal effects. As we shift along the  preference spectrum from the Utilitarian to the Rawlsian, the rankings of each of the 10 individuals on the optimal targeting queue shift.
+
+
+
+
+
+
+Prior Estimates
+
+A NGO program manager needs to determine how to allocate finite resources among a population in need.
+Perhaps some will not receive any aid, other will receive positive amounts. Perhaps all will receive positive amounts but still differ in magnitude.
+
+Based on observables and prior empirical causal studies,  -->
+
+<!--
+
+Administrative and other data are gathered for candidate recipients of allocations in many villages for the intervention scale-up. The question is, which child should receive the nutritional
+
+The results developed here are meant for studying allocation problems after empirical causal analysis has been completed.  -->
+
+<!-- ## Premise
+
+
+Organizations like the WFP have finite resources, and there are potentially many candidate recipients of resources. How should the WFP allocate its limited resources among children?
+
+What is optimal is determined by several factors.
+
+### What Does the Planner Want?
+
+In terms of the **Planner**:
+
+1. What is the WFP's **Inequality Aversion**?
+    + Trying to increase average height? (or reduce average stunting probability)
+    + Trying to increase height for those who are suffering from stunting the most?
+    + Or Trying to improve both average outcomes and outcomes for the worst?
+2. Does the WFP have a current **bias**?
+    + The WFP might be for the next year, focused on improving outcomes for girls, that is a bias for girls over boys
+    + The WFP might be focused on improving conditions in a set of countries for the next year, that is bias for individuals from these countries.
+3. What is the **expected outcome** of interest?
+    + Is height increase the objective?
+    + Is increasing height above stunting threshold the objective?
+    + Are improving both wasting (low weight) and stunting jointly the objective?
+
+### How Do Candidate Recipients Differ?
+
+There could be 50,000 children who are between age 0 and 2 in a particular area. All of these children (and their households) could be candidate recipients of allocations. From administrative data, or a survey conducted by the WFP, we have some information available possibly about these candidate recipients.
+
+For each child candidate recipient of allocation, given prior empirical estimates and the child's observables:
+
+1. What is the expected level of height at two years of age for a child  -->
+
+
+
+
+<!--
+### What Matters
+
+Suppose we learn from an empirical [paper](https://doi.org/10.1016/j.ehb.2016.03.002) based on a nutritional intervention that protein rather than non-protein components of calorie impacts height and weight in early childhood. As an empirical paper that studies causal linkages, we learn from this paper *what matters*, *how much it matters*, and possibly *how effects differ among children with different observables*.
+
+Program managers at organizations like the [World Food Program](https://www.wfpusa.org/) might find these results useful: given their limited resources, they might be able to focus more on protein components of calorie rather than non-protein components of total calorie in their aid programs.
+
+Similarly, we could find from a set of [school production function estimation](https://doi.org/10.1016/B978-0-12-815391-8.00013-6) exercises that certain inputs are more effective than others. Given these knowledge, school administrators might be able to spend their limited resources more effectively.
+
+### Allocating What Matters
+
+This paper/project assumes that we have learned from prior empirical work: *what matters*, *how much it matters*, and possibly *how effects differ among children with different observables*.
+
+This paper asks, given  -->

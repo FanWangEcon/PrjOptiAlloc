@@ -3,7 +3,7 @@
 \docType{data}
 \name{df_opt_lalonde_training_employ}
 \alias{df_opt_lalonde_training_employ}
-\title{Lalonde AER 1986 with Wage Regression Allocation Queue Queue}
+\title{Lalonde AER 1986 with Wage Regression Allocation Queue}
 \format{
 csv
 }

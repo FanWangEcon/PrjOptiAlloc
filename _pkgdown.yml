@@ -9,6 +9,8 @@ authors:
 navbar:
   title: "Optimal Allocation"
   left:
+    - text: "Get Started"
+      href: articles/PrjOptiAlloc.html
     - text: "Functions"
       href: reference/index.html
     - text: "Tutorials"
@@ -51,22 +53,29 @@ reference:
 - subtitle: Binary Optimal Allocation Functions
   desc: Allocate W units of resources among N individuals. Each i of N gets 0 or 1.
   contents:
-  - starts_with("ffp_opt_sobin")
+  - ffp_opt_sobin_target_row
   - ffp_opt_anlyz_rhgin_bin
+  - ffp_opt_sobin_rev
+  - starts_with("ffp_opt_sobin")
 - subtitle: Discrete Optimal Allocation Functions
   desc: Allocate W units of resources among N individuals. Each i of N gets some discrete units between individual minimum and maximum.
   contents:
+  - ffp_opt_anlyz_rhgin_dis
+  - ffp_opt_sodis_value
+  - ffp_opt_sodis_rev
+  - ffp_opt_anlyz_sodis_rev
   - starts_with("ffp_opt_sodis")
 - subtitle: Linear Bounded-Continuous Optimal Allocation Functions
   desc: Allocate W units of resources among N individuals. Each i of N gets some continuous amount below minimum and maximum
   contents:
   - starts_with("ffp_opt_solin")
   - ffp_opt_anlyz_rhgin
-- subtitle: Discrete Optimal Allocation Functions
-  desc: Allocate W units of resources among N individuals. Each i of N gets discrete units.
+- title: Data
+- subtitle: Simulated Data
+  desc: Illustrative Testing
   contents:
-  - starts_with("ffp_")
-- title: Raw Datasets
+  - ffd_draw_n_alpha
+- subtitle: Raw Datasets
   desc: Testing datasets
   contents:
   - starts_with("df_opt_")
@@ -75,7 +84,7 @@ reference:
   - -df_opt_dtgch_cbem4_rrlop_argin
   - -df_opt_lalonde_training_employ
   - -df_opt_lalonde_training_wage
-- title: Datasets with Optimal Allocation Results
+- subtitle: Datasets with Optimal Allocation Results
   desc: Datset files with additional columns that store optimal allocation results or allocation space parameters
   contents:
   - df_opt_dtgch_cbem4_rrlop
@@ -100,8 +109,8 @@ articles:
   - ffv_opt_sobin_rkone_allrw_car
   - ffv_opt_sobin_rkone_allrw_wgt
   - ffv_opt_sobin_rev
-- title: Binary Allocation Example Vignettes with an Job Training RCT
-  desc: Demonstrate optimal binary allocation queue. Use empirical A and alpha from an the NSW job training RCT from Lalonde (AER, 1986).
+- title: Binary Allocation Example Vignettes with a Job Training RCT
+  desc: Demonstrate optimal binary allocation queue. Use empirical A and alpha from the NSW job training RCT from Lalonde (AER, 1986).
   contents:
   - ffv_opt_sobin_rkone_allfc_training_logit
   - ffv_opt_sobin_rkone_allrw_training_wage
@@ -123,7 +132,7 @@ articles:
   contents:
   - ffv_opt_solog_bisec_allrw
 - title: Generate Estimation Space Parameters
-  desc: Vignette that only conducts estimations and generate A and alpha for estimation space. Most A and alpha generated in various other files as well that also solve for optimal alloction.
+  desc: Vignette that only conducts estimations and generate A and alpha for estimation space. Most A and alpha generated in various other files as well that also solve for optimal allocation.
   contents:
   - ffv_opt_dtgch_cbem4
 
