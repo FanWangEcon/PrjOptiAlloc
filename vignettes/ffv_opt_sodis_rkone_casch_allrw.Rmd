@@ -1,14 +1,18 @@
 ---
-title: DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)
+title: Line by Line Discrete Allocation with Linear Regression
+description: |
+  Test discrete optimal allocation solution line by line without function. 
+  Use the the california student test score dataset. 
+  Regress student English and Math test scores on Student-Teacher-Ratio. 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)}
+  %\VignetteIndexEntry{Line by Line Discrete Allocation with Linear Regression}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
 
-# Discrete Optimal Allocation Allocate Teacher (Line by Line)
+Test discrete optimal allocation solution line by line without function. Use the the california student test score dataset. Regress student English and Math test scores on Student-Teacher-Ratio. 
 
 ## Data Structures
 
@@ -156,6 +160,8 @@ library(PrjOptiAlloc)
 
 library(knitr)
 library(kableExtra)
+
+bl_save_rda = FALSE
 ```
 
 ### Policy Parameters
@@ -350,7 +356,9 @@ df_casch_prep_i <- df_casch_prep_i %>% select(id_i, D_max_i, D_o_i, Omega_i, the
 
 ```{r}
 df_opt_caschool_prep_i <- df_casch_prep_i
-usethis::use_data(df_opt_caschool_prep_i, df_opt_caschool_prep_i, overwrite = TRUE)
+if (bl_save_rda) {
+  usethis::use_data(df_opt_caschool_prep_i, df_opt_caschool_prep_i, overwrite = TRUE) 
+}
 ```
 
 ## DF2: Effect of an Additional Teacher (df_input_il)
@@ -425,9 +433,13 @@ For functionalized reuse and testing.
 
 ```{r}
 df_opt_caschool_input_il <- df_input_il
-usethis::use_data(df_opt_caschool_input_il, df_opt_caschool_input_il, overwrite = TRUE)
+if (bl_save_rda) {
+  usethis::use_data(df_opt_caschool_input_il, df_opt_caschool_input_il, overwrite = TRUE)
+}
 df_opt_caschool_input_ib <- df_input_ib
-usethis::use_data(df_opt_caschool_input_ib, df_opt_caschool_input_ib, overwrite = TRUE)
+if (bl_save_rda) {
+  usethis::use_data(df_opt_caschool_input_ib, df_opt_caschool_input_ib, overwrite = TRUE)
+}
 ```
 
 ## DF3 and DF4: Optimal Target Queue (df_queue_il) and Allocation (df_alloc_i)

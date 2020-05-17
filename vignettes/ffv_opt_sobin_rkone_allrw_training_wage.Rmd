@@ -1,22 +1,17 @@
 ---
-title: BINARY--NSW Training WAGE Optimal Allocation Solution
+title: Linear Wage Binary Allocation Lalonde Training Example
+description: |
+  Linear wage regression estimation of A and alpha from the Lalonde Training Dataset (722 Observations). 
+  Solve for optimal binary allocation queues.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--NSW Training WAGE Optimal Allocation Solution}
+  %\VignetteIndexEntry{Linear Wage Binary Allocation Lalonde Training Example}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
 
-Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAllo==c/)**
-
-# Objective
-
-Test binary allocation queue with Lalonde training dataset. There are 722 observations, 297 in the treatment group, 425 in the control group.
-
-Following Lalonde, regressions are in terms of wage levels (not log wage)
-
-# Load Packages and Data
+Linear wage regression estimation of A and alpha from the Lalonde Training Dataset (722 Observations). Solve for optimal binary allocation queues. Test binary allocation queue with Lalonde training dataset. There are 722 observations, 297 in the treatment group, 425 in the control group. Following Lalonde, regressions are in terms of wage levels (not log wage)
 
 ## Load Dependencies
 
@@ -38,6 +33,9 @@ library(PrjOptiAlloc)
 
 library(knitr)
 library(kableExtra)
+
+bl_save_rda = FALSE
+bl_save_img = FALSE
 ```
 
 ## Load Data and Generate New Variables
@@ -102,9 +100,9 @@ dft <- dft %>%
 #                                labels=c("young","older")))
 ```
 
-# Regression with Data and Construct Input Arrays
+## Regression with Data and Construct Input Arrays
 
-## Tabulate and Summarize Averages
+### Tabulate and Summarize Averages
 
 What is the average difference in wage between treatment and control, do they match what is reported in Lalonde (1986)?
 
@@ -139,7 +137,7 @@ round(t(dft %>% group_by(trt, marr, age_m2) %>%
 
 ```
 
-## Tabulate
+### Tabulate
 
 ```{r tabulate groups}
 # Tabulate groups, how many in each group, enough for group heterogeneity in effects?
@@ -155,7 +153,7 @@ dft %>%
   pivot_wider(names_from = trt, values_from = freq)
 ```
 
-## Regression Testing
+### Regression Testing
 
 ```{r Regression Testing}
 
@@ -207,9 +205,9 @@ summary(lm(re78 ~  age + I(age^2) + factor(age_m2) +
 
 ```
 
-## Regress Wage on Training Status
+### Regress Wage on Training Status
 
-### Linear Binary Problem
+#### Linear Binary Problem
 
 ```{r Binary Linear Regression}
 # Store Regression Results
@@ -226,9 +224,9 @@ rs_wage_on_trt_tidy = tidy(rs_wage_on_trt)
 rs_wage_on_trt_tidy
 ```
 
-## Construct Input Arrays $A_i$ and $\alpha_i$
+### Construct Input Arrays $A_i$ and $\alpha_i$
 
-### Linear Binary Regression
+#### Linear Binary Regression
 
 Multiply coefficient vector by covariate matrix to generate *A* vector that is child/individual specific.
 
@@ -257,15 +255,15 @@ ar_alpha_m <- mt_intr %*% ar_fl_main_esti
 head(ar_alpha_m, 5)
 ```
 
-## Individual Weight
+### Individual Weight
 ```{r}
 # Child Weight
 ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
 ```
 
-## Matrix with Required Inputs for Allocation
+### Matrix with Required Inputs for Allocation
 
-### Linear Binary Matrix
+#### Linear Binary Matrix
 
 ```{r Linear Allocattion Space Matrix}
 # Initate Dataframe that will store all estimates and optimal allocation relevant information
@@ -294,7 +292,7 @@ tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
 head(tb_key_alpha_A_beta, 32)
 ```
 
-# Optimal Linear Allocations
+## Optimal Linear Allocations
 
 ```{r Set Allocation Parameters}
 
@@ -335,7 +333,7 @@ it_how_many_vary_rank <- sum(df_all_rho$rank_max - df_all_rho$rank_min)
 it_how_many_vary_rank
 ```
 
-## Save Results
+### Save Results
 
 ```{r saving file}
 
@@ -345,11 +343,13 @@ df_all_rho <- df_all_rho %>% rename(A_i_wage = A, alpha_i_wage = alpha, beta_i_w
                                     rank_min_wage = rank_min, rank_max_wage = rank_max, avg_rank_wage = avg_rank)
 
 # Save File
-df_opt_lalonde_training_wage <- df_all_rho
-usethis::use_data(df_opt_lalonde_training_wage, df_opt_lalonde_training_wage, overwrite = TRUE)
+if (bl_save_rda) {
+  df_opt_lalonde_training_wage <- df_all_rho
+  usethis::use_data(df_opt_lalonde_training_wage, df_opt_lalonde_training_wage, overwrite = TRUE)
+}
 ```
 
-## Change in Rank along rho
+### Change in Rank along rho
 
 ```{r graph of rank change, fig.height = 4, fig.width = 7, fig.align = "center"}
 # get rank when wage rho = 1
@@ -414,7 +414,7 @@ line.plot <- df_rank_graph %>%
 print(line.plot)
 ```
 
-## Bump Plot for Optimal Binary Allocations
+### Bump Plot for Optimal Binary Allocations
 
 ```{r binary allocation bump plot, fig.height = 10, fig.width = 20, fig.align = "center"}
 

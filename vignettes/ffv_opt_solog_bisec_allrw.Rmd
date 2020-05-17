@@ -1,15 +1,19 @@
 ---
-title: LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)
+title: Line by Line Test Log Linear Allocation Test
+description: |
+  Given allocation space parameters (A, alpha) for log linear regression, test log-linear optima allocation line by line.
+  The result is not included in the final version of the paper, because the results are not closed-form, but are based on a root search. 
+  The root search is very fast when initial condition is zero.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)}
+  %\VignetteIndexEntry{Line by Line Test Log Linear Allocation Test}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
-back to **[fan](https://fanwangecon.github.io/)**'s optimal allocation homepage **[table of content](https://fanwangecon.github.io/prjoptialloc/)**
 
-# Objective
+Given allocation space parameters (A, alpha) for log linear regression, test log-linear optima allocation line by line. The result is not included in the final version of the paper, because the results are not closed-form, but are based on a root search. The root search is very fast when initial condition is zero.
+  
 
 The objective of this file is to solve the log linear $N_i$ and $H_i$ problem without invoking any functions using bisection with the implicit solution derived in the paper.
 
@@ -35,23 +39,29 @@ There is a dataset with child attributes, nutritional inputs and outputs. Run re
   + @return a dataframe that expands the df inputs with additional results, including bisection solution.
 2. The structure assumes some regression has already taken place to generate the i specific variables listed.
 
-# Load Packages and Data
+## Load Packages and Data
 
-## Load Dependencies
+### Load Dependencies
 
 ```{r globaloptions, echo = T, results = 'hide', message=F, warning=F}
 rm(list = ls(all.names = TRUE))
 options(knitr.duplicate.label = 'allow')
 ```
 ```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
-library(tidyverse)
+library(tibble)
+library(dplyr)
 library(tidyr)
+library(stringr)
+library(broom)
+library(ggplot2)
+
+library(PrjOptiAlloc)
+
 library(knitr)
 library(kableExtra)
-library(PrjOptiAlloc)
 ```
 
-## common parameters
+### common parameters
 
 some important shared, common fixed parameters specify them here:
 
@@ -75,7 +85,7 @@ it_n_choice_cnt_ttest = 3
 it_n_choice_cnt_dense = 100
 ```
 
-## a and alpha input matrix
+### a and alpha input matrix
 
 different types of *alpha* and *a* combinations. the algorithm, solutions should work for any alpha and a.
 
@@ -118,7 +128,7 @@ if (it_test == 1) {
 }
 ```
 
-## expand matrix
+### expand matrix
 
 ```{r matrix expansion}
 # choice grid for nutritional feasible choices for each
@@ -140,9 +150,9 @@ kable(tb_states_choices_ttest) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-# Apply Same Function All Rows, some inputs row-specific, other shared
+## Apply Same Function All Rows, some inputs row-specific, other shared
 
-## 3 points and denser dataframs and define function
+### 3 points and denser dataframs and define function
 
 ```{r define function}
 # convert matrix to tibble
@@ -177,7 +187,7 @@ ffi_nonlin_dplyrdo <- function(fl_a, fl_alpha, fl_n, ar_a, ar_alpha, fl_n_agg, f
 }
 ```
 
-## evaluate at three choice points and show table
+### evaluate at three choice points and show table
 
 in the example below, just show results evaluating over three choice points and show table.
 
@@ -192,7 +202,7 @@ kable(tb_states_choices_ttest_eval) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-## evaluate at many choice points and show graphically
+### evaluate at many choice points and show graphically
 
 same as above, but now we evaluate the function over the individuals at many choice points so that we can graph things out.
 
@@ -220,10 +230,6 @@ lineplot <- tb_states_choices_dense_eval %>%
              caption = 'evaluating the function')
 print(lineplot)
 ```
-
-# bisection solve optimal choice for each individual
-
-## bisection algorithm
 
 ## dplyr implementation of bisection
 

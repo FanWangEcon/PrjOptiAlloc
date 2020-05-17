@@ -1,20 +1,36 @@
 ---
-title: LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest
+title: Line by Line Test Bounded-Continuous Function with Height Nutrition Data
+description: |
+  Given allocation space parameters (A, alpha), test the lower-bounded continuous optimal allocation line by line without function.
+  This demonstrates relative optimality conditions, inverse optimal allocation, and optimal allocation.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest}
+  %\VignetteIndexEntry{Line by Line Test Bounded-Continuous Function with Height Nutrition Data}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
 
-```{r global_options, include = FALSE}
-try(source("../.Rprofile"))
-```
 
-`r text_shared_preamble_one`
+Given allocation space parameters (A, alpha), test the lower-bounded continuous optimal allocation line by line without function. This demonstrates relative optimality conditions, inverse optimal allocation, and optimal allocation.
 
 Solves the linear optimal allocation problem. Each individual receives input $N_i$, and we are interested in individual expected outcomes $H_i$. Production functions or reduced causal form relationships are linear with individual specific slopes and intercepts. Solve for different planners.
+
+
+```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
+rm(list = ls(all.names = TRUE))
+options(knitr.duplicate.label = 'allow')
+```
+
+```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
+library(dplyr)
+library(tidyr)
+
+library(REconTools)
+library(PrjOptiAlloc)
+
+bl_save_rda = FALSE
+```
 
 ## Load Data
 
@@ -24,6 +40,8 @@ Alternatively, provide hand input data.
 
 
 ```{r Load Data}
+bl_save_rda = FALSE
+
 it_data_which = 2
 
 if (it_data_which == 1) {
@@ -61,11 +79,11 @@ if (it_data_which == 2) {
 }
 ```
 
-# Solve
+## Solve
 
 I would like to be able to directly call the dataset generated here in various functions. Save the datafile we just created in the project folder.
 
-## Prep Inputs
+### Prep Inputs
 
 ```{r}
 df <- df_esti
@@ -76,9 +94,9 @@ fl_N_agg <- fl_N_agg
 fl_rho <- -10
 ```
 
-## Relative Allocations
+### Relative Allocations
 
-### Rank
+#### Rank
 
 ```{r}
 # a. select only relevant data
@@ -102,7 +120,7 @@ summary(df_opti)
 summary(df_opti %>% select(lowest_rank_A, lowest_rank_alpha, lowest_rank_beta))
 ```
 
-### Relative Slopes, Intercepts
+#### Relative Slopes, Intercepts
 
 ```{r}
 # e. relative slope and relative intercept with respect to lowest index
@@ -136,13 +154,12 @@ summary(df_opti %>%
 df_opti %>%
   select(A, alpha, beta,
          rank_val, rela_intercept_to_lowest, rela_x_intercept,
-         rank_y_inter_idx, rank_x_inter_idx) %>%
-  kable() %>% kable_styling_fc()
+         rank_y_inter_idx, rank_x_inter_idx)
 ```
 
-## Spline and Inversion
+### Spline and Inversion
 
-### Summing up for Splines
+#### Summing up for Splines
 
 ```{r}
 # f. cumulative sums
@@ -157,7 +174,7 @@ df_opti <- df_opti %>%
 summary(df_opti %>% select(rela_slope_to_lowest_cumsum, rela_intercept_to_lowest_cumsum))
 ```
 
-### Inverting Splines (Cumulative)
+#### Inverting Splines (Cumulative)
 
 ```{r}
 # g. inverting cumulative slopes and intercepts
@@ -172,7 +189,7 @@ df_opti <- df_opti %>%
 summary(df_opti %>% select(rela_slope_to_lowest_cumsum_invert, rela_intercept_to_lowest_cumsum_invert))
 ```
 
-### X intercepts as Spline Knots and inverted Spline Knots
+#### X intercepts as Spline Knots and inverted Spline Knots
 
 ```{r}
 
@@ -191,8 +208,8 @@ df_opti <- df_opti %>%
 summary(df_opti %>% select(rela_x_intercept, opti_lowest_spline_knots))
 ```
 
-## Optimal Allocations
-### Compute Optimal Allocation for the Lowest
+### Optimal Allocations
+#### Compute Optimal Allocation for the Lowest
 
 ```{r}
 
@@ -212,7 +229,8 @@ df_opti <- df_opti %>% arrange(opti_lowest_spline_knots) %>%
 summary(df_opti %>% select(tot_devi, allocate_lowest))
 ```
 
-### Compute Optimal Allocation for All Others given Lowest
+
+#### Compute Optimal Allocation for All Others given Lowest
 
 ```{r}
 # l. Find position of subsidy
@@ -233,7 +251,7 @@ df_opti <- df_opti %>%
 summary(df_opti %>% select(opti_allocate, allocate_total))
 ```
 
-## Expected Outcomes Given Optimal Allocations
+### Expected Outcomes Given Optimal Allocations
 
 ```{r}
 
@@ -253,10 +271,12 @@ summary(df_opti)
 print(cbind(ar_opti_expout,ar_opti_inpalc))
 ```
 
-# Save Outputs
+## Save Outputs
 
 ```{r}
-# df_opt_dtgch_ropti: dataframe, opt project, data guat cebu height, cebu edu mother, results relative linear optimal
-df_opt_dtgch_cbem4_rrlop <- df_opti
-usethis::use_data(df_opt_dtgch_cbem4_rrlop, df_opt_dtgch_cbem4_rrlop, overwrite = TRUE)
+if (bl_save_rda) {
+  # df_opt_dtgch_ropti: dataframe, opt project, data guat cebu height, cebu edu mother, results relative linear optimal
+  df_opt_dtgch_cbem4_rrlop <- df_opti
+  usethis::use_data(df_opt_dtgch_cbem4_rrlop, df_opt_dtgch_cbem4_rrlop, overwrite = TRUE)  
+}
 ```

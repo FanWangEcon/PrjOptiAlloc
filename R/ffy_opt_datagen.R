@@ -1,4 +1,3 @@
-# Generates arbitrary dataframes needed for discrete as well as continuous optimization problems when there are N individuals?
 ffi_draw_n_alpha <- function(fl_w_dollar = 100,
                              it_w_units_avg = 5,
                              fl_eh_max_inc_i = 5,
@@ -8,12 +7,20 @@ ffi_draw_n_alpha <- function(fl_w_dollar = 100,
                              fl_A_i_relative_ratio = 3,
                              it_N = 2,
                              it_rand_seed = 123){
+  #' Generate N=2 Data for Discrete and Bounded Continuous Examples
+  #'
+  #' @description
+  #' Generates arbitrary dataframes needed for discrete as well as continuous optimization problems when there are N individuals?
+  #'
+  #' @param fl_w_dollar float amount of aggregate resources in dollar for both individuals
   #' @param it_w_units_avg float number of goods for cts at max, approxi number for dis
-  #' @param fl_eh_max_inc_i1 float maximum increase EH for one individual
+  #' @param fl_eh_max_inc_i float maximum increase EH for one individual
   #' @param fl_min_max_eh_inc_ratio float ratio of maximum and minimum outcome increase
-  #' @param it_N integer the number of individuals
   #' @param fl_disc_cts_match_ratio float if 1, disc unit = it_w_units_avg
   #' @param fl_A_i_alpha_i1_ratio float A_i divide the alphi_il ratio, discrete set this
+  #' @param fl_A_i_relative_ratio float Relative ratio of A between the two individuals
+  #' @param it_N integer the number of individuals
+  #' @param it_rand_seed integer random seed
 
   set.seed(it_rand_seed)
 

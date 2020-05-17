@@ -1,14 +1,18 @@
 ---
-title: DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Function)
+title: Function Test Discrete Allocation with Linear Regression
+description: |
+  Test binary optimal allocation solution function from package. 
+  Use the the california student test score dataset, same as line by line.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Function)}
+  %\VignetteIndexEntry{Function Test Discrete Allocation with Linear Regression}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
 
-# Discrete Optimal Allocation Allocate Teacher (Function)
+
+Test discrete optimal allocation solution line by line without function. Use the the california student test score dataset. Regress student English and Math test scores on Student-Teacher-Ratio. 
 
 
 This function produces the same results as [DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html). The differences are:

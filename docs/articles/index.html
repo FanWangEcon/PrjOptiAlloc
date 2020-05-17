@@ -6,27 +6,31 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • PrjOptiAlloc</title>
+<title>Articles • Optimal Allocation</title>
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -63,7 +67,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-article-index">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -76,82 +80,78 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">PrjOptiAlloc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <a class="navbar-link" href="../index.html">Optimal Allocation</a>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../reference/index.html">Functions</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Tutorials</a>
+</li>
+<li>
+  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
+</li>
+<li>
+  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Other Sites
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/ffv_opt_anlyz_rhgin.html">ANALYSIS--Optimal Allocations Planner Elasticity Vector and Ginis</a>
+      <a href="https://fanwangecon.github.io/REconTools/">R Tools for Data and Optimization</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a>
+      <a href="https://fanwangecon.github.io/R4Econ/">R Examples Data and Optimization</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev.html">BINARY--REV Test One Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="https://fanwangecon.github.io/Stat4Econ/">R Examples Introductory Statistics</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rev_two.html">BINARY--REV Test Two Resource Equivalent Variation Computation (Line by Line)</a>
+      <a href="https://fanwangecon.github.io/Stata4Econ/">Stata Examples Regressions and Tables</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rkone_allfc_training_logit.html">BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution</a>
+      <a href="https://fanwangecon.github.io/M4Econ/">Matlab Examples Matrix and Graphs</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rkone_allrw_car.html">BINARY--MPG and Shift Optimal Allocation Solution (Line by Line)</a>
+      <a href="https://fanwangecon.github.io/Math4Econ/">Matlab Introductory Math for Econ</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rkone_allrw_training.html">BINARY--NSW Training WAGE and EMPLOYMENT Optimal Allocation Analysis</a>
+      <a href="https://fanwangecon.github.io/Tex4Econ/">Latex and Paper Generation Examples</a>
     </li>
     <li>
-      <a href="../articles/ffv_opt_sobin_rkone_allrw_training_wage.html">BINARY--NSW Training WAGE Optimal Allocation Solution</a>
-    </li>
-    <li>
-      <a href="../articles/ffv_opt_sobin_rkone_allrw_wgt.html">BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)</a>
-    </li>
-    <li>
-      <a href="../articles/ffv_opt_sodis_rkone_casch_allfn.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Function)</a>
-    </li>
-    <li>
-      <a href="../articles/ffv_opt_sodis_rkone_casch_allrw.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)</a>
-    </li>
-    <li>
-      <a href="../articles/ffv_opt_solin_relow.html">LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest</a>
-    </li>
-    <li>
-      <a href="../articles/ffv_opt_solin_relow_allfn.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Function)</a>
-    </li>
-    <li>
-      <a href="../articles/ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a>
-    </li>
-    <li>
-      <a href="../articles/ffv_opt_solog_asame_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Analytical Common Alpha</a>
-    </li>
-    <li>
-      <a href="../articles/ffv_opt_solog_bisec_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)</a>
+      <a href="https://fanwangecon.github.io/pyfan/">Python Examples</a>
     </li>
   </ul>
 </li>
+<li>
+  <a href="http://fanwangecon.github.io/">Fan</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/fanwangecon/PrjOptiAlloc">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://twitter.com/fanwangecon">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -169,27 +169,83 @@
     </div>
 
     <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
+      <h3>Example N=2 Discrete and Bounded-Continuous Optimal Allocation</h3>
+      <p class="section-desc"><p>Demonstrate optimal allocation between two simulated individuals graphically</p></p>
 
-      <ul>
-        <li><a href="ffv_opt_anlyz_rhgin.html">ANALYSIS--Optimal Allocations Planner Elasticity Vector and Ginis</a></li>
-        <li><a href="ffv_opt_dtgch_cbem4.html">DATA--Generate Data Cebu Four Category Test Regression Results</a></li>
-        <li><a href="ffv_opt_sobin_rev.html">BINARY--REV Test One Resource Equivalent Variation Computation (Line by Line)</a></li>
-        <li><a href="ffv_opt_sobin_rev_two.html">BINARY--REV Test Two Resource Equivalent Variation Computation (Line by Line)</a></li>
-        <li><a href="ffv_opt_sobin_rkone_allfc_training_logit.html">BINARY--NSW Training EMPLOYMENT as Outcome Optimal Allocation Solution</a></li>
-        <li><a href="ffv_opt_sobin_rkone_allrw_car.html">BINARY--MPG and Shift Optimal Allocation Solution (Line by Line)</a></li>
-        <li><a href="ffv_opt_sobin_rkone_allrw_training.html">BINARY--NSW Training WAGE and EMPLOYMENT Optimal Allocation Analysis</a></li>
-        <li><a href="ffv_opt_sobin_rkone_allrw_training_wage.html">BINARY--NSW Training WAGE Optimal Allocation Solution</a></li>
-        <li><a href="ffv_opt_sobin_rkone_allrw_wgt.html">BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)</a></li>
-        <li><a href="ffv_opt_sodis_rkone_casch_allfn.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Function)</a></li>
-        <li><a href="ffv_opt_sodis_rkone_casch_allrw.html">DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)</a></li>
-        <li><a href="ffv_opt_solin_relow.html">LINEAR--Optimal Linear Allocation based On Relative Allocation to Lowest</a></li>
-        <li><a href="ffv_opt_solin_relow_allfn.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Function)</a></li>
-        <li><a href="ffv_opt_solin_relow_allrw.html">LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)</a></li>
-        <li><a href="ffv_opt_solog_asame_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Analytical Common Alpha</a></li>
-        <li><a href="ffv_opt_solog_bisec_allrw.html">LOG-LINEAR--DRS (Log-Linear) Optimal Allocation Implicit Bisection Solution (Line by Line)</a></li>
-      </ul>
+      <dl>
+        <dt><a href="ffv_opt_n2_fn.html">Example Discrete and Bounded-Continuous Optimal Allocation for N=2</a></dt>
+        <dd><p>Test Theorem 1 and Theorem 2 optimal allocation functions when N=2. Use randomly generated A and alpha parameters for two individuals’ discrete and bounded-continuous allocation problems.</p></dt>
+      </dl>
+    </div>
+    <div class="section ">
+      <h3>Binary Allocation Testing Vignettes (mtcars, birthwt)</h3>
+      <p class="section-desc"><p>Testing the binary allocation solution line by line and with function. Use standard R testing datasets mtcars and birthwt. Test Welfare (REV) with hand-input example data.</p></p>
+
+      <dl>
+        <dt><a href="ffv_opt_sobin_rkone_allrw_car.html">Line by Line Test Binary Allocation with Linear Regression</a></dt>
+        <dd><p>Test binary optimal allocation solution line by line without function. Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.</p></dt>
+        <dt><a href="ffv_opt_sobin_rkone_allrw_wgt.html">Function Test Binary Allocation with Linear Regression</a></dt>
+        <dd><p>Test binary optimal allocation solution function from package. Use the the birthwt testing dataset. Regression birth weight on smoking status.</p></dt>
+        <dt><a href="ffv_opt_sobin_rev.html">Welfare Test Resource Equivalent Variation (REV) Computation (Line by Line)</a></dt>
+        <dd><p>Line by line, calculate welfare distances, Resource Equivalent Variation (REV), for the Binary Allocation problem based on Theorem 1. Hand-input A and alpha values.</p></dt>
+      </dl>
+    </div>
+    <div class="section ">
+      <h3>Binary Allocation Example Vignettes with an Job Training RCT</h3>
+      <p class="section-desc"><p>Demonstrate optimal binary allocation queue. Use empirical A and alpha from an the NSW job training RCT from Lalonde (AER, 1986).</p></p>
+
+      <dl>
+        <dt><a href="ffv_opt_sobin_rkone_allfc_training_logit.html">Logit Employment Binary Allocation Lalonde Training Example</a></dt>
+        <dd><p>Logit employment regression estimation of A and alpha from the Lalonde Training Dataset (722 Observations). Solve for optimal binary allocation queues.</p></dt>
+        <dt><a href="ffv_opt_sobin_rkone_allrw_training_wage.html">Linear Wage Binary Allocation Lalonde Training Example</a></dt>
+        <dd><p>Linear wage regression estimation of A and alpha from the Lalonde Training Dataset (722 Observations). Solve for optimal binary allocation queues.</p></dt>
+        <dt><a href="ffv_opt_sobin_rkone_allrw_training.html">Wage and Employment Comparison Binary Allocation Lalonde Training Example</a></dt>
+        <dd><p>Welfare, Resource Equivalent Variation (REV), comparisons between wage and employment allocation results. Wage and Employment allocation space parameters comparison.</p></dt>
+      </dl>
+    </div>
+    <div class="section ">
+      <h3>Discrete Allocation Testing Vignettes (Test Scores and Student-Teacher Ratio)</h3>
+      <p class="section-desc"><p>Testing the discrete allocation solution line by line and with function. Use the Student Test Score Data from Stock and Watson (2003).</p></p>
+
+      <dl>
+        <dt><a href="ffv_opt_sodis_rkone_casch_allrw.html">Line by Line Discrete Allocation with Linear Regression</a></dt>
+        <dd><p>Test discrete optimal allocation solution line by line without function. Use the the california student test score dataset. Regress student English and Math test scores on Student-Teacher-Ratio.</p></dt>
+        <dt><a href="ffv_opt_sodis_rkone_casch_allfn.html">Function Test Discrete Allocation with Linear Regression</a></dt>
+        <dd><p>Test binary optimal allocation solution function from package. Use the the california student test score dataset, same as line by line.</p></dt>
+      </dl>
+    </div>
+    <div class="section ">
+      <h3>Linear-Continuous Allocation Testing Vignettes (Nutrition and Height)</h3>
+      <p class="section-desc"><p>Testing linear-continuous allocation solution line by line and with function. Nutrition and height Data from Puentes et. al. (2016)</p></p>
+
+      <dl>
+        <dt><a href="ffv_opt_solin_relow.html">Line by Line Test Bounded-Continuous Function with Height Nutrition Data</a></dt>
+        <dd><p>Given allocation space parameters (A, alpha), test the lower-bounded continuous optimal allocation line by line without function. This demonstrates relative optimality conditions, inverse optimal allocation, and optimal allocation.</p></dt>
+        <dt><a href="ffv_opt_anlyz_rhgin.html">Function Test Bounded-Continuous Function with Height Nutrition Data</a></dt>
+        <dd><p>Given allocation space parameters (A, alpha), test the lower-bounded continuous optimal allocation function. Compare inequality measures given optimal allocations across planner preferences.</p></dt>
+        <dt><a href="ffv_opt_solin_relow_allrw.html">Line by Line Test Lower-Bounded Linear-Continuous Allocation with Linear Regression</a></dt>
+        <dd><p>Test the lower-bounded linear-continuous optimal allocation solution line by line without function. Use the guatemala-cebu scrambled nutrition and height early childhood data. Regress the effect of nutritional supplements on height.</p></dt>
+        <dt><a href="ffv_opt_solin_relow_allfn.html">Function Test Lower-Bounded Linear-Continuous Allocation with Linear Regression</a></dt>
+        <dd><p>Test the lower-bounded linear-continuous optimal allocation solution function from package. Use the guatemala-cebu scrambled nutrition and height early childhood data, same as line by line.</p></dt>
+      </dl>
+    </div>
+    <div class="section ">
+      <h3>Log-Linear Continuous Allocation Testing Vignettes (Nutrition and Height)</h3>
+      <p class="section-desc"><p>Testing log-linear decreasing returns allocation solution line by line and with function. Nutrition and height Data from Puentes et. al. (2016). Results not included in the paper. Results not closed-form, requires root search.</p></p>
+
+      <dl>
+        <dt><a href="ffv_opt_solog_bisec_allrw.html">Line by Line Test Log Linear Allocation Test</a></dt>
+        <dd><p>Given allocation space parameters (A, alpha) for log linear regression, test log-linear optima allocation line by line. The result is not included in the final version of the paper, because the results are not closed-form, but are based on a root search. The root search is very fast when initial condition is zero.</p></dt>
+      </dl>
+    </div>
+    <div class="section ">
+      <h3>Generate Estimation Space Parameters</h3>
+      <p class="section-desc"><p>Vignette that only conducts estimations and generate A and alpha for estimation space. Most A and alpha generated in various other files as well that also solve for optimal alloction.</p></p>
+
+      <dl>
+        <dt><a href="ffv_opt_dtgch_cbem4.html">Generate A and alpha Nutrition Height Test Regression Results</a></dt>
+        <dd><p>Generate A and alpha based on a linear regression. Four categories based on initial height and mother education levels (Guatemala and Cebu dataset). Regress height on protein inputs allowing for heterogeneous effects for each of the four categories.</p></dt>
+      </dl>
     </div>
   </div>
 </div>
@@ -197,11 +253,11 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Fan Wang.</p>
+  <p>Developed by <a href='https://fanwangecon.github.io'>Fan Wang</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

@@ -1,16 +1,15 @@
 ---
-title: BINARY--NSW Training WAGE and EMPLOYMENT Optimal Allocation Analysis
+title: Wage and Employment Comparison Binary Allocation Lalonde Training Example
+description: |
+  Welfare, Resource Equivalent Variation (REV), comparisons between wage and employment allocation results. 
+  Wage and Employment allocation space parameters comparison.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--NSW Training WAGE and EMPLOYMENT Optimal Allocation Analysis}
+  %\VignetteIndexEntry{Wage and Employment Comparison Binary Allocation Lalonde Training Example}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
-
-Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAllo==c/)**
-
-# Objective
 
 Test binary allocation queue with Lalonde training dataset. There are 722 observations, 297 in the treatment group, 425 in the control group.
 
@@ -21,7 +20,6 @@ Already completed optimal ranking analysis and regressions for [wage](https://fa
 3. Who are those ranked in top 10 to receive? Along the spectrum
 4. Resource Equivalent Variation along the spectrum
 
-# Load Packages and Data
 
 ## Load Dependencies
 
@@ -36,9 +34,11 @@ library(tibble)
 library(purrr)
 library(stringr)
 library(broom)
+library(haven)
 library(ggplot2)
-library(REconTools)
+library(forcats)
 
+library(REconTools)
 library(PrjOptiAlloc)
 
 library(knitr)
@@ -80,7 +80,7 @@ str(dfj)
 summary(dfj)
 ```
 
-# Compute REV
+## Compute REV
 
 Compute Resource Equivalent Variations. Assume here that i use here the same ar_rho vector as used in [emloyment](C:\Users\fan\PrjOptiAlloc\vignettes\ffv_opt_sobin_rkone_allfc_training_logit.Rmd) and [wage](C:\Users\fan\PrjOptiAlloc\vignettes\ffv_opt_sobin_rkone_allrw_training_wage.Rmd) regressions.
 
@@ -198,11 +198,11 @@ png(paste0(spt_img_save_draft, snm_cnts),
 print(line.plot)
 dev.off()
 ```
-# Analysis of A and alpha
+## Analysis of A and alpha
 
 Generate some tables where the distributions of $A$ and $\alpha$ are compared.
 
-## Scatter Plots
+### Scatter Plots
 
 ```{r, fig.height = 4, fig.width = 7, fig.align = "center"}
 # Binary Marginal Effects and Prediction without Binary
@@ -229,7 +229,7 @@ ggplot.A.alpha(df = dfj,
 
 ```
 
-## Histogram Plots
+### Histogram Plots
 
 What is the distribution of A given alpha. This is relevant in the linear regression case
 ```{r, fig.height = 4, fig.width = 7, fig.align = "center"}
@@ -254,11 +254,11 @@ dfj_hist %>% ggplot(aes(x=A_i_wage, fill=alpha_i_wage)) +
 ```
 
 
-# Min and Max Rank Change Across rho
+## Min and Max Rank Change Across rho
 
 The max calculated by ffp_opt_anlyz_rhgin_bin is the top rank, small in number. The min calculated by the function is the lowest ranked, largest number.
 
-## Histogram Plots and Table highest Rank Reached
+### Histogram Plots and Table highest Rank Reached
 
 Looked highest rank reached for each (highest rank (smallest number ever reached)).
 
@@ -297,7 +297,7 @@ dfj_highest_long %>% group_by(employvswwage, highestrank_grp) %>%
                 summarize(count = n())
 ```
 
-## Histogram Plots and Table Min and Max Change
+### Histogram Plots and Table Min and Max Change
 
 From the wage and employment analysis, each generates min and max rank
 
@@ -344,7 +344,7 @@ dfj_gap_long %>% group_by(employvswwage, rank_gap_grp) %>%
 ```
 
 
-# Table of Top 10 Individuals
+## Table of Top 10 Individuals
 
 ```{r top 10 ranked at least once}
 

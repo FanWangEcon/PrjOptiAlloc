@@ -1,18 +1,17 @@
 ---
-title: LINEAR--CRS (Linear) Optimal Allocation Solution (Function)
+title: Function Test Lower-Bounded Linear-Continuous Allocation with Linear Regression
+description: |
+  Test the lower-bounded linear-continuous optimal allocation solution function from package. 
+  Use the guatemala-cebu scrambled nutrition and height early childhood data, same as line by line.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{LINEAR--CRS (Linear) Optimal Allocation Solution (Function)}
+  %\VignetteIndexEntry{Function Test Lower-Bounded Linear-Continuous Allocation with Linear Regression}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
 
-Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAlloc/)**
-
-There are two related filed:
-
-# Objective
+Test the lower-bounded linear-continuous optimal allocation solution function from package. Use the guatemala-cebu scrambled nutrition and height early childhood data, same as line by line.
 
 The objective of this file is to solve the linear $N_i$ and $H_i$ problem without invoking any functions. This function first tested out the linear solution algorithm.
 
@@ -25,9 +24,9 @@ File name *ffv_opt_solin_relow_allfn*:
 
 See associated functions in the [ffv_opt_dtgch_cbem4](https://fanwangecon.github.io/REconTools/articles/ffv_opt_dtgch_cbem4.html) file.
 
-# Load Packages and Data
+## Load Packages and Data
 
-## Load Dependencies
+### Load Dependencies
 
 ```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
 rm(list = ls(all.names = TRUE))
@@ -39,15 +38,15 @@ library(tidyr)
 library(stringr)
 library(broom)
 library(ggplot2)
-library(REconTools)
 
+library(REconTools)
 library(PrjOptiAlloc)
 
 library(knitr)
 library(kableExtra)
 ```
 
-## Get Data and Regression Results
+### Get Data and Regression Results
 
 Generate four categories by initial height and mother's education levels combinations.
 
@@ -66,9 +65,9 @@ head(df_esti, 10)
 # Attach
 attach(df_raw)
 ```
-# Optimal Allocations
+## Optimal Allocations
 
-## Common Parameters for Optimal Allocation
+### Common Parameters for Optimal Allocation
 
 ```{r Set Allocation Parameters}
 # Child Count
@@ -86,11 +85,9 @@ ar_rho = c(-50, -25, -10)
 ar_rho = unique(ar_rho)
 ```
 
-## Optimal Linear Allocation (CRS)
+### Optimal Linear Allocation (CRS)
 
 This also works with any CRS CES.
-
-### Optimal Linear Allocation Hard-Coded
 
 ```{r Optimal Linear Allocation Hard Code All Rho}
 

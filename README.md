@@ -1,6 +1,6 @@
 [![HitCount](http://hits.dwyl.io/fanwangecon/PrjOptiAlloc.svg)](https://github.com/FanWangEcon/PrjOptiAlloc)  [![Star](https://img.shields.io/github/stars/fanwangecon/PrjOptiAlloc?style=social)](https://github.com/FanWangEcon/PrjOptiAlloc/stargazers) [![Fork](https://img.shields.io/github/forks/fanwangecon/PrjOptiAlloc?style=social)](https://github.com/FanWangEcon/PrjOptiAlloc/network/members) [![Star](https://img.shields.io/github/watchers/fanwangecon/PrjOptiAlloc?style=social)](https://github.com/FanWangEcon/PrjOptiAlloc/watchers)
 
-This is a research project [website](https://fanwangecon.github.io/PrjOptiAlloc/) for solving individual specific optimal allocation problems given estimation results. Various theorems from [Fan](https://fanwangecon.github.io/)'s [Optimal Allocation paper](http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) are implemented here as R code in one package that supports the paper.
+This is a research project [website](https://fanwangecon.github.io/PrjOptiAlloc/) for solving individual specific optimal allocation problems given estimation results. Various theorems from [Fan](https://fanwangecon.github.io/)'s [Optimal Allocation paper](http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) are implemented here as R code in one package that supports the paper. 
 
 See [here](https://github.com/FanWangEcon) for all of [Fan](https://fanwangecon.github.io/)'s public repositories. Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or problems.
 
@@ -8,9 +8,7 @@ See [here](https://github.com/FanWangEcon) for all of [Fan](https://fanwangecon.
 
 # Installation
 
-One key aspect of this project is that the theorems from the [Optimal Allocation paper](http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) are easily implemenable for large classes of estimation results. The theorems are computationally implemented here using R (the algorithms are language agnostic) in a package called [PrjOptiAlloc](https://github.com/FanWangEcon/PrjOptiAlloc). Functions in this package are described in the various [reference pages](https://fanwangecon.github.io/PrjOptiAlloc/reference/) and [vignette articles](https://fanwangecon.github.io/PrjOptiAlloc/articles/) on this website.
-
-The tools here depend on [base R](), [tidyverse]() and [tidymodels](). After installing those, two packages should be installed, [fan](http://fanwangecon.github.io/)'s [REconTools](http://fanwangecon.github.io/REconTools/), which provides a number of support tools required, as well as this package itself [PrjOptiAllocs](http://fanwangecon.github.io/PrjOptiAlloc/). For installation help, see [devtools](http://r-pkgs.had.co.nz/intro.html).
+The tools here depend on [base R](https://stat.ethz.ch/R-manual/R-devel/library/base/html/base-package.html), [tidyverse](https://www.tidyverse.org/) and [tidymodels](https://www.tidymodels.org/). After installing those, two packages should be installed, [fan](http://fanwangecon.github.io/)'s [REconTools](http://fanwangecon.github.io/REconTools/), which provides a number of support tools required, as well as this package itself [PrjOptiAllocs](http://fanwangecon.github.io/PrjOptiAlloc/). For installation help, see [devtools](http://r-pkgs.had.co.nz/intro.html).
 
 ```
 # To Install the Programs in the R folder of the REconTools Repository
@@ -19,7 +17,7 @@ devtools::install_github("fanwangecon/PrjOptiAlloc")
 devtools::install_github("fanwangecon/REconTools")
 ```
 
-# 1. Introduction
+# General Idea
 
 We approach an estimation/allocation problem here is in three steps.
 

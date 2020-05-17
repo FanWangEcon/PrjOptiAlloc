@@ -1,22 +1,21 @@
 ---
-title: BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)
+title: Function Test Binary Allocation with Linear Regression
+description: |
+  Test binary optimal allocation solution function from package. 
+  Use the the birthwt testing dataset. Regression birth weight on smoking status.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--Birth Weight and Doctors Visit Optimal Allocation Solution (Line by Line)}
+  %\VignetteIndexEntry{Function Test Binary Allocation with Linear Regression}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
 
-Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAllo==c/)**
-
-# Objective
-
 The effects of mother's smoking status on birth weight. If we aim to improve health outcomes, what is the priority sequence of mothers whom we would want to discourage from smoking.
 
-# Load Packages and Data
+## Load Packages and Data
 
-## Load Dependencies
+### Load Dependencies
 
 ```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
 rm(list = ls(all.names = TRUE))
@@ -37,7 +36,7 @@ library(knitr)
 library(kableExtra)
 ```
 
-## Load Data
+### Load Data
 
 Generate four categories by initial height and mother's education levels combinations.
 
@@ -80,9 +79,9 @@ summary(lm(bwt ~ factor(ftv) + factor(ht) + factor(ui) + factor(ptl) - 1))
 summary(lm(bwt ~ lwt + factor(race) + (ftv) - 1))
 ```
 
-# Regression with Data and Construct Input Arrays
+## Regression with Data and Construct Input Arrays
 
-## Binary Problem Regress Birth Weight on Mother's Smoking Status
+### Binary Problem Regress Birth Weight on Mother's Smoking Status
 
 ```{r Linear Regression Testing}
 # A. Regress child birth weight on mother's age, race and mother's weight
@@ -110,7 +109,7 @@ rs_wgt_on_smke_tidy = tidy(rs_wgt_on_smke)
 rs_wgt_on_smke_tidy
 ```
 
-## Construct Input Arrays $A_i$ and $\alpha_i$
+### Construct Input Arrays $A_i$ and $\alpha_i$
 
 Multiply coefficient vector by covariate matrix to generate *A* vector that is child/individual specific.
 
@@ -139,14 +138,14 @@ ar_alpha_m <- mt_intr %*% ar_fl_main_esti
 head(ar_alpha_m, 5)
 ```
 
-## Individual Weight
+### Individual Weight
 
 ```{r}
 # Child Weight
 ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
 ```
 
-## Matrix with Required Inputs for Allocation
+### Matrix with Required Inputs for Allocation
 
 ```{r}
 # Initate Dataframe that will store all estimates and optimal allocation relevant information
@@ -174,9 +173,9 @@ tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
 head(tb_key_alpha_A_beta, 32)
 ```
 
-# Optimal Linear Allocations
+## Optimal Linear Allocations
 
-## Parameters for Optimal Allocation
+### Parameters for Optimal Allocation
 
 ```{r Set Allocation Parameters}
 # Child Count
@@ -195,7 +194,7 @@ ar_rho <- c(seq(-110, -90, length.out=10), -50, 10, -1, -0.5, -0.1, 0.01, 0.05, 
 ar_rho <- unique(ar_rho)
 ```
 
-## Optimal binary Allocation (CRS)
+### Optimal binary Allocation
 
 This also works with any CRS CES.
 

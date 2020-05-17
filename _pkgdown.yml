@@ -9,9 +9,9 @@ authors:
 navbar:
   title: "Optimal Allocation"
   left:
-    - text: "Theorem Functions"
+    - text: "Functions"
       href: reference/index.html
-    - text: "Theorem Guides"
+    - text: "Tutorials"
       href: articles/index.html
     - text: "Paper"
       href: https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf
@@ -47,11 +47,22 @@ navbar:
 
 
 reference:
-- title: Binary Optimal Allocation Functions
+- title: Optimal Allocation Functions
+- subtitle: Binary Optimal Allocation Functions
   desc: Allocate W units of resources among N individuals. Each i of N gets 0 or 1.
   contents:
-  - starts_with("ffp_")
-- title: Discrete Optimal Allocation Functions
+  - starts_with("ffp_opt_sobin")
+  - ffp_opt_anlyz_rhgin_bin
+- subtitle: Discrete Optimal Allocation Functions
+  desc: Allocate W units of resources among N individuals. Each i of N gets some discrete units between individual minimum and maximum.
+  contents:
+  - starts_with("ffp_opt_sodis")
+- subtitle: Linear Bounded-Continuous Optimal Allocation Functions
+  desc: Allocate W units of resources among N individuals. Each i of N gets some continuous amount below minimum and maximum
+  contents:
+  - starts_with("ffp_opt_solin")
+  - ffp_opt_anlyz_rhgin
+- subtitle: Discrete Optimal Allocation Functions
   desc: Allocate W units of resources among N individuals. Each i of N gets discrete units.
   contents:
   - starts_with("ffp_")
@@ -76,6 +87,51 @@ reference:
   desc: Support functions and sample files that generate allocation space parameters from estimation space
   contents:
   - starts_with("ffy_")
+
+
+articles:
+- title: Example N=2 Discrete and Bounded-Continuous Optimal Allocation
+  desc: Demonstrate optimal allocation between two simulated individuals graphically
+  contents:
+  - ffv_opt_n2_fn
+- title: Binary Allocation Testing Vignettes (mtcars, birthwt)
+  desc: Testing the binary allocation solution line by line and with function. Use standard R testing datasets mtcars and birthwt. Test Welfare (REV) with hand-input example data.
+  contents:
+  - ffv_opt_sobin_rkone_allrw_car
+  - ffv_opt_sobin_rkone_allrw_wgt
+  - ffv_opt_sobin_rev
+- title: Binary Allocation Example Vignettes with an Job Training RCT
+  desc: Demonstrate optimal binary allocation queue. Use empirical A and alpha from an the NSW job training RCT from Lalonde (AER, 1986).
+  contents:
+  - ffv_opt_sobin_rkone_allfc_training_logit
+  - ffv_opt_sobin_rkone_allrw_training_wage
+  - ffv_opt_sobin_rkone_allrw_training
+- title: Discrete Allocation Testing Vignettes (Test Scores and Student-Teacher Ratio)
+  desc: Testing the discrete allocation solution line by line and with function. Use the Student Test Score Data from Stock and Watson (2003).
+  contents:
+  - ffv_opt_sodis_rkone_casch_allrw
+  - ffv_opt_sodis_rkone_casch_allfn
+- title: Linear-Continuous Allocation Testing Vignettes (Nutrition and Height)
+  desc: Testing linear-continuous allocation solution line by line and with function. Nutrition and height Data from Puentes et. al. (2016)
+  contents:
+  - ffv_opt_solin_relow
+  - ffv_opt_anlyz_rhgin
+  - ffv_opt_solin_relow_allrw
+  - ffv_opt_solin_relow_allfn
+- title: Log-Linear Continuous Allocation Testing Vignettes (Nutrition and Height)
+  desc: Testing log-linear decreasing returns allocation solution line by line and with function. Nutrition and height Data from Puentes et. al. (2016). Results not included in the paper. Results not closed-form, requires root search.
+  contents:
+  - ffv_opt_solog_bisec_allrw
+- title: Generate Estimation Space Parameters
+  desc: Vignette that only conducts estimations and generate A and alpha for estimation space. Most A and alpha generated in various other files as well that also solve for optimal alloction.
+  contents:
+  - ffv_opt_dtgch_cbem4
+
+# - title: Binary Optimal Allocation Vignettes
+#   desc: Vignettes for functions that summarize dataframes
+#   contents:
+#   - starts_with("ffv_summ")
+
 
 template:
   params:

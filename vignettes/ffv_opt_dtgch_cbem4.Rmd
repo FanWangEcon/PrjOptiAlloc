@@ -1,16 +1,16 @@
 ---
-title: DATA--Generate Data Cebu Four Category Test Regression Results
+title: Generate A and alpha Nutrition Height Test Regression Results
+description: |
+  Generate A and alpha based on a linear regression.
+  Four categories based on initial height and mother education levels (Guatemala and Cebu dataset).
+  Regress height on protein inputs allowing for heterogeneous effects for each of the four categories.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{DATA--Generate Data Cebu Four Category Test Regression Results}
+  %\VignetteIndexEntry{Generate A and alpha Nutrition Height Test Regression Results}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
-
-Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAlloc/)**
-
-# Objective
 
 Generates data from the [Guatemala and Cebu dataset](https://www.sciencedirect.com/science/article/pii/S1570677X16300107) jitter/rand version, select cebu only between 0 and 24. Generates four categories based on initial height and mother education levels. Regress height on protein inputs allowing for heterogeneous effecst for each of the four categories.
 
@@ -20,16 +20,16 @@ Generates data from the [Guatemala and Cebu dataset](https://www.sciencedirect.c
 rm(list = ls(all.names = TRUE))
 options(knitr.duplicate.label = 'allow')
 ```
+
 ```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
-setwd('C:/Users/fan/PrjOptiAlloc')
+# setwd('C:/Users/fan/PrjOptiAlloc')
 library(dplyr)
 library(tidyr)
-library(stringr)
 library(broom)
-library(ggplot2)
+library(stringr)
 library(REconTools)
-library(knitr)
-library(kableExtra)
+
+bl_save_rda = FALSE
 ```
 
 ## Get Data
@@ -40,7 +40,8 @@ Generate four categories by initial height and mother's education levels combina
 # Load Library
 
 # Select Cebu Only
-df_hw_cebu_m24 <- df_hgt_wgt %>% filter(S.country == 'Cebu' & svymthRound == 24 & prot > 0 & hgt > 0) %>% drop_na()
+df_hw_cebu_m24 <- REconTools::df_hgt_wgt %>%
+  filter(S.country == 'Cebu' & svymthRound == 24 & prot > 0 & hgt > 0) %>% drop_na()
 
 # Generate Discrete Version of momEdu
 df_hw_cebu_m24 <- df_hw_cebu_m24 %>%
@@ -58,9 +59,9 @@ df_hw_cebu_m24$hgt0med = as.factor(df_hw_cebu_m24$hgt0med)
 attach(df_hw_cebu_m24)
 ```
 
-# Regression with Data and Construct Input Arrays
+## Regression with Data and Construct Input Arrays
 
-## Linear Regression
+### Linear Regression
 
 Estimation *Production functions* or any other function. Below, Regression height outcomes on input interacted with the categories created before. This will generate category specific marginal effects.
 
@@ -72,10 +73,10 @@ mt_linht <- model.matrix(~ sex:hgt0med - 1)
 # Regress Height At Month 24 on Nutritional Inputs with controls
 rs_hgt_prot_lin = lm(hgt ~ prot:mt_linht + mt_lincv - 1)
 print(summary(rs_hgt_prot_lin))
-rs_hgt_prot_lin_tidy = tidy(rs_hgt_prot_lin)
+rs_hgt_prot_lin_tidy = broom::tidy(rs_hgt_prot_lin)
 ```
 
-## Log-Linear Regression
+### Log-Linear Regression
 
 Now log-linear regressions, where inptut coefficient differs by input groups.
 
@@ -87,10 +88,10 @@ mt_loght <- model.matrix(~ sex:hgt0med - 1)
 # Log and log regression for month 24
 rs_hgt_prot_log = lm(log(hgt) ~ log(prot):mt_loght + mt_logcv - 1)
 print(summary(rs_hgt_prot_log))
-rs_hgt_prot_log_tidy = tidy(rs_hgt_prot_log)
+rs_hgt_prot_log_tidy = broom::tidy(rs_hgt_prot_log)
 ```
 
-## Construct Input Arrays $A_i$ and $\alpha_i$
+### Construct Input Arrays $A_i$ and $\alpha_i$
 
 Multiply coefficient vector by covariate matrix to generate *A* vector that is child/individual specific.
 
@@ -127,11 +128,13 @@ tb_opti_unique <- tb_opti %>% group_by(!!!syms(ar_st_varnames)) %>%
                     summarise(n_obs_group=n())
 ```
 
-# Export Data to */data* Folder
+## Export Data to */data* Folder
 
 I would like to be able to directly call the dataset generated here in various functions. Save the datafile we just created in the project folder.
 
 ```{r}
-df_opt_dtgch_cbem4 <- df_esti
-usethis::use_data(df_opt_dtgch_cbem4, df_opt_dtgch_cbem4, overwrite = TRUE)
+if (bl_save_rda) {
+  df_opt_dtgch_cbem4 <- df_esti
+  usethis::use_data(df_opt_dtgch_cbem4, df_opt_dtgch_cbem4, overwrite = TRUE)
+}
 ```

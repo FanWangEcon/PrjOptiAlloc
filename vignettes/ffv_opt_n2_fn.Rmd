@@ -1,28 +1,38 @@
 ---
-title: INTRO--Optimal Allocation Two Individuals Example
+title: Example Discrete and Bounded-Continuous Optimal Allocation for N=2
+description: |
+  Test Theorem 1 and Theorem 2 optimal allocation functions when N=2. 
+  Use randomly generated A and alpha parameters for two individuals' discrete and bounded-continuous
+  allocation problems. 
 output: rmarkdown::html_vignette
 vignette: >
-%\VignetteIndexEntry{INTRO--Optimal Allocation Two Individuals Example}
-  %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
-  urlcolor: blue
+  %\VignetteIndexEntry{Example Discrete and Bounded-Continuous Optimal Allocation for N=2}
+    %\VignetteEngine{knitr::rmarkdown}
+    \usepackage[utf8]{inputenc}
+urlcolor: blue
 ---
 
-# Optimal Allocation Between Two Individuals
 
 ```{r global_options, include = FALSE}
 # try(source("../.Rprofile"))
 rm(list = ls(all.names = TRUE))
 # Load Libraries
 library(stats)
+library(tibble)
 library(tidyr)
 library(stringr)
 library(broom)
+library(haven)
+library(forcats)
 library(ggplot2)
 library(dplyr)
+
+library(PrjOptiAlloc)
+
+bl_save_img = FALSE
 ```
 
-`r text_shared_preamble_one`
+Test Theorem 1 and Theorem 2 optimal allocation functions when N=2. Use randomly generated A and alpha parameters for two individuals' discrete and bounded-continuous allocation problems. 
 
 Determine how to optimally allocate resources between two individuals. There are two structures:
 
@@ -32,7 +42,6 @@ Determine how to optimally allocate resources between two individuals. There are
 For both problems, we cans solve the optimal allocation problem given different levels of aggregate resources, different planner inequality aversion parameters as well as biases.
 
 The goal below is to generate the data input structure for these two problems in a comparable way. Generate problem solutions by calling the discrete and continuous optimal functions we have created, and generate additional outputs needed to visualize and understand the model solution. The goal is to link the results here to the basics of 2 dimensional indifference and resource sets, and illustrate how the solutions here complete each other, and add to existing results.
-
 
 ## Input and Output
 
@@ -936,19 +945,22 @@ plt_disc_paper <- plt_disc_paper +
 
 
 # Save Plot
-snm_disc <- 'disc_exp_out_grid.png'
-png(paste0(spt_img_save, snm_disc),
-      width = 135, height = 86, units='mm', res = 300,
-    pointsize=5)
+if (bl_save_img) {
+  snm_disc <- 'disc_exp_out_grid.png'
+  png(paste0(spt_img_save, snm_disc),
+        width = 135, height = 86, units='mm', res = 300,
+      pointsize=5)
+  print(plt_disc_paper)
+  dev.off()
+  png(paste0(spt_img_save_draft, snm_disc),
+        width = 135, height = 86, units='mm', res = 300,
+      pointsize=5)
+  print(plt_disc_paper)
+  dev.off()
+  # Prin here
+}
 print(plt_disc_paper)
-dev.off()
-png(paste0(spt_img_save_draft, snm_disc),
-      width = 135, height = 86, units='mm', res = 300,
-    pointsize=5)
-print(plt_disc_paper)
-dev.off()
-# Prin here
-print(plt_disc_paper)
+
 ```
 
 #### Discrete Utility and Choices Jointly 
@@ -1014,19 +1026,20 @@ plt_disc_paper <- plt_disc_paper +
   # scale_color_manual(values=c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF'))+
   #
 
-
 # Save Plot
-snm_disc <- 'disc_resource_expansion_path.png'
-png(paste0(spt_img_save, snm_disc),
-      width = 135, height = 86, units='mm', res = 300,
-    pointsize=5)
-print(plt_disc_paper)
-dev.off()
-png(paste0(spt_img_save_draft, snm_disc),
-      width = 135, height = 86, units='mm', res = 300,
-    pointsize=5)
-print(plt_disc_paper)
-dev.off()
+if (bl_save_img) {
+  snm_disc <- 'disc_resource_expansion_path.png'
+  png(paste0(spt_img_save, snm_disc),
+        width = 135, height = 86, units='mm', res = 300,
+      pointsize=5)
+  print(plt_disc_paper)
+  dev.off()
+  png(paste0(spt_img_save_draft, snm_disc),
+        width = 135, height = 86, units='mm', res = 300,
+      pointsize=5)
+  print(plt_disc_paper)
+  dev.off()
+}
 # Prin here
 print(plt_disc_paper)
 ```
@@ -1084,16 +1097,18 @@ plt_cnts_paper <- plt_cnts_paper +
   theme_bw(base_size=8)
 
 # Save Plot
-snm_cnts <- 'cts_exp_out_grid.png'
-png(paste0(spt_img_save, snm_cnts),
-      width = 135, height = 86, units='mm', res = 300, pointsize=7)
-print(plt_cnts_paper)
-dev.off()
-png(paste0(spt_img_save_draft, snm_cnts),
-      width = 135, height = 86, units='mm', res = 300, 
-    pointsize=5)
-print(plt_cnts_paper)
-dev.off()
+if (bl_save_img) {
+  snm_cnts <- 'cts_exp_out_grid.png'
+  png(paste0(spt_img_save, snm_cnts),
+        width = 135, height = 86, units='mm', res = 300, pointsize=7)
+  print(plt_cnts_paper)
+  dev.off()
+  png(paste0(spt_img_save_draft, snm_cnts),
+        width = 135, height = 86, units='mm', res = 300, 
+      pointsize=5)
+  print(plt_cnts_paper)
+  dev.off()
+}
 # Prin here  
 print(plt_cnts_paper)  
 ```
@@ -1154,16 +1169,18 @@ plt_cnts_paper <- plt_cnts_paper +
   theme_bw(base_size=8)
 
 # Save Plot
-snm_cnts <- 'cnts_resource_expansion_path.png'
-png(paste0(spt_img_save, snm_cnts),
-      width = 135, height = 86, units='mm', res = 300, pointsize=7)
-print(plt_cnts_paper)
-dev.off()
-png(paste0(spt_img_save_draft, snm_cnts),
-      width = 135, height = 86, units='mm', res = 300, 
-    pointsize=5)
-print(plt_cnts_paper)
-dev.off()
+if (bl_save_img) {
+  snm_cnts <- 'cnts_resource_expansion_path.png'
+  png(paste0(spt_img_save, snm_cnts),
+        width = 135, height = 86, units='mm', res = 300, pointsize=7)
+  print(plt_cnts_paper)
+  dev.off()
+  png(paste0(spt_img_save_draft, snm_cnts),
+        width = 135, height = 86, units='mm', res = 300, 
+      pointsize=5)
+  print(plt_cnts_paper)
+  dev.off()
+}
 # Prin here  
 print(plt_cnts_paper)  
 ```

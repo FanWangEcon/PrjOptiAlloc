@@ -1,16 +1,15 @@
 ---
-title: BINARY--MPG and Shift Optimal Allocation Solution (Line by Line)
+title: Line by Line Test Binary Allocation with Linear Regression
+description: |
+  Test binary optimal allocation solution line by line without function. 
+  Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift. 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--MPG and Shift Optimal Allocation Solution (Line by Line)}
+  %\VignetteIndexEntry{Line by Line Test Binary Allocation with Linear Regression}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
-
-Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAllo==c/)**
-
-# Objective
 
 The objective of this file is to solve the linear $N_i\in{0,1}$ and $H_i$ problem without invoking any functions.
 
@@ -48,9 +47,9 @@ There is a dataset with child attributes, nutritional inputs and outputs. Run re
 
 Doing this allows for lagged intereaction that are time specific in an arbitrary way.
 
-# Load Packages and Data
+## Load Packages and Data
 
-## Load Dependencies
+### Load Dependencies
 
 ```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
 rm(list = ls(all.names = TRUE))
@@ -72,7 +71,7 @@ library(knitr)
 library(kableExtra)
 ```
 
-## Load Data
+### Load Data
 
 Generate four categories by initial height and mother's education levels combinations.
 
@@ -109,9 +108,9 @@ tb_mtcars %>%
   pivot_wider(names_from = vs, values_from = freq)
 ```
 
-# Regression with Data and Construct Input Arrays
+## Regression with Data and Construct Input Arrays
 
-## Regress MPG on Manual Transmission
+### Regress MPG on Manual Transmission
 
 ```{r Linear Regression Testing}
 # A. Regree MPG on horse power and binary if Manual or not (manual = 1)
@@ -140,7 +139,7 @@ rs_mpg_on_auto_tidy = tidy(rs_mpg_on_auto)
 rs_mpg_on_auto_tidy
 ```
 
-## Construct Input Arrays $A_i$ and $\alpha_i$
+### Construct Input Arrays $A_i$ and $\alpha_i$
 
 Multiply coefficient vector by covariate matrix to generate *A* vector that is child/individual specific.
 
@@ -169,14 +168,14 @@ ar_alpha_m <- mt_intr %*% ar_fl_main_esti
 head(ar_alpha_m, 5)
 ```
 
-## Individual Weight
+### Individual Weight
 
 ```{r}
 # Child Weight
 ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
 ```
 
-## Matrix with Required Inputs for Allocation
+### Matrix with Required Inputs for Allocation
 
 ```{r}
 # Initate Dataframe that will store all estimates and optimal allocation relevant information
@@ -201,9 +200,9 @@ tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
 head(tb_key_alpha_A_beta, 32)
 ```
 
-# Optimal Linear Allocations
+## Optimal Linear Allocations
 
-## Parameters for Optimal Allocation
+### Parameters for Optimal Allocation
 
 ```{r Set Allocation Parameters}
 # Child Count
@@ -219,7 +218,7 @@ ar_rho <- c(-100, -10, -1, -0.5, -0.1, 0.01, 0.05, 0.10, 0.20,  0.9)
 ar_rho <- unique(ar_rho)
 ```
 
-## Optimal binary Allocation (CRS)
+### Optimal binary Allocation (CRS)
 
 This also works with any CRS CES.
 

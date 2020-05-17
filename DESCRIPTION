@@ -1,6 +1,6 @@
 Package: PrjOptiAlloc
 Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Version: 0.1.1
 Authors@R:
     person(given = "Fan",
            family = "Wang",
@@ -10,7 +10,7 @@ Authors@R:
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 URL: https://fanwangecon.github.io/PrjOptiAlloc/
-Depends: R (>= 3.6.1)
+Depends: R (>= 3.6)
 BugReports: https://github.com/FanWangEcon/PrjOptiAlloc/issues
 Encoding: UTF-8
 LazyData: true
@@ -24,4 +24,8 @@ Imports:
     dplyr,
     broom,
     ggplot2,
-    tibble
+    tibble,
+    forcats,
+    haven,
+    purrr,
+    kableExtra

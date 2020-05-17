@@ -1,16 +1,18 @@
 ---
-title: LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)
+title: Line by Line Test Lower-Bounded Linear-Continuous Allocation with Linear Regression
+description: |
+  Test the lower-bounded linear-continuous optimal allocation solution line by line without function. 
+  Use the guatemala-cebu scrambled nutrition and height early childhood data. 
+  Regress the effect of nutritional supplements on height.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{LINEAR--CRS (Linear) Optimal Allocation Solution (Line by Line)}
+  %\VignetteIndexEntry{Line by Line Test Lower-Bounded Linear-Continuous Allocation with Linear Regression}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
 
-Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAlloc/)**
-
-# Objective
+Test lower-bounded linear-continuous optimal allocation solution line by line without function. Use the guatemala-cebu scrambled nutrition and height early childhood data. Regress the effect of nutritional supplements on height.
 
 The objective of this file is to solve the linear $N_i$ and $H_i$ problem without invoking any functions. This function first tested out the linear solution algorithm.
 
@@ -38,9 +40,9 @@ There is a dataset with child attributes, nutritional inputs and outputs. Run re
 
 Doing this allows for lagged intereaction that are time specific in an arbitrary way.
 
-# Load Packages and Data
+## Load Packages and Data
 
-## Load Dependencies
+### Load Dependencies
 
 ```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
 rm(list = ls(all.names = TRUE))
@@ -57,7 +59,7 @@ library(knitr)
 library(kableExtra)
 ```
 
-## Load Data
+### Load Data
 
 Generate four categories by initial height and mother's education levels combinations.
 
@@ -83,9 +85,9 @@ df_hw_cebu_m24$hgt0med = as.factor(df_hw_cebu_m24$hgt0med)
 attach(df_hw_cebu_m24)
 ```
 
-# Regression with Data and Construct Input Arrays
+## Regression with Data and Construct Input Arrays
 
-## Linear Regression
+### Linear Regression
 
 Estimation *Production functions* or any other function. Below, Regression height outcomes on input interacted with the categories created before. This will generate category specific marginal effects.
 
@@ -100,7 +102,7 @@ print(summary(rs_hgt_prot_lin))
 rs_hgt_prot_lin_tidy = tidy(rs_hgt_prot_lin)
 ```
 
-## Log-Linear Regression
+### Log-Linear Regression
 
 Now log-linear regressions, where inptut coefficient differs by input groups.
 
@@ -115,7 +117,7 @@ print(summary(rs_hgt_prot_log))
 rs_hgt_prot_log_tidy = tidy(rs_hgt_prot_log)
 ```
 
-## Construct Input Arrays $A_i$ and $\alpha_i$
+### Construct Input Arrays $A_i$ and $\alpha_i$
 
 Multiply coefficient vector by covariate matrix to generate *A* vector that is child/individual specific.
 
@@ -147,9 +149,9 @@ tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
                     summarise(n_obs_group=n())
 ```
 
-# Optimal Linear Allocations
+## Optimal Linear Allocations
 
-## Parameters for Optimal Allocation
+### Parameters for Optimal Allocation
 
 ```{r Set Allocation Parameters}
 # Child Count
@@ -168,7 +170,7 @@ ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25
 ar_rho <- unique(ar_rho)
 ```
 
-## Optimal Linear Allocation (CRS)
+### Optimal Linear Allocation (CRS)
 
 This also works with any CRS CES.
 
@@ -285,9 +287,9 @@ print(summary(tb_opti_alloc_all_rho))
 str(tb_opti_alloc_all_rho)
 ```
 
-# Linear optimal Allocation Statistics and Graphs
+## Linear optimal Allocation Statistics and Graphs
 
-## Compute Gini Statistics for Allocations and Outcomes
+### Compute Gini Statistics for Allocations and Outcomes
 
 Compute Gini coefficient for each expected outcome and input vector, and store results in separate vectors for input allocation and expected outcomes, then combine.
 
@@ -339,7 +341,7 @@ scatter <- tb_gini_long %>%
 print(scatter)
 ```
 
-## Graphs Based on Individual Allocations
+### Graphs Based on Individual Allocations
 
 ```{r Individal Allocation Plots}
 # p. graph scatter of opposing preference correlation

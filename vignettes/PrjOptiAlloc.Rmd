@@ -1,0 +1,12 @@
+---
+title: "Introduction to Project Optimal Allocation"
+description: >
+  Get started with Project Optimal Allocation.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to Project Optimal Allocation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This is a package built with [pkgdown](https://pkgdown.r-lib.org/).

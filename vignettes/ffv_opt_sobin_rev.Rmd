@@ -1,20 +1,19 @@
 ---
-title: BINARY--REV Test One Resource Equivalent Variation Computation (Line by Line)
+title: Welfare Test Resource Equivalent Variation (REV) Computation (Line by Line)
+description: |
+  Line by line, calculate welfare distances, Resource Equivalent Variation (REV), 
+  for the Binary Allocation problem based on Theorem 1. Hand-input A and alpha values.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BINARY--REV Test One Resource Equivalent Variation Computation (Line by Line)}
+  %\VignetteIndexEntry{Welfare Test Resource Equivalent Variation (REV) Computation (Line by Line)}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
 
-Back to **[Fan](https://fanwangecon.github.io/)**'s Optimal Allocation Homepage **[Table of Content](https://fanwangecon.github.io/PrjOptiAllo==c/)**
+Line by line, calculate welfare distances, Resource Equivalent Variation (REV), for the Binary Allocation problem based on Theorem 1. Hand-input A and alpha values.
 
-# Objective
-
-Calculate Resource Equivalent Variation for the Binary Problem based on Theorem 1. Theorem 1's Equation 6 offers a path for computing an efficient solution to calculating REV.
-
-# Load Dependencies
+## Load Dependencies
 
 ```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
 rm(list = ls(all.names = TRUE))
@@ -24,11 +23,6 @@ options(knitr.duplicate.label = 'allow')
 library(dplyr)
 library(tidyr)
 library(tibble)
-library(stringr)
-
-library(broom)
-library(ggplot2)
-library(REconTools)
 
 library(PrjOptiAlloc)
 
@@ -36,9 +30,9 @@ library(knitr)
 library(kableExtra)
 ```
 
-# Implement Algorithm Line by Line
+## Implement Algorithm Line by Line
 
-## Generate Testing Rank Data
+### Generate Testing Rank Data
 
 Generate data needed.
 
@@ -67,7 +61,7 @@ for (it_rho_ctr in seq(1,length(ar_rho))) {
 }
 ```
 
-## Compute REV
+### Compute REV
 
 Compute REV giving observable and ranking
 
@@ -95,7 +89,7 @@ kable(tb_onevar) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-## Generate Util observed um and not observed Reverse Sum
+### Generate Util observed um and not observed Reverse Sum
 
 ```{r}
 # Generate directional cumulative sums
@@ -162,7 +156,7 @@ cat('it_w_hat_obs:', it_w_hat_obs, '\n')
 cat('delta_rev:', delta_rev, '\n')
 ```
 
-# Function test
+## Function test
 
 Test the function written based on the details above.
 

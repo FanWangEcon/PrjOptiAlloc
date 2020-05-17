@@ -2,3 +2,7 @@
 ^\.Rproj\.user$
 ^doc$
 ^Meta$
+^_img$
+^code_r$
+^docs$
+^vignettes_working$
