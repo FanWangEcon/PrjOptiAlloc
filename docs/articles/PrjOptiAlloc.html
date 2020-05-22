@@ -150,13 +150,13 @@
 <ul>
 <li>Trying to increase average height? (or reduce average stunting probability)</li>
 <li>Trying to increase height for those who are suffering from stunting the most?</li>
-<li>Or Trying to improve both average outcomes and outcomes for the worst?</li>
+<li>Or trying to improve both average outcomes and outcomes for the worst?</li>
 </ul>
 </li>
 <li>Does the WFP have a current <em>bias</em>?
 <ul>
-<li>The WFP might be for the next year, focused on improving outcomes for girls, that is a bias for girls over boys</li>
-<li>The WFP might be focused on improving conditions in a set of countries for the next year, that is bias for individuals from these countries.</li>
+<li>The WFP might be for the next year, focused on improving outcomes for girls: bias for girls over boys.</li>
+<li>The WFP might be focused on improving conditions in a set of countries for the next year: bias for individuals from these countries.</li>
 </ul>
 </li>
 <li>What is the <em>expected outcome</em> of interest?
@@ -174,25 +174,25 @@
 <p>What is optimal might depend on prior estimates and observables on children? Needs and effectiveness are based on estimates and observables:</p>
 <ol style="list-style-type: decimal">
 <li>
-<em>needs</em>: From admin and survey data, and using existing estimates, what is the expected level of height at two years of age for a child given the child’s height at birth and parental information.</li>
+<em>Needs</em>: From admin and survey data, and using existing estimates, what is the expected level of height at two years of age for a child given the child’s height at birth and parental information.</li>
 <li>
-<em>effectiveness</em>: Given prior estimates, and child observables, what is the expected effect of an additional bottle of nutritional supplement on this child’s expected height at two years of age?</li>
+<em>Effectiveness</em>: Given prior estimates, and child observables, what is the expected effect of an additional bottle of nutritional supplement on this child’s expected height at two years of age?</li>
 <li>
-<em>bounds</em>: What are the upper and lower bounds on how many bottles of protein shakes, or how many grams of protein intakes a child could take at the most or must take at the minimum?</li>
+<em>Bounds</em>: What are the upper and lower bounds on how many bottles of protein shakes, or how many grams of protein intakes a child could take at the most or must take at the minimum?</li>
 </ol>
 </div>
 <div id="from-estimation-to-allocation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#from-estimation-to-allocation" class="anchor"></a>From Estimation to Allocation</h2>
-<p>We estimate some causal relationship between individual specific allocable input <em>V</em> and some outcome of interest <em>EH</em>. Finding causal estimates in reduced form or structural context is the main objective of most empirical papers. Generally, most research ends with finding what inputs/factors/policies matter, and how much they matter.</p>
+<p>We estimate some causal relationship between individual-specific allocable input <em>V</em> and some outcome of interest <em>EH</em>. Finding causal estimates in reduced form or structural context is the main objective of most empirical papers. Generally, most research ends with finding what inputs/factors/policies matter and how much they matter.</p>
 <p>What are the allocative implications of the causal estimates and observables? One way to think about this is that we might want to randomize in order to estimate causal effects, but given our estimates, how should we allocate among heterogeneous individuals the finite resources that we found to be beneficial.</p>
 <p>The key tradeoff here is between <em>needs</em> and <em>effectiveness</em>. What is the expected outcome without allocation (needs), and what are the expected effects of allocations <em>effectiveness</em>. These might be heterogeneous among individuals and might not coincide. The optimal allocation problem is computationally very intensive if we are to consider all possible combinations of allocations.</p>
 </div>
 <div id="optimal-allocation-queues" class="section level2">
 <h2 class="hasAnchor">
 <a href="#optimal-allocation-queues" class="anchor"></a>Optimal Allocation Queues</h2>
-<p>The key concept that make the solutions possible is the <em>Optimal Allocation Queue</em>. It turns out, in both discrete and continuous cases, we can analytical solve for the optimal ranking in which individuals should begin and stop to receive allocations. These rankings, crucially, are invariant to resources when the marginal effects of allocations are nonincreasing. Nonincreasing marginal effects lead to resource (income) expansion paths do not bend backwards.</p>
-<p>One might think the allocation queue concept is not relevant for the continuous problems, because there, we need to figure out how much to provide to each individual, not just who should receive first or second. But it turns out that for the bounded-continuous problem, the solution is to first analytically find who should be the first individual to receive allocations. Then, there is an analytical function that maps total resource available to how much this first recipient should optimally receive as total resource availability increase. This function, it turns out, is a linear spline (when marginal returns are linear), and each successive knot of the spline is where the next individual in the optimal targeting queue begins to receive allocations.</p>
+<p>The key concept that makes the solutions possible is the <em>Optimal Allocation Queue</em>. In both discrete and bounded-continuous (linear) cases, we can analytically solve for the optimal ranking in which individuals should begin and stop to receive allocations. These rankings, crucially, are invariant to resources when the marginal effects of allocations are nonincreasing. Nonincreasing marginal effects lead to resource (income) expansion paths that do not bend backward.</p>
+<p>One might think the allocation queue concept is not relevant for the continuous problems, because there, we need to figure out how much to provide to each individual, not just who should receive first or second. But it turns out that for the bounded-continuous problem, the solution is to first analytically find who should be the first individual to receive allocations. Then, there is an analytical function that maps total resources available to how much this first recipient should optimally receive as total resource availability increases. This function, it turns out, is a linear spline (when marginal returns are linear), and each successive knot of the spline is where the next individual in the optimal targeting queue begins to receive allocations.</p>
 <p>For the bounded-continuous problems, in the paper, I only discuss the linear case with constant-returns. When returns are decreasing, there are no analytical solutions. I do provide the solution to the log-linear problem using bisection in this vignette: <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solog_bisec_allrw.html">Loglinear Optimal Allocation Implicit Bisection Solution</a></p>
 <!--
 ## 2.3 Brute-Force vs Analytical Solutions

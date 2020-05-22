@@ -1,20 +1,20 @@
 [![HitCount](http://hits.dwyl.io/fanwangecon/PrjOptiAlloc.svg)](https://github.com/FanWangEcon/PrjOptiAlloc)  [![Star](https://img.shields.io/github/stars/fanwangecon/PrjOptiAlloc?style=social)](https://github.com/FanWangEcon/PrjOptiAlloc/stargazers) [![Fork](https://img.shields.io/github/forks/fanwangecon/PrjOptiAlloc?style=social)](https://github.com/FanWangEcon/PrjOptiAlloc/network/members) [![Star](https://img.shields.io/github/watchers/fanwangecon/PrjOptiAlloc?style=social)](https://github.com/FanWangEcon/PrjOptiAlloc/watchers)
 
-This is a research project [website](https://fanwangecon.github.io/PrjOptiAlloc/) for solving individual specific optimal allocation problems given estimation results. Various theorems from [Fan](https://fanwangecon.github.io/)'s [Optimal Allocation paper](http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) are implemented here as R code in one package that supports the paper.
+This is a research project [website](https://fanwangecon.github.io/PrjOptiAlloc/) for solving individual-specific optimal allocation problems. Various results from [Fan](https://fanwangecon.github.io/)'s [Optimal Allocation paper](http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) are implemented here as R code in one package that supports the paper.
 
 [![](https://img.shields.io/github/last-commit/fanwangecon/PrjOptiAlloc)](https://github.com/FanWangEcon/PrjOptiAlloc/commits/master) [![](https://img.shields.io/github/commit-activity/m/fanwangecon/PrjOptiAlloc)](https://github.com/FanWangEcon/PrjOptiAlloc/graphs/commit-activity) [![](https://img.shields.io/github/issues/fanwangecon/PrjOptiAlloc)](https://github.com/FanWangEcon/PrjOptiAlloc/issues) [![](https://img.shields.io/github/issues-pr/fanwangecon/PrjOptiAlloc)](https://github.com/FanWangEcon/PrjOptiAlloc/pulls)
 
 ## Usage
 
-The [Paper](https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) tab contains the latest version of the optimal allocation paper. The [Slides](https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf) tab provides the latest version of the paper presentation file. The [News](https://fanwangecon.github.io/PrjOptiAlloc/news/index.html) tab provides update when code version changes.
+The [Paper](https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) tab contains the latest version of the optimal allocation paper. The [Slides](https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf) tab provides the latest version of the paper presentation file. The [News](https://fanwangecon.github.io/PrjOptiAlloc/news/index.html) tab provides updates when code/paper versions changes.
 
-The [Functions](https://fanwangecon.github.io/PrjOptiAlloc/reference/index.html) tab provides a list of functions that implements discrete and bounded-continuous optimal allocation problems. It also provides estimation functions, data functions, and other support functions.
+The [Functions](https://fanwangecon.github.io/PrjOptiAlloc/reference/index.html) tab provides a list of functions that implements discrete and bounded-continuous optimal allocation problems. It also includes estimation functions, data functions, and other support functions.
 
 The [Tutorials](https://fanwangecon.github.io/PrjOptiAlloc/articles/index.html) tab provides groups of vignettes that solve the various types of optimal allocation problems step by step from raw data to optimal allocation queues without invoking external functions. These step by step results are converted into ingredients of different [functions](https://fanwangecon.github.io/PrjOptiAlloc/reference/index.html). Some Vignettes solve for optimal allocation programs by calling these functions directly rather than solving step by step.
 
 ## Data
 
-To demonstrate theorem intuitions graphically, the [Tutorials](https://fanwangecon.github.io/PrjOptiAlloc/articles/index.html) files provide numerical examples when the number of candidate recipients of allocations is equal to two. The tutorials in general use empirical data where the number of candidate recipients of allocations is larger than several hundred. For these problems, computational brute-force solutions suffer from factorially increase choice-sets and exponentially increasing state-spaces. The Theorems in the [Optimal Allocation paper](http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) provides closed-form solutions that are trivial to computationally implement for these otherwise computationally difficult allocation problems.
+To demonstrate intuitions graphically, I provide under the [Tutorials](https://fanwangecon.github.io/PrjOptiAlloc/articles/index.html) tab numerical examples when the number of candidate recipients of allocations is two. Most files under the [Tutorials](https://fanwangecon.github.io/PrjOptiAlloc/articles/index.html) tab use empirical data where the number of candidate recipients is several hundred or more. For these problems, computational brute-force comparison methods quickly become intractable due to factorially increasing choice-sets and exponentially increasing state-spaces. In constrast, the [Optimal Allocation paper](https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf) provides closed-form solutions to several classes of optimal allocation problems under CES preference aggregation. The computational burden of the solutions increase only linearly with the number of candidate recipients of allocations.
 
 Datasets used include:
 
@@ -28,7 +28,7 @@ Datasets used include:
 
 The tools here depend on [base R](https://stat.ethz.ch/R-manual/R-devel/library/base/html/base-package.html), [tidyverse](https://www.tidyverse.org/) and [tidymodels](https://www.tidymodels.org/). After installing those, two packages should be installed, [fan](http://fanwangecon.github.io/)'s [REconTools](http://fanwangecon.github.io/REconTools/), which provides a number of support tools required, as well as this package itself [PrjOptiAllocs](http://fanwangecon.github.io/PrjOptiAlloc/). For installation help, see [devtools](http://r-pkgs.had.co.nz/intro.html).
 
-Installation will download all datasets, functions as well as vignettes associated with the project.
+Installing the package will download all datasets, functions as well as vignettes associated with the project.
 
 ```
 # To Install the Programs in the R folder of the REconTools Repository

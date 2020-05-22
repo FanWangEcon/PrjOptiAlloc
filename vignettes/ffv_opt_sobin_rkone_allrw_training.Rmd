@@ -1,7 +1,7 @@
 ---
 title: Wage and Employment Comparison Binary Allocation Lalonde Training Example
 description: |
-  Welfare, Resource Equivalent Variation (REV), comparisons between wage and employment allocation results. 
+  Welfare, Resource Equivalent Variation (REV), comparisons between wage and employment allocation results.
   Wage and Employment allocation space parameters comparison.
 output: rmarkdown::html_vignette
 vignette: >
@@ -43,6 +43,8 @@ library(PrjOptiAlloc)
 
 library(knitr)
 library(kableExtra)
+
+bl_save_img = FALSE
 ```
 
 ## Merge the Wage and Employmennt Rsults
@@ -162,13 +164,13 @@ title_line3 <- sprintf("Expenditure (Resource) Minimization to achieve same welf
 
 # Relabel Variable
 Outcome_levels <- c(rev = "employment_prob")
-tb_rev_wage_employ_long <- tb_rev_wage_employ_long %>% 
+tb_rev_wage_employ_long <- tb_rev_wage_employ_long %>%
   filter(Outcome == 'employment_prob') %>%
   mutate(Outcome = as_factor(Outcome)) %>%
   mutate(Outcome = fct_recode(Outcome_levels, !!!Outcome_levels))
 
 # Graph Results--Draw
-line.plot <- tb_rev_wage_employ_long %>% 
+line.plot <- tb_rev_wage_employ_long %>%
   ggplot(aes(x=one_minus_rho, y=rev,
              group=Outcome,
              colour=Outcome, size=2)) +
@@ -182,21 +184,23 @@ line.plot <- tb_rev_wage_employ_long %>%
   theme_bw(base_size=8)
 
 # Labeling
-line.plot$labels$colour <- "REV"  
+line.plot$labels$colour <- "REV"
 
 # Print
 print(line.plot)
 
-snm_cnts <- 'Lalonde_employ_rev.png'
-png(paste0(spt_img_save, snm_cnts),
-      width = 135, height = 86, units='mm', res = 300, pointsize=7)
-print(line.plot)
-dev.off()
-png(paste0(spt_img_save_draft, snm_cnts),
-      width = 135, height = 86, units='mm', res = 300, 
-    pointsize=5)
-print(line.plot)
-dev.off()
+if (bl_save_img) {
+  snm_cnts <- 'Lalonde_employ_rev.png'
+  png(paste0(spt_img_save, snm_cnts),
+        width = 135, height = 86, units='mm', res = 300, pointsize=7)
+  print(line.plot)
+  dev.off()
+  png(paste0(spt_img_save_draft, snm_cnts),
+        width = 135, height = 86, units='mm', res = 300,
+      pointsize=5)
+  print(line.plot)
+  dev.off()
+}
 ```
 ## Analysis of A and alpha
 

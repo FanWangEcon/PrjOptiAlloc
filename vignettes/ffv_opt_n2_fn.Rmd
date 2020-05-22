@@ -1,9 +1,9 @@
 ---
 title: Example Discrete and Bounded-Continuous Optimal Allocation for N=2
 description: |
-  Test Theorem 1 and Theorem 2 optimal allocation functions when N=2. 
+  Test Theorem 1 and Theorem 2 optimal allocation functions when N=2.
   Use randomly generated A and alpha parameters for two individuals' discrete and bounded-continuous
-  allocation problems. 
+  allocation problems.
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example Discrete and Bounded-Continuous Optimal Allocation for N=2}
@@ -32,7 +32,7 @@ library(PrjOptiAlloc)
 bl_save_img = FALSE
 ```
 
-Test Theorem 1 and Theorem 2 optimal allocation functions when N=2. Use randomly generated A and alpha parameters for two individuals' discrete and bounded-continuous allocation problems. 
+Test Theorem 1 and Theorem 2 optimal allocation functions when N=2. Use randomly generated A and alpha parameters for two individuals' discrete and bounded-continuous allocation problems.
 
 Determine how to optimally allocate resources between two individuals. There are two structures:
 
@@ -45,9 +45,9 @@ The goal below is to generate the data input structure for these two problems in
 
 ## Input and Output
 
-This will be written as a function so that a great variety of cases and situations can be simulated and drawn. Intuitively, on the 2D surface, our objective is to show that choices are constrained in choice windows (choice boxes), there is a choice strike zone, in the continuous case, it is a rectangle, in the discrete case, it is a number of possibly uneven points. There will be a rightward expanding line inside this box, that is the income expansion path. In the discrete case, it is not a line, but traces through a set of points. In the continuous case, it is a line with possible kink (only no kink if disects the diagnol of the choice strike zone exactly). Each point along this line is associated with a different level of value, which is utility given optimal choices. 
+This will be written as a function so that a great variety of cases and situations can be simulated and drawn. Intuitively, on the 2D surface, our objective is to show that choices are constrained in choice windows (choice boxes), there is a choice strike zone, in the continuous case, it is a rectangle, in the discrete case, it is a number of possibly uneven points. There will be a rightward expanding line inside this box, that is the income expansion path. In the discrete case, it is not a line, but traces through a set of points. In the continuous case, it is a line with possible kink (only no kink if disects the diagnol of the choice strike zone exactly). Each point along this line is associated with a different level of value, which is utility given optimal choices.
 
-Note that when marginal effects are linear, strike zone budget lines are not straight but backward bending. 
+Note that when marginal effects are linear, strike zone budget lines are not straight but backward bending.
 
 The input for strike zone are:
 
@@ -76,12 +76,12 @@ $$\sum^{W^{units}}_l A_{i,l} = W^{dollar}\cdot\frac{\alpha_i}{p_i}$$
 
 Given the formulation above, the procedure to generate discrete and continuous consistent marginal effects parameters is:
 
-1. Start with $W^{dollar}$, and draw $\alpha$ and $p$ from somewhat tightly bounded uniform distribution, so they are not too different. 
-2. Pick any $W^{units}$, draw uniformly $A_{il}$ for both $i=1$ and $i=2$, they must sum up to the right hand side. 
+1. Start with $W^{dollar}$, and draw $\alpha$ and $p$ from somewhat tightly bounded uniform distribution, so they are not too different.
+2. Pick any $W^{units}$, draw uniformly $A_{il}$ for both $i=1$ and $i=2$, they must sum up to the right hand side.
 
 Now there are $\frac{\alpha_i}{p_i}$ as well as $A_{il}$. The aggregate effects of allocating all discrete inputs for one individual, and the aggregate effects of allocating all continuous inputs for one individual on outcome for that individual are the same. This makes the discrete and continuous comparison on the same figure possible.
 
-Write this as a function so that we can easily generate additional examples. The function should be able to output for more than two individuals, any number of individuals for testing. 
+Write this as a function so that we can easily generate additional examples. The function should be able to output for more than two individuals, any number of individuals for testing.
 
 ```{r opti alloc n2 generate test}
 ffi_draw_n_alpha <- function(fl_w_dollar = 100,
@@ -96,39 +96,39 @@ ffi_draw_n_alpha <- function(fl_w_dollar = 100,
   #' @param it_w_units_avg float number of goods for cts at max, approxi number for dis
   #' @param fl_eh_max_inc_i1 float maximum increase EH for one individual
   #' @param fl_min_max_eh_inc_ratio float ratio of maximum and minimum outcome increase
-  #' @param it_N integer the number of individuals 
+  #' @param it_N integer the number of individuals
   #' @param fl_disc_cts_match_ratio float if 1, disc unit = it_w_units_avg
   #' @param fl_A_i_alpha_i1_ratio float A_i divide the alphi_il ratio, discrete set this
-  
+
   set.seed(it_rand_seed)
-  
+
   # Let price be the same, does not matter, only marginal effect over price ratio matters
   fl_price <- fl_w_dollar/it_w_units_avg
   fl_cts_alpha_max <- ((fl_eh_max_inc_i*fl_price)/fl_w_dollar)
   fl_cts_alpha_min <- fl_cts_alpha_max/fl_min_max_eh_inc_ratio
-  
-  # Generate two individuals at min and max, otherwise draw randomly between them as well 
+
+  # Generate two individuals at min and max, otherwise draw randomly between them as well
   if (it_N == 1) {
     stop("Need to draw for at least two individuals")
   } else {
     ar_cts_alpha <- c(fl_cts_alpha_min, fl_cts_alpha_max)
     if (it_N > 2) {
-      ar_cts_alpha_more <- 
+      ar_cts_alpha_more <-
         runif((it_N-2), min=fl_cts_alpha_min, max=fl_cts_alpha_max)
       ar_cts_alpha <- c(ar_cts_alpha, ar_cts_alpha_more)
     }
     ar_cts_alpha <- sort(ar_cts_alpha, decreasing=TRUE)
   }
-  
+
   # Aggregate W for Discrete
   ar_A_i_sum <- fl_w_dollar*(ar_cts_alpha/fl_price)
-  
-  # Draw A_il 
+
+  # Draw A_il
   ar_it_w_units <- sample(round(
-    seq(it_w_units_avg/fl_disc_cts_match_ratio, 
-        it_w_units_avg*fl_disc_cts_match_ratio, length.out=it_N)), 
+    seq(it_w_units_avg/fl_disc_cts_match_ratio,
+        it_w_units_avg*fl_disc_cts_match_ratio, length.out=it_N)),
     it_N, replace=TRUE)
-  
+
   # Genereate alpha_il
   ls_ar_alpha_il = apply(
     cbind(ar_it_w_units, ar_A_i_sum),
@@ -136,9 +136,9 @@ ffi_draw_n_alpha <- function(fl_w_dollar = 100,
     function(row, min, max) {
       it_draw <- row[1]
       fl_sum <- row[2]
-      ar_unif <- runif(it_draw, 
+      ar_unif <- runif(it_draw,
                        min=fl_cts_alpha_min,
-                       max=fl_cts_alpha_max) 
+                       max=fl_cts_alpha_max)
       ar_unif <- sort(ar_unif, decreasing=TRUE)
       ar_share <- ar_unif/sum(ar_unif)
       ar_levels <- (ar_share*fl_sum*fl_disc_cts_match_ratio)
@@ -147,13 +147,13 @@ ffi_draw_n_alpha <- function(fl_w_dollar = 100,
       return(list(ar_share=ar_share,
                   ar_levels=ar_levels))
     })
-  
+
   # Print All
   message(ls_ar_alpha_il)
   message(fl_w_dollar/fl_price)
   sapply(seq(it_N), function(x) sum(ls_ar_alpha_il[[x]]$ar_levels))
   message((fl_w_dollar*ar_cts_alpha)/fl_price)
-  
+
   # Generate A_i that are consistent with alpha_i scales
   # randomly draw two individual N2 where the differences is 2x of A_il
   # Average of alpha_i1 of all individuals
@@ -165,7 +165,7 @@ ffi_draw_n_alpha <- function(fl_w_dollar = 100,
   fl_b <- fl_alpha_i1_avg
   fl_A_i_gap = (fl_b*(fl_a - 1))/(1 + fl_a)
   ar_A_i = runif(it_N,min=fl_b - fl_A_i_gap, max=fl_b + fl_A_i_gap)
-  
+
   # return otuputs
   return(list(ar_A_i = ar_A_i,
               ls_ar_alpha_il=ls_ar_alpha_il,
@@ -182,7 +182,7 @@ fl_w_dollar = 100
 it_rand_seed <- 4596553
 it_N <- 2
 ls_out_n2 <- suppressMessages(
-  ffi_draw_n_alpha(fl_w_dollar=fl_w_dollar, 
+  ffi_draw_n_alpha(fl_w_dollar=fl_w_dollar,
                    it_N = it_N, it_rand_seed=it_rand_seed))
 ls_out_n2
 ```
@@ -214,7 +214,7 @@ it_rand_seed <- 8135788
 
 it_N <- 2
 ls_out_n2 <- suppressMessages(
-  ffi_draw_n_alpha(fl_w_dollar=fl_w_dollar, 
+  ffi_draw_n_alpha(fl_w_dollar=fl_w_dollar,
                    it_w_units_avg=it_w_units_avg,
                    it_N = it_N, it_rand_seed=it_rand_seed))
 
@@ -222,7 +222,7 @@ ls_out_n2 <- suppressMessages(
 # fl_e = endowment points
 fl_A_1 = ls_out_n2$ar_A_i[1]
 fl_A_2 = ls_out_n2$ar_A_i[2]
-# fl_alpha_1l = alpha_il 
+# fl_alpha_1l = alpha_il
 # fl_eh_alloc_il = outcome at alloations
 ar_alpha_1l = ls_out_n2$ls_ar_alpha_il[[1]]$ar_levels
 ar_alpha_2l = ls_out_n2$ls_ar_alpha_il[[2]]$ar_levels
@@ -247,12 +247,12 @@ fl_D_max_1 = length(ar_alpha_1l)
 fl_D_max_2 = length(ar_alpha_2l)
 fl_EH_max_1 = fl_A_1 + fl_D_max_1*fl_alpha_1
 fl_EH_max_2 = fl_A_2 + fl_D_max_2*fl_alpha_2
-# max_dollar 
+# max_dollar
 fl_w_dollar_max = fl_price*it_w_max
 ar_w_dollars_strike_at_disc <- seq(0, fl_w_dollar_max, length.out=(it_w_max+1))
 ar_w_dollars_solve_at_disc <- seq(0, fl_w_dollar_max, length.out=(it_w_max*6)+1)
 
-# print 
+# print
 print(paste0('it_rand_seed:',it_rand_seed))
 print(paste0('fl_A_1:', fl_A_1, ',fl_A_2:', fl_A_2))
 print(paste0('fl_alpha_1:', fl_A_1, ',fl_alpha_2:', fl_A_2))
@@ -266,7 +266,7 @@ print(paste0('ar_eh_2l_zr:', ar_eh_2l_zr))
 
 ## Feasible Allocation and Utility
 
-In this section, we generate all possible combinations of feasible allocation across these two individuals, and also indifference curve points combinations at each choice points. 
+In this section, we generate all possible combinations of feasible allocation across these two individuals, and also indifference curve points combinations at each choice points.
 
 ### Discrete Resource Exhausting Allocation Points
 
@@ -276,43 +276,43 @@ Given aggregate units of resources, from 1 to *it_w_units_avg*.
 ls_mt_strike_eh_disc <- vector(mode = "list", length = it_w_units_avg)
 
 for (it_w in ar_w_solve_at_disc){
-  
+
   ar_cur_w_ehlt_combo <- c()
   ar_cur_w_unit_combo <- c()
-  
+
   for (it_1l in seq(1, length(ar_alpha_1l_zr))){
     fl_eh_1l <- ar_eh_1l_zr[it_1l]
-    
+
     for (it_2l in seq(1, length(ar_alpha_2l_zr))){
       fl_eh_2l <- ar_eh_2l_zr[it_2l]
-      
+
       # included alloca = 0 at L162
       it_1l_2l_sum <- (it_1l-1) + (it_2l-1)
       if (it_1l_2l_sum == it_w){
         # at this point, EH_1 and EH_2
-        
+
         # Aggregate Resource is Fully Distributed
         ar_cur_w_ehlt_combo <- c(ar_cur_w_ehlt_combo, fl_eh_1l, fl_eh_2l)
         ar_cur_w_unit_combo <- c(ar_cur_w_unit_combo, it_1l-1, it_2l-1)
-        
+
       }
     }
   }
-  
+
   dim(ar_cur_w_ehlt_combo) <- c(2, length(ar_cur_w_ehlt_combo)/2)
   dim(ar_cur_w_unit_combo) <- c(2, length(ar_cur_w_unit_combo)/2)
-  mt_strike_eh_disc <- cbind(it_w*fl_price, it_w, 
-                             t(ar_cur_w_ehlt_combo), 
+  mt_strike_eh_disc <- cbind(it_w*fl_price, it_w,
+                             t(ar_cur_w_ehlt_combo),
                              t(ar_cur_w_unit_combo))
-  colnames(mt_strike_eh_disc) <- 
+  colnames(mt_strike_eh_disc) <-
     c('w_dollars', 'w_units', 'EH_1l', 'EH_2l', 'D_1l', 'D_2l')
   ls_mt_strike_eh_disc[[it_w]] <- mt_strike_eh_disc
-  
+
 }
 
-tb_strike_eh_disc_all <- 
-  as_tibble(do.call(rbind, ls_mt_strike_eh_disc)) %>% 
-  mutate(vartype = 'discrete') %>% 
+tb_strike_eh_disc_all <-
+  as_tibble(do.call(rbind, ls_mt_strike_eh_disc)) %>%
+  mutate(vartype = 'discrete') %>%
   mutate(outtype = 'strike')
 
 print(tb_strike_eh_disc_all)
@@ -321,21 +321,21 @@ print(tb_strike_eh_disc_all)
 
 ### Continuous Choice Strike Zone
 
-The continuous choice strike zone for the CRS problem with bounded choices is a box with straight downward sloping lines through representing budget lines. All lines are parallel to each other. We are interseted in the intercepts and slopes. Slopes are all the same, so just the intercepts. There is a smooth set of intercepts, but for graphing etc, we only need a finite set of lines representing the discrete problem's resource points. And we need the bounding corner values. 
+The continuous choice strike zone for the CRS problem with bounded choices is a box with straight downward sloping lines through representing budget lines. All lines are parallel to each other. We are interseted in the intercepts and slopes. Slopes are all the same, so just the intercepts. There is a smooth set of intercepts, but for graphing etc, we only need a finite set of lines representing the discrete problem's resource points. And we need the bounding corner values.
 
 ```{r}
 # assume 1 is the x-axis and 2 is the y-axis
-ffi_cts_strike_crs_slope_intercept <- 
+ffi_cts_strike_crs_slope_intercept <-
   function(fl_w, fl_alpha_price_rat_1, fl_alpha_price_rat_2, fl_A_1, fl_A_2) {
-    
-    fl_slope = 
+
+    fl_slope =
       (-1)*(fl_alpha_price_rat_2/fl_alpha_price_rat_1)
-    
-    fl_intercept = 
-      fl_w*fl_alpha_price_rat_2 + 
-      (fl_alpha_price_rat_2/fl_alpha_price_rat_1)*fl_A_1 + 
+
+    fl_intercept =
+      fl_w*fl_alpha_price_rat_2 +
+      (fl_alpha_price_rat_2/fl_alpha_price_rat_1)*fl_A_1 +
       fl_A_2
-    
+
     return(list(fl_slope=fl_slope, fl_intercept=fl_intercept))
   }
 ```
@@ -350,12 +350,12 @@ fl_alpha_price_rat_2 <- fl_alpha_2/fl_price
 # Continuous slope generator
 ls_ar_draws_shares = sapply(ar_w_dollars_strike_at_disc,
                             ffi_cts_strike_crs_slope_intercept,
-                            fl_alpha_price_rat_1=fl_alpha_price_rat_1, 
+                            fl_alpha_price_rat_1=fl_alpha_price_rat_1,
                             fl_alpha_price_rat_2=fl_alpha_price_rat_2,
                             fl_A_1=fl_A_1,
                             fl_A_2=fl_A_2)
-mt_ar_draws_shares <- 
-  cbind(ar_w_dollars_strike_at_disc, as_tibble(t(ls_ar_draws_shares)) %>% unnest()) %>% 
+mt_ar_draws_shares <-
+  cbind(ar_w_dollars_strike_at_disc, as_tibble(t(ls_ar_draws_shares)) %>% unnest()) %>%
   rowid_to_column(var = "row_ctr")
 
 # Print results
@@ -365,7 +365,7 @@ print(mt_ar_draws_shares)
 A grid of x-points and corresponding y-points at each of the slopes
 
 ```{r}
-ls_mt_strike_eh_cts <- 
+ls_mt_strike_eh_cts <-
   apply(mt_ar_draws_shares, 1,
         function(row) {
           it_row_ctr <- row[1]
@@ -380,27 +380,27 @@ ls_mt_strike_eh_cts <-
 
           ar_EH1 <- ar_EH1[ar_EH2>=fl_A_2]
           ar_EH2 <- ar_EH2[ar_EH2>=fl_A_2]
-          
+
           ar_D_1l <- (ar_EH1 - fl_A_1)/fl_alpha_1
           ar_D_2l <- (ar_EH2 - fl_A_2)/fl_alpha_2
-        
+
           fl_w_units <- (fl_w_dollars/(fl_price))
-          mt_strike_eh_cts <- 
-            cbind(fl_w_dollars, fl_w_units, 
+          mt_strike_eh_cts <-
+            cbind(fl_w_dollars, fl_w_units,
                   ar_EH1, ar_EH2, ar_D_1l, ar_D_2l)
           rownames(mt_strike_eh_cts) <- NULL
-          
-          colnames(mt_strike_eh_cts) <- 
-            c('w_dollars', 'w_units', 
+
+          colnames(mt_strike_eh_cts) <-
+            c('w_dollars', 'w_units',
               'EH_1l', 'EH_2l', 'D_1l', 'D_2l')
-          
-          
+
+
           return(mt_strike_eh_cts)
         })
 
-tb_strike_eh_cts_all <- 
-  as_tibble(do.call(rbind, ls_mt_strike_eh_cts)) %>% 
-  mutate(vartype = 'continuous') %>% 
+tb_strike_eh_cts_all <-
+  as_tibble(do.call(rbind, ls_mt_strike_eh_cts)) %>%
+  mutate(vartype = 'continuous') %>%
   mutate(outtype = 'strike')
 
 print(head(tb_strike_eh_cts_all, 10))
@@ -425,16 +425,16 @@ Build up discrete input frame
 ```{r}
 # ID and max Discrete Allocation
 mt_i_D <- cbind(c(1,2), c(it_D_1l, it_D_2l))
-colnames(mt_i_D) <- c('id_i', 'D_max_i')      
+colnames(mt_i_D) <- c('id_i', 'D_max_i')
 tb_i_D <- as_tibble(mt_i_D)
 # A_i and alpha_il as matrix
 mt_A_alpha <- rbind(cbind(1, seq(1,it_D_1l), ar_alpha_1l, ar_A_1l, fl_beta_1),
                     cbind(2, seq(1,it_D_2l), ar_alpha_2l, ar_A_2l, fl_beta_2))
 colnames(mt_A_alpha) <- c('id_i', 'D_il', 'alpha_il', 'A_il', 'beta_i')
 # Combine to generate input_il matrix
-df_input_il <- tb_i_D %>% 
-  uncount(D_max_i) %>% 
-  rowid_to_column(var = "id_il") %>% 
+df_input_il <- tb_i_D %>%
+  uncount(D_max_i) %>%
+  rowid_to_column(var = "id_il") %>%
   left_join(tb_i_D, by='id_i') %>%
   group_by(id_i) %>%
   mutate(D_il = row_number()) %>%
@@ -476,33 +476,33 @@ ls_mt_opti_eh_disc <- apply(cbind(ar_w_solve_at_disc), 1,
     select(rho_val, D_star_i, EH_star_i) %>%
     pivot_wider(names_from = id_i,
                 values_from = c(D_star_i, EH_star_i)) %>%
-    rename(EH_1l = EH_star_i_1, EH_2l = EH_star_i_2, 
+    rename(EH_1l = EH_star_i_1, EH_2l = EH_star_i_2,
            D_1l = D_star_i_1, D_2l = D_star_i_2) %>%
     mutate(w_units = row[1], w_dollars = row[1]*fl_price) %>%
     select(w_dollars, w_units, EH_1l, EH_2l, D_1l, D_2l, rho_val)
   return(mt_opti_disc)
   })
-tb_opti_eh_disc_all <- 
-  as_tibble(do.call(rbind, ls_mt_opti_eh_disc)) %>% 
-  mutate(vartype = 'discrete') %>% 
+tb_opti_eh_disc_all <-
+  as_tibble(do.call(rbind, ls_mt_opti_eh_disc)) %>%
+  mutate(vartype = 'discrete') %>%
   mutate(outtype = 'optimal')
 print(head(tb_opti_eh_disc_all, 10))
 ```
 
 ### Optimal Continuous Choices
 
-Now I take advantage of the bounded linear solution and solve for the continuous allocation problem given the previously generated continuous parameters that are consistent (in the same general scale) as the discrete parameters used for the discrete allocations. 
+Now I take advantage of the bounded linear solution and solve for the continuous allocation problem given the previously generated continuous parameters that are consistent (in the same general scale) as the discrete parameters used for the discrete allocations.
 
 Build up continuous input frame
 
 ```{r}
 # ID and max Discrete Allocation
-# Note the problem here does not explicity 
-mt_cts_Aalphabeta <- cbind(c(1,2), 
+# Note the problem here does not explicity
+mt_cts_Aalphabeta <- cbind(c(1,2),
                 c(fl_A_1, fl_A_2),
                 c(fl_alpha_1, fl_alpha_2),
                 c(fl_beta_1, fl_beta_2))
-colnames(mt_cts_Aalphabeta) <- c('id_i', 'A_i', 'alpha_i', 'beta_i')      
+colnames(mt_cts_Aalphabeta) <- c('id_i', 'A_i', 'alpha_i', 'beta_i')
 tb_cts_Aalphabeta <- as_tibble(mt_cts_Aalphabeta)
 ```
 
@@ -526,28 +526,28 @@ Combine results so that the continuous optimal choices' outputs are in the same 
 ls_mt_opti_eh_cts <- apply(
   cbind(ar_w_dollars_solve_at_disc), 1,
   function(row){
-    
+
     fl_w_dollars <- row[1]
     fl_w_units <- fl_w_dollars/fl_price
-    
+
     ls_lin_solu_all_rhos <- suppressWarnings(suppressMessages(
       ffp_opt_anlyz_rhgin(
       df, svr_id_i, svr_A_i, svr_alpha_i, svr_beta_i, fl_w_units, ar_rho)))
     mt_opti_alloc_all_rho_n2 <- ls_lin_solu_all_rhos$mt_opti_alloc_all_rho
     mt_expc_outcm_all_rho_n2 <- ls_lin_solu_all_rhos$mt_expc_outcm_all_rho
-    
-    mt_opti_cts <- cbind(fl_w_dollars, fl_w_units, 
+
+    mt_opti_cts <- cbind(fl_w_dollars, fl_w_units,
                          t(mt_expc_outcm_all_rho_n2), t(mt_opti_alloc_all_rho_n2),
                          ar_rho)
-    colnames(mt_opti_cts) <- c('w_dollars', 'w_units', 
+    colnames(mt_opti_cts) <- c('w_dollars', 'w_units',
                                'EH_1l', 'EH_2l', 'D_1l', 'D_2l', 'rho_val')
 
     return(as_tibble(mt_opti_cts))
   })
 
-tb_opti_eh_cts_all <- 
-  as_tibble(do.call(rbind, ls_mt_opti_eh_cts)) %>% 
-  mutate(vartype = 'continuous') %>% 
+tb_opti_eh_cts_all <-
+  as_tibble(do.call(rbind, ls_mt_opti_eh_cts)) %>%
+  mutate(vartype = 'continuous') %>%
   mutate(outtype = 'optimal')
 print(head(tb_opti_eh_cts_all, 10))
 ```
@@ -556,65 +556,65 @@ print(head(tb_opti_eh_cts_all, 10))
 
 There are hard bounds on the level of allocations allowed at most for the two individuals. If allocation max exceeded for person $i$ but not person $j$, then distribute allocation from $i$ to $j$.
 
-1. generate new *D* variable for amount that exceeds bounds. 
+1. generate new *D* variable for amount that exceeds bounds.
 2. reset the excess allocation columns so that excess with existing does not exceed individual bound, cross $i$ and $j$
-3. apply function to add to existing outcome additional allocation multiplied by marginal effects. 
+3. apply function to add to existing outcome additional allocation multiplied by marginal effects.
 
 ```{r}
-# 1. generate new *D* variable for amount that exceeds bounds. 
+# 1. generate new *D* variable for amount that exceeds bounds.
 tb_opti_eh_cts_all <- tb_opti_eh_cts_all %>%
-  mutate(D_1l_excess = 
-           case_when(D_1l > fl_D_max_1 
+  mutate(D_1l_excess =
+           case_when(D_1l > fl_D_max_1
                      ~ (D_1l - fl_D_max_1),
-                     TRUE 
+                     TRUE
                      ~ 0),
-         D_2l_excess = 
-           case_when(D_2l > fl_D_max_2 
+         D_2l_excess =
+           case_when(D_2l > fl_D_max_2
                      ~ (D_2l - fl_D_max_2),
-                     TRUE 
+                     TRUE
                      ~ 0)) %>%
-  select(w_dollars, EH_1l, EH_2l, D_1l, D_2l, 
+  select(w_dollars, EH_1l, EH_2l, D_1l, D_2l,
          D_1l_excess, D_2l_excess, everything())
 
 # 2. if both exceed, then reset outcomes for both
 tb_opti_eh_cts_all <- tb_opti_eh_cts_all %>%
-  mutate(EH_1l = 
-           case_when(D_1l_excess > 0 & D_2l_excess > 0 
+  mutate(EH_1l =
+           case_when(D_1l_excess > 0 & D_2l_excess > 0
                      ~ EH_1l - D_1l_excess*(fl_alpha_1),
                      TRUE ~ EH_1l),
-         EH_2l = 
-           case_when(D_1l_excess > 0 & D_2l_excess > 0 
+         EH_2l =
+           case_when(D_1l_excess > 0 & D_2l_excess > 0
                      ~ EH_2l - D_2l_excess*(fl_alpha_2),
                      TRUE ~ EH_2l))
 
 # 3. 1 exceeds but 2 does not
 tb_opti_eh_cts_all <- tb_opti_eh_cts_all %>%
-  mutate(EH_1l = 
-           case_when(D_1l_excess > 0 & D_2l_excess == 0 
+  mutate(EH_1l =
+           case_when(D_1l_excess > 0 & D_2l_excess == 0
                      ~ EH_1l - D_1l_excess*(fl_alpha_1),
                      TRUE ~ EH_1l),
-         EH_2l = 
-           case_when(D_1l_excess > 0 & D_2l_excess == 0 
+         EH_2l =
+           case_when(D_1l_excess > 0 & D_2l_excess == 0
                      ~ EH_2l + D_1l_excess*(fl_alpha_2),
                      TRUE ~ EH_2l))
 # %>%
 #   mutate(EH_2l =
 #            case_when(EH_2l >= fl_EH_max_2 ~ fl_EH_max_2,
 #                      TRUE ~ EH_2l))
-         
+
 # 4. 2 exceeds but 1 does not
 tb_opti_eh_cts_all <- tb_opti_eh_cts_all %>%
-  mutate(EH_1l = 
-           case_when(D_1l_excess == 0 & D_2l_excess > 0 
+  mutate(EH_1l =
+           case_when(D_1l_excess == 0 & D_2l_excess > 0
                      ~ EH_1l + D_2l_excess*(fl_alpha_1),
                      TRUE ~ EH_1l),
-         EH_2l = 
-           case_when(D_1l_excess == 0 & D_2l_excess > 0 
+         EH_2l =
+           case_when(D_1l_excess == 0 & D_2l_excess > 0
                      ~ EH_2l - D_2l_excess*(fl_alpha_2),
-                     TRUE ~ EH_2l)) %>% 
-  # mutate(EH_1l = 
+                     TRUE ~ EH_2l)) %>%
+  # mutate(EH_1l =
   #          case_when(EH_1l > fl_EH_max_1 ~ fl_EH_max_1,
-  #                    TRUE ~ EH_1l)) %>%   
+  #                    TRUE ~ EH_1l)) %>%
   select(-D_1l_excess, -D_2l_excess)
 ```
 
@@ -624,19 +624,19 @@ Combine the constrained choice sets and optimal choices together. Then evaluate 
 
 ```{r}
 # Combine optimal choices as well as choicesets
-tb_all_points <- 
+tb_all_points <-
   rbind(tb_strike_eh_disc_all %>% mutate(rho_val = NA),
-        tb_opti_eh_disc_all, 
+        tb_opti_eh_disc_all,
         tb_strike_eh_cts_all %>% mutate(rho_val = NA),
-        tb_opti_eh_cts_all) 
+        tb_opti_eh_cts_all)
 
 # Evaluate to obtain Value at Optimal Choices and Utility at Other
-# choice points. 
+# choice points.
 ffi_util_eval <- function(EH_1l, EH_2l, rho_val) {
   fl_util = (fl_beta_1*(EH_1l^rho_val) + fl_beta_2*(EH_2l^rho_val))^(1/rho_val)
   return(fl_util)
 }
-tb_all_points <- tb_all_points %>% 
+tb_all_points <- tb_all_points %>%
   mutate(val_at_choices = ffi_util_eval(EH_1l, EH_2l, rho_val))
 
 # Summary results
@@ -657,47 +657,47 @@ it_A_grid = 1000
 # ar_lambda <- 1 - (10^(c(seq(-2,2, length.out=3))))
 ar_beta <- fl_beta_1
 
-# Select v_points 
+# Select v_points
 # Indifference at three points, min, max and middle of allocations
 # & (rho_val == ar_rho[2])
-mt_v_star_rho_val <- tb_all_points %>% 
-  filter((outtype == 'optimal') & 
+mt_v_star_rho_val <- tb_all_points %>%
+  filter((outtype == 'optimal') &
            (w_units %in% round(seq(2,it_w_max-2,length.out=3)))
          ) %>%
   select(w_units, vartype, rho_val, val_at_choices)
 
 # Combine for inputs to indiff function
-tb_pref <- as_tibble(mt_v_star_rho_val) %>% 
-  expand_grid(ar_beta) %>% 
-  rename_all(~c('w_units','vartype','rho_val', 'vstar', 'beta')) %>% 
-  rowid_to_column(var = "indiff_id") %>% 
+tb_pref <- as_tibble(mt_v_star_rho_val) %>%
+  expand_grid(ar_beta) %>%
+  rename_all(~c('w_units','vartype','rho_val', 'vstar', 'beta')) %>%
+  rowid_to_column(var = "indiff_id") %>%
   select(indiff_id, rho_val, beta, vstar, w_units, vartype)
 
 # Generate indifference points with apply and anonymous function
 # note must only select the numeric arrays
 ls_df_indiff <- apply(
-  tb_pref %>% 
-    select(indiff_id, rho_val, beta, vstar), 
+  tb_pref %>%
+    select(indiff_id, rho_val, beta, vstar),
   1, function(x){
     indiff_id <- x[1]
     lambda <- x[2]
     beta <- x[3]
     vstar <- x[4]
-    
+
     ar_fl_A_indiff <- seq(fl_A_min, fl_A_max, length.out=it_A_grid)
-    ar_fl_B_indiff <- (((vstar^lambda) - 
+    ar_fl_B_indiff <- (((vstar^lambda) -
                           (beta*ar_fl_A_indiff^(lambda)))/(1-beta))^(1/lambda)
     mt_A_B_indiff <- cbind(indiff_id, lambda, beta, vstar,
                            ar_fl_A_indiff, ar_fl_B_indiff)
     colnames(mt_A_B_indiff) <- c('indiff_id', 'rho_val', 'beta_1', 'val_at_choices',
                                  'EH_1l', 'EH_2l')
-    tb_A_B_indiff <- as_tibble(mt_A_B_indiff) %>% 
-      rowid_to_column(var = "A_grid_id") %>% 
+    tb_A_B_indiff <- as_tibble(mt_A_B_indiff) %>%
+      rowid_to_column(var = "A_grid_id") %>%
       filter(EH_2l >= 0 & EH_2l <= max(ar_fl_A_indiff))
     return(tb_A_B_indiff)
   })
 df_indiff <- do.call(rbind, ls_df_indiff) %>% drop_na()
-df_indiff <- df_indiff %>% 
+df_indiff <- df_indiff %>%
   left_join(tb_pref %>% select(indiff_id, w_units, vartype), by='indiff_id')
 ```
 
@@ -706,12 +706,12 @@ df_indiff <- df_indiff %>%
 To prepare for graphing, generat varous factors.
 
 ```{r}
-tb_all_points <- tb_all_points %>% 
+tb_all_points <- tb_all_points %>%
   mutate(rho_val = case_when(is.na(rho_val) ~ 9999, TRUE ~ rho_val)) %>%
-  mutate(vartype = as_factor(vartype), 
+  mutate(vartype = as_factor(vartype),
          outtype = as_factor(outtype),
          rho_val = as_factor(rho_val)) %>%
-  mutate(varouttype = fct_cross(vartype, outtype, sep='_')) 
+  mutate(varouttype = fct_cross(vartype, outtype, sep='_'))
 ```
 ### Graph Discrete and Continuous Choice Sets
 
@@ -727,7 +727,7 @@ st_x_label <- 'Expected Outcome Individual 1'
 st_y_label <- 'Expected Outcome Individual 2'
 
 # Graphing
-plt_strike <- 
+plt_strike <-
   tb_all_points %>% filter(outtype=='strike') %>%
   ggplot(aes(x=EH_1l, y=EH_2l, colour=vartype, shape=vartype)) +
   geom_jitter(size=4, width = 0.01) +
@@ -739,9 +739,9 @@ plt_strike <-
 print(plt_strike)
 ```
 
-### Graph Discrete Choice Set and Income Expansion Path. 
+### Graph Discrete Choice Set and Income Expansion Path.
 
-Income expansion given different planner preferences. 
+Income expansion given different planner preferences.
 
 ```{r}
 # Labeling
@@ -752,13 +752,13 @@ st_x_label <- 'Expected Outcome Individual 1'
 st_y_label <- 'Expected Outcome Individual 2'
 
 # Graphing
-plt_disc <- 
-  tb_all_points %>% 
+plt_disc <-
+  tb_all_points %>%
   filter(vartype=='discrete') %>%
-  ggplot(aes(x=EH_1l, y=EH_2l, 
+  ggplot(aes(x=EH_1l, y=EH_2l,
              colour=rho_val, shape=rho_val)) +
   geom_jitter(size=7, width = 0) +
-  labs(title = st_title, subtitle = st_subtitle, 
+  labs(title = st_title, subtitle = st_subtitle,
        x = st_x_label, y = st_y_label, caption = st_caption) +
   theme_bw()
 
@@ -768,7 +768,7 @@ print(plt_disc)
 
 ### Graph Continuous Choice Set and Income Expansion Path
 
-Continuous choice set and income expansion path. Unlike in the discrete case, each additional increment has the same effect for the same individual. This is assuming linear effects. Alternatively, could assume the effects are decreasing. 
+Continuous choice set and income expansion path. Unlike in the discrete case, each additional increment has the same effect for the same individual. This is assuming linear effects. Alternatively, could assume the effects are decreasing.
 
 
 ```{r}
@@ -782,12 +782,12 @@ st_y_label <- 'Expected Outcome Individual 2'
 
 # Graphing
 plt_cts <-
-  tb_all_points %>% 
+  tb_all_points %>%
   filter(vartype=='continuous') %>%
-  ggplot(aes(x=EH_1l, y=EH_2l, 
+  ggplot(aes(x=EH_1l, y=EH_2l,
              colour=rho_val, shape=rho_val)) +
   geom_jitter(size=5, width = 0) +
-  labs(title = st_title, subtitle = st_subtitle, 
+  labs(title = st_title, subtitle = st_subtitle,
        x = st_x_label, y = st_y_label, caption = st_caption) +
   theme_bw()
 
@@ -811,12 +811,12 @@ st_y_label <- 'Expected Outcome Individual 2'
 
 # Graphing
 plt_opti <-
-  tb_all_points %>% 
+  tb_all_points %>%
   filter(outtype=='optimal') %>%
-  ggplot(aes(x=EH_1l, y=EH_2l, 
+  ggplot(aes(x=EH_1l, y=EH_2l,
              colour=rho_val, shape=vartype)) +
   geom_jitter(size=2, width = 0) +
-  labs(title = st_title, subtitle = st_subtitle, 
+  labs(title = st_title, subtitle = st_subtitle,
        x = st_x_label, y = st_y_label, caption = st_caption) +
   theme_bw()
 
@@ -841,21 +841,21 @@ st_y_label <- 'Individual 2 EH'
 #                                'EH_1l', 'EH_2l
 
 # Graphing
-plt_indiff <- 
-  df_indiff %>% 
+plt_indiff <-
+  df_indiff %>%
   mutate(rho_val = as_factor(rho_val),
          beta_1 = as_factor(beta_1),
          val_at_choices = as_factor(val_at_choices)) %>%
   ggplot(aes(x=EH_1l, y=EH_2l, colour=rho_val)) +
-  facet_wrap(~ vartype) + 
+  facet_wrap(~ vartype) +
   geom_point(size=1) +
   labs(title = st_title, subtitle = st_subtitle,
        x = st_x_label, y = st_y_label, caption = st_caption) +
   theme_bw()
 
 # Graphing
-plt_indiff_cts <- 
-  df_indiff %>% filter(vartype == 'continuous') %>% 
+plt_indiff_cts <-
+  df_indiff %>% filter(vartype == 'continuous') %>%
   mutate(rho_val = as_factor(rho_val),
          beta_1 = as_factor(beta_1),
          val_at_choices = as_factor(val_at_choices)) %>%
@@ -866,8 +866,8 @@ plt_indiff_cts <-
   theme_bw()
 
 # Graphing
-plt_indiff_disc <- 
-  df_indiff %>% filter(vartype == 'discrete') %>% 
+plt_indiff_disc <-
+  df_indiff %>% filter(vartype == 'discrete') %>%
   mutate(rho_val = as_factor(rho_val),
          beta_1 = as_factor(beta_1),
          val_at_choices = as_factor(val_at_choices)) %>%
@@ -886,60 +886,60 @@ print(plt_indiff)
 ```{r}
 # Data
 tb_dis <- tb_all_points %>% filter(vartype=='discrete' & rho_val == 9999) %>%
-  mutate(rho_val_str = case_when(rho_val == 9999 ~ 'Feasible')) 
-tb_dis_frontier <- tb_all_points %>% 
-  filter(vartype=='discrete' & rho_val == 9999) 
-tb_dis_idif <- df_indiff %>% filter(vartype == 'discrete') %>% 
-  filter(rho_val == -0.01) %>% 
+  mutate(rho_val_str = case_when(rho_val == 9999 ~ 'Feasible'))
+tb_dis_frontier <- tb_all_points %>%
+  filter(vartype=='discrete' & rho_val == 9999)
+tb_dis_idif <- df_indiff %>% filter(vartype == 'discrete') %>%
+  filter(rho_val == -0.01) %>%
   mutate(rho_val = as_factor(rho_val),
          beta_1 = as_factor(beta_1),
          val_at_choices = as_factor(val_at_choices))
 
 # Plot 1: Indifference Simple (too many lines confusing)
-plt_indiff_oneline <- tb_dis_idif %>% 
+plt_indiff_oneline <- tb_dis_idif %>%
   ggplot(aes(x=EH_1l, y=EH_2l)) +
   geom_point(size=0.5)
 
 # Plot 2: Indifference Simple (too many lines confusing)
 plt_frontier <- geom_line(data = tb_dis_frontier,
-                          aes(x=EH_1l, y=EH_2l, group=w_units), 
+                          aes(x=EH_1l, y=EH_2l, group=w_units),
                           colour = "black", linetype = "dashed")
 
 # Plot 1 + 2 + 3: Choice + Indiff
-plt_disc_paper <- 
-  plt_indiff_oneline + 
-  plt_frontier + 
+plt_disc_paper <-
+  plt_indiff_oneline +
+  plt_frontier +
   geom_point(data = tb_dis,
               aes(x=EH_1l, y=EH_2l,
                   colour=rho_val_str,
                   shape=rho_val_str,
                   size=rho_val_str))
-                  # 
+                  #
 
 # Plot Axis Setting
-plt_disc_paper <- plt_disc_paper + 
-  xlim(min(tb_dis$EH_1l)-0.4, max(tb_dis$EH_1l)+0.4) + 
+plt_disc_paper <- plt_disc_paper +
+  xlim(min(tb_dis$EH_1l)-0.4, max(tb_dis$EH_1l)+0.4) +
   ylim(min(tb_dis$EH_2l)-0.4, max(tb_dis$EH_2l)+0.4)
 
 # Labeling
-plt_disc_paper$labels$colour <- ""  
-plt_disc_paper$labels$shape <- ""  
+plt_disc_paper$labels$colour <- ""
+plt_disc_paper$labels$shape <- ""
 # st_title <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels')
 st_subtitle <- paste0('Red Dots = the maximum feasible expected outcomes grid (rectilinear)\n',
-                      'Black Solid Lines = indifference curves for λ=-0.01\n', 
+                      'Black Solid Lines = indifference curves for λ=-0.01\n',
                       'Black Dashed Lines = discrete aggregate resource levels')
 st_caption <- paste0('Expected Outcome Two People Example')
 st_x_label <- expression(EH[1]~'('~D[1]~'): '~Expected~Outcome~Allocation~Recipient~1)
 st_y_label <- expression(EH[2]~'('~D[2]~'): '~Expected~Outcome~Allocation~Recipient~2)
-plt_disc_paper <- plt_disc_paper +   
-  labs(subtitle = st_subtitle, 
-       x = st_x_label, 
-       y = st_y_label, 
+plt_disc_paper <- plt_disc_paper +
+  labs(subtitle = st_subtitle,
+       x = st_x_label,
+       y = st_y_label,
        caption = st_caption) +
   theme_bw(base_size=8) +
-  scale_size_manual(values=c(7,6,6,4)) + 
+  scale_size_manual(values=c(7,6,6,4)) +
   guides(size=FALSE)
-  
+
   # scale_color_manual(values=c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF'))+
   #
 
@@ -963,66 +963,66 @@ print(plt_disc_paper)
 
 ```
 
-#### Discrete Utility and Choices Jointly 
+#### Discrete Utility and Choices Jointly
 
 ```{r}
 # Data
 tb_dis <- tb_all_points %>% filter(vartype=='discrete') %>%
   mutate(rho_val_str = case_when(rho_val == 9999 ~ 'Feasible',
-                                TRUE ~ paste0('λ=',rho_val))) 
-tb_dis_frontier <- tb_all_points %>% 
-  filter(vartype=='discrete' & rho_val == 9999) 
-tb_dis_idif <- df_indiff %>% filter(vartype == 'discrete') %>% 
-  filter(rho_val == -0.01) %>% 
+                                TRUE ~ paste0('λ=',rho_val)))
+tb_dis_frontier <- tb_all_points %>%
+  filter(vartype=='discrete' & rho_val == 9999)
+tb_dis_idif <- df_indiff %>% filter(vartype == 'discrete') %>%
+  filter(rho_val == -0.01) %>%
   mutate(rho_val = as_factor(rho_val),
          beta_1 = as_factor(beta_1),
          val_at_choices = as_factor(val_at_choices))
 
 # Plot 1: Indifference Simple (too many lines confusing)
-plt_indiff_oneline <- tb_dis_idif %>% 
+plt_indiff_oneline <- tb_dis_idif %>%
   ggplot(aes(x=EH_1l, y=EH_2l)) +
   geom_point(size=0.5)
 
 # Plot 2: Indifference Simple (too many lines confusing)
 plt_frontier <- geom_line(data = tb_dis_frontier,
-                          aes(x=EH_1l, y=EH_2l, group=w_units), 
+                          aes(x=EH_1l, y=EH_2l, group=w_units),
                           colour = "gray", linetype = "dashed")
 
 # Plot 1 + 2 + 3: Choice + Indiff
-plt_disc_paper <- 
-  plt_indiff_oneline + 
-  plt_frontier + 
+plt_disc_paper <-
+  plt_indiff_oneline +
+  plt_frontier +
   geom_point(data = tb_dis,
               aes(x=EH_1l, y=EH_2l,
                   colour=rho_val_str,
                   shape=rho_val_str,
                   size=rho_val_str))
-                  # 
+                  #
 
 # Plot Axis Setting
-plt_disc_paper <- plt_disc_paper + 
-  xlim(min(tb_dis$EH_1l)-0.4, max(tb_dis$EH_1l)+0.4) + 
+plt_disc_paper <- plt_disc_paper +
+  xlim(min(tb_dis$EH_1l)-0.4, max(tb_dis$EH_1l)+0.4) +
   ylim(min(tb_dis$EH_2l)-0.4, max(tb_dis$EH_2l)+0.4)
 
 # Labeling
-plt_disc_paper$labels$colour <- "λ Levels"  
-plt_disc_paper$labels$shape <- "λ Levels"  
+plt_disc_paper$labels$colour <- "λ Levels"
+plt_disc_paper$labels$shape <- "λ Levels"
 # st_title <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels')
 st_subtitle <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels\n',
-                      'Black Solid Lines = indifference curves for λ=-0.01\n', 
+                      'Black Solid Lines = indifference curves for λ=-0.01\n',
                       'Gray Dashed Lines = discrete aggregate resource levels')
 st_caption <- paste0('Expected Outcome Two People Example')
 st_x_label <- expression(EH[1]~'('~D[1]~'): '~Expected~Outcome~Allocation~Recipient~1)
 st_y_label <- expression(EH[2]~'('~D[2]~'): '~Expected~Outcome~Allocation~Recipient~2)
-plt_disc_paper <- plt_disc_paper +   
-  labs(subtitle = st_subtitle, 
-       x = st_x_label, 
-       y = st_y_label, 
+plt_disc_paper <- plt_disc_paper +
+  labs(subtitle = st_subtitle,
+       x = st_x_label,
+       y = st_y_label,
        caption = st_caption) +
   theme_bw(base_size=8) +
-  scale_size_manual(values=c(7,6,6,4)) + 
+  scale_size_manual(values=c(7,6,6,4)) +
   guides(size=FALSE)
-  
+
   # scale_color_manual(values=c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF'))+
   #
 
@@ -1051,48 +1051,48 @@ print(plt_disc_paper)
 tb_cts <- tb_all_points %>% filter(vartype=='discrete') %>%
   filter(rho_val != 9999) %>%
   mutate(rho_val_str = case_when(rho_val == 9999 ~ 'Feasible Choices',
-                                 TRUE ~ paste0('λ=',rho_val))) 
-tb_cts_frontier <- tb_all_points %>% 
-  filter(vartype=='continuous' & rho_val == 9999) 
-tb_cts_idif <- df_indiff %>% filter(vartype == 'continuous') %>% 
-  filter(rho_val == -0.01) %>% 
+                                 TRUE ~ paste0('λ=',rho_val)))
+tb_cts_frontier <- tb_all_points %>%
+  filter(vartype=='continuous' & rho_val == 9999)
+tb_cts_idif <- df_indiff %>% filter(vartype == 'continuous') %>%
+  filter(rho_val == -0.01) %>%
   mutate(rho_val = as_factor(rho_val),
          beta_1 = as_factor(beta_1),
          val_at_choices = as_factor(val_at_choices))
 
 # Plot 1: Indiff Plot Limited Lines
-plt_indiff_cts_oneline <- tb_cts_idif %>% 
+plt_indiff_cts_oneline <- tb_cts_idif %>%
   ggplot(aes(x=EH_1l, y=EH_2l)) +
   geom_point(size=0.5)
 
 # Plot 2: Indifference Simple (too many lines confusing)
 plt_frontier_cts <- geom_line(data = tb_cts_frontier,
-                          aes(x=EH_1l, y=EH_2l, group=w_units), 
+                          aes(x=EH_1l, y=EH_2l, group=w_units),
                           colour = "black", linetype = "dashed")
 
 # Plot 1 + 2 + 3: Choice + Indiff
 plt_cnts_paper <- plt_indiff_cts_oneline + plt_frontier_cts
 
 # Plot Axis Setting
-plt_cnts_paper <- plt_cnts_paper + 
-  xlim(min(tb_cts$EH_1l-0.4), max(tb_cts$EH_1l+0.4)) + 
+plt_cnts_paper <- plt_cnts_paper +
+  xlim(min(tb_cts$EH_1l-0.4), max(tb_cts$EH_1l+0.4)) +
   ylim(min(tb_cts$EH_2l-0.4), max(tb_cts$EH_2l+0.4))
 
 # Labeling
-plt_cnts_paper$labels$colour <- "λ Levels"  
-plt_cnts_paper$labels$shape <- "λ Levels"  
+plt_cnts_paper$labels$colour <- "λ Levels"
+plt_cnts_paper$labels$shape <- "λ Levels"
 st_subtitle <- paste0('Rectangular bounds on choices\n',
-                      'Black Solid Lines = indifference curves for λ=-0.01\n', 
+                      'Black Solid Lines = indifference curves for λ=-0.01\n',
                       'Black Dashed Lines = selected aggregate resource levels')
 # st_title <- paste0('Bounded Continuous Choice Resource Expansion Path with N=2')
 # st_subtitle <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels')
 st_caption <- paste0('Expected Outcome Two People Example')
 st_x_label <- expression(EH[1]~'('~C[1]~'): '~Expected~Outcome~Recipient~1)
 st_y_label <- expression(EH[2]~'('~C[2]~'): '~Expected~Outcome~Recipient~2)
-plt_cnts_paper <- plt_cnts_paper +   
-  labs(subtitle = st_subtitle, 
-       x = st_x_label, 
-       y = st_y_label, 
+plt_cnts_paper <- plt_cnts_paper +
+  labs(subtitle = st_subtitle,
+       x = st_x_label,
+       y = st_y_label,
        caption = st_caption) +
   theme_bw(base_size=8)
 
@@ -1104,67 +1104,67 @@ if (bl_save_img) {
   print(plt_cnts_paper)
   dev.off()
   png(paste0(spt_img_save_draft, snm_cnts),
-        width = 135, height = 86, units='mm', res = 300, 
+        width = 135, height = 86, units='mm', res = 300,
       pointsize=5)
   print(plt_cnts_paper)
   dev.off()
 }
-# Prin here  
-print(plt_cnts_paper)  
+# Prin here
+print(plt_cnts_paper)
 ```
 
-#### Continuous Utility and Choices Jointly 
+#### Continuous Utility and Choices Jointly
 
 ```{r}
 # Data
 tb_cts <- tb_all_points %>% filter(vartype=='continuous') %>%
   filter(rho_val != 9999) %>%
   mutate(rho_val_str = case_when(rho_val == 9999 ~ 'Feasible Choices',
-                                 TRUE ~ paste0('λ=',rho_val))) 
-tb_cts_frontier <- tb_all_points %>% 
-  filter(vartype=='continuous' & rho_val == 9999) 
-tb_cts_idif <- df_indiff %>% filter(vartype == 'continuous') %>% 
-  filter(rho_val == -0.01) %>% 
+                                 TRUE ~ paste0('λ=',rho_val)))
+tb_cts_frontier <- tb_all_points %>%
+  filter(vartype=='continuous' & rho_val == 9999)
+tb_cts_idif <- df_indiff %>% filter(vartype == 'continuous') %>%
+  filter(rho_val == -0.01) %>%
   mutate(rho_val = as_factor(rho_val),
          beta_1 = as_factor(beta_1),
          val_at_choices = as_factor(val_at_choices))
 
 # Plot 1: Indiff Plot Limited Lines
-plt_indiff_cts_oneline <- tb_cts_idif %>% 
+plt_indiff_cts_oneline <- tb_cts_idif %>%
   ggplot(aes(x=EH_1l, y=EH_2l)) +
   geom_point(size=0.5)
 
 # Plot 2: Indifference Simple (too many lines confusing)
 plt_frontier_cts <- geom_line(data = tb_cts_frontier,
-                          aes(x=EH_1l, y=EH_2l, group=w_units), 
+                          aes(x=EH_1l, y=EH_2l, group=w_units),
                           colour = "gray", linetype = "dashed")
 
 # Plot 1 + 2 + 3: Choice + Indiff
-plt_cnts_paper <- plt_indiff_cts_oneline + plt_frontier_cts + 
+plt_cnts_paper <- plt_indiff_cts_oneline + plt_frontier_cts +
   geom_point(data = tb_cts,
              aes(x=EH_1l, y=EH_2l, colour=rho_val_str, shape=rho_val_str),
              size=2, width = 0)
 
 # Plot Axis Setting
-plt_cnts_paper <- plt_cnts_paper + 
-  xlim(min(tb_cts$EH_1l-0.4), max(tb_cts$EH_1l+0.4)) + 
+plt_cnts_paper <- plt_cnts_paper +
+  xlim(min(tb_cts$EH_1l-0.4), max(tb_cts$EH_1l+0.4)) +
   ylim(min(tb_cts$EH_2l-0.4), max(tb_cts$EH_2l+0.4))
 
 # Labeling
-plt_cnts_paper$labels$colour <- "λ Levels"  
-plt_cnts_paper$labels$shape <- "λ Levels"  
+plt_cnts_paper$labels$colour <- "λ Levels"
+plt_cnts_paper$labels$shape <- "λ Levels"
 st_subtitle <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels\n',
-                      'Black Solid Lines = indifference curves for λ=-0.01\n', 
+                      'Black Solid Lines = indifference curves for λ=-0.01\n',
                       'Gray Dashed Lines = selected aggregate resource levels')
 # st_title <- paste0('Bounded Continuous Choice Resource Expansion Path with N=2')
 # st_subtitle <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels')
 st_caption <- paste0('Expected Outcome Two People Example')
 st_x_label <- expression(EH[1]~'('~C[1]~'): '~Expected~Outcome~Recipient~1)
 st_y_label <- expression(EH[2]~'('~C[2]~'): '~Expected~Outcome~Recipient~2)
-plt_cnts_paper <- plt_cnts_paper +   
-  labs(subtitle = st_subtitle, 
-       x = st_x_label, 
-       y = st_y_label, 
+plt_cnts_paper <- plt_cnts_paper +
+  labs(subtitle = st_subtitle,
+       x = st_x_label,
+       y = st_y_label,
        caption = st_caption) +
   theme_bw(base_size=8)
 
@@ -1176,13 +1176,13 @@ if (bl_save_img) {
   print(plt_cnts_paper)
   dev.off()
   png(paste0(spt_img_save_draft, snm_cnts),
-        width = 135, height = 86, units='mm', res = 300, 
+        width = 135, height = 86, units='mm', res = 300,
       pointsize=5)
   print(plt_cnts_paper)
   dev.off()
 }
-# Prin here  
-print(plt_cnts_paper)  
+# Prin here
+print(plt_cnts_paper)
 ```
 
 
@@ -1191,35 +1191,35 @@ ar_w_solve_at_disc <- seq(1,18)
 it_alpha_1l_zr <- 10
 it_alpha_2l_zr <- 10
 for (it_w in ar_w_solve_at_disc){
-  
+
   ar_cur_w_ehlt_combo <- c()
   ar_cur_w_unit_combo <- c()
-  
+
   for (it_1l in seq(1, it_alpha_1l_zr)){
     fl_eh_1l <- ar_eh_1l_zr[it_1l]
-    
+
     for (it_2l in seq(1, it_alpha_2l_zr)){
       fl_eh_2l <- ar_eh_2l_zr[it_2l]
-      
+
       # included alloca = 0 at L162
       it_1l_2l_sum <- (it_1l-1) + (it_2l-1)
       if (it_1l_2l_sum == it_w){
         # at this point, EH_1 and EH_2
-        
+
         # Aggregate Resource is Fully Distributed
         ar_cur_w_ehlt_combo <- c(ar_cur_w_ehlt_combo, fl_eh_1l, fl_eh_2l)
         ar_cur_w_unit_combo <- c(ar_cur_w_unit_combo, it_1l-1, it_2l-1)
-        
+
       }
     }
   }
-  
+
   dim(ar_cur_w_unit_combo) <- c(2, length(ar_cur_w_unit_combo)/2)
   print(ar_cur_w_unit_combo)
-  
+
   it_compo_one <- min(min(it_w + 1, min(it_alpha_1l_zr, it_alpha_2l_zr)))
   it_compo_two <- -(max(0, it_w - (min(it_alpha_1l_zr, it_alpha_2l_zr) + 1)))
-  print(paste0('iit_compo_one:', it_compo_one, ', it_compo_two:', it_compo_two, 
+  print(paste0('iit_compo_one:', it_compo_one, ', it_compo_two:', it_compo_two,
                ', it_compo_one_two:', it_compo_one + it_compo_two))
 }
 

@@ -22,10 +22,10 @@ What is optimal might depend on the preferences of the planner? I use *CES prefe
 1. What is the WFP's *Inequality Aversion*?
     + Trying to increase average height? (or reduce average stunting probability)
     + Trying to increase height for those who are suffering from stunting the most?
-    + Or Trying to improve both average outcomes and outcomes for the worst?
+    + Or trying to improve both average outcomes and outcomes for the worst?
 2. Does the WFP have a current *bias*?
-    + The WFP might be for the next year, focused on improving outcomes for girls, that is a bias for girls over boys
-    + The WFP might be focused on improving conditions in a set of countries for the next year, that is bias for individuals from these countries.
+    + The WFP might be for the next year, focused on improving outcomes for girls: bias for girls over boys.
+    + The WFP might be focused on improving conditions in a set of countries for the next year: bias for individuals from these countries.
 3. What is the *expected outcome* of interest?
     + Is height increase the objective?
     + Is increasing height above the stunting threshold the objective?
@@ -35,13 +35,13 @@ What is optimal might depend on the preferences of the planner? I use *CES prefe
 
 What is optimal might depend on prior estimates and observables on children? Needs and effectiveness are based on estimates and observables:
 
-1. *needs*: From admin and survey data, and using existing estimates, what is the expected level of height at two years of age for a child given the child's height at birth and parental information.
-2. *effectiveness*: Given prior estimates, and child observables, what is the expected effect of an additional bottle of nutritional supplement on this child's expected height at two years of age?
-3. *bounds*: What are the upper and lower bounds on how many bottles of protein shakes, or how many grams of protein intakes a child could take at the most or must take at the minimum?
+1. *Needs*: From admin and survey data, and using existing estimates, what is the expected level of height at two years of age for a child given the child's height at birth and parental information.
+2. *Effectiveness*: Given prior estimates, and child observables, what is the expected effect of an additional bottle of nutritional supplement on this child's expected height at two years of age?
+3. *Bounds*: What are the upper and lower bounds on how many bottles of protein shakes, or how many grams of protein intakes a child could take at the most or must take at the minimum?
 
 ## From Estimation to Allocation
 
-We estimate some causal relationship between individual specific allocable input *V* and some outcome of interest *EH*. Finding causal estimates in reduced form or structural context is the main objective of most empirical papers. Generally, most research ends with finding what inputs/factors/policies matter, and how much they matter.
+We estimate some causal relationship between individual-specific allocable input *V* and some outcome of interest *EH*. Finding causal estimates in reduced form or structural context is the main objective of most empirical papers. Generally, most research ends with finding what inputs/factors/policies matter and how much they matter.
 
 What are the allocative implications of the causal estimates and observables? One way to think about this is that we might want to randomize in order to estimate causal effects, but given our estimates, how should we allocate among heterogeneous individuals the finite resources that we found to be beneficial.
 
@@ -49,9 +49,9 @@ The key tradeoff here is between *needs* and *effectiveness*. What is the expect
 
 ## Optimal Allocation Queues
 
-The key concept that make the solutions possible is the *Optimal Allocation Queue*. It turns out, in both discrete and continuous cases, we can analytical solve for the optimal ranking in which individuals should begin and stop to receive allocations. These rankings, crucially, are invariant to resources when the marginal effects of allocations are nonincreasing. Nonincreasing marginal effects lead to resource (income) expansion paths do not bend backwards.
+The key concept that makes the solutions possible is the *Optimal Allocation Queue*. In both discrete and bounded-continuous (linear) cases, we can analytically solve for the optimal ranking in which individuals should begin and stop to receive allocations. These rankings, crucially, are invariant to resources when the marginal effects of allocations are nonincreasing. Nonincreasing marginal effects lead to resource (income) expansion paths that do not bend backward.
 
-One might think the allocation queue concept is not relevant for the continuous problems, because there, we need to figure out how much to provide to each individual, not just who should receive first or second. But it turns out that for the bounded-continuous problem, the solution is to first analytically find who should be the first individual to receive allocations. Then, there is an analytical function that maps total resource available to how much this first recipient should optimally receive as total resource availability increase. This function, it turns out, is a linear spline (when marginal returns are linear), and each successive knot of the spline is where the next individual in the optimal targeting queue begins to receive allocations.
+One might think the allocation queue concept is not relevant for the continuous problems, because there, we need to figure out how much to provide to each individual, not just who should receive first or second. But it turns out that for the bounded-continuous problem, the solution is to first analytically find who should be the first individual to receive allocations. Then, there is an analytical function that maps total resources available to how much this first recipient should optimally receive as total resource availability increases. This function, it turns out, is a linear spline (when marginal returns are linear), and each successive knot of the spline is where the next individual in the optimal targeting queue begins to receive allocations.
 
 For the bounded-continuous problems, in the paper, I only discuss the linear case with constant-returns. When returns are decreasing, there are no analytical solutions. I do provide the solution to the log-linear problem using bisection in this vignette: [Loglinear Optimal Allocation Implicit Bisection Solution](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solog_bisec_allrw.html)
 
