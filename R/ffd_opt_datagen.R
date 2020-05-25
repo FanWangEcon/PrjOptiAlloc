@@ -21,6 +21,9 @@ ffd_draw_n_alpha <- function(fl_w_dollar = 100,
   #' @param fl_A_i_relative_ratio float Relative ratio of A between the two individuals
   #' @param it_N integer the number of individuals
   #' @param it_rand_seed integer random seed
+  #' @author Fan Wang, \url{http://fanwangecon.github.io}
+  #' @export
+
 
   set.seed(it_rand_seed)
 

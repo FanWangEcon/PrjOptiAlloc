@@ -1,0 +1,179 @@
+---
+title: Example Discrete and Bounded-Continuous Optimal Allocation for N=2
+description: |
+  Test Theorem 1 and Theorem 2 optimal allocation functions when N=2.
+  Use randomly generated A and alpha parameters for two individuals' discrete and bounded-continuous
+  allocation problems.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example Discrete and Bounded-Continuous Optimal Allocation for N=2}
+    %\VignetteEngine{knitr::rmarkdown}
+    \usepackage[utf8]{inputenc}
+urlcolor: blue
+---
+
+```{r global_options, include = FALSE}
+# try(source("../.Rprofile"))
+rm(list = ls(all.names = TRUE))
+# Load Libraries
+library(stats)
+library(tibble)
+library(tidyr)
+library(stringr)
+library(broom)
+library(haven)
+library(forcats)
+library(ggplot2)
+library(dplyr)
+
+library(PrjOptiAlloc)
+
+source('C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/PrjOptiAlloc/R/ffd_opt_datagen.R')
+
+bl_save_img = FALSE
+```
+
+## Input and Output
+
+### Specify Parameters
+
+```{r}
+spt_img_save <- '../_img/'
+spt_img_save_draft <- 'C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/HgtOptiAlloDraft/_img/'
+
+# Draw data
+fl_beta_1 = 0.5
+fl_beta_2 = 1-fl_beta_1
+fl_w_dollar = 100
+it_w_units_avg = 5
+
+# Specify more parameters
+fl_dis_w <- (it_w_units_avg + 1)
+fl_cts_w <- fl_dis_w # common price
+ar_rho <- c(0.5, -5)
+ar_rho <- c(0.99, -0.01, -100)
+# ar_rho <- c(0.99, -0.01, -6)
+# ar_rho <- 1 - (10^(c(seq(-2,2, length.out=20))))
+```
+
+### Generate A and alpha
+
+These parameters persist and are used throughout the rest of the file for allocation allocations. Parameters are more or less shared by discrete and continuous parameters.
+
+```{r}
+it_rand_seed <- sample(10^7, 1, replace=T)
+
+it_w_units_avg = 5
+it_rand_seed <- 8135788
+
+# it_w_units_avg = 5
+# it_rand_seed <- 1234
+
+# it_w_units_avg = 4
+# it_rand_seed <- 449879812
+
+it_N <- 2
+ls_out_n2 <- suppressMessages(
+  ffd_draw_n_alpha(fl_w_dollar=fl_w_dollar,
+                   it_w_units_avg=it_w_units_avg,
+                   it_N = it_N, it_rand_seed=it_rand_seed))
+
+# Translate to 2D budget indiff units
+# fl_e = endowment points
+fl_A_1 = ls_out_n2$ar_A_i[1]
+fl_A_2 = ls_out_n2$ar_A_i[2]
+# fl_alpha_1l = alpha_il
+# fl_eh_alloc_il = outcome at alloations
+ar_alpha_1l = ls_out_n2$ls_ar_alpha_il[[1]]$ar_levels
+ar_alpha_2l = ls_out_n2$ls_ar_alpha_il[[2]]$ar_levels
+ar_alpha_1l_zr = c(0,ls_out_n2$ls_ar_alpha_il[[1]]$ar_levels)
+ar_alpha_2l_zr = c(0,ls_out_n2$ls_ar_alpha_il[[2]]$ar_levels)
+ar_A_1l <- fl_A_1 + cumsum(head(ar_alpha_1l_zr, -1))
+ar_A_2l <- fl_A_2 + cumsum(head(ar_alpha_2l_zr, -1))
+ar_eh_1l_zr <- fl_A_1 + cumsum(ar_alpha_1l_zr)
+ar_eh_2l_zr <- fl_A_2 + cumsum(ar_alpha_2l_zr)
+it_D_1l <- length(ar_alpha_1l)
+it_D_2l <- length(ar_alpha_2l)
+# Max Discrete Choice After which budget outside of choice strike zone fully
+it_w_max <- length(ar_alpha_1l) + length(ar_alpha_2l)
+ar_w_solve_at_disc <- seq(1, it_w_max)
+
+# Continuous
+fl_alpha_1 = ls_out_n2$ar_cts_alpha[1]
+fl_alpha_2 = ls_out_n2$ar_cts_alpha[2]
+fl_price = ls_out_n2$fl_price
+# continuous choice use discrete max as bounds
+fl_D_max_1 = length(ar_alpha_1l)
+fl_D_max_2 = length(ar_alpha_2l)
+fl_EH_max_1 = fl_A_1 + fl_D_max_1*fl_alpha_1
+fl_EH_max_2 = fl_A_2 + fl_D_max_2*fl_alpha_2
+# max_dollar
+fl_w_dollar_max = fl_price*it_w_max
+ar_w_dollars_strike_at_disc <- seq(0, fl_w_dollar_max, length.out=(it_w_max+1))
+ar_w_dollars_solve_at_disc <- seq(0, fl_w_dollar_max, length.out=(it_w_max*6)+1)
+
+# print
+print(paste0('it_rand_seed:',it_rand_seed))
+print(paste0('fl_A_1:', fl_A_1, ',fl_A_2:', fl_A_2))
+print(paste0('fl_alpha_1:', fl_A_1, ',fl_alpha_2:', fl_A_2))
+print(paste0('ar_alpha_1l:', ar_alpha_1l))
+print(paste0('ar_alpha_2l:', ar_alpha_2l))
+print(paste0('ar_A_1l:', ar_A_1l))
+print(paste0('ar_A_2l:', ar_A_2l))
+print(paste0('ar_eh_1l_zr:', ar_eh_1l_zr))
+print(paste0('ar_eh_2l_zr:', ar_eh_2l_zr))
+```
+
+## Optimal Discrete Choices
+
+Given $A_i$ and $\alpha_{il}$, solve for optimal discrete allocation
+
+Build up discrete input frame
+```{r}
+# ID and max Discrete Allocation
+mt_i_D <- cbind(c(1,2), c(it_D_1l, it_D_2l))
+colnames(mt_i_D) <- c('id_i', 'D_max_i')
+tb_i_D <- as_tibble(mt_i_D)
+# A_i and alpha_il as matrix
+mt_A_alpha <- rbind(cbind(1, seq(1,it_D_1l), ar_alpha_1l, ar_A_1l, fl_beta_1),
+                    cbind(2, seq(1,it_D_2l), ar_alpha_2l, ar_A_2l, fl_beta_2))
+colnames(mt_A_alpha) <- c('id_i', 'D_il', 'alpha_il', 'A_il', 'beta_i')
+# Combine to generate input_il matrix
+df_input_il <- tb_i_D %>%
+  uncount(D_max_i) %>%
+  rowid_to_column(var = "id_il") %>%
+  left_join(tb_i_D, by='id_i') %>%
+  group_by(id_i) %>%
+  mutate(D_il = row_number()) %>%
+  left_join(as_tibble(mt_A_alpha), by=(c('id_i'='id_i', 'D_il'='D_il')))
+```
+
+Solve for optimal choices.
+
+```{r}
+ls_dis_solu <- suppressWarnings(suppressMessages(
+  ffp_opt_anlyz_rhgin_dis(ar_rho,
+                          fl_dis_w,
+                          df_input_il,
+                          bl_df_alloc_il = TRUE,
+                          bl_return_V = TRUE,
+                          bl_return_allQ_V = TRUE,
+                          bl_return_inner_V = TRUE)))
+df_queue_il_long_n2 <-ls_dis_solu$df_queue_il_long
+df_queue_il_wide_n2 <- ls_dis_solu$df_queue_il_wide
+df_alloc_i_long_n2 <- ls_dis_solu$df_alloc_i_long
+df_rho_gini_n2 <- ls_dis_solu$df_rho_gini
+df_alloc_il_long_n2 <- ls_dis_solu$df_alloc_il_long
+```
+
+Sort Value along Resource Expansion Path:
+
+```{r}
+df_queue_il_long_n2 %>%
+  arrange(rho_val, Q_il) %>%
+  select(rho_val, id_i, id_il, Q_il, D_Wbin_il, V_sum_l, V_inner_Q_il, V_star_Q_il)
+```
+
+
+## The Rev Function, compare aginst some Alternative Allocation
+

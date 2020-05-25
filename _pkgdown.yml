@@ -84,6 +84,9 @@ reference:
   - -df_opt_dtgch_cbem4_rrlop_argin
   - -df_opt_lalonde_training_employ
   - -df_opt_lalonde_training_wage
+  - -df_opt_caschool_prep_i
+  - -df_opt_caschool_input_ib
+  - -df_opt_caschool_input_il  
 - subtitle: Datasets with Optimal Allocation Results
   desc: Datset files with additional columns that store optimal allocation results or allocation space parameters
   contents:
@@ -92,6 +95,9 @@ reference:
   - df_opt_dtgch_cbem4_rrlop_argin
   - df_opt_lalonde_training_employ
   - df_opt_lalonde_training_wage
+  - df_opt_caschool_prep_i
+  - df_opt_caschool_input_ib
+  - df_opt_caschool_input_il
 - title: Support Files
   desc: Support functions and sample files that generate allocation space parameters from estimation space
   contents:
