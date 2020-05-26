@@ -6,3 +6,4 @@
 ^code_r$
 ^docs$
 ^vignettes_working$
+^_pkgdown\.yml$

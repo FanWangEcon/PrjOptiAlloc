@@ -1,12 +1,10 @@
 ---
-title: Example Discrete and Bounded-Continuous Optimal Allocation for N=2
+title: Discrete Optimal Allocation for N=2 and Welfare Distance REV
 description: |
-  Test Theorem 1 and Theorem 2 optimal allocation functions when N=2.
-  Use randomly generated A and alpha parameters for two individuals' discrete and bounded-continuous
-  allocation problems.
+  Compare welfare between all feasible discrete allocations and observed allocations when N=2.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Example Discrete and Bounded-Continuous Optimal Allocation for N=2}
+  %\VignetteIndexEntry{Discrete Optimal Allocation for N=2 and Welfare Distance REV}
     %\VignetteEngine{knitr::rmarkdown}
     \usepackage[utf8]{inputenc}
 urlcolor: blue
@@ -90,38 +88,17 @@ ar_alpha_1l_zr = c(0,ls_out_n2$ls_ar_alpha_il[[1]]$ar_levels)
 ar_alpha_2l_zr = c(0,ls_out_n2$ls_ar_alpha_il[[2]]$ar_levels)
 ar_A_1l <- fl_A_1 + cumsum(head(ar_alpha_1l_zr, -1))
 ar_A_2l <- fl_A_2 + cumsum(head(ar_alpha_2l_zr, -1))
-ar_eh_1l_zr <- fl_A_1 + cumsum(ar_alpha_1l_zr)
-ar_eh_2l_zr <- fl_A_2 + cumsum(ar_alpha_2l_zr)
 it_D_1l <- length(ar_alpha_1l)
 it_D_2l <- length(ar_alpha_2l)
 # Max Discrete Choice After which budget outside of choice strike zone fully
 it_w_max <- length(ar_alpha_1l) + length(ar_alpha_2l)
 ar_w_solve_at_disc <- seq(1, it_w_max)
 
-# Continuous
-fl_alpha_1 = ls_out_n2$ar_cts_alpha[1]
-fl_alpha_2 = ls_out_n2$ar_cts_alpha[2]
-fl_price = ls_out_n2$fl_price
-# continuous choice use discrete max as bounds
-fl_D_max_1 = length(ar_alpha_1l)
-fl_D_max_2 = length(ar_alpha_2l)
-fl_EH_max_1 = fl_A_1 + fl_D_max_1*fl_alpha_1
-fl_EH_max_2 = fl_A_2 + fl_D_max_2*fl_alpha_2
-# max_dollar
-fl_w_dollar_max = fl_price*it_w_max
-ar_w_dollars_strike_at_disc <- seq(0, fl_w_dollar_max, length.out=(it_w_max+1))
-ar_w_dollars_solve_at_disc <- seq(0, fl_w_dollar_max, length.out=(it_w_max*6)+1)
-
 # print
 print(paste0('it_rand_seed:',it_rand_seed))
 print(paste0('fl_A_1:', fl_A_1, ',fl_A_2:', fl_A_2))
-print(paste0('fl_alpha_1:', fl_A_1, ',fl_alpha_2:', fl_A_2))
 print(paste0('ar_alpha_1l:', ar_alpha_1l))
 print(paste0('ar_alpha_2l:', ar_alpha_2l))
-print(paste0('ar_A_1l:', ar_A_1l))
-print(paste0('ar_A_2l:', ar_A_2l))
-print(paste0('ar_eh_1l_zr:', ar_eh_1l_zr))
-print(paste0('ar_eh_2l_zr:', ar_eh_2l_zr))
 ```
 
 ## Optimal Discrete Choices
@@ -176,4 +153,112 @@ df_queue_il_long_n2 %>%
 
 
 ## The Rev Function, compare aginst some Alternative Allocation
+
+### Generate All Outcome Combinations 
+
+Generate all outcome combinations, and expected outcome combinations for the two individuals at all combinations. If allocations are binary, then there are 4 possible combinations, but have to skip zero/zero.
+
+First generate combination index frame:
+
+```{r}
+# generate index frame
+df_feasible_allocate <- 
+  as_tibble(expand.grid(id_1l = seq(0, it_D_1l), 
+                        id_2l = seq(0, it_D_2l))) %>%
+  filter(!(id_1l == 0 & id_2l == 0)) %>%
+  rowid_to_column(var = "id_alloc") %>%
+  expand_grid(as_tibble(seq(1, 2)) %>% rename(id_i = value)) %>%
+  mutate(beta_i = 0.5) %>%
+  select(id_alloc, id_i, id_1l, id_2l, beta_i)
+
+df_feasible_allocate$id_i = as.factor(df_feasible_allocate$id_i)
+df_feasible_allocate$id_1l = as.factor(df_feasible_allocate$id_1l)
+df_feasible_allocate$id_2l = as.factor(df_feasible_allocate$id_2l)
+# print
+df_feasible_allocate
+```
+
+Generate $\alpha$ matrix for the two individuals to prep for merging:
+
+```{r}
+# For individual 1
+df_alpha_1 <- as_tibble(mt_A_alpha) %>% filter(id_i == 1) %>%
+  select(alpha_il, D_il) %>%
+  rename(id_1l = D_il) %>%
+  mutate(id_i = 1) %>%
+  mutate(alpha_il_cum = cumsum(alpha_il)) %>%
+  select(-alpha_il)
+# For individual 2
+df_alpha_2 <- as_tibble(mt_A_alpha) %>% filter(id_i == 2) %>%
+  select(alpha_il, D_il) %>%
+  rename(id_2l = D_il) %>%
+  mutate(id_i = 2) %>%
+  mutate(alpha_il_cum = cumsum(alpha_il)) %>%
+  select(-alpha_il)
+# To factors
+df_alpha_1$id_i = as.factor(df_alpha_1$id_i)
+df_alpha_1$id_1l = as.factor(df_alpha_1$id_1l)
+df_alpha_2$id_i = as.factor(df_alpha_2$id_i)
+df_alpha_2$id_2l = as.factor(df_alpha_2$id_2l)
+
+# Print
+print(df_alpha_1)
+print(df_alpha_2)
+```
+
+Merging result for *A_i_l0* and *alpha_o_i*:
+
+```{r}
+df_input_ib_all <- df_feasible_allocate %>%
+  left_join(df_alpha_1, by=c('id_i'='id_i', 'id_1l'='id_1l')) %>%
+  left_join(df_alpha_2, by=c('id_i'='id_i', 'id_2l'='id_2l')) %>%
+  mutate(alpha_o_i = case_when(id_i == 1 ~ alpha_il_cum.x,
+                               id_i == 2 ~ alpha_il_cum.y)) %>%
+  select(-alpha_il_cum.x, -alpha_il_cum.y) %>%
+  mutate(alpha_o_i = case_when(is.na(alpha_o_i) ~ 0,
+                              TRUE ~ alpha_o_i)) %>%
+  mutate(A_i_l0 = case_when(id_i == 1 ~ fl_A_1, 
+                            id_i == 2 ~ fl_A_2)) %>%
+  select(id_alloc, id_i, id_1l, id_2l, A_i_l0, alpha_o_i, beta_i) %>%
+  mutate(w_agg = as.numeric(id_1l) + as.numeric(id_2l))
+  
+print(df_input_ib_all)
+```
+
+
+### REV Test for One Observed Set of Allocations at One Resource Point
+
+There are only two individuals, pick any feasible point, and compare against optimal allocations, at one aggregate resource point
+
+```{r}
+df_queue_il_long_with_V <- df_queue_il_long_n2
+df_input_ib_agg_grp <- df_input_ib_all %>% filter(w_agg==6)
+
+unique(df_input_ib_agg_grp %>% pull(id_alloc))
+
+
+df_input_ib <- df_input_ib_all %>% filter(id_alloc==36)
+df_input_ib
+it_w_agg <- df_input_ib %>% slice(1L) %>% pull(w_agg)
+
+ffp_opt_anlyz_sodis_rev(
+  ar_rho,
+  it_w_agg,
+  df_input_ib,
+  df_queue_il_long_with_V,
+)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
 

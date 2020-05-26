@@ -1,5 +1,5 @@
 Package: PrjOptiAlloc
-Title: What the Package Does (One Line, Title Case)
+Title: The Optimal Allocation of Resources Among Heterogeneous Individuals
 Version: 0.1.1
 Authors@R:
     person(given = "Fan",

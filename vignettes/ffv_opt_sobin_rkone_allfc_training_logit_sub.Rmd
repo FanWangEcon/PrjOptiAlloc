@@ -1,31 +1,18 @@
 ---
-title: Logit Employment Binary Allocation Lalonde Training Example
+title: Logit Employment Binary Allocation Lalonde Training Example by Age Only
 description: |
   Logit employment regression estimation of A and alpha from the Lalonde Training Dataset (722 Observations).
-  Solve for optimal binary allocation queues.
+  Solve for optimal binary allocation queues by Age only. 
+  Using only Age in employment predication and allocation determination. 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Logit Employment Binary Allocation Lalonde Training Example}
+  %\VignetteIndexEntry{Logit Employment Binary Allocation Lalonde Training Example by Age Only}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
 
-Example using the Lalonde Training Dataset. Estimate A and alpha from logit regression. Solve for optimal binary allocation queues. There are 722 observations, 297 in the treatment group, 425 in the control group.
-
-**Objective One**:
-
-estimate a logit regression using the [Lalonde (1986)](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_lalonde_training.html) dataset. Include age, education, and race as controls.
-
-**Generate and Analyze $A_i$ and $\alpha_i$**
-
-1. Generate and show how to generate $A_i$ and $\alpha_i$ in the binary allocation Space
-2. What is the correlation between $A$ and $\alpha$
-3. What is the relationship between $x$ and $A$ and $\alpha$, when there is one x covariate, when there are multiple?
-
-**Solve for Optimal Allocations**
-
-Uses the binary allocation function as well as the planner iterator to solve for optimal binary targeting queue. These queue tell the planner, given the planner's preferences, who should optimally receive allocations.
+In [Logit Employment Binary Allocation Lalonde Training Example](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allfc_training_logit.html), analyzed optimal allocation when all observables attributes of individuals are used for targeting. Subgroup allocation targeting here, based on one attribute.
 
 ## Set Up
 
@@ -59,6 +46,8 @@ bl_save_img = FALSE
 spt_img_save <- '../_img/'
 spt_img_save_draft <- 'C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/HgtOptiAlloDraft/_img/'
 ```
+
+The regression is the same as prior. Subgroup allocation is based on the idea of targeting only a subset of individuals, when we know the marginal effects and needs of all individuals.
 
 ```{r data set up}
 data(df_opt_lalonde_training)
@@ -125,8 +114,8 @@ dft$p_mpg <- predict(rs_logit, newdata = dft, type = "response")
 #                    , data = dft, family = "binomial")
 rs_logit_bi <- glm(emp78 ~
                      age + I(age^2) + factor(age_m2)
-                   + educ + I(educ^2) +
-                   + educ + black + hisp + marr + nodeg
+                   # + educ + I(educ^2) +
+                   # + educ + black + hisp + marr + nodeg
                    + factor(trt)
                    + factor(age_m2)*factor(trt)
                    , data = dft, family = "binomial")
@@ -182,7 +171,7 @@ scatter <- ggplot(dft, aes(x=p_mpg_hp_bi0)) +
 print(scatter)
 ```
 
-## Generate and Analyze A and alpha
+## Generate and Analyze Individual A and alpha
 
 ### Prediction with Binary set to 0 and 1 Difference
 
@@ -229,7 +218,7 @@ plt_A_alpha$labels$shape <- "Age Subgroups"
 print(plt_A_alpha)
 
 if (bl_save_img) {
-  snm_cnts <- 'Lalonde_employ_A_alpha.png'
+  snm_cnts <- 'Lalonde_employ_A_alpha_age.png'
   png(paste0(spt_img_save, snm_cnts),
         width = 135, height = 86, units='mm', res = 300, pointsize=7)
   print(plt_A_alpha)
@@ -242,54 +231,25 @@ if (bl_save_img) {
 }
 ```
 
-### X variables and A and alpha
-
-Given the x-variables included in the logit regression, how do they relate to A_i and alpha_i
-
-```{r logit prediction marginal vs base along covariate x, fig.height = 4, fig.width = 6, fig.align = "center"}
-# Generate Gap Variable
-dft <- dft %>% mutate(alpha_i = p_mpg_hp_bi1 - p_mpg_hp_bi0) %>%
-                mutate(A_i = p_mpg_hp_bi0)
-
-# Binary Marginal Effects and Prediction without Binary
-ggplot.A.alpha.x <- function(svr_x, df,
-                             svr_alpha = 'alpha_i', svr_A = "A_i"){
-
-  scatter <- ggplot(df, aes(x=!!sym(svr_x))) +
-        geom_point(aes(y=alpha_i), size=4, shape=4, color="red") +
-        geom_point(aes(y=A_i), size=2, shape=8, color="blue") +
-        geom_abline(intercept = 0, slope = 1) + # 45 degree line
-        labs(title = paste0('A (blue) and alpha (red) vs x variables=', svr_x),
-             x = svr_x,
-             y = 'Probabilities',
-             caption = paste0(sdt_name, ' simulated prediction')) +
-        theme_bw()
-
-return(scatter)
-}
-
-# Plot over multiple
-lapply(ls_st_xs,
-       ggplot.A.alpha.x,
-       df = dft)
-```
 
 ## Optimal Binary Allocation
+
+### Preference Vector
+
+```{r}
+beta_i <- rep(1/dim(dft)[1], times=dim(dft)[1])
+ar_rho = c(-100, -0.001,  0.95)
+ar_rho <- 1 - (10^(c(seq(-2,2, length.out=30))))
+ar_rho <- unique(ar_rho)
+```
 
 ### Solve for Optimal Allocaions Across Preference Parameters
 
 Invoke the binary optimal allocation function *ffp_opt_anlyz_rhgin_bin* that loops over rhos.
 
 ```{r}
-
 svr_inpalc <- 'rank'
-
-beta_i <- rep(1/dim(dft)[1], times=dim(dft)[1])
 dft <- cbind(dft, beta_i)
-ar_rho = c(-100, -0.001,  0.95)
-ar_rho <- 1 - (10^(c(seq(-2,2, length.out=30))))
-ar_rho <- unique(ar_rho)
-
 svr_rho_val <- 'rho_val'
 ls_bin_solu_all_rhos <-
   ffp_opt_anlyz_rhgin_bin(dft, svr_id_i = 'id',
@@ -319,15 +279,15 @@ df_all_rho_long <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>%
 # Select subset to graph
 df_rank_graph <- df_all_rho_long %>%
                     mutate(id = factor(id)) %>%
-                    filter((id == 2221) |  # utilitarian rank = 1
-                           (id == 58) |  # utilitarian rank = 101
-                           (id == 710)  |  # utilitarian rank = 201
-                           (id == 57) |  # utilitarian rank = 301
-                           (id == 74)|  # utilitarian rank = 401
-                           (id == 248) |  # utilitarian rank = 501
-                           (id == 206) |  # utilitarian rank = 601
-                           (id == 272)   # utilitarian rank = 701
-                             ) %>%
+                    filter((id == 1) |  # utilitarian rank = 1
+                           (id == 11) |  # utilitarian rank = 101
+                           (id == 5)  |  # utilitarian rank = 201
+                           (id == 205) |  # utilitarian rank = 301
+                           (id == 42)|  # utilitarian rank = 401
+                           (id == 8) |  # utilitarian rank = 501
+                           (id == 31) |  # utilitarian rank = 601
+                           (id == 134)   # utilitarian rank = 701
+                           ) %>%
                     mutate(one_minus_rho = 1 - !!sym(svr_rho_val)) %>%
                     mutate(rho_c1_rk = factor(rho_c1_rk))
 
@@ -335,13 +295,13 @@ df_rank_graph$rho_c1_rk
 
 df_rank_graph$id <- factor(df_rank_graph$rho_c1_rk,
                            labels = c('Rank= 1  ', #200
-                                      'Rank= 101', #110
-                                      'Rank= 201', #95
-                                      'Rank= 301', #217
-                                      'Rank= 401', #274
-                                      'Rank= 501', #101
-                                      'Rank= 601', #131
-                                      'Rank= 701' #3610
+                                      'Rank= 124', #110
+                                      'Rank= 245', #95
+                                      'Rank= 320', #217
+                                      'Rank= 411', #274
+                                      'Rank= 503', #101
+                                      'Rank= 595',
+                                      'Rank= 700'
                                        ))
 
 # x-labels
@@ -349,7 +309,7 @@ x.labels <- c('λ=0.99', 'λ=0.90', 'λ=0', 'λ=-10', 'λ=-100')
 x.breaks <- c(0.01, 0.10, 1, 10, 100)
 
 # title line 2
-title_line1 <- sprintf("Positions on the optimal binary allocation queue at varying inequality averion (λ) levels")
+title_line1 <- sprintf("Optimal allocation queue vary λ, allocate using only AGE")
 title_line2 <- sprintf("Colored lines = different individuals from the NSW training dataset")
 title_line3 <- sprintf("Track ranking changes for eight individuals ranked 1, 101, ..., 701 at λ=0.99")
 
@@ -375,7 +335,7 @@ line.plot$labels$colour <- "At λ=0.99, i's"
 print(line.plot)
 
 if (bl_save_img) {
-  snm_cnts <- 'Lalonde_employ_rank.png'
+  snm_cnts <- 'Lalonde_employ_rank_age.png'
   png(paste0(spt_img_save, snm_cnts),
         width = 135, height = 86, units='mm', res = 300, pointsize=7)
   print(line.plot)
@@ -391,17 +351,16 @@ if (bl_save_img) {
 ### Save Results
 
 ```{r saving file}
-
 # Change Variable names so that this can becombined with logit file later
-df_all_rho <- df_all_rho %>% rename_at(vars(starts_with("rho_")), funs(str_replace(., "rk", "rk_employ")))
+df_all_rho <- df_all_rho %>% rename_at(vars(starts_with("rho_")), funs(str_replace(., "rk", "rk_empage")))
 df_all_rho <- df_all_rho %>%
-        rename(A_i_employ = A_i, alpha_i_employ = alpha_i, beta_i_employ = beta_i,
-               rank_min_employ = rank_min, rank_max_employ = rank_max, avg_rank_employ = avg_rank)
+        rename(A_i_empage = A_i, alpha_i_empage = alpha_i, beta_i_empage = beta_i,
+               rank_min_empage = rank_min, rank_max_empage = rank_max, avg_rank_empage = avg_rank)
 
 # Save File
 if (bl_save_rda) {
-  df_opt_lalonde_training_employ <- df_all_rho
-  usethis::use_data(df_opt_lalonde_training_employ, df_opt_lalonde_training_employ, overwrite = TRUE)
+  df_opt_lalonde_training_empage <- df_all_rho
+  usethis::use_data(df_opt_lalonde_training_empage, df_opt_lalonde_training_empage, overwrite = TRUE)
 }
 ```
 

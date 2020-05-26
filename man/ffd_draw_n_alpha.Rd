@@ -38,3 +38,6 @@ ffd_draw_n_alpha(
 \description{
 Generates arbitrary dataframes needed for discrete as well as continuous optimization problems when there are N individuals?
 }
+\author{
+Fan Wang, \url{http://fanwangecon.github.io}
+}

@@ -58,15 +58,19 @@ spt_img_save_draft <- 'C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/HgtOptiAll
 
 ```{r Load Packages and Process Data}
 # Load Data
-data(df_opt_lalonde_training_employ)
 data(df_opt_lalonde_training_wage)
+data(df_opt_lalonde_training_employ)
+data(df_opt_lalonde_training_empage)
 
 # dfj, dataframe joint
-dfj <- df_opt_lalonde_training_employ %>% left_join(df_opt_lalonde_training_wage, by = 'id')
+dfj <- df_opt_lalonde_training_employ %>% 
+  left_join(df_opt_lalonde_training_wage, by = 'id') %>% 
+  left_join(df_opt_lalonde_training_empage, by = 'id')
 
 # drop the .y variables, clean the .x out
-dfj <- dfj %>% select(-contains(".y")) %>%
-          rename_at(vars(ends_with(".x")), funs(str_replace(., ".x", "")))
+dfj <- dfj %>% select(-contains(".y"), -contains(".x")) 
+# %>%
+#           rename_at(vars(ends_with(".x")), funs(str_replace(., ".x", "")))
 
 # order and organize variables
 dfj <- dfj %>% select(id,
@@ -96,15 +100,19 @@ ar_rho <- unique(ar_rho)
 ar_bin_observed <- dfj %>% pull(trt)
 ar_A_wage <- dfj %>% pull(A_i_wage)
 ar_A_employ <- dfj %>% pull(A_i_employ)
+ar_A_empage <- dfj %>% pull(A_i_empage)
 
 ar_alpha_wage <- dfj %>% pull(alpha_i_wage)
 ar_alpha_employ <- dfj %>% pull(alpha_i_employ)
+ar_alpha_empage <- dfj %>% pull(alpha_i_empage)
 
 ar_beta_wage <- dfj %>% pull(beta_i_wage)
 ar_beta_employ <- dfj %>% pull(beta_i_employ)
+ar_beta_empage <- dfj %>% pull(beta_i_empage)
 
 ar_rev_wage <- rep(0, length(ar_rho))
 ar_rev_employ <- rep(0, length(ar_rho))
+ar_rev_empage <- rep(0, length(ar_rho))
 
 for (it_rho_ctr in seq(1, length(ar_rho))) {
 
@@ -112,9 +120,11 @@ for (it_rho_ctr in seq(1, length(ar_rho))) {
 
   svr_rho_employ  <- paste0('rho_c', it_rho_ctr, '_rk_employ')
   svr_rho_wage <- paste0('rho_c', it_rho_ctr, '_rk_wage')
+  svr_rho_empage <- paste0('rho_c', it_rho_ctr, '_rk_empage')
 
   ar_queue_optimal_wage <- dfj %>% pull(svr_rho_wage)
   ar_queue_optimal_employ <- dfj %>% pull(svr_rho_employ)
+  ar_queue_optimal_empage <- dfj %>% pull(svr_rho_empage)
 
   ar_rev_wage[it_rho_ctr] <- ffp_opt_sobin_rev(ar_queue_optimal_wage, ar_bin_observed,
                                                ar_A_wage, ar_alpha_wage, ar_beta_wage,
@@ -123,13 +133,19 @@ for (it_rho_ctr in seq(1, length(ar_rho))) {
   ar_rev_employ[it_rho_ctr] <- ffp_opt_sobin_rev(ar_queue_optimal_employ, ar_bin_observed,
                                                  ar_A_employ, ar_alpha_employ, ar_beta_employ,
                                                  fl_rho)
+
+  ar_rev_empage[it_rho_ctr] <- ffp_opt_sobin_rev(ar_queue_optimal_empage, ar_bin_observed,
+                                                 ar_A_empage, ar_alpha_empage, ar_beta_empage,
+                                                 fl_rho)
+  
 }
 print(ar_rev_wage)
 print(ar_rev_employ)
+print(ar_rev_empage)
 
 # combine results
-mt_combine <- cbind(ar_rho, ar_rev_wage*100, ar_rev_employ*100)
-colnames(mt_combine) <- c('rho', 'rev_expected_wage', 'rev_employment_prob')
+mt_combine <- cbind(ar_rho, ar_rev_wage*100, ar_rev_employ*100, ar_rev_empage*100)
+colnames(mt_combine) <- c('rho', 'rev_expected_wage', 'rev_employment_prob', 'rev_employage_prob')
 tb_rev_wage_employ <- as_tibble(mt_combine) %>% rowid_to_column(var = "eval")
 # Transform x-scale to 1-rho
 tb_rev_wage_employ <- tb_rev_wage_employ %>% mutate(one_minus_rho = 1 - rho)
@@ -159,15 +175,15 @@ x.breaks <- c(0.01, 0.10, 1, 10, 100)
 # title_line2 <- sprintf("REV (Resource Equivalent Variation) Along Planner Spectrum")
 
 title_line1 <- sprintf("Share of resources lost (misallocation) at varying inequality averion (λ) levels")
-title_line2 <- sprintf("Compare observed (random) allocations to optimal allocations")
+title_line2 <- sprintf("Compare observed (random) allocations to optimal allocations (all x) vs (age only)")
 title_line3 <- sprintf("Expenditure (Resource) Minimization to achieve same welfare as welfare at observed allocations")
 
 # Relabel Variable
-Outcome_levels <- c(rev = "employment_prob")
-tb_rev_wage_employ_long <- tb_rev_wage_employ_long %>%
-  filter(Outcome == 'employment_prob') %>%
+Outcome_levels <- c(all = "employment_prob", age = "employage_prob")
+tb_rev_wage_employ_long <- tb_rev_wage_employ_long %>% 
+  filter(Outcome == 'employment_prob' | Outcome == 'employage_prob') %>%
   mutate(Outcome = as_factor(Outcome)) %>%
-  mutate(Outcome = fct_recode(Outcome_levels, !!!Outcome_levels))
+  mutate(Outcome = fct_recode(Outcome, !!!Outcome_levels))
 
 # Graph Results--Draw
 line.plot <- tb_rev_wage_employ_long %>%
@@ -181,7 +197,9 @@ line.plot <- tb_rev_wage_employ_long %>%
        y = 'Misallocation Percentage = REV (Resource Equivalent Variations)',
        caption = 'Optimally allocate 297 training spots among 722 individuals. Data from Lalonde (AER, 1986).') +
   scale_x_continuous(trans='log10', labels = x.labels, breaks = x.breaks) +
-  theme_bw(base_size=8)
+  theme_bw(base_size=8) + 
+  ylim(0, 100)
+
 
 # Labeling
 line.plot$labels$colour <- "REV"
@@ -351,45 +369,45 @@ dfj_gap_long %>% group_by(employvswwage, rank_gap_grp) %>%
 ## Table of Top 10 Individuals
 
 ```{r top 10 ranked at least once}
-
-# Calculat the maximum rank reached by each from all the rhos we have
-# The difference between this and the other max, this computes across all rhos, employment and wage
-
-dfj_top10 <- dfj %>%
-    select(contains("rho_")) %>%
-    reduce(pmin) %>%
-    mutate(dfj, max_rank_rhos = .)
-
-dfj_top10 <- dfj_top10 %>% filter(max_rank_rhos <= 10) %>%
-  select(id, age, educ, black, race,
-         rho_c1_rk_employ, rho_c16_rk_employ, rho_c30_rk_employ,
-         rho_c1_rk_wage, rho_c16_rk_wage, rho_c30_rk_wage) %>%
-  rename(emp_util = rho_c1_rk_employ,
-         emp_CD   = rho_c16_rk_employ,
-         emp_rawl = rho_c30_rk_employ,
-         wag_util = rho_c1_rk_wage,
-         wag_CD   = rho_c16_rk_wage,
-         wag_rawl = rho_c30_rk_wage,
-         ) %>%
-  arrange(age, educ, race)
-
-dim(dfj_top10)
-
-# Graphing Library
-library(kableExtra)
-# Load Data
-dt <- mtcars[1:5, 1:6]
-# Generate latex string variable
-st_out_tex <- kable(dfj_top10, "latex")
-print(st_out_tex)
-# File out
-# fileConn <- file("./../../_file/tex/tex_sample_a_tab.tex")
-fileConn <- file("C:/users/fan/HgtOptiAlloDraft/_tab/Lalonde_wage_employ_top10.tex")
-writeLines(st_out_tex, fileConn)
-close(fileConn)
-
-# Display results here
-dfj_top10 %>%
-    kable() %>%
-    kable_styling(bootstrap_options = c("striped", "hover", "responsive"))
+# 
+# # Calculat the maximum rank reached by each from all the rhos we have
+# # The difference between this and the other max, this computes across all rhos, employment and wage
+# 
+# dfj_top10 <- dfj %>%
+#     select(contains("rho_")) %>%
+#     reduce(pmin) %>%
+#     mutate(dfj, max_rank_rhos = .)
+# 
+# dfj_top10 <- dfj_top10 %>% filter(max_rank_rhos <= 10) %>%
+#   select(id, age, educ, black, race,
+#          rho_c1_rk_employ, rho_c16_rk_employ, rho_c30_rk_employ,
+#          rho_c1_rk_wage, rho_c16_rk_wage, rho_c30_rk_wage) %>%
+#   rename(emp_util = rho_c1_rk_employ,
+#          emp_CD   = rho_c16_rk_employ,
+#          emp_rawl = rho_c30_rk_employ,
+#          wag_util = rho_c1_rk_wage,
+#          wag_CD   = rho_c16_rk_wage,
+#          wag_rawl = rho_c30_rk_wage,
+#          ) %>%
+#   arrange(age, educ, race)
+# 
+# dim(dfj_top10)
+# 
+# # Graphing Library
+# library(kableExtra)
+# # Load Data
+# dt <- mtcars[1:5, 1:6]
+# # Generate latex string variable
+# st_out_tex <- kable(dfj_top10, "latex")
+# print(st_out_tex)
+# # File out
+# # fileConn <- file("./../../_file/tex/tex_sample_a_tab.tex")
+# fileConn <- file("C:/users/fan/HgtOptiAlloDraft/_tab/Lalonde_wage_employ_top10.tex")
+# writeLines(st_out_tex, fileConn)
+# close(fileConn)
+# 
+# # Display results here
+# dfj_top10 %>%
+#     kable() %>%
+#     kable_styling(bootstrap_options = c("striped", "hover", "responsive"))
 ```

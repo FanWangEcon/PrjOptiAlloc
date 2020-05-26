@@ -50,6 +50,7 @@ ffp_opt_anlyz_sodis_rev <- function(ar_rho,
   #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_sodis_rev.html}
   #' \url{https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html}
   #' @export
+  #' @examples
   #' data(df_opt_caschool_input_ib)
   #' df_input_ib <- df_opt_caschool_input_ib
 

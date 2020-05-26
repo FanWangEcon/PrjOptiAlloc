@@ -86,7 +86,7 @@ reference:
   - -df_opt_lalonde_training_wage
   - -df_opt_caschool_prep_i
   - -df_opt_caschool_input_ib
-  - -df_opt_caschool_input_il  
+  - -df_opt_caschool_input_il
 - subtitle: Datasets with Optimal Allocation Results
   desc: Datset files with additional columns that store optimal allocation results or allocation space parameters
   contents:
@@ -119,6 +119,7 @@ articles:
   desc: Demonstrate optimal binary allocation queue. Use empirical A and alpha from the NSW job training RCT from Lalonde (AER, 1986).
   contents:
   - ffv_opt_sobin_rkone_allfc_training_logit
+  - ffv_opt_sobin_rkone_allfc_training_logit_sub
   - ffv_opt_sobin_rkone_allrw_training_wage
   - ffv_opt_sobin_rkone_allrw_training
 - title: Discrete Allocation Testing Vignettes (Test Scores and Student-Teacher Ratio)
