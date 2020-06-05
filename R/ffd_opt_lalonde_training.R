@@ -24,6 +24,8 @@
 #' @source \url{https://www.jstor.org/stable/1806062?}
 #'
 #' @examples
+#' library(REconTools)
 #' data(df_opt_lalonde_training)
 #' head(df_opt_lalonde_training, 10)
+#' REconTools::ff_summ_percentiles(df_opt_lalonde_training)
 "df_opt_lalonde_training"

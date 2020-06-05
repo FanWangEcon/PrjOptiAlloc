@@ -54,35 +54,35 @@ ffp_opt_anlyz_sodis_rev <- function(ar_rho,
   #' data(df_opt_caschool_input_ib)
   #' df_input_ib <- df_opt_caschool_input_ib
 
-    # Evaluate REV
-    ar_util_rev_loop <- df_queue_il_long_with_V %>%
-      group_by(!!sym(svr_rho)) %>%
-      do(rev = ffp_opt_sodis_rev(fl_rho = .[[svr_rho_val]],
-                                   it_w_agg = it_w_agg,
-                                   df_input_ib = df_input_ib, df_queue_il_with_V = .,
-                                   svr_A_i_l0 = svr_A_i_l0, svr_alpha_o_i = svr_alpha_o_i,
-                                   svr_inpalc = svr_inpalc,
-                                   svr_beta_i = svr_beta_i,
-                                   svr_V_star_Q_il = svr_V_star_Q_il)$fl_REV) %>%
-      unnest() %>% pull()
+  # Evaluate REV
+  ar_util_rev_loop <- df_queue_il_long_with_V %>%
+    group_by(!!sym(svr_rho)) %>%
+    do(rev = ffp_opt_sodis_rev(fl_rho = .[[svr_rho_val]],
+                               it_w_agg = it_w_agg,
+                               df_input_ib = df_input_ib, df_queue_il_with_V = .,
+                               svr_A_i_l0 = svr_A_i_l0, svr_alpha_o_i = svr_alpha_o_i,
+                               svr_inpalc = svr_inpalc,
+                               svr_beta_i = svr_beta_i,
+                               svr_V_star_Q_il = svr_V_star_Q_il)$fl_REV) %>%
+    unnest() %>% pull()
 
-    # Return Matrix
-    mt_rho_rev <- cbind(ar_rho, ar_util_rev_loop)
-    colnames(mt_rho_rev) <- c(svr_rho_val,'REV')
-    tb_rho_rev <- as_tibble(mt_rho_rev) %>% rowid_to_column(var = svr_rho)
+  # Return Matrix
+  mt_rho_rev <- cbind(ar_rho, ar_util_rev_loop)
+  colnames(mt_rho_rev) <- c(svr_rho_val,'REV')
+  tb_rho_rev <- as_tibble(mt_rho_rev) %>% rowid_to_column(var = svr_rho)
 
-# Retrun
-return(tb_rho_rev)
+  # Retrun
+  return(tb_rho_rev)
 }
 
 
 ffp_opt_sodis_rev <- function(fl_rho,
-                                it_w_agg,
-                                df_input_ib, df_queue_il_with_V,
-                                svr_A_i_l0 = 'A_i_l0', svr_alpha_o_i = 'alpha_o_i',
-                                svr_inpalc = 'Q_il',
-                                svr_beta_i = 'beta_i',
-                                svr_V_star_Q_il = 'V_star_Q_il'){
+                              it_w_agg,
+                              df_input_ib, df_queue_il_with_V,
+                              svr_A_i_l0 = 'A_i_l0', svr_alpha_o_i = 'alpha_o_i',
+                              svr_inpalc = 'Q_il',
+                              svr_beta_i = 'beta_i',
+                              svr_V_star_Q_il = 'V_star_Q_il'){
   #' Discrete Problem Resource Equivalent Variation
   #'
   #' @description
@@ -102,14 +102,29 @@ ffp_opt_sodis_rev <- function(fl_rho,
 
   # B. Aggregate utility given Alternative Allocation
   fl_util_alter_alloc <- df_input_ib %>%
-      mutate(v_altern_i = !!sym(svr_beta_i)*((!!sym(svr_A_i_l0) + !!sym(svr_alpha_o_i))^fl_rho)) %>%
-      summarize(v_altern_unif_i = sum(v_altern_i)^(1/fl_rho)) %>%
-      pull()
+    mutate(v_altern_i = !!sym(svr_beta_i)*((!!sym(svr_A_i_l0) + !!sym(svr_alpha_o_i))^fl_rho)) %>%
+    summarize(v_altern_unif_i = sum(v_altern_i)^(1/fl_rho)) %>%
+    pull()
 
   # C. Generate rho specific REV
   it_w_exp_min <- min(df_queue_il_with_V %>%
                         filter(!!sym(svr_V_star_Q_il) >= fl_util_alter_alloc) %>%
                         pull(!!sym(svr_inpalc)))
+  # D. There are some exceptions:
+  # it could be that when optimal choice is observed, value are almost so identical yet slighlty not
+  # this leads to empty it_w_exp_min, no value selectec, no allocation gives better than Observed
+  if (it_w_exp_min == Inf) {
+    it_w_exp_min = it_w_agg
+  }
+
+  # E. for the same reason as D, minor approximation error when observed choice is optimal.
+  # for both E and D, the df_input_ib matrix does not store allocation but A and alpha given
+  # allocations, so it is not possible to directly condition for cases where observed is optimal
+  if (it_w_exp_min > it_w_agg) {
+    it_w_exp_min = it_w_agg
+  }
+
+
   fl_REV <- 1 - (it_w_exp_min/it_w_agg)
 
   # Return

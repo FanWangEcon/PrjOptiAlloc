@@ -124,7 +124,7 @@ allocation problems.
 
       
 
-      </header><script src="ffv_opt_n2_fn_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
+      </header><script src="ffv_opt_n2_fn_files/header-attrs-2.2/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example Discrete and Bounded-Continuous Optimal Allocation for N=2</h1>
@@ -513,7 +513,7 @@ allocation problems.
 <span class="no">mt_ar_draws_shares</span> <span class="kw">&lt;-</span>
   <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_w_dollars_strike_at_disc</span>, <span class="fu">as_tibble</span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">ls_ar_draws_shares</span>)) <span class="kw">%&gt;%</span> <span class="fu">unnest</span>()) <span class="kw">%&gt;%</span>
   <span class="fu">rowid_to_column</span>(<span class="kw">var</span> <span class="kw">=</span> <span class="st">"row_ctr"</span>)</pre></body></html></div>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(fl_slope, fl_intercept)`</code></pre>
 <div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="co"># Print results</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">mt_ar_draws_shares</span>)</pre></body></html></div>
@@ -931,7 +931,7 @@ allocation problems.
   })
 <span class="no">df_indiff</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(<span class="no">rbind</span>, <span class="no">ls_df_indiff</span>) <span class="kw">%&gt;%</span> <span class="fu">drop_na</span>()
 <span class="no">df_indiff</span> <span class="kw">&lt;-</span> <span class="no">df_indiff</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(<span class="no">tb_pref</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">indiff_id</span>, <span class="no">w_units</span>, <span class="no">vartype</span>), <span class="kw">by</span><span class="kw">=</span><span class="st">'indiff_id'</span>)</pre></body></html></div>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">tb_pref</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">indiff_id</span>, <span class="no">w_units</span>, <span class="no">vartype</span>), <span class="kw">by</span><span class="kw">=</span><span class="st">'indiff_id'</span>)</pre></body></html></div>
 </div>
 <div id="graph-choices-strike-set-and-optimal-choices" class="section level2">
 <h2 class="hasAnchor">
@@ -1146,15 +1146,15 @@ allocation problems.
 <span class="co"># Labeling</span>
 <span class="no">plt_disc_paper</span>$<span class="no">labels</span>$<span class="no">colour</span> <span class="kw">&lt;-</span> <span class="st">""</span>
 <span class="no">plt_disc_paper</span>$<span class="no">labels</span>$<span class="no">shape</span> <span class="kw">&lt;-</span> <span class="st">""</span>
-<span class="co"># st_title &lt;- paste0('Optimal choices as resource expands at three inequality aversion (&lt;U+03BB&gt;) Levels')</span>
-<span class="no">st_subtitle</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Red Dots = the maximum feasible expected outcomes grid (rectilinear)\n'</span>,
+<span class="no">st_title</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">Expected</span>~<span class="no">Outcomes</span>~<span class="no">Grid</span>~<span class="no">with</span>~<span class="no">Positive</span>~<span class="no">and</span>~<span class="no">Nonincreasing</span>~<span class="no">alpha</span>[<span class="no">il</span>]~<span class="st">'(Rectilinear)'</span>)
+<span class="no">st_subtitle</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Red Dots = the maximum feasible expected outcomes grid \n'</span>,
                       <span class="st">'Black Solid Lines = indifference curves for &lt;U+03BB&gt;=-0.01\n'</span>,
                       <span class="st">'Black Dashed Lines = discrete aggregate resource levels'</span>)
-<span class="no">st_caption</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Expected Outcome Two People Example'</span>)
-<span class="no">st_x_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">EH</span>[<span class="fl">1</span>]~<span class="st">'('</span>~<span class="no">D</span>[<span class="fl">1</span>]~<span class="st">'): '</span>~<span class="no">Expected</span>~<span class="no">Outcome</span>~<span class="no">Allocation</span>~<span class="no">Recipient</span>~<span class="fl">1</span>)
-<span class="no">st_y_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">EH</span>[<span class="fl">2</span>]~<span class="st">'('</span>~<span class="no">D</span>[<span class="fl">2</span>]~<span class="st">'): '</span>~<span class="no">Expected</span>~<span class="no">Outcome</span>~<span class="no">Allocation</span>~<span class="no">Recipient</span>~<span class="fl">2</span>)
+<span class="no">st_caption</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Expected Outcome Two Candidate Recipients Example'</span>)
+<span class="no">st_x_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">EH</span>[<span class="fl">1</span>]~<span class="st">'('</span>~<span class="no">D</span>[<span class="fl">1</span>]~<span class="st">'): '</span>~<span class="no">Expected</span>~<span class="no">Outcome</span>~<span class="no">Recipient</span>~<span class="fl">1</span>)
+<span class="no">st_y_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">EH</span>[<span class="fl">2</span>]~<span class="st">'('</span>~<span class="no">D</span>[<span class="fl">2</span>]~<span class="st">'): '</span>~<span class="no">Expected</span>~<span class="no">Outcome</span>~<span class="no">Recipient</span>~<span class="fl">2</span>)
 <span class="no">plt_disc_paper</span> <span class="kw">&lt;-</span> <span class="no">plt_disc_paper</span> +
-  <span class="fu">labs</span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="no">st_subtitle</span>,
+  <span class="fu">labs</span>(<span class="kw">title</span> <span class="kw">=</span> <span class="no">st_title</span>, <span class="kw">subtitle</span> <span class="kw">=</span> <span class="no">st_subtitle</span>,
        <span class="kw">x</span> <span class="kw">=</span> <span class="no">st_x_label</span>,
        <span class="kw">y</span> <span class="kw">=</span> <span class="no">st_y_label</span>,
        <span class="kw">caption</span> <span class="kw">=</span> <span class="no">st_caption</span>) +
@@ -1170,25 +1170,30 @@ allocation problems.
 <span class="kw">if</span> (<span class="no">bl_save_img</span>) {
   <span class="no">snm_disc</span> <span class="kw">&lt;-</span> <span class="st">'disc_exp_out_grid.png'</span>
   <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">spt_img_save</span>, <span class="no">snm_disc</span>),
-        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">86</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
+        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
       <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">5</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_disc_paper</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
   <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">spt_img_save_draft</span>, <span class="no">snm_disc</span>),
-        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">86</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
+        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
       <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">5</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_disc_paper</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
   <span class="co"># Prin here</span>
-}
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_disc_paper</span>)</pre></body></html></div>
+}</pre></body></html></div>
+<pre><code>## Warning: Removed 1043 rows containing missing values (geom_point).
+
+## Warning: Removed 1043 rows containing missing values (geom_point).</code></pre>
+<pre><code>## png 
+##   2</code></pre>
+<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_disc_paper</span>)</pre></body></html></div>
 <pre><code>## Warning: Removed 1043 rows containing missing values (geom_point).</code></pre>
 <p><img src="ffv_opt_n2_fn_files/figure-html/unnamed-chunk-23-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div id="discrete-utility-and-choices-jointly" class="section level4">
 <h4 class="hasAnchor">
 <a href="#discrete-utility-and-choices-jointly" class="anchor"></a>Discrete Utility and Choices Jointly</h4>
-<div class="sourceCode" id="cb56"><html><body><pre class="r"><span class="co"># Data</span>
+<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="co"># Data</span>
 <span class="no">tb_dis</span> <span class="kw">&lt;-</span> <span class="no">tb_all_points</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">vartype</span><span class="kw">==</span><span class="st">'discrete'</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho_val_str</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">rho_val</span> <span class="kw">==</span> <span class="fl">9999</span> ~ <span class="st">'Feasible'</span>,
                                 <span class="fl">TRUE</span> ~ <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'&lt;U+03BB&gt;='</span>,<span class="no">rho_val</span>)))
@@ -1229,15 +1234,15 @@ allocation problems.
 <span class="co"># Labeling</span>
 <span class="no">plt_disc_paper</span>$<span class="no">labels</span>$<span class="no">colour</span> <span class="kw">&lt;-</span> <span class="st">"&lt;U+03BB&gt; Levels"</span>
 <span class="no">plt_disc_paper</span>$<span class="no">labels</span>$<span class="no">shape</span> <span class="kw">&lt;-</span> <span class="st">"&lt;U+03BB&gt; Levels"</span>
-<span class="co"># st_title &lt;- paste0('Optimal choices as resource expands at three inequality aversion (&lt;U+03BB&gt;) Levels')</span>
-<span class="no">st_subtitle</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Optimal choices as resource expands at three inequality aversion (&lt;U+03BB&gt;) Levels\n'</span>,
-                      <span class="st">'Black Solid Lines = indifference curves for &lt;U+03BB&gt;=-0.01\n'</span>,
+<span class="no">st_title</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Optimal Choices as Resources Expand at Three Inequality Aversion (&lt;U+03BB&gt;) Levels'</span>)
+<span class="no">st_subtitle</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Black Solid Lines = indifference curves for &lt;U+03BB&gt;=-0.01\n'</span>,
                       <span class="st">'Gray Dashed Lines = discrete aggregate resource levels'</span>)
-<span class="no">st_caption</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Expected Outcome Two People Example'</span>)
-<span class="no">st_x_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">EH</span>[<span class="fl">1</span>]~<span class="st">'('</span>~<span class="no">D</span>[<span class="fl">1</span>]~<span class="st">'): '</span>~<span class="no">Expected</span>~<span class="no">Outcome</span>~<span class="no">Allocation</span>~<span class="no">Recipient</span>~<span class="fl">1</span>)
-<span class="no">st_y_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">EH</span>[<span class="fl">2</span>]~<span class="st">'('</span>~<span class="no">D</span>[<span class="fl">2</span>]~<span class="st">'): '</span>~<span class="no">Expected</span>~<span class="no">Outcome</span>~<span class="no">Allocation</span>~<span class="no">Recipient</span>~<span class="fl">2</span>)
+<span class="no">st_caption</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Expected Outcome Two Candidate Recipients Example'</span>)
+<span class="no">st_x_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">EH</span>[<span class="fl">1</span>]~<span class="st">'('</span>~<span class="no">D</span>[<span class="fl">1</span>]~<span class="st">'): '</span>~<span class="no">Expected</span>~<span class="no">Outcome</span>~<span class="no">Recipient</span>~<span class="fl">1</span>)
+<span class="no">st_y_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">EH</span>[<span class="fl">2</span>]~<span class="st">'('</span>~<span class="no">D</span>[<span class="fl">2</span>]~<span class="st">'): '</span>~<span class="no">Expected</span>~<span class="no">Outcome</span>~<span class="no">Recipient</span>~<span class="fl">2</span>)
 <span class="no">plt_disc_paper</span> <span class="kw">&lt;-</span> <span class="no">plt_disc_paper</span> +
-  <span class="fu">labs</span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="no">st_subtitle</span>,
+  <span class="fu">labs</span>(<span class="kw">title</span> <span class="kw">=</span> <span class="no">st_title</span>,
+       <span class="kw">subtitle</span> <span class="kw">=</span> <span class="no">st_subtitle</span>,
        <span class="kw">x</span> <span class="kw">=</span> <span class="no">st_x_label</span>,
        <span class="kw">y</span> <span class="kw">=</span> <span class="no">st_y_label</span>,
        <span class="kw">caption</span> <span class="kw">=</span> <span class="no">st_caption</span>) +
@@ -1252,17 +1257,22 @@ allocation problems.
 <span class="kw">if</span> (<span class="no">bl_save_img</span>) {
   <span class="no">snm_disc</span> <span class="kw">&lt;-</span> <span class="st">'disc_resource_expansion_path.png'</span>
   <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">spt_img_save</span>, <span class="no">snm_disc</span>),
-        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">86</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
+        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
       <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">5</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_disc_paper</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
   <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">spt_img_save_draft</span>, <span class="no">snm_disc</span>),
-        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">86</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
+        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
       <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">5</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_disc_paper</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
-}
-<span class="co"># Prin here</span>
+}</pre></body></html></div>
+<pre><code>## Warning: Removed 1043 rows containing missing values (geom_point).
+
+## Warning: Removed 1043 rows containing missing values (geom_point).</code></pre>
+<pre><code>## png 
+##   2</code></pre>
+<div class="sourceCode" id="cb62"><html><body><pre class="r"><span class="co"># Prin here</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_disc_paper</span>)</pre></body></html></div>
 <pre><code>## Warning: Removed 1043 rows containing missing values (geom_point).</code></pre>
 <p><img src="ffv_opt_n2_fn_files/figure-html/unnamed-chunk-24-1.png" width="700" style="display: block; margin: auto;"></p>
@@ -1270,7 +1280,7 @@ allocation problems.
 <div id="continuous-expected-outcomes-grid" class="section level4">
 <h4 class="hasAnchor">
 <a href="#continuous-expected-outcomes-grid" class="anchor"></a>Continuous Expected Outcomes Grid</h4>
-<div class="sourceCode" id="cb58"><html><body><pre class="r"><span class="co"># Data</span>
+<div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="co"># Data</span>
 <span class="no">tb_cts</span> <span class="kw">&lt;-</span> <span class="no">tb_all_points</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">vartype</span><span class="kw">==</span><span class="st">'discrete'</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">rho_val</span> <span class="kw">!=</span> <span class="fl">9999</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho_val_str</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">rho_val</span> <span class="kw">==</span> <span class="fl">9999</span> ~ <span class="st">'Feasible Choices'</span>,
@@ -1304,16 +1314,16 @@ allocation problems.
 <span class="co"># Labeling</span>
 <span class="no">plt_cnts_paper</span>$<span class="no">labels</span>$<span class="no">colour</span> <span class="kw">&lt;-</span> <span class="st">"&lt;U+03BB&gt; Levels"</span>
 <span class="no">plt_cnts_paper</span>$<span class="no">labels</span>$<span class="no">shape</span> <span class="kw">&lt;-</span> <span class="st">"&lt;U+03BB&gt; Levels"</span>
-<span class="no">st_subtitle</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Rectangular bounds on choices\n'</span>,
+<span class="no">st_subtitle</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Rectangular bounds on choices (hypercube for N&gt;2)\n'</span>,
                       <span class="st">'Black Solid Lines = indifference curves for &lt;U+03BB&gt;=-0.01\n'</span>,
                       <span class="st">'Black Dashed Lines = selected aggregate resource levels'</span>)
 <span class="co"># st_title &lt;- paste0('Bounded Continuous Choice Resource Expansion Path with N=2')</span>
-<span class="co"># st_subtitle &lt;- paste0('Optimal choices as resource expands at three inequality aversion (&lt;U+03BB&gt;) Levels')</span>
-<span class="no">st_caption</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Expected Outcome Two People Example'</span>)
+<span class="no">st_title</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="st">'Expected Outcomes Grid with Bounded Linear Allocations'</span>)
+<span class="no">st_caption</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Expected Outcome Two Candidate Recipients Example'</span>)
 <span class="no">st_x_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">EH</span>[<span class="fl">1</span>]~<span class="st">'('</span>~<span class="no">C</span>[<span class="fl">1</span>]~<span class="st">'): '</span>~<span class="no">Expected</span>~<span class="no">Outcome</span>~<span class="no">Recipient</span>~<span class="fl">1</span>)
 <span class="no">st_y_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">EH</span>[<span class="fl">2</span>]~<span class="st">'('</span>~<span class="no">C</span>[<span class="fl">2</span>]~<span class="st">'): '</span>~<span class="no">Expected</span>~<span class="no">Outcome</span>~<span class="no">Recipient</span>~<span class="fl">2</span>)
 <span class="no">plt_cnts_paper</span> <span class="kw">&lt;-</span> <span class="no">plt_cnts_paper</span> +
-  <span class="fu">labs</span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="no">st_subtitle</span>,
+  <span class="fu">labs</span>(<span class="kw">title</span><span class="kw">=</span><span class="no">st_title</span>, <span class="kw">subtitle</span> <span class="kw">=</span> <span class="no">st_subtitle</span>,
        <span class="kw">x</span> <span class="kw">=</span> <span class="no">st_x_label</span>,
        <span class="kw">y</span> <span class="kw">=</span> <span class="no">st_y_label</span>,
        <span class="kw">caption</span> <span class="kw">=</span> <span class="no">st_caption</span>) +
@@ -1323,25 +1333,32 @@ allocation problems.
 <span class="kw">if</span> (<span class="no">bl_save_img</span>) {
   <span class="no">snm_cnts</span> <span class="kw">&lt;-</span> <span class="st">'cts_exp_out_grid.png'</span>
   <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">spt_img_save</span>, <span class="no">snm_cnts</span>),
-        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">86</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>, <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">7</span>)
+        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>, <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">7</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_cnts_paper</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
   <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">spt_img_save_draft</span>, <span class="no">snm_cnts</span>),
-        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">86</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
+        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
       <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">5</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_cnts_paper</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
-}
-<span class="co"># Prin here</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_cnts_paper</span>)</pre></body></html></div>
+}</pre></body></html></div>
 <pre><code>## Warning: Removed 1077 rows containing missing values (geom_point).</code></pre>
 <pre><code>## Warning: Removed 11 row(s) containing missing values (geom_path).</code></pre>
+<pre><code>## Warning: Removed 1077 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 11 row(s) containing missing values (geom_path).</code></pre>
+<pre><code>## png 
+##   2</code></pre>
+<div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="co"># Prin here</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_cnts_paper</span>)</pre></body></html></div>
+<pre><code>## Warning: Removed 1077 rows containing missing values (geom_point).
+
+## Warning: Removed 11 row(s) containing missing values (geom_path).</code></pre>
 <p><img src="ffv_opt_n2_fn_files/figure-html/unnamed-chunk-25-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div id="continuous-utility-and-choices-jointly" class="section level4">
 <h4 class="hasAnchor">
 <a href="#continuous-utility-and-choices-jointly" class="anchor"></a>Continuous Utility and Choices Jointly</h4>
-<div class="sourceCode" id="cb61"><html><body><pre class="r"><span class="co"># Data</span>
+<div class="sourceCode" id="cb72"><html><body><pre class="r"><span class="co"># Data</span>
 <span class="no">tb_cts</span> <span class="kw">&lt;-</span> <span class="no">tb_all_points</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">vartype</span><span class="kw">==</span><span class="st">'continuous'</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">rho_val</span> <span class="kw">!=</span> <span class="fl">9999</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho_val_str</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">rho_val</span> <span class="kw">==</span> <span class="fl">9999</span> ~ <span class="st">'Feasible Choices'</span>,
@@ -1370,7 +1387,7 @@ allocation problems.
              <span class="fu">aes</span>(<span class="kw">x</span><span class="kw">=</span><span class="no">EH_1l</span>, <span class="kw">y</span><span class="kw">=</span><span class="no">EH_2l</span>, <span class="kw">colour</span><span class="kw">=</span><span class="no">rho_val_str</span>, <span class="kw">shape</span><span class="kw">=</span><span class="no">rho_val_str</span>),
              <span class="kw">size</span><span class="kw">=</span><span class="fl">2</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">0</span>)</pre></body></html></div>
 <pre><code>## Warning: Ignoring unknown parameters: width</code></pre>
-<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="co"># Plot Axis Setting</span>
+<div class="sourceCode" id="cb74"><html><body><pre class="r"><span class="co"># Plot Axis Setting</span>
 <span class="no">plt_cnts_paper</span> <span class="kw">&lt;-</span> <span class="no">plt_cnts_paper</span> +
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">xlim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">tb_cts</span>$<span class="no">EH_1l</span>-<span class="fl">0.4</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">tb_cts</span>$<span class="no">EH_1l</span>+<span class="fl">0.4</span>)) +
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">tb_cts</span>$<span class="no">EH_2l</span>-<span class="fl">0.4</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">tb_cts</span>$<span class="no">EH_2l</span>+<span class="fl">0.4</span>))
@@ -1378,16 +1395,15 @@ allocation problems.
 <span class="co"># Labeling</span>
 <span class="no">plt_cnts_paper</span>$<span class="no">labels</span>$<span class="no">colour</span> <span class="kw">&lt;-</span> <span class="st">"&lt;U+03BB&gt; Levels"</span>
 <span class="no">plt_cnts_paper</span>$<span class="no">labels</span>$<span class="no">shape</span> <span class="kw">&lt;-</span> <span class="st">"&lt;U+03BB&gt; Levels"</span>
-<span class="no">st_subtitle</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Optimal choices as resource expands at three inequality aversion (&lt;U+03BB&gt;) Levels\n'</span>,
-                      <span class="st">'Black Solid Lines = indifference curves for &lt;U+03BB&gt;=-0.01\n'</span>,
+<span class="no">st_title</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Optimal Choices as Resources Expand at Three Inequality Aversion (&lt;U+03BB&gt;) Levels'</span>)
+<span class="no">st_subtitle</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Black Solid Lines = indifference curves for &lt;U+03BB&gt;=-0.01\n'</span>,
                       <span class="st">'Gray Dashed Lines = selected aggregate resource levels'</span>)
-<span class="co"># st_title &lt;- paste0('Bounded Continuous Choice Resource Expansion Path with N=2')</span>
 <span class="co"># st_subtitle &lt;- paste0('Optimal choices as resource expands at three inequality aversion (&lt;U+03BB&gt;) Levels')</span>
-<span class="no">st_caption</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Expected Outcome Two People Example'</span>)
+<span class="no">st_caption</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Expected Outcome Two Candidate Recipients Example'</span>)
 <span class="no">st_x_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">EH</span>[<span class="fl">1</span>]~<span class="st">'('</span>~<span class="no">C</span>[<span class="fl">1</span>]~<span class="st">'): '</span>~<span class="no">Expected</span>~<span class="no">Outcome</span>~<span class="no">Recipient</span>~<span class="fl">1</span>)
 <span class="no">st_y_label</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="no">EH</span>[<span class="fl">2</span>]~<span class="st">'('</span>~<span class="no">C</span>[<span class="fl">2</span>]~<span class="st">'): '</span>~<span class="no">Expected</span>~<span class="no">Outcome</span>~<span class="no">Recipient</span>~<span class="fl">2</span>)
 <span class="no">plt_cnts_paper</span> <span class="kw">&lt;-</span> <span class="no">plt_cnts_paper</span> +
-  <span class="fu">labs</span>(<span class="kw">subtitle</span> <span class="kw">=</span> <span class="no">st_subtitle</span>,
+  <span class="fu">labs</span>(<span class="kw">title</span> <span class="kw">=</span> <span class="no">st_title</span>, <span class="kw">subtitle</span> <span class="kw">=</span> <span class="no">st_subtitle</span>,
        <span class="kw">x</span> <span class="kw">=</span> <span class="no">st_x_label</span>,
        <span class="kw">y</span> <span class="kw">=</span> <span class="no">st_y_label</span>,
        <span class="kw">caption</span> <span class="kw">=</span> <span class="no">st_caption</span>) +
@@ -1397,20 +1413,24 @@ allocation problems.
 <span class="kw">if</span> (<span class="no">bl_save_img</span>) {
   <span class="no">snm_cnts</span> <span class="kw">&lt;-</span> <span class="st">'cnts_resource_expansion_path.png'</span>
   <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">spt_img_save</span>, <span class="no">snm_cnts</span>),
-        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">86</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>, <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">7</span>)
+        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>, <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">7</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_cnts_paper</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
   <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">spt_img_save_draft</span>, <span class="no">snm_cnts</span>),
-        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">86</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
+        <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
       <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">5</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_cnts_paper</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
-}
-<span class="co"># Prin here</span>
+}</pre></body></html></div>
+<pre><code>## Warning: Removed 1019 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 1019 rows containing missing values (geom_point).</code></pre>
+<pre><code>## png 
+##   2</code></pre>
+<div class="sourceCode" id="cb78"><html><body><pre class="r"><span class="co"># Prin here</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_cnts_paper</span>)</pre></body></html></div>
 <pre><code>## Warning: Removed 1019 rows containing missing values (geom_point).</code></pre>
 <p><img src="ffv_opt_n2_fn_files/figure-html/unnamed-chunk-26-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="no">ar_w_solve_at_disc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>,<span class="fl">18</span>)
+<div class="sourceCode" id="cb80"><html><body><pre class="r"><span class="no">ar_w_solve_at_disc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>,<span class="fl">18</span>)
 <span class="no">it_alpha_1l_zr</span> <span class="kw">&lt;-</span> <span class="fl">10</span>
 <span class="no">it_alpha_2l_zr</span> <span class="kw">&lt;-</span> <span class="fl">10</span>
 <span class="kw">for</span> (<span class="no">it_w</span> <span class="kw">in</span> <span class="no">ar_w_solve_at_disc</span>){

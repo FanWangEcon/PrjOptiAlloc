@@ -228,30 +228,71 @@ print(df_input_ib_all)
 
 ### REV Test for One Observed Set of Allocations at One Resource Point
 
-There are only two individuals, pick any feasible point, and compare against optimal allocations, at one aggregate resource point
+There are only two individuals, pick any feasible point, and compare against optimal allocations, at one aggregate resource point. The welfare function only takes one set of allocations, and the optimal allocation results contain welfare along optimal allocation queues for all individuals. 
+
+In the code below, I loop over each possible set of observed allocation from *df_input_ib_all* (2 rows at a time, each row an individual, 2 row is a set of allocations). Within each loop, resource equivalent variation is computed comparing the welfare at this "observed allocations" set to welfare along the optimal allocation queue, and finding out, along the resource expansion path (allocation queue), how much less resources are needed to achieve the same welfare as achieved by the "observed allocations".
+
+First, test at one aggregate resources level:
 
 ```{r}
+# Optimal Allocation Results Along Queue with Value
 df_queue_il_long_with_V <- df_queue_il_long_n2
-df_input_ib_agg_grp <- df_input_ib_all %>% filter(w_agg==6)
 
+# Get information and statistics
+df_input_ib_agg_grp <- df_input_ib_all %>% filter(w_agg==11)
 unique(df_input_ib_agg_grp %>% pull(id_alloc))
-
-
-df_input_ib <- df_input_ib_all %>% filter(id_alloc==36)
+df_input_ib <- df_input_ib_all %>% filter(id_alloc==41)
 df_input_ib
 it_w_agg <- df_input_ib %>% slice(1L) %>% pull(w_agg)
 
+# Call REV function
 ffp_opt_anlyz_sodis_rev(
-  ar_rho,
+  ar_rho[3],
   it_w_agg,
   df_input_ib,
-  df_queue_il_long_with_V,
+  df_queue_il_long_with_V %>% filter(rho_val == -100),
 )
 
 ```
 
+Second, compute REV all all feasible allocation combinations, using [(MxP by N) to (MxQ by N+Z-1)](https://fanwangecon.github.io/R4Econ/function/dof/htmlpdfr/fs_funceval_groupwider.html):
 
+```{r}
+# Temp function
+ffi_opt_anlyz_sodis_rev_wrapper <- function(df_input_ib_sub){
+  it_w_agg <- df_input_ib_sub %>%slice(1L) %>% pull(w_agg)
+  df_rev <- ffp_opt_anlyz_sodis_rev(
+    ar_rho=ar_rho,
+    it_w_agg=it_w_agg,
+    df_input_ib=df_input_ib_sub,
+    df_queue_il_long_with_V=df_queue_il_long_n2,
+  )
+  return(df_rev)
+}
 
+# Function over Groups
+df_rev_allrho <- suppressWarnings(
+  df_input_ib_all %>% 
+    group_by(id_alloc) %>%
+    do(df_rev = ffi_opt_anlyz_sodis_rev_wrapper(.)) %>%
+    unnest() %>%
+    rowid_to_column(var = "id_alloc_rho")) %>%
+  left_join(df_input_ib_all %>% 
+              group_by(id_alloc) %>% slice(1L) %>% ungroup() %>%
+              select(id_alloc, id_1l, id_2l, w_agg), 
+            join='id_alloc') %>%
+  arrange(w_agg, rho, id_1l, id_2l)
+
+# show results
+print(df_rev_allrho)
+```
+
+Third review results: 
+
+```{r}
+# group by rho, group by w, sort by id_1l and id_2l
+view(df_rev_allrho)
+```
 
 
 

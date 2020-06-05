@@ -24,7 +24,7 @@ Note since \eqn{\alpha_{il}} considers only additional allocation, with existing
 }
 \examples{
 data(df_opt_caschool_input_ib)
-head(df_opt_caschool_input_ib, 10)
+head(df_opt_caschool_input_ib, 30)
 }
 \references{
 Stock, James H. and Mark W. Watson (2003) Introduction to Econometrics, Addison-Wesley Educational Publishers, chapter 4–7.

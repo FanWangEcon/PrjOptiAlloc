@@ -124,7 +124,7 @@ Regress the effect of nutritional supplements on height.
 
       
 
-      </header><script src="ffv_opt_solin_relow_allrw_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
+      </header><script src="ffv_opt_solin_relow_allrw_files/header-attrs-2.2/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Line by Line Test Lower-Bounded Linear-Continuous Allocation with Linear Regression</h1>
@@ -335,9 +335,10 @@ Regress the effect of nutritional supplements on height.
               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'S.country'</span>, <span class="st">'vil.id'</span>, <span class="st">'indi.id'</span>, <span class="st">'svymthRound'</span>, <span class="no">ar_st_varnames</span>)))
 
 <span class="co"># Unique beta, A, and alpha groups</span>
-<span class="no">tb_opti_unique</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">n_obs_group</span><span class="kw">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/n.html">n</a></span>())</pre></body></html></div>
+<span class="no">tb_opti_unique</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">n_obs_group</span><span class="kw">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>())</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'alpha', 'A' (override with `.groups` argument)</code></pre>
 </div>
 </div>
 <div id="optimal-linear-allocations" class="section level2">
@@ -346,7 +347,7 @@ Regress the effect of nutritional supplements on height.
 <div id="parameters-for-optimal-allocation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#parameters-for-optimal-allocation" class="anchor"></a>Parameters for Optimal Allocation</h3>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="co"># Child Count</span>
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="co"># Child Count</span>
 <span class="no">df_hw_cebu_m24_full</span> <span class="kw">&lt;-</span> <span class="no">df_hw_cebu_m24</span>
 <span class="no">it_obs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">df_hw_cebu_m24</span>)[<span class="fl">1</span>]
 
@@ -365,7 +366,7 @@ Regress the effect of nutritional supplements on height.
 <h3 class="hasAnchor">
 <a href="#optimal-linear-allocation-crs" class="anchor"></a>Optimal Linear Allocation (CRS)</h3>
 <p>This also works with any CRS CES.</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="co"># Optimal Linear Equation</span>
+<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="co"># Optimal Linear Equation</span>
 
 <span class="co"># accumulate allocation results</span>
 <span class="no">tb_opti_alloc_all_rho</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span>
@@ -454,11 +455,11 @@ Regress the effect of nutritional supplements on height.
   <span class="no">tb_opti_main_results</span> <span class="kw">&lt;-</span> <span class="no">tb_opti</span> <span class="kw">%&gt;%</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'lowest_rank_alpha'</span>, <span class="st">'lowest_rank_beta'</span>)))
   <span class="no">tb_opti_allocate_wth_key</span> <span class="kw">&lt;-</span> <span class="no">tb_opti</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="st">'indi.id'</span>,<span class="st">'opti_allocate'</span>, <span class="st">'opti_exp_outcome'</span>)) <span class="kw">%&gt;%</span>
-                                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">rename</a></span>(!!<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, <span class="no">it_rho_ctr</span>, <span class="st">'_on'</span>) <span class="kw">:=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="st">'opti_allocate'</span>),
-                                       !!<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, <span class="no">it_rho_ctr</span>, <span class="st">'_eh'</span>) <span class="kw">:=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="st">'opti_exp_outcome'</span>))
+                                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(!!<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, <span class="no">it_rho_ctr</span>, <span class="st">'_on'</span>) <span class="kw">:=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="st">'opti_allocate'</span>),
+                                       !!<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, <span class="no">it_rho_ctr</span>, <span class="st">'_eh'</span>) <span class="kw">:=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="st">'opti_exp_outcome'</span>))
 
   <span class="co"># n. merge optimal allocaiton results from different planner preference</span>
-  <span class="no">tb_opti_alloc_all_rho</span> <span class="kw">&lt;-</span> <span class="no">tb_opti_alloc_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(<span class="no">tb_opti_allocate_wth_key</span>, <span class="kw">by</span><span class="kw">=</span><span class="st">'indi.id'</span>)
+  <span class="no">tb_opti_alloc_all_rho</span> <span class="kw">&lt;-</span> <span class="no">tb_opti_alloc_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">tb_opti_allocate_wth_key</span>, <span class="kw">by</span><span class="kw">=</span><span class="st">'indi.id'</span>)
 
   <span class="co"># print subset</span>
   <span class="kw">if</span> (<span class="no">it_rho_ctr</span> <span class="kw">==</span> <span class="fl">1</span> <span class="kw">|</span> <span class="no">it_rho_ctr</span> <span class="kw">==</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>) <span class="kw">|</span> <span class="no">it_rho_ctr</span> <span class="kw">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>)/<span class="fl">2</span>)) {
@@ -633,7 +634,7 @@ Regress the effect of nutritional supplements on height.
 ##  Mean   :119.1   Mean   : 21.88   Mean   :22823   Mean   :79.91   
 ##  3rd Qu.:119.1   3rd Qu.:  0.00   3rd Qu.:22823   3rd Qu.:79.87   
 ##  Max.   :119.1   Max.   :119.06   Max.   :22823   Max.   :86.10</code></pre>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="co"># o. print results</span>
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="co"># o. print results</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_opti_alloc_all_rho</span>))</pre></body></html></div>
 <pre><code>##   S.country             vil.id         indi.id        svymthRound
 ##  Length:1043        Min.   : 1.00   Min.   :   2.0   Min.   :24  
@@ -754,7 +755,7 @@ Regress the effect of nutritional supplements on height.
 ##  Mean   :79.91   Mean   : 21.88   Mean   :79.91  
 ##  3rd Qu.:79.87   3rd Qu.:  0.00   3rd Qu.:79.87  
 ##  Max.   :86.10   Max.   :119.06   Max.   :86.10</code></pre>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">tb_opti_alloc_all_rho</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">tb_opti_alloc_all_rho</span>)</pre></body></html></div>
 <pre><code>## tibble [1,043 x 67] (S3: tbl_df/tbl/data.frame)
 ##  $ S.country  : chr [1:1043] "Cebu" "Cebu" "Cebu" "Cebu" ...
 ##  $ vil.id     : num [1:1043] 1 1 1 1 1 1 1 1 1 1 ...
@@ -822,7 +823,25 @@ Regress the effect of nutritional supplements on height.
 ##  $ rho_c29_on : num [1:1043] 0 0 0 83.6 0 ...
 ##  $ rho_c29_eh : num [1:1043] 78.4 79.9 78.9 86.1 77.8 ...
 ##  $ rho_c30_on : num [1:1043] 0 0 0 83.6 0 ...
-##  $ rho_c30_eh : num [1:1043] 78.4 79.9 78.9 86.1 77.8 ...</code></pre>
+##  $ rho_c30_eh : num [1:1043] 78.4 79.9 78.9 86.1 77.8 ...
+##  - attr(*, "spec")=
+##   .. cols(
+##   ..   S.country = col_character(),
+##   ..   vil.id = col_double(),
+##   ..   indi.id = col_double(),
+##   ..   sex = col_character(),
+##   ..   svymthRound = col_double(),
+##   ..   momEdu = col_double(),
+##   ..   wealthIdx = col_double(),
+##   ..   hgt = col_double(),
+##   ..   wgt = col_double(),
+##   ..   hgt0 = col_double(),
+##   ..   wgt0 = col_double(),
+##   ..   prot = col_double(),
+##   ..   cal = col_double(),
+##   ..   p.A.prot = col_double(),
+##   ..   p.A.nProt = col_double()
+##   .. )</code></pre>
 </div>
 </div>
 <div id="linear-optimal-allocation-statistics-and-graphs" class="section level2">
@@ -834,7 +853,7 @@ Regress the effect of nutritional supplements on height.
 <p>Compute Gini coefficient for each expected outcome and input vector, and store results in separate vectors for input allocation and expected outcomes, then combine.</p>
 <p>See how <strong>apply</strong> works here: <a href="https://fanwangecon.github.io/R4Econ/support/function/fs_applysapplymutate.html">R use Apply, Sapply and dplyr Mutate to Evaluate one Function Across Rows of a Matrix</a> from <a href="https://fanwangecon.github.io/R4Econ">R4Econ</a>.</p>
 <p>See how gini function works: <a href="https://fanwangecon.github.io/REconTools/reference/ff_dist_gini_vector_pos.html">ff_dist_gini_vector_pos</a> from <a href="https://fanwangecon.github.io/REconTools">REconTools</a>.</p>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="co"># Select out columns for _on = optimal nutrition</span>
+<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="co"># Select out columns for _on = optimal nutrition</span>
 <span class="no">mt_opti_alloc_all_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html">data.matrix</a></span>(<span class="no">tb_opti_alloc_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">ends_with</a></span>(<span class="st">'_on'</span>)))
 <span class="no">mt_expc_outcm_all_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html">data.matrix</a></span>(<span class="no">tb_opti_alloc_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">ends_with</a></span>(<span class="st">'_eh'</span>)))
 
@@ -863,7 +882,7 @@ Regress the effect of nutritional supplements on height.
 <div id="gini-graphs" class="section level3">
 <h3 class="hasAnchor">
 <a href="#gini-graphs" class="anchor"></a>Gini Graphs</h3>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="no">scatter</span> <span class="kw">&lt;-</span> <span class="no">tb_gini_long</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="no">scatter</span> <span class="kw">&lt;-</span> <span class="no">tb_gini_long</span> <span class="kw">%&gt;%</span>
       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span><span class="no">on</span>, <span class="kw">y</span><span class="kw">=</span><span class="no">eh</span>)) +
       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="kw">size</span><span class="kw">=</span><span class="no">planner_elas</span>) +
       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">'Scatter Plot of Optimal Allocation and Expected Outcomes Gini'</span>,
@@ -877,7 +896,7 @@ Regress the effect of nutritional supplements on height.
 <div id="graphs-based-on-individual-allocations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#graphs-based-on-individual-allocations" class="anchor"></a>Graphs Based on Individual Allocations</h3>
-<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="co"># p. graph scatter of opposing preference correlation</span>
+<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="co"># p. graph scatter of opposing preference correlation</span>
 <span class="no">svr_lowrho_ctr</span> <span class="kw">&lt;-</span> <span class="fl">1</span>
 <span class="no">svr_higrho_ctr</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>)-<span class="fl">1</span>
 <span class="no">svr_lowrho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, <span class="no">svr_lowrho_ctr</span>, <span class="st">'_on'</span>)
@@ -885,7 +904,7 @@ Regress the effect of nutritional supplements on height.
 <span class="no">tb_min_max_rho</span> <span class="kw">&lt;-</span> <span class="no">tb_opti_alloc_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">svr_lowrho</span>, <span class="no">svr_higrho</span>)))
 
 <span class="no">scatter</span> <span class="kw">&lt;-</span> <span class="no">tb_min_max_rho</span> <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_lowrho</span>), <span class="kw">y</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_higrho</span>))) +
+      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_lowrho</span>), <span class="kw">y</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_higrho</span>))) +
       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="kw">size</span><span class="kw">=</span><span class="fl">1</span>) +
       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">'Scatter Plot of Optimal Allocation Low and High Rho'</span>,
            <span class="kw">x</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Allocation High Rho = '</span>, <span class="no">ar_rho</span>[<span class="no">svr_higrho_ctr</span>], <span class="st">', More Efficient'</span>),
@@ -894,7 +913,7 @@ Regress the effect of nutritional supplements on height.
       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>()
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">scatter</span>)</pre></body></html></div>
 <p><img src="ffv_opt_solin_relow_allrw_files/figure-html/Individal%20Allocation%20Plots-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"># lineplot &lt;- tb_opti %&gt;%
+<div class="sourceCode" id="cb24"><html><body><pre class="r"># lineplot &lt;- tb_opti %&gt;%
 #     gather(variable, value, -month) %&gt;%
 #     ggplot(aes(x=month, y=value, colour=variable, linetype=variable)) +
 #         geom_line() +

@@ -29,7 +29,7 @@ library(dplyr)
 
 library(PrjOptiAlloc)
 
-bl_save_img = FALSE
+bl_save_img = TRUE
 ```
 
 Test Theorem 1 and Theorem 2 optimal allocation functions when N=2. Use randomly generated A and alpha parameters for two individuals' discrete and bounded-continuous allocation problems.
@@ -924,15 +924,15 @@ plt_disc_paper <- plt_disc_paper +
 # Labeling
 plt_disc_paper$labels$colour <- ""
 plt_disc_paper$labels$shape <- ""
-# st_title <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels')
-st_subtitle <- paste0('Red Dots = the maximum feasible expected outcomes grid (rectilinear)\n',
+st_title <- expression(Expected~Outcomes~Grid~with~Positive~and~Nonincreasing~alpha[il]~'(Rectilinear)')
+st_subtitle <- paste0('Red Dots = the maximum feasible expected outcomes grid \n',
                       'Black Solid Lines = indifference curves for λ=-0.01\n',
                       'Black Dashed Lines = discrete aggregate resource levels')
-st_caption <- paste0('Expected Outcome Two People Example')
-st_x_label <- expression(EH[1]~'('~D[1]~'): '~Expected~Outcome~Allocation~Recipient~1)
-st_y_label <- expression(EH[2]~'('~D[2]~'): '~Expected~Outcome~Allocation~Recipient~2)
+st_caption <- paste0('Expected Outcome Two Candidate Recipients Example')
+st_x_label <- expression(EH[1]~'('~D[1]~'): '~Expected~Outcome~Recipient~1)
+st_y_label <- expression(EH[2]~'('~D[2]~'): '~Expected~Outcome~Recipient~2)
 plt_disc_paper <- plt_disc_paper +
-  labs(subtitle = st_subtitle,
+  labs(title = st_title, subtitle = st_subtitle,
        x = st_x_label,
        y = st_y_label,
        caption = st_caption) +
@@ -948,12 +948,12 @@ plt_disc_paper <- plt_disc_paper +
 if (bl_save_img) {
   snm_disc <- 'disc_exp_out_grid.png'
   png(paste0(spt_img_save, snm_disc),
-        width = 135, height = 86, units='mm', res = 300,
+        width = 135, height = 96, units='mm', res = 300,
       pointsize=5)
   print(plt_disc_paper)
   dev.off()
   png(paste0(spt_img_save_draft, snm_disc),
-        width = 135, height = 86, units='mm', res = 300,
+        width = 135, height = 96, units='mm', res = 300,
       pointsize=5)
   print(plt_disc_paper)
   dev.off()
@@ -1007,15 +1007,15 @@ plt_disc_paper <- plt_disc_paper +
 # Labeling
 plt_disc_paper$labels$colour <- "λ Levels"
 plt_disc_paper$labels$shape <- "λ Levels"
-# st_title <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels')
-st_subtitle <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels\n',
-                      'Black Solid Lines = indifference curves for λ=-0.01\n',
+st_title <- paste0('Optimal Choices as Resources Expand at Three Inequality Aversion (λ) Levels')
+st_subtitle <- paste0('Black Solid Lines = indifference curves for λ=-0.01\n',
                       'Gray Dashed Lines = discrete aggregate resource levels')
-st_caption <- paste0('Expected Outcome Two People Example')
-st_x_label <- expression(EH[1]~'('~D[1]~'): '~Expected~Outcome~Allocation~Recipient~1)
-st_y_label <- expression(EH[2]~'('~D[2]~'): '~Expected~Outcome~Allocation~Recipient~2)
+st_caption <- paste0('Expected Outcome Two Candidate Recipients Example')
+st_x_label <- expression(EH[1]~'('~D[1]~'): '~Expected~Outcome~Recipient~1)
+st_y_label <- expression(EH[2]~'('~D[2]~'): '~Expected~Outcome~Recipient~2)
 plt_disc_paper <- plt_disc_paper +
-  labs(subtitle = st_subtitle,
+  labs(title = st_title, 
+       subtitle = st_subtitle,
        x = st_x_label,
        y = st_y_label,
        caption = st_caption) +
@@ -1030,12 +1030,12 @@ plt_disc_paper <- plt_disc_paper +
 if (bl_save_img) {
   snm_disc <- 'disc_resource_expansion_path.png'
   png(paste0(spt_img_save, snm_disc),
-        width = 135, height = 86, units='mm', res = 300,
+        width = 135, height = 96, units='mm', res = 300,
       pointsize=5)
   print(plt_disc_paper)
   dev.off()
   png(paste0(spt_img_save_draft, snm_disc),
-        width = 135, height = 86, units='mm', res = 300,
+        width = 135, height = 96, units='mm', res = 300,
       pointsize=5)
   print(plt_disc_paper)
   dev.off()
@@ -1081,16 +1081,16 @@ plt_cnts_paper <- plt_cnts_paper +
 # Labeling
 plt_cnts_paper$labels$colour <- "λ Levels"
 plt_cnts_paper$labels$shape <- "λ Levels"
-st_subtitle <- paste0('Rectangular bounds on choices\n',
+st_subtitle <- paste0('Rectangular bounds on choices (hypercube for N>2)\n',
                       'Black Solid Lines = indifference curves for λ=-0.01\n',
                       'Black Dashed Lines = selected aggregate resource levels')
 # st_title <- paste0('Bounded Continuous Choice Resource Expansion Path with N=2')
-# st_subtitle <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels')
-st_caption <- paste0('Expected Outcome Two People Example')
+st_title <- expression('Expected Outcomes Grid with Bounded Linear Allocations')
+st_caption <- paste0('Expected Outcome Two Candidate Recipients Example')
 st_x_label <- expression(EH[1]~'('~C[1]~'): '~Expected~Outcome~Recipient~1)
 st_y_label <- expression(EH[2]~'('~C[2]~'): '~Expected~Outcome~Recipient~2)
 plt_cnts_paper <- plt_cnts_paper +
-  labs(subtitle = st_subtitle,
+  labs(title=st_title, subtitle = st_subtitle,
        x = st_x_label,
        y = st_y_label,
        caption = st_caption) +
@@ -1100,11 +1100,11 @@ plt_cnts_paper <- plt_cnts_paper +
 if (bl_save_img) {
   snm_cnts <- 'cts_exp_out_grid.png'
   png(paste0(spt_img_save, snm_cnts),
-        width = 135, height = 86, units='mm', res = 300, pointsize=7)
+        width = 135, height = 96, units='mm', res = 300, pointsize=7)
   print(plt_cnts_paper)
   dev.off()
   png(paste0(spt_img_save_draft, snm_cnts),
-        width = 135, height = 86, units='mm', res = 300,
+        width = 135, height = 96, units='mm', res = 300,
       pointsize=5)
   print(plt_cnts_paper)
   dev.off()
@@ -1153,16 +1153,15 @@ plt_cnts_paper <- plt_cnts_paper +
 # Labeling
 plt_cnts_paper$labels$colour <- "λ Levels"
 plt_cnts_paper$labels$shape <- "λ Levels"
-st_subtitle <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels\n',
-                      'Black Solid Lines = indifference curves for λ=-0.01\n',
+st_title <- paste0('Optimal Choices as Resources Expand at Three Inequality Aversion (λ) Levels')
+st_subtitle <- paste0('Black Solid Lines = indifference curves for λ=-0.01\n',
                       'Gray Dashed Lines = selected aggregate resource levels')
-# st_title <- paste0('Bounded Continuous Choice Resource Expansion Path with N=2')
 # st_subtitle <- paste0('Optimal choices as resource expands at three inequality aversion (λ) Levels')
-st_caption <- paste0('Expected Outcome Two People Example')
+st_caption <- paste0('Expected Outcome Two Candidate Recipients Example')
 st_x_label <- expression(EH[1]~'('~C[1]~'): '~Expected~Outcome~Recipient~1)
 st_y_label <- expression(EH[2]~'('~C[2]~'): '~Expected~Outcome~Recipient~2)
 plt_cnts_paper <- plt_cnts_paper +
-  labs(subtitle = st_subtitle,
+  labs(title = st_title, subtitle = st_subtitle,
        x = st_x_label,
        y = st_y_label,
        caption = st_caption) +
@@ -1172,11 +1171,11 @@ plt_cnts_paper <- plt_cnts_paper +
 if (bl_save_img) {
   snm_cnts <- 'cnts_resource_expansion_path.png'
   png(paste0(spt_img_save, snm_cnts),
-        width = 135, height = 86, units='mm', res = 300, pointsize=7)
+        width = 135, height = 96, units='mm', res = 300, pointsize=7)
   print(plt_cnts_paper)
   dev.off()
   png(paste0(spt_img_save_draft, snm_cnts),
-        width = 135, height = 86, units='mm', res = 300,
+        width = 135, height = 96, units='mm', res = 300,
       pointsize=5)
   print(plt_cnts_paper)
   dev.off()

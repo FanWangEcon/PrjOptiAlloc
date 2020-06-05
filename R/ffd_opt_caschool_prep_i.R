@@ -31,5 +31,5 @@
 #'
 #' @examples
 #' data(df_opt_caschool_prep_i)
-#' head(df_opt_caschool_prep_i, 10)
+#' head(df_opt_caschool_prep_i, 30)
 "df_opt_caschool_prep_i"

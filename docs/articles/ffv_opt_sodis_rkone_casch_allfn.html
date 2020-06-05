@@ -123,7 +123,7 @@ Use the California student test score dataset, same as line by line.
 
       
 
-      </header><script src="ffv_opt_sodis_rkone_casch_allfn_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
+      </header><script src="ffv_opt_sodis_rkone_casch_allfn_files/header-attrs-2.2/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Function Test Discrete Allocation with Linear Regression</h1>
@@ -221,9 +221,9 @@ Use the California student test score dataset, same as line by line.
 
 ## Warning in ff_dist_gini_vector_pos(.[[svr_EH_star_i]]): Data vector has only
 ## n=3, max-inequality/min-gini=0.5</code></pre>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(rev)`</code></pre>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(alloc_i_upto_Q)`</code></pre>
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">df_queue_il_long</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue_hand</span>$<span class="no">df_queue_il_long</span>
 <span class="no">df_queue_il_wide</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue_hand</span>$<span class="no">df_queue_il_wide</span>
@@ -384,9 +384,9 @@ Use the California student test score dataset, same as line by line.
 <pre><code>## Joining, by = "id_il"</code></pre>
 <pre><code>## Adding missing grouping variables: `id_i`
 ## Adding missing grouping variables: `id_i`</code></pre>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(rev)`</code></pre>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(alloc_i_upto_Q)`</code></pre>
 <div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="no">df_queue_il_long</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_queue_il_long</span>
 <span class="no">df_queue_il_wide</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_queue_il_wide</span>
@@ -500,17 +500,17 @@ Use the California student test score dataset, same as line by line.
 
 ## Warning in min(df_queue_il_with_V %&gt;% filter(!!sym(svr_V_star_Q_il) &gt;=
 ## fl_util_alter_alloc) %&gt;% : no non-missing arguments to min; returning Inf</code></pre>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(rev)`</code></pre>
 <div class="sourceCode" id="cb52"><html><body><pre class="r"><span class="co"># Display Results</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">tb_rho_rev</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 4 x 3
-##     rho rho_val     REV
-##   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-## 1     1   0.99  -Inf   
-## 2     2   0.785 -Inf   
-## 3     3  -3.64     1.00
-## 4     4 -99        1.00</code></pre>
+##     rho rho_val   REV
+##   &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1   0.99   0   
+## 2     2   0.785  0   
+## 3     3  -3.64   1.00
+## 4     4 -99      1.00</code></pre>
 </div>
 <div id="optimal-allocation-among-subset-of-districts" class="section level2">
 <h2 class="hasAnchor">
@@ -528,7 +528,7 @@ Use the California student test score dataset, same as line by line.
 <span class="no">it_O</span> <span class="kw">&lt;-</span> <span class="fl">4</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1</span>)
 <span class="no">df_cas_prep_sub_i</span> <span class="kw">&lt;-</span> <span class="no">df_opt_caschool_prep_i</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">teachers</span> <span class="kw">&lt;=</span> <span class="fl">100</span> <span class="kw">&amp;</span> <span class="no">teachers</span> <span class="kw">&gt;=</span> <span class="fl">50</span>)
-<span class="no">df_cas_prep_sub_i</span> <span class="kw">&lt;-</span> <span class="no">df_cas_prep_sub_i</span>[<span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">df_cas_prep_sub_i</span>)[<span class="fl">1</span>], <span class="no">it_O</span>, <span class="kw">replace</span><span class="kw">=</span><span class="fl">FALSE</span>),]
+<span class="no">df_cas_prep_sub_i</span> <span class="kw">&lt;-</span> <span class="no">df_cas_prep_sub_i</span>[<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">df_cas_prep_sub_i</span>)[<span class="fl">1</span>], <span class="no">it_O</span>, <span class="kw">replace</span><span class="kw">=</span><span class="fl">FALSE</span>),]
 <span class="no">ar_cas_id_selected</span> <span class="kw">&lt;-</span> <span class="no">df_cas_prep_sub_i</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">id_i</span>)
 
 <span class="co"># Select from il and ib only ids that are randomly selected</span>
@@ -610,9 +610,9 @@ Use the California student test score dataset, same as line by line.
 
 ## Warning in ff_dist_gini_vector_pos(.[[svr_EH_star_i]]): Data vector has only
 ## n=4, max-inequality/min-gini=0.6</code></pre>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(rev)`</code></pre>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(alloc_i_upto_Q)`</code></pre>
 <div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="no">df_queue_il_sub_long</span> <span class="kw">&lt;-</span> <span class="no">ls_df_sub_queue</span>$<span class="no">df_queue_il_long</span>
 <span class="no">df_queue_il_sub_wide</span> <span class="kw">&lt;-</span> <span class="no">ls_df_sub_queue</span>$<span class="no">df_queue_il_wide</span>
@@ -624,7 +624,7 @@ Use the California student test score dataset, same as line by line.
 <span class="no">ar_util_rev_loop_func</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/ffp_opt_anlyz_sodis_rev.html">ffp_opt_anlyz_sodis_rev</a></span>(<span class="no">ar_rho</span>,<span class="no">fl_teacher_increase_sub_number</span>,
                                                  <span class="kw">df_input_ib</span> <span class="kw">=</span> <span class="no">df_cas_input_sub_ib</span>,
                                                  <span class="kw">df_queue_il_long_with_V</span> <span class="kw">=</span> <span class="no">df_queue_il_sub_long</span>)</pre></body></html></div>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(rev)`</code></pre>
 <p>Show Results</p>
 <div class="sourceCode" id="cb72"><html><body><pre class="r"><span class="co"># Display Results</span>

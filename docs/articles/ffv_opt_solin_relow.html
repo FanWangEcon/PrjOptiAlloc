@@ -123,7 +123,7 @@ This demonstrates relative optimality conditions, inverse optimal allocation, an
 
       
 
-      </header><script src="ffv_opt_solin_relow_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
+      </header><script src="ffv_opt_solin_relow_files/header-attrs-2.2/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Line by Line Test Bounded-Continuous Function with Height Nutrition Data</h1>
@@ -211,7 +211,7 @@ This demonstrates relative optimality conditions, inverse optimal allocation, an
 <h4 class="hasAnchor">
 <a href="#rank" class="anchor"></a>Rank</h4>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># a. select only relevant data</span>
-<span class="no">df_opti</span> <span class="kw">&lt;-</span> <span class="no">df</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">rename</a></span>(<span class="kw">A</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_i</span>), <span class="kw">alpha</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_alpha_i</span>), <span class="kw">beta</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_beta_i</span>))
+<span class="no">df_opti</span> <span class="kw">&lt;-</span> <span class="no">df</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">A</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_i</span>), <span class="kw">alpha</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_alpha_i</span>), <span class="kw">beta</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_beta_i</span>))
 
 <span class="co"># b. Generate V4, Rank Index Value, rho specific</span>
 <span class="co"># df_opti &lt;- df_opti %&gt;% mutate(!!paste0('rv_', it_rho_ctr) := A/((alpha*beta))^(1/(1-fl_rho)))</span>

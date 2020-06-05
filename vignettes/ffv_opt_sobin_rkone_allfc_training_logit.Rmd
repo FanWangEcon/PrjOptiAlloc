@@ -50,7 +50,7 @@ library(knitr)
 library(kableExtra)
 
 bl_save_rda = FALSE
-bl_save_img = FALSE
+bl_save_img = TRUE
 ```
 
 ## Get Data
@@ -61,9 +61,15 @@ spt_img_save_draft <- 'C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/HgtOptiAll
 ```
 
 ```{r data set up}
+# Dataset
 data(df_opt_lalonde_training)
+
+# Add a binary variable for if there are wage in year 1975
+dft <- df_opt_lalonde_training %>% 
+  mutate(re75_zero = case_when(re75 == 0 ~ 1, re75 != 0 ~ 0))
+
 # dft stands for dataframe training
-dft <- df_opt_lalonde_training %>% mutate(id = X) %>%
+dft <- dft %>% mutate(id = X) %>%
            select(-X) %>%
            select(id, everything()) %>%
            mutate(emp78 =
@@ -127,6 +133,7 @@ rs_logit_bi <- glm(emp78 ~
                      age + I(age^2) + factor(age_m2)
                    + educ + I(educ^2) +
                    + educ + black + hisp + marr + nodeg
+                   + factor(re75_zero) + 
                    + factor(trt)
                    + factor(age_m2)*factor(trt)
                    , data = dft, family = "binomial")
@@ -199,14 +206,15 @@ dft_graph <- dft
 dft_graph$age_m2 <- factor(dft_graph$age_m2, labels = c('Age <= 23', 'Age > 23'))
 
 # Titling
+st_title <- sprintf("Expected Outcomes without Allocations and Marginal Effects of Allocations")
 title_line1 <- sprintf("Each circle (cross) represents an individual <= age 23 (> age 23)")
 title_line2 <- sprintf("Heterogeneous expected outcome (employment probability) with and without training")
 title_line3 <- sprintf("Heterogeneity from logistic regression nonlinearity and heterogeneous age group effects")
 title <- expression('The joint distribution of'~A[i]~'and'~alpha[i]~','~'Logistic Regression, Lalonde (AER, 1986)')
-caption <- paste0('Logistic regression predictions of the employment effects of a training RCT. Data from Lalonde (AER, 1986).')
+caption <- paste0('Based on a logistic regression of the employment effects of a training RCT. Data: Lalonde (AER, 1986).')
 # Labels
-st_x_label <- expression(A[i]~', '~Probability~of~Employment~without~Training~','~'P(train=0)')
-st_y_label <- expression(alpha[i]~','~Marginal~Effects~of~Training~','~'P(train=1) - P(train=0)')
+st_x_label <- expression(Probability~of~Employment~without~Training~','~A[i]~'= P(train=0)')
+st_y_label <- expression(Marginal~Effects~of~Training~','~alpha[i]~'= P(train=1) - P(train=0)')
 
 # Binary Marginal Effects and Prediction without Binary
 plt_A_alpha <- dft_graph %>% ggplot(aes(x=A_i)) +
@@ -215,7 +223,8 @@ plt_A_alpha <- dft_graph %>% ggplot(aes(x=A_i)) +
                      shape=factor(age_m2)), size=4) +
       geom_abline(intercept = 0, slope = 1) + # 45 degree line
       scale_colour_manual(values=c("#69b3a2", "#404080")) +
-      labs(subtitle = paste0(title_line1,'\n', title_line2, '\n', title_line3),
+      labs(title = st_title, 
+           subtitle = paste0(title_line1, '\n', title_line2, '\n', title_line3),
            x = st_x_label,
            y = st_y_label,
            caption = caption) +
@@ -231,11 +240,11 @@ print(plt_A_alpha)
 if (bl_save_img) {
   snm_cnts <- 'Lalonde_employ_A_alpha.png'
   png(paste0(spt_img_save, snm_cnts),
-        width = 135, height = 86, units='mm', res = 300, pointsize=7)
+        width = 135, height = 96, units='mm', res = 300, pointsize=7)
   print(plt_A_alpha)
   dev.off()
   png(paste0(spt_img_save_draft, snm_cnts),
-        width = 135, height = 86, units='mm', res = 300,
+        width = 135, height = 96, units='mm', res = 300,
       pointsize=5)
   print(plt_A_alpha)
   dev.off()
@@ -314,19 +323,19 @@ it_how_many_vary_rank
 # get rank when wage rho = 1
 df_all_rho_rho_c1 <- df_all_rho %>% select(id, rho_c1_rk)
 # Merge
-df_all_rho_long <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>%
+df_all_rho_long_more <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>%
                       left_join(df_all_rho_rho_c1, by='id')
 # Select subset to graph
-df_rank_graph <- df_all_rho_long %>%
+df_rank_graph <- df_all_rho_long_more %>%
                     mutate(id = factor(id)) %>%
-                    filter((id == 2221) |  # utilitarian rank = 1
-                           (id == 58) |  # utilitarian rank = 101
-                           (id == 710)  |  # utilitarian rank = 201
-                           (id == 57) |  # utilitarian rank = 301
-                           (id == 74)|  # utilitarian rank = 401
-                           (id == 248) |  # utilitarian rank = 501
-                           (id == 206) |  # utilitarian rank = 601
-                           (id == 272)   # utilitarian rank = 701
+                    filter((id == 1) |  # utilitarian rank = 1
+                           (id == 711) |  # utilitarian rank = 101
+                           (id == 731)  |  # utilitarian rank = 207
+                           (id == 50) |  # utilitarian rank = 300
+                           (id == 1571)|  # utilitarian rank = 402
+                           (id == 22) |  # utilitarian rank = 500
+                           (id == 164) |  # utilitarian rank = 600
+                           (id == 296)   # utilitarian rank = 701
                              ) %>%
                     mutate(one_minus_rho = 1 - !!sym(svr_rho_val)) %>%
                     mutate(rho_c1_rk = factor(rho_c1_rk))
@@ -349,7 +358,7 @@ x.labels <- c('λ=0.99', 'λ=0.90', 'λ=0', 'λ=-10', 'λ=-100')
 x.breaks <- c(0.01, 0.10, 1, 10, 100)
 
 # title line 2
-title_line1 <- sprintf("Positions on the optimal binary allocation queue at varying inequality averion (λ) levels")
+st_title <- sprintf("Positions on the Optimal (Binary) Allocation Queue at Varying λ Levels")
 title_line2 <- sprintf("Colored lines = different individuals from the NSW training dataset")
 title_line3 <- sprintf("Track ranking changes for eight individuals ranked 1, 101, ..., 701 at λ=0.99")
 
@@ -361,10 +370,10 @@ line.plot <- df_rank_graph %>%
   # geom_line(aes(linetype =fct_rev(id)), size=0.75) +
   geom_line(size=0.5) +
   geom_vline(xintercept=c(1), linetype="dotted") +
-  labs(subtitle = paste0(title_line1, '\n', title_line2, '\n', title_line3),
-       x = 'log10 Rescale of λ, Log10(λ)\nλ=1 Utilitarian (Maximize Average), λ=-infty Rawlsian (Maximize Mininum)',
+  labs(title = st_title, subtitle = paste0(title_line2, '\n', title_line3),
+       x = 'log10 Rescale of λ, Log10(1-λ)\nλ=1 Utilitarian (Maximize Average), λ=-infty Rawlsian (Maximize Minimum)',
        y = 'Optimal Allocation Queue Rank (1=highest)',
-       caption = 'Based on logistic regression of the employment effects of a training RCT. Data from Lalonde (AER, 1986).') +
+       caption = 'Based on a logistic regression of the employment effects of a training RCT. Data: Lalonde (AER, 1986).') +
   scale_x_continuous(trans='log10', labels = x.labels, breaks = x.breaks) +
   theme_bw(base_size=8)
 
@@ -377,11 +386,11 @@ print(line.plot)
 if (bl_save_img) {
   snm_cnts <- 'Lalonde_employ_rank.png'
   png(paste0(spt_img_save, snm_cnts),
-        width = 135, height = 86, units='mm', res = 300, pointsize=7)
+        width = 135, height = 96, units='mm', res = 300, pointsize=7)
   print(line.plot)
   dev.off()
   png(paste0(spt_img_save_draft, snm_cnts),
-        width = 135, height = 86, units='mm', res = 300,
+        width = 135, height = 96, units='mm', res = 300,
       pointsize=5)
   print(line.plot)
   dev.off()

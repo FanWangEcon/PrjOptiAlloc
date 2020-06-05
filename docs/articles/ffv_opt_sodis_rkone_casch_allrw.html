@@ -124,7 +124,7 @@ Regress student English and Math test scores on Student-Teacher-Ratio.
 
       
 
-      </header><script src="ffv_opt_sodis_rkone_casch_allrw_files/header-attrs-2.1/header-attrs.js"></script><script src="ffv_opt_sodis_rkone_casch_allrw_files/kePrint-0.0.1/kePrint.js"></script><div class="row">
+      </header><script src="ffv_opt_sodis_rkone_casch_allrw_files/header-attrs-2.2/header-attrs.js"></script><script src="ffv_opt_sodis_rkone_casch_allrw_files/kePrint-0.0.1/kePrint.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Line by Line Discrete Allocation with Linear Regression</h1>
@@ -479,7 +479,7 @@ Regress student English and Math test scores on Student-Teacher-Ratio.
 ## </code></pre>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">dfca</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">county</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<pre><code>## Warning: funs() is soft deprecated as of dplyr 0.8.0
+<pre><code>## Warning: `funs()` is deprecated as of dplyr 0.8.0.
 ## Please use a list of either functions or lambdas: 
 ## 
 ##   # Simple named list: 
@@ -490,7 +490,8 @@ Regress student English and Math test scores on Student-Teacher-Ratio.
 ## 
 ##   # Using lambdas
 ##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
-## This warning is displayed once per session.</code></pre>
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
 <pre><code>## # A tibble: 45 x 16
 ##    county X_mean distcod_mean enrltot_mean teachers_mean calwpct_mean
 ##    &lt;fct&gt;   &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;
@@ -545,16 +546,9 @@ Regress student English and Math test scores on Student-Teacher-Ratio.
 <div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># Tabulate groups, how many in each group, enough for group heterogeneity in effects?</span>
 <span class="no">dfca</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">county</span>, <span class="no">grspan</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">freq</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n.html">n</a></span>()) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">freq</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>()) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span>(<span class="kw">names_from</span> <span class="kw">=</span> <span class="no">grspan</span>, <span class="kw">values_from</span> <span class="kw">=</span> <span class="no">freq</span>)</pre></body></html></div>
-<pre><code>## Warning: Factor `county` contains implicit NA, consider using
-## `forcats::fct_explicit_na`
-
-## Warning: Factor `county` contains implicit NA, consider using
-## `forcats::fct_explicit_na`
-
-## Warning: Factor `county` contains implicit NA, consider using
-## `forcats::fct_explicit_na`</code></pre>
+<pre><code>## `summarise()` regrouping output by 'county' (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 45 x 3
 ## # Groups:   county [45]
 ##    county       `KK-08` `KK-06`
@@ -3975,14 +3969,14 @@ beta_i
 <pre><code>## Joining, by = "id_il"</code></pre>
 <div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="co"># Primary Long File</span>
 <span class="no">df_queue_il_long</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queues</span>$<span class="no">df_all_rho_long</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">D_Wbin_il</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">&lt;=</span> <span class="no">fl_teacher_increase_number</span> ~ <span class="fl">1</span>, <span class="fl">TRUE</span> ~ <span class="fl">0</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(<span class="no">df_input_il</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, <span class="no">id_il</span>, <span class="no">D_max_i</span>, <span class="no">D_il</span>), <span class="kw">by</span><span class="kw">=</span><span class="st">'id_il'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>), <span class="no">id_i</span>, <span class="no">id_il</span>, <span class="no">D_max_i</span>, <span class="no">D_il</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), <span class="no">D_Wbin_il</span>, <span class="no">A_il</span>, <span class="no">alpha_il</span>, <span class="no">beta_i</span>)
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">D_Wbin_il</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">&lt;=</span> <span class="no">fl_teacher_increase_number</span> ~ <span class="fl">1</span>, <span class="fl">TRUE</span> ~ <span class="fl">0</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_input_il</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, <span class="no">id_il</span>, <span class="no">D_max_i</span>, <span class="no">D_il</span>), <span class="kw">by</span><span class="kw">=</span><span class="st">'id_il'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>), <span class="no">id_i</span>, <span class="no">id_il</span>, <span class="no">D_max_i</span>, <span class="no">D_il</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), <span class="no">D_Wbin_il</span>, <span class="no">A_il</span>, <span class="no">alpha_il</span>, <span class="no">beta_i</span>)
 
 <span class="co"># Results from optimal targeting</span>
 <span class="co"># wide frame is mainly for visualization and analysis</span>
 <span class="no">df_queue_il_wide</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queues</span>$<span class="no">df_all_rho</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(<span class="no">df_casch_prep_i</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, <span class="no">teachers</span>, <span class="no">enrltot</span>, <span class="no">theta_i</span>), <span class="kw">by</span><span class="kw">=</span><span class="st">'id_i'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_casch_prep_i</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, <span class="no">teachers</span>, <span class="no">enrltot</span>, <span class="no">theta_i</span>), <span class="kw">by</span><span class="kw">=</span><span class="st">'id_i'</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, <span class="no">id_il</span>, <span class="no">teachers</span>, <span class="no">enrltot</span>, <span class="no">theta_i</span>, <span class="no">D_max_i</span>, <span class="no">D_il</span>, <span class="no">A_il</span>, <span class="no">alpha_il</span>, <span class="no">beta_i</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">everything</a></span>())
 
 <span class="co"># display</span>
@@ -9377,17 +9371,17 @@ rho_c4_rk
 </ol>
 <div class="sourceCode" id="cb66"><html><body><pre class="r"><span class="co"># Generate D_i and F_i long</span>
 <span class="no">df_alloc_i_long</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>), <span class="no">id_i</span>, <span class="no">D_max_i</span>, <span class="no">D_Wbin_il</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>), <span class="no">id_i</span>, <span class="no">D_max_i</span>, <span class="no">D_Wbin_il</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">D_star_i</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">D_Wbin_il</span>), <span class="kw">D_max_i</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">D_max_i</span>),
             <span class="kw">F_i</span> <span class="kw">=</span> <span class="no">D_star_i</span>/<span class="no">D_max_i</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>))
-
-<span class="co"># df_alloc_i_wide is for visualization etc</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>))) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>))</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'id_i' (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb68"><html><body><pre class="r"><span class="co"># df_alloc_i_wide is for visualization etc</span>
 <span class="no">st_last_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">svr_rho</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))
 <span class="no">df_alloc_i_wide</span> <span class="kw">&lt;-</span> <span class="no">df_alloc_i_long</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>), <span class="no">F_i</span>, <span class="no">D_max_i</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>), <span class="no">F_i</span>, <span class="no">D_max_i</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span>(
     <span class="kw">names_from</span> <span class="kw">=</span> <span class="no">svr_rho</span>,
     <span class="kw">values_from</span> <span class="kw">=</span> <span class="st">'F_i'</span>
@@ -9396,15 +9390,15 @@ rho_c4_rk
 ## i Use `all_of(svr_rho)` instead of `svr_rho` to silence this message.
 ## i See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.
 ## This message is displayed once per session.</code></pre>
-<div class="sourceCode" id="cb68"><html><body><pre class="r"><span class="co"># Rename rho columns and merge with key district attributes</span>
+<div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="co"># Rename rho columns and merge with key district attributes</span>
 <span class="no">ls_st_vars_casch_prep</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'id_i'</span>, <span class="st">'distcod'</span>, <span class="st">'county'</span>, <span class="st">'district'</span>, <span class="st">'grspan'</span>, <span class="st">'avginc'</span>, <span class="st">'testscr'</span>,
                            <span class="st">'enrltot'</span>, <span class="st">'teachers'</span>, <span class="st">'stravg'</span>)
 <span class="no">df_alloc_i_wide</span> <span class="kw">&lt;-</span> <span class="no">df_alloc_i_wide</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_at</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">num_range</a></span>(<span class="st">''</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))))),
             <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">svr_rho</span>,<span class="no">.</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(<span class="no">df_casch_prep_i</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="no">ls_st_vars_casch_prep</span>)),
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_casch_prep_i</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="no">ls_st_vars_casch_prep</span>)),
             <span class="kw">by</span><span class="kw">=</span><span class="st">'id_i'</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="no">ls_st_vars_casch_prep</span>), <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">everything</a></span>()) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho_diff</span> <span class="kw">=</span> (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">st_last_rho</span>) - !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">svr_rho</span>, <span class="st">'1'</span>))))
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho_diff</span> <span class="kw">=</span> (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">st_last_rho</span>) - !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">svr_rho</span>, <span class="st">'1'</span>))))
 
 <span class="co"># Display Results</span>
 <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">df_alloc_i_wide</span>[<span class="fl">1</span>:<span class="fl">420</span>,] <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html">mutate_if</a></span>(<span class="no">is.numeric</span>, <span class="no">round</span>, <span class="fl">2</span>)) <span class="kw">%&gt;%</span>
@@ -30474,13 +30468,15 @@ NA
 <h4 class="hasAnchor">
 <a href="#allocation-distribution-analysis" class="anchor"></a>Allocation Distribution Analysis</h4>
 <p>Given the allocations we have, not</p>
-<div class="sourceCode" id="cb71"><html><body><pre class="r"><span class="no">df</span> <span class="kw">&lt;-</span> <span class="no">df_alloc_i_long</span>
+<div class="sourceCode" id="cb73"><html><body><pre class="r"><span class="no">df</span> <span class="kw">&lt;-</span> <span class="no">df_alloc_i_long</span>
 <span class="no">vars.group</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">svr_rho</span>)
 <span class="no">var.numeric</span> <span class="kw">&lt;-</span> <span class="st">'F_i'</span>
 <span class="no">str.stats.group</span> <span class="kw">&lt;-</span> <span class="st">'allperc'</span>
 <span class="no">ar.perc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.01</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>,<span class="kw">by</span><span class="kw">=</span><span class="fl">0.05</span>), <span class="fl">0.99</span>)
-<span class="no">ls_summ_by_group</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_bygroup.html">ff_summ_bygroup</a></span>(<span class="no">df</span>, <span class="no">vars.group</span>, <span class="no">var.numeric</span>, <span class="no">str.stats.group</span>, <span class="no">ar.perc</span>)
-<span class="no">df_table_grp_stats</span> <span class="kw">&lt;-</span> <span class="no">ls_summ_by_group</span>$<span class="no">df_table_grp_stats</span>
+<span class="no">ls_summ_by_group</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_bygroup.html">ff_summ_bygroup</a></span>(<span class="no">df</span>, <span class="no">vars.group</span>, <span class="no">var.numeric</span>, <span class="no">str.stats.group</span>, <span class="no">ar.perc</span>)</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<div class="sourceCode" id="cb75"><html><body><pre class="r"><span class="no">df_table_grp_stats</span> <span class="kw">&lt;-</span> <span class="no">ls_summ_by_group</span>$<span class="no">df_table_grp_stats</span>
 <span class="no">df_row_grp_stats</span> <span class="kw">&lt;-</span> <span class="no">ls_summ_by_group</span>$<span class="no">df_row_grp_stats</span>
 <span class="no">df_overall_stats</span> <span class="kw">&lt;-</span> <span class="no">ls_summ_by_group</span>$<span class="no">df_overall_stats</span>
 <span class="no">df_row_stats_all</span> <span class="kw">&lt;-</span> <span class="no">ls_summ_by_group</span>$<span class="no">df_row_stats_all</span>
@@ -30991,7 +30987,7 @@ n.distinct
 <div id="single-rho" class="section level4">
 <h4 class="hasAnchor">
 <a href="#single-rho" class="anchor"></a>Single Rho</h4>
-<div class="sourceCode" id="cb72"><html><body><pre class="r"><span class="co"># Parameters</span>
+<div class="sourceCode" id="cb76"><html><body><pre class="r"><span class="co"># Parameters</span>
 <span class="no">svr_id_i</span> <span class="kw">&lt;-</span> <span class="st">'id_i'</span>
 <span class="no">svr_id_t</span> <span class="kw">&lt;-</span> <span class="no">svr_inpalc</span>
 <span class="no">st_idcol_prefix</span> <span class="kw">&lt;-</span> <span class="st">'sid_'</span>
@@ -31042,7 +31038,7 @@ n.distinct
 ## #   sid_104 &lt;dbl&gt;, sid_105 &lt;dbl&gt;, sid_106 &lt;dbl&gt;, sid_107 &lt;dbl&gt;, sid_108 &lt;dbl&gt;,
 ## #   sid_109 &lt;dbl&gt;, sid_110 &lt;dbl&gt;, sid_111 &lt;dbl&gt;, sid_112 &lt;dbl&gt;, sid_113 &lt;dbl&gt;,
 ## #   sid_114 &lt;dbl&gt;, sid_115 &lt;dbl&gt;, sid_116 &lt;dbl&gt;, ...</code></pre>
-<div class="sourceCode" id="cb74"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_roster_wide_cumu_func</span>,<span class="fl">30</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb78"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_roster_wide_cumu_func</span>,<span class="fl">30</span>))</pre></body></html></div>
 <pre><code>## # A tibble: 30 x 376
 ##     Q_il sid_1 sid_2 sid_3 sid_4 sid_5 sid_7 sid_8 sid_9 sid_10 sid_11 sid_12
 ##    &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
@@ -31082,7 +31078,7 @@ n.distinct
 <h4 class="hasAnchor">
 <a href="#multiple-rhos" class="anchor"></a>Multiple Rhos</h4>
 <p>use do anything to solve for multiple rhos and stack.</p>
-<div class="sourceCode" id="cb76"><html><body><pre class="r"><span class="co"># Parameters</span>
+<div class="sourceCode" id="cb80"><html><body><pre class="r"><span class="co"># Parameters</span>
 <span class="no">svr_id_i</span> <span class="kw">&lt;-</span> <span class="st">'id_i'</span>
 <span class="no">svr_id_t</span> <span class="kw">&lt;-</span> <span class="no">svr_inpalc</span>
 <span class="no">st_idcol_prefix</span> <span class="kw">&lt;-</span> <span class="st">'sid_'</span>
@@ -31097,9 +31093,9 @@ n.distinct
                                       <span class="kw">svr_id_i</span><span class="kw">=</span><span class="no">svr_id_i</span>,
                                       <span class="kw">st_idcol_prefix</span><span class="kw">=</span><span class="no">st_idcol_prefix</span>)$<span class="no">df_roster_wide_cumu</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span>() <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho'</span>, <span class="st">'1'</span>)))</pre></body></html></div>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(alloc_i_upto_Q)`</code></pre>
-<div class="sourceCode" id="cb78"><html><body><pre class="r"><span class="co"># Print Results</span>
+<div class="sourceCode" id="cb82"><html><body><pre class="r"><span class="co"># Print Results</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_alloc_il</span>,<span class="fl">30</span>))</pre></body></html></div>
 <pre><code>## # A tibble: 30 x 377
 ##      rho  Q_il sid_1 sid_2 sid_3 sid_4 sid_5 sid_7 sid_8 sid_9 sid_10 sid_11
@@ -31155,7 +31151,7 @@ n.distinct
 <li>optimal queues</li>
 <li>i and l specific information</li>
 </ol>
-<div class="sourceCode" id="cb80"><html><body><pre class="r"><span class="no">ffi_solve_queue</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">ar_rho</span>,
+<div class="sourceCode" id="cb84"><html><body><pre class="r"><span class="no">ffi_solve_queue</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">ar_rho</span>,
                             <span class="no">fl_teacher_increase_number</span>,
                             <span class="no">df_input_il</span>,
                             <span class="no">svr_rho</span> <span class="kw">=</span> <span class="st">'rho'</span>,
@@ -31177,18 +31173,18 @@ n.distinct
 
     <span class="co"># Allocations that would be below resource threshold.</span>
     <span class="no">df_queue_il_long</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queues</span>$<span class="no">df_all_rho_long</span> <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>) <span class="kw">:=</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">&lt;=</span> <span class="no">fl_teacher_increase_number</span> ~ <span class="fl">1</span>,
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>) <span class="kw">:=</span>
+               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">&lt;=</span> <span class="no">fl_teacher_increase_number</span> ~ <span class="fl">1</span>,
                          <span class="fl">TRUE</span> ~ <span class="fl">0</span>)) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(<span class="no">df_input_il</span> <span class="kw">%&gt;%</span>
-                  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_il</span>),
-                         !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_max_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_il</span>)),
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_input_il</span> <span class="kw">%&gt;%</span>
+                  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_il</span>),
+                         !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_max_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_il</span>)),
                 <span class="kw">by</span><span class="kw">=</span><span class="no">svr_id_il</span>) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>),
-             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_il</span>),
-             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_max_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_il</span>),
-             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>),
-             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_il</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_alpha_il</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_beta_i</span>))
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>),
+             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_il</span>),
+             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_max_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_il</span>),
+             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>),
+             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_il</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_alpha_il</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_beta_i</span>))
 
     <span class="co"># Results from optimal targeting</span>
     <span class="co"># wide frame is mainly for visualization and analysis</span>
@@ -31197,10 +31193,10 @@ n.distinct
     <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">df_queue_il_long</span><span class="kw">=</span><span class="no">df_queue_il_long</span>, <span class="kw">df_queue_il_wide</span><span class="kw">=</span><span class="no">df_queue_il_wide</span>))
 }</pre></body></html></div>
 <p>Test call Function.</p>
-<div class="sourceCode" id="cb81"><html><body><pre class="r"><span class="co"># Function Test</span>
+<div class="sourceCode" id="cb85"><html><body><pre class="r"><span class="co"># Function Test</span>
 <span class="no">ls_df_queue</span> <span class="kw">&lt;-</span> <span class="fu">ffi_solve_queue</span>(<span class="no">ar_rho</span>, <span class="no">fl_teacher_increase_number</span>, <span class="no">df_input_il</span>)</pre></body></html></div>
 <pre><code>## Joining, by = "id_il"</code></pre>
-<div class="sourceCode" id="cb83"><html><body><pre class="r"><span class="no">df_queue_il_long_func</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_queue_il_long</span>
+<div class="sourceCode" id="cb87"><html><body><pre class="r"><span class="no">df_queue_il_long_func</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_queue_il_long</span>
 <span class="no">df_queue_il_wide_func</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_queue_il_wide</span>
 
 <span class="co"># Compare with Non-Function Inovke</span>
@@ -31212,7 +31208,7 @@ n.distinct
 <h4 class="hasAnchor">
 <a href="#optimal-allocation-function" class="anchor"></a>Optimal Allocation Function</h4>
 <p>Generate function.</p>
-<div class="sourceCode" id="cb85"><html><body><pre class="r"><span class="no">ffi_solve_alloc</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">df_queue_il_long</span>,
+<div class="sourceCode" id="cb89"><html><body><pre class="r"><span class="no">ffi_solve_alloc</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">df_queue_il_long</span>,
                             <span class="no">svr_rho</span> <span class="kw">=</span> <span class="st">'rho'</span>,
                             <span class="no">svr_id_i</span> <span class="kw">=</span> <span class="st">'id_i'</span>,
                             <span class="no">svr_D_max_i</span> <span class="kw">=</span> <span class="st">'D_max_i'</span>,
@@ -31223,22 +31219,22 @@ n.distinct
   <span class="co"># Both aggregate discrete level of allocation as well as allocation as a fraction of individual maximum</span>
 
   <span class="no">df_alloc_i_long</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>),
-           !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_max_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>)) <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>)) <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_max_i</span>)  <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_max_i</span>)),
-              !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_star_i</span>) <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>)),
-              !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_F_star_i</span>) <span class="kw">:=</span> (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_star_i</span>)/!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_max_i</span>))) <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>))) <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>))
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>),
+           !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_max_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>)) <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>)) <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_max_i</span>)  <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_max_i</span>)),
+              !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_star_i</span>) <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>)),
+              !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_F_star_i</span>) <span class="kw">:=</span> (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_star_i</span>)/!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_max_i</span>))) <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>))) <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>))
 
     <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">df_alloc_i_long</span>)
 }</pre></body></html></div>
 <p>Test call Function.</p>
-<div class="sourceCode" id="cb86"><html><body><pre class="r"><span class="co"># Function Test</span>
-<span class="no">df_alloc_i_long_func</span> <span class="kw">&lt;-</span> <span class="fu">ffi_solve_alloc</span>(<span class="no">df_queue_il_long_func</span>)
-
-<span class="co"># Compare with Non-Function Inovke</span>
+<div class="sourceCode" id="cb90"><html><body><pre class="r"><span class="co"># Function Test</span>
+<span class="no">df_alloc_i_long_func</span> <span class="kw">&lt;-</span> <span class="fu">ffi_solve_alloc</span>(<span class="no">df_queue_il_long_func</span>)</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'id_i' (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb92"><html><body><pre class="r"><span class="co"># Compare with Non-Function Inovke</span>
 <span class="co"># if 0 below, no difference</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">df_alloc_i_long</span>$<span class="no">D_star_i</span> - <span class="no">df_alloc_i_long_func</span>$<span class="no">D_star_i</span>)</pre></body></html></div>
 <pre><code>## [1] 0</code></pre>
@@ -31247,7 +31243,7 @@ n.distinct
 <h4 class="hasAnchor">
 <a href="#given-df_queue_il-generate-df_value_il" class="anchor"></a>Given df_queue_il generate df_value_il</h4>
 <p>This is not tested line by line earlier, but tested line by line in the REV section later.</p>
-<div class="sourceCode" id="cb88"><html><body><pre class="r"><span class="co"># value given optimal choices up to Q=W point.</span>
+<div class="sourceCode" id="cb94"><html><body><pre class="r"><span class="co"># value given optimal choices up to Q=W point.</span>
 <span class="no">ffi_disc_value_star_q</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">fl_rho</span>, <span class="no">df_queue_il</span>,
                                   <span class="no">bl_return_allQ_V</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
                                   <span class="no">bl_return_inner_V</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
@@ -31265,28 +31261,28 @@ n.distinct
 
   <span class="co"># A.1 Di=0 Utility for all</span>
   <span class="no">df_rev_dizr_i_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il</span> <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_il</span>) <span class="kw">==</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_beta_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_il</span>)) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_beta_i</span>)*((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_il</span>))^<span class="no">fl_rho</span>),
-             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">:=</span> <span class="fl">0</span>) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_il</span>) <span class="kw">==</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_beta_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_il</span>)) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_beta_i</span>)*((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_il</span>))^<span class="no">fl_rho</span>),
+             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">:=</span> <span class="fl">0</span>) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
 
   <span class="co"># A.2 Cumulative Within Person Utility Inner Power Di, only D_Wbin_il == 1, those within allocaiton bound</span>
   <span class="kw">if</span> (<span class="no">bl_return_allQ_V</span>) {
     <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il</span>
   } <span class="kw">else</span> {
     <span class="co"># only evaluate up to resource</span>
-    <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>) <span class="kw">==</span> <span class="fl">1</span>)
+    <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>) <span class="kw">==</span> <span class="fl">1</span>)
   }
   <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span>
-                                       !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_beta_i</span>)*((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_il</span>)+!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_alpha_il</span>))^<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span>
+                                       !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_beta_i</span>)*((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_il</span>)+!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_alpha_il</span>))^<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
 
   <span class="co"># A.3 Run cum sum function</span>
   <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(<span class="no">df_rev_dizr_i_onerho</span>, <span class="no">df_rev_il_long_onerho</span>)
   <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
   <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_panel_cumsum_grouplast.html">ff_panel_cumsum_grouplast</a></span>(<span class="no">df_rev_il_long_onerho</span>,
                                                      <span class="kw">svr_id</span><span class="kw">=</span><span class="no">svr_id_i</span>, <span class="kw">svr_x</span><span class="kw">=</span><span class="no">svr_inpalc</span>, <span class="kw">svr_y</span><span class="kw">=</span><span class="no">svr_V_cumu_l</span>,
                                                      <span class="kw">svr_cumsumtop</span> <span class="kw">=</span> <span class="no">svr_V_inner_Q_il</span>,
@@ -31294,9 +31290,9 @@ n.distinct
 
   <span class="co"># A.4 Outter power</span>
   <span class="co"># Exclude Rank = 0, already used them to calculate total cumulative</span>
-  <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">!=</span> <span class="fl">0</span>)
+  <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">!=</span> <span class="fl">0</span>)
   <span class="no">df_rev_Ail_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">:=</span> (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_inner_Q_il</span>))^(<span class="fl">1</span>/<span class="no">fl_rho</span>))
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">:=</span> (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_inner_Q_il</span>))^(<span class="fl">1</span>/<span class="no">fl_rho</span>))
 
 
   <span class="co"># Export: function is given rho, so no rho to export</span>
@@ -31332,7 +31328,7 @@ n.distinct
 <li>i and l specific information: <span class="math inline">\(A_{il}\)</span>, <span class="math inline">\(\alpha_{il}\)</span>, <span class="math inline">\(\beta_{i}\)</span>
 </li>
 </ol>
-<div class="sourceCode" id="cb89"><html><body><pre class="r"><span class="no">ffi_solve_queue_alloc</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">ar_rho</span>,
+<div class="sourceCode" id="cb95"><html><body><pre class="r"><span class="no">ffi_solve_queue_alloc</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">ar_rho</span>,
                                   <span class="no">fl_teacher_increase_number</span>,
                                   <span class="no">df_input_il</span>,
                                   <span class="no">bl_return_V</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
@@ -31363,25 +31359,25 @@ n.distinct
     <span class="co"># Step 2</span>
     <span class="co"># Allocations that would be below resource threshold.</span>
     <span class="no">df_queue_il_long</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>) <span class="kw">:=</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">&lt;=</span> <span class="no">fl_teacher_increase_number</span> ~ <span class="fl">1</span>,
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>) <span class="kw">:=</span>
+               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">&lt;=</span> <span class="no">fl_teacher_increase_number</span> ~ <span class="fl">1</span>,
                          <span class="fl">TRUE</span> ~ <span class="fl">0</span>)) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(<span class="no">df_input_il</span> <span class="kw">%&gt;%</span>
-                  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_il</span>),
-                         !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_max_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_il</span>)),
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_input_il</span> <span class="kw">%&gt;%</span>
+                  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_il</span>),
+                         !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_max_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_il</span>)),
                 <span class="kw">by</span><span class="kw">=</span><span class="no">svr_id_il</span>)
 
     <span class="co"># Step 3</span>
     <span class="co"># Optimal Allocation Discrete Levels</span>
     <span class="no">df_alloc_i_long</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho_val</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>),
-             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_max_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>)) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>)) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho_val</span>)  <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho_val</span>)),
-                !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_max_i</span>)  <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_max_i</span>)),
-                !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_star_i</span>) <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>)),
-                !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_F_star_i</span>) <span class="kw">:=</span> (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_star_i</span>)/!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_max_i</span>))) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>))
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho_val</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>),
+             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_max_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>)) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>)) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho_val</span>)  <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho_val</span>)),
+                !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_max_i</span>)  <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_max_i</span>)),
+                !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_star_i</span>) <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>)),
+                !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_F_star_i</span>) <span class="kw">:=</span> (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_star_i</span>)/!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_max_i</span>))) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>))
 
     <span class="co"># Step 4</span>
     <span class="co"># Expected Outcome Given Optimal Choices</span>
@@ -31389,15 +31385,15 @@ n.distinct
     <span class="co"># Very straight forward, except need to deal with D_star_i = 0, merge D_star_i and di jointly</span>
     <span class="no">df_alloc_i_long</span> <span class="kw">&lt;-</span> <span class="no">df_alloc_i_long</span> <span class="kw">%&gt;%</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">D_star_i_zr1</span> <span class="kw">=</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_star_i</span>) <span class="kw">==</span> <span class="fl">0</span> ~ <span class="fl">1</span>, <span class="co"># for merging where D_star = 0</span>
-                         <span class="fl">TRUE</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_star_i</span>))) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(<span class="no">df_input_il</span> <span class="kw">%&gt;%</span>
-                  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_il</span>),
-                         !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_il</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_alpha_il</span>)),
+               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_star_i</span>) <span class="kw">==</span> <span class="fl">0</span> ~ <span class="fl">1</span>, <span class="co"># for merging where D_star = 0</span>
+                         <span class="fl">TRUE</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_star_i</span>))) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_input_il</span> <span class="kw">%&gt;%</span>
+                  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_il</span>),
+                         !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_il</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_alpha_il</span>)),
                 <span class="kw">by</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/stats/setNames.html">setNames</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">svr_id_i</span>, <span class="no">svr_D_il</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">svr_id_i</span>, <span class="st">'D_star_i_zr1'</span>))) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_EH_star_i</span>) <span class="kw">:=</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_star_i</span>) <span class="kw">==</span> <span class="fl">0</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_il</span>), <span class="co"># no choice no allocation</span>
-                         <span class="fl">TRUE</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_il</span>) + !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_alpha_il</span>)))
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_EH_star_i</span>) <span class="kw">:=</span>
+               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_star_i</span>) <span class="kw">==</span> <span class="fl">0</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_il</span>), <span class="co"># no choice no allocation</span>
+                         <span class="fl">TRUE</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_il</span>) + !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_alpha_il</span>)))
 
     <span class="co"># Step 5a, value at Q points</span>
     <span class="no">svr_return_list</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">svr_rho</span>, <span class="no">svr_rho_val</span>, <span class="no">svr_id_i</span>, <span class="no">svr_id_il</span>,
@@ -31406,7 +31402,7 @@ n.distinct
 
     <span class="kw">if</span> (<span class="no">bl_return_V</span>){
       <span class="no">mt_util_rev_loop</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span>
-        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>)) <span class="kw">%&gt;%</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>)) <span class="kw">%&gt;%</span>
         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/do.html">do</a></span>(<span class="kw">rev</span> <span class="kw">=</span> <span class="fu">ffi_disc_value_star_q</span>(<span class="kw">fl_rho</span> <span class="kw">=</span> <span class="no">.</span><span class="kw">[[</span><span class="no">svr_rho_val</span>]],
                                        <span class="kw">df_queue_il</span> <span class="kw">=</span> <span class="no">.</span>,
                                        <span class="kw">bl_return_allQ_V</span> <span class="kw">=</span> <span class="no">bl_return_allQ_V</span>,
@@ -31417,7 +31413,7 @@ n.distinct
                                        <span class="kw">svr_V_star_Q_il</span> <span class="kw">=</span> <span class="no">svr_V_star_Q_il</span>)) <span class="kw">%&gt;%</span>
             <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span>()
       <span class="co"># Step 5b, merge values to queue df</span>
-      <span class="no">df_queue_il_long</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(<span class="no">mt_util_rev_loop</span>,
+      <span class="no">df_queue_il_long</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">mt_util_rev_loop</span>,
                                      <span class="kw">by</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/stats/setNames.html">setNames</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">svr_rho</span>, <span class="no">svr_inpalc</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">svr_rho</span>, <span class="no">svr_inpalc</span>))) <span class="kw">%&gt;%</span>
                           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="no">svr_return_list</span>), <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="st">'V_'</span>))
     } <span class="kw">else</span> {
@@ -31428,21 +31424,22 @@ n.distinct
     <span class="co"># Step 6</span>
     <span class="co"># Sort columns</span>
     <span class="no">df_alloc_i_long</span> <span class="kw">&lt;-</span> <span class="no">df_alloc_i_long</span> <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho_val</span>),
-             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>),
-             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_max_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_star_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_F_star_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_EH_star_i</span>))
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho_val</span>),
+             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>),
+             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_max_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_star_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_F_star_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_EH_star_i</span>))
 
     <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">df_queue_il_long</span><span class="kw">=</span><span class="no">df_queue_il_long</span>,
                 <span class="kw">df_queue_il_wide</span><span class="kw">=</span><span class="no">df_queue_il_wide</span>,
                 <span class="kw">df_alloc_i_long</span><span class="kw">=</span><span class="no">df_alloc_i_long</span>))
 }</pre></body></html></div>
 <p>Test call Function.</p>
-<div class="sourceCode" id="cb90"><html><body><pre class="r"><span class="co"># Function Test</span>
+<div class="sourceCode" id="cb96"><html><body><pre class="r"><span class="co"># Function Test</span>
 <span class="no">ls_df_queue_alloc</span> <span class="kw">&lt;-</span> <span class="fu">ffi_solve_queue_alloc</span>(<span class="no">ar_rho</span>, <span class="no">fl_teacher_increase_number</span>, <span class="no">df_input_il</span>)</pre></body></html></div>
 <pre><code>## Joining, by = "id_il"</code></pre>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## `summarise()` regrouping output by 'id_i' (override with `.groups` argument)</code></pre>
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(rev)`</code></pre>
-<div class="sourceCode" id="cb93"><html><body><pre class="r"><span class="no">df_queue_il_long_func</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue_alloc</span>$<span class="no">df_queue_il_long</span>
+<div class="sourceCode" id="cb100"><html><body><pre class="r"><span class="no">df_queue_il_long_func</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue_alloc</span>$<span class="no">df_queue_il_long</span>
 <span class="no">df_queue_il_wide_func</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue_alloc</span>$<span class="no">df_queue_il_wide</span>
 <span class="no">mt_util_rev_loop</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue_alloc</span>$<span class="no">mt_util_rev_loop</span>
 <span class="no">df_alloc_i_long_func</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue_alloc</span>$<span class="no">df_alloc_i_long</span>
@@ -31451,14 +31448,15 @@ n.distinct
 <span class="co"># if 0 below, no difference</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">df_queue_il_long</span>$<span class="no">Q_il</span> - <span class="no">df_queue_il_long_func</span>$<span class="no">Q_il</span>)</pre></body></html></div>
 <pre><code>## [1] 0</code></pre>
-<div class="sourceCode" id="cb95"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">df_alloc_i_long</span>$<span class="no">D_star_i</span> - <span class="no">df_alloc_i_long_func</span>$<span class="no">D_star_i</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb102"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">df_alloc_i_long</span>$<span class="no">D_star_i</span> - <span class="no">df_alloc_i_long_func</span>$<span class="no">D_star_i</span>)</pre></body></html></div>
 <pre><code>## [1] 0</code></pre>
 <p>Test return with V or not, with inner V or not, solve up to all Q or not</p>
-<div class="sourceCode" id="cb97"><html><body><pre class="r"><span class="co"># when bl_return_V = FALSE, other two don't matter</span>
+<div class="sourceCode" id="cb104"><html><body><pre class="r"><span class="co"># when bl_return_V = FALSE, other two don't matter</span>
 <span class="no">bl_return_V</span> <span class="kw">&lt;-</span> <span class="fl">FALSE</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu">ffi_solve_queue_alloc</span>(<span class="no">ar_rho</span>, <span class="no">fl_teacher_increase_number</span>, <span class="no">df_input_il</span>,
                            <span class="kw">bl_return_V</span><span class="kw">=</span><span class="no">bl_return_V</span>)$<span class="no">df_queue_il_long</span>, <span class="fl">10</span>)</pre></body></html></div>
 <pre><code>## Joining, by = "id_il"</code></pre>
+<pre><code>## `summarise()` regrouping output by 'id_i' (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 10 x 8
 ##      rho rho_val  id_i id_il D_max_i  D_il  Q_il D_Wbin_il
 ##    &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;
@@ -31472,12 +31470,13 @@ n.distinct
 ##  8     4 -99         2     2       1     1   749         1
 ##  9     1   0.99      3     3       8     1   558         1
 ## 10     2   0.785     3     3       8     1   555         1</code></pre>
-<div class="sourceCode" id="cb100"><html><body><pre class="r"><span class="co"># by default, no inner only up to resource</span>
+<div class="sourceCode" id="cb108"><html><body><pre class="r"><span class="co"># by default, no inner only up to resource</span>
 <span class="no">bl_return_V</span> <span class="kw">&lt;-</span> <span class="fl">TRUE</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu">ffi_solve_queue_alloc</span>(<span class="no">ar_rho</span>, <span class="no">fl_teacher_increase_number</span>, <span class="no">df_input_il</span>,
                            <span class="kw">bl_return_V</span><span class="kw">=</span><span class="no">bl_return_V</span>)$<span class="no">df_queue_il_long</span>, <span class="fl">10</span>)</pre></body></html></div>
-<pre><code>## Joining, by = "id_il"</code></pre>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Joining, by = "id_il"
+## `summarise()` regrouping output by 'id_i' (override with `.groups` argument)</code></pre>
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(rev)`</code></pre>
 <pre><code>## # A tibble: 10 x 9
 ##      rho rho_val  id_i id_il D_max_i  D_il  Q_il D_Wbin_il V_star_Q_il
@@ -31492,14 +31491,15 @@ n.distinct
 ##  8     4 -99         2     2       1     1   749         1        637.
 ##  9     1   0.99      3     3       8     1   558         1        583.
 ## 10     2   0.785     3     3       8     1   555         1        566.</code></pre>
-<div class="sourceCode" id="cb104"><html><body><pre class="r"><span class="co"># by default, no inner only up to resource</span>
+<div class="sourceCode" id="cb112"><html><body><pre class="r"><span class="co"># by default, no inner only up to resource</span>
 <span class="no">bl_return_V</span> <span class="kw">&lt;-</span> <span class="fl">TRUE</span>
 <span class="no">bl_return_inner_V</span> <span class="kw">&lt;-</span> <span class="fl">TRUE</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu">ffi_solve_queue_alloc</span>(<span class="no">ar_rho</span>, <span class="no">fl_teacher_increase_number</span>, <span class="no">df_input_il</span>,
                            <span class="kw">bl_return_V</span><span class="kw">=</span><span class="no">bl_return_V</span>,
                            <span class="kw">bl_return_inner_V</span><span class="kw">=</span><span class="no">bl_return_inner_V</span>)$<span class="no">df_queue_il_long</span>, <span class="fl">10</span>)</pre></body></html></div>
-<pre><code>## Joining, by = "id_il"</code></pre>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Joining, by = "id_il"
+## `summarise()` regrouping output by 'id_i' (override with `.groups` argument)</code></pre>
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(rev)`</code></pre>
 <pre><code>## # A tibble: 10 x 11
 ##      rho rho_val  id_i id_il D_max_i  D_il  Q_il D_Wbin_il    V_sum_l
@@ -31515,7 +31515,7 @@ n.distinct
 ##  9     1   0.99      3     3       8     1   558         1  1.43e+  0
 ## 10     2   0.785     3     3       8     1   555         1  3.79e-  1
 ## # ... with 2 more variables: V_inner_Q_il &lt;dbl&gt;, V_star_Q_il &lt;dbl&gt;</code></pre>
-<div class="sourceCode" id="cb108"><html><body><pre class="r"><span class="co"># by default, inner values as well as all values even if D_Wbin_il = 0</span>
+<div class="sourceCode" id="cb116"><html><body><pre class="r"><span class="co"># by default, inner values as well as all values even if D_Wbin_il = 0</span>
 <span class="co"># This takes much more time.</span>
 <span class="no">bl_return_V</span> <span class="kw">&lt;-</span> <span class="fl">TRUE</span>
 <span class="no">bl_return_inner_V</span> <span class="kw">&lt;-</span> <span class="fl">TRUE</span>
@@ -31524,8 +31524,9 @@ n.distinct
                            <span class="kw">bl_return_V</span><span class="kw">=</span><span class="no">bl_return_V</span>,
                            <span class="kw">bl_return_inner_V</span><span class="kw">=</span><span class="no">bl_return_inner_V</span>,
                            <span class="kw">bl_return_allQ_V</span><span class="kw">=</span><span class="no">bl_return_allQ_V</span>)$<span class="no">df_queue_il_long</span>, <span class="fl">10</span>)</pre></body></html></div>
-<pre><code>## Joining, by = "id_il"</code></pre>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Joining, by = "id_il"
+## `summarise()` regrouping output by 'id_i' (override with `.groups` argument)</code></pre>
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(rev)`</code></pre>
 <pre><code>## # A tibble: 10 x 11
 ##      rho rho_val  id_i id_il D_max_i  D_il  Q_il D_Wbin_il   V_sum_l
@@ -31577,7 +31578,7 @@ n.distinct
 </ul>
 </li>
 </ol>
-<div class="sourceCode" id="cb112"><html><body><pre class="r"><span class="co"># Shared Names</span>
+<div class="sourceCode" id="cb120"><html><body><pre class="r"><span class="co"># Shared Names</span>
 <span class="no">svr_V_cumu_l</span> <span class="kw">&lt;-</span> <span class="st">'V_sum_l'</span>
 <span class="no">svr_V_inner_Q_il</span> <span class="kw">&lt;-</span> <span class="st">'V_inner_Q_il'</span>
 <span class="no">svr_V_star_Q_il</span> <span class="kw">&lt;-</span> <span class="st">'V_star_Q_il'</span></pre></body></html></div>
@@ -31593,12 +31594,13 @@ n.distinct
 </ul>
 </li>
 </ol>
-<div class="sourceCode" id="cb113"><html><body><pre class="r"><span class="co"># Total optimal allocation each row, should equal to fl_teacher_increase_number</span>
+<div class="sourceCode" id="cb121"><html><body><pre class="r"><span class="co"># Total optimal allocation each row, should equal to fl_teacher_increase_number</span>
 <span class="no">df_alloc_i_long</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">sum_D_star_i</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">D_star_i</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">summ_D_i_correct</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">fl_teacher_increase_number</span> <span class="kw">==</span> <span class="no">sum_D_star_i</span> ~ <span class="fl">1</span>,
                                       <span class="fl">TRUE</span> ~ <span class="fl">0</span> ))</pre></body></html></div>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 4 x 3
 ##     rho sum_D_star_i summ_D_i_correct
 ##   &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;
@@ -31606,7 +31608,7 @@ n.distinct
 ## 2     2         1084                1
 ## 3     3         1084                1
 ## 4     4         1084                1</code></pre>
-<div class="sourceCode" id="cb115"><html><body><pre class="r"><span class="co"># What is the uniform allocation total</span>
+<div class="sourceCode" id="cb124"><html><body><pre class="r"><span class="co"># What is the uniform allocation total</span>
 <span class="no">df_casch_prep_i</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">sum_D_o_i</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">D_o_i</span>))</pre></body></html></div>
 <pre><code>##   sum_D_o_i
 ## 1      1072</code></pre>
@@ -31625,7 +31627,7 @@ n.distinct
 <div id="testing-optimal-allocation-one-rho" class="section level3">
 <h3 class="hasAnchor">
 <a href="#testing-optimal-allocation-one-rho" class="anchor"></a>Testing Optimal Allocation One Rho</h3>
-<div class="sourceCode" id="cb117"><html><body><pre class="r"><span class="co"># Some fl_rho</span>
+<div class="sourceCode" id="cb126"><html><body><pre class="r"><span class="co"># Some fl_rho</span>
 <span class="no">it_rho_ctr</span> <span class="kw">&lt;-</span> <span class="fl">4</span>
 <span class="no">fl_rho</span> <span class="kw">&lt;-</span> <span class="no">ar_rho</span>[<span class="no">it_rho_ctr</span>]</pre></body></html></div>
 <div id="utility-uniform-allocation" class="section level4">
@@ -31637,7 +31639,7 @@ n.distinct
 <li>Merge main left_join with utility component dataframe, only keep on row</li>
 <li>Simple Sum and Outter power form to generate overall utility from observed allocations</li>
 </ol>
-<div class="sourceCode" id="cb118"><html><body><pre class="r"><span class="co"># Utility for Uniform Allocations</span>
+<div class="sourceCode" id="cb127"><html><body><pre class="r"><span class="co"># Utility for Uniform Allocations</span>
 <span class="no">df_casch_prep_i_testlam</span> <span class="kw">&lt;-</span> <span class="no">df_input_ib</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">v_unif_i</span> <span class="kw">=</span> <span class="no">beta_i</span>*((<span class="no">A_i_l0</span>+<span class="no">alpha_o_i</span>)^<span class="no">fl_rho</span>))
 <span class="co"># view(df_casch_prep_i_testlam %&gt;% select(id_i, v_unif_i, Omega_i, theta_i, D_o_i))</span>
 <span class="co"># Aggregate planner utility from uniform allocation</span>
@@ -31645,14 +31647,14 @@ n.distinct
 <span class="co"># Print</span>
 <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'Utility from Uniform Allocation'</span>, <span class="st">'\n'</span>)</pre></body></html></div>
 <pre><code>## Utility from Uniform Allocation</code></pre>
-<div class="sourceCode" id="cb120"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">fl_util_unif_alloc_testlam</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb129"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">fl_util_unif_alloc_testlam</span>)</pre></body></html></div>
 <pre><code>## [1] 635.9258</code></pre>
 </div>
 <div id="utility-at-zero-allocation-each-i" class="section level4">
 <h4 class="hasAnchor">
 <a href="#utility-at-zero-allocation-each-i" class="anchor"></a>Utility at Zero Allocation each i</h4>
 <p>Creating <em>df_rev_Di0_i</em>, i specific df. Long frame optimal queue data, additionally, also the raw dataframe with utility evaluated for each without additional allocations, given base allocations, no outter power.</p>
-<div class="sourceCode" id="cb122"><html><body><pre class="r"><span class="co"># Step 1</span>
+<div class="sourceCode" id="cb131"><html><body><pre class="r"><span class="co"># Step 1</span>
 <span class="co"># base no additional allocation utility, no outter power</span>
 <span class="co"># select D_il == 1, A_il here is utility without additional allocations</span>
 <span class="no">df_rev_Di0_i_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_input_il</span> <span class="kw">%&gt;%</span>
@@ -31667,12 +31669,12 @@ n.distinct
 <span class="no">df_rev_Di0_i_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_Di0_i_onerho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, <span class="no">v_zero_i</span>)
 
 <span class="co"># Step 3</span>
-<span class="no">df_rev_Di0_i_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_Di0_i_onerho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">:=</span> <span class="fl">0</span>)
+<span class="no">df_rev_Di0_i_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_Di0_i_onerho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">:=</span> <span class="fl">0</span>)
 
 <span class="co"># Step 4</span>
 <span class="no">df_rev_Di0_i_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_Di0_i_onerho</span> <span class="kw">%&gt;%</span>
-                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span> <span class="no">v_zero_i</span>) <span class="kw">%&gt;%</span>
-                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))</pre></body></html></div>
+                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span> <span class="no">v_zero_i</span>) <span class="kw">%&gt;%</span>
+                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))</pre></body></html></div>
 </div>
 <div id="utility-cumulative-from-optimal-allocation" class="section level4">
 <h4 class="hasAnchor">
@@ -31694,14 +31696,14 @@ n.distinct
 <a href="#utility-for-schools-with-additional-allocations" class="anchor"></a>Utility for Schools with Additional Allocations</h5>
 <p>First, let’s do summation directly only based on <em>df_queue_il_long</em>, including schools that have nonzero allocations, ranking from first in queue for an additional teacher spot to last.</p>
 <p>This is insufficient, because the cumulative sum will not include schools that have not received any additional allocations.</p>
-<div class="sourceCode" id="cb123"><html><body><pre class="r"><span class="co"># Steps 1 and 2</span>
+<div class="sourceCode" id="cb132"><html><body><pre class="r"><span class="co"># Steps 1 and 2</span>
 <span class="no">df_rev_il_long_onerho_wrong</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span>
-                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="no">it_rho_ctr</span> <span class="kw">&amp;</span> <span class="no">D_Wbin_il</span> <span class="kw">==</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
-                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span>  <span class="no">beta_i</span>*((<span class="no">A_il</span>+<span class="no">alpha_il</span>)^<span class="no">fl_rho</span>))
+                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="no">it_rho_ctr</span> <span class="kw">&amp;</span> <span class="no">D_Wbin_il</span> <span class="kw">==</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
+                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span>  <span class="no">beta_i</span>*((<span class="no">A_il</span>+<span class="no">alpha_il</span>)^<span class="no">fl_rho</span>))
 
 <span class="co"># Step 3, only for one rho</span>
 <span class="no">df_rev_il_long_onerho_wrong</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho_wrong</span> <span class="kw">%&gt;%</span>
-                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
+                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
 <span class="no">df_rev_il_long_onerho_wrong</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_panel_cumsum_grouplast.html">ff_panel_cumsum_grouplast</a></span>(<span class="no">df_rev_il_long_onerho_wrong</span>,
                                                <span class="kw">svr_id</span><span class="kw">=</span><span class="st">'id_i'</span>, <span class="kw">svr_x</span><span class="kw">=</span><span class="no">svr_inpalc</span>, <span class="kw">svr_y</span><span class="kw">=</span><span class="no">svr_V_cumu_l</span>,
                                                <span class="kw">svr_cumsumtop</span> <span class="kw">=</span> <span class="no">svr_V_inner_Q_il</span>,
@@ -31709,8 +31711,8 @@ n.distinct
 
 <span class="co"># Outter power</span>
 <span class="no">df_rev_il_long_onerho_wrong</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho_wrong</span> <span class="kw">%&gt;%</span>
-                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">:=</span>
-                                 (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_inner_Q_il</span>))^(<span class="fl">1</span>/<span class="no">fl_rho</span>))</pre></body></html></div>
+                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">:=</span>
+                                 (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_inner_Q_il</span>))^(<span class="fl">1</span>/<span class="no">fl_rho</span>))</pre></body></html></div>
 </div>
 <div id="utility-for-schools-without-and-with-additional-allocations" class="section level5">
 <h5 class="hasAnchor">
@@ -31724,22 +31726,22 @@ n.distinct
 </li>
 <li>Stack base no alloc and opti queue files</li>
 </ol>
-<div class="sourceCode" id="cb124"><html><body><pre class="r"><span class="co"># Same steps as above</span>
+<div class="sourceCode" id="cb133"><html><body><pre class="r"><span class="co"># Same steps as above</span>
 <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span>
-                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="no">it_rho_ctr</span> <span class="kw">&amp;</span> <span class="no">D_Wbin_il</span> <span class="kw">==</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
-                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span> <span class="no">beta_i</span>*((<span class="no">A_il</span>+<span class="no">alpha_il</span>)^<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
-                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
+                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="no">it_rho_ctr</span> <span class="kw">&amp;</span> <span class="no">D_Wbin_il</span> <span class="kw">==</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
+                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span> <span class="no">beta_i</span>*((<span class="no">A_il</span>+<span class="no">alpha_il</span>)^<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
+                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
 <span class="co"># Now combine dataframes</span>
 <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(<span class="no">df_rev_Di0_i_onerho</span>, <span class="no">df_rev_il_long_onerho</span>)
 <span class="co"># view(df_rev_il_long_onerho %&gt;% filter(id_i==1) %&gt;% arrange(!!sym(svr_V_cumu_l)))</span>
 
 <span class="co"># TEST monotinicity</span>
 <span class="no">rank_max_min_val</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">id_i</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">util_sumi_uptol_min</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>)))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">util_sumi_uptol_min</span> <span class="kw">==</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">id_i</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">util_sumi_uptol_min</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>)))) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">util_sumi_uptol_min</span> <span class="kw">==</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">rank_max</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>))) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>()
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">rank_max</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>))) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>()
 <span class="kw">if</span> (<span class="no">rank_max_min_val</span> <span class="kw">!=</span> <span class="fl">0</span> <span class="kw">&amp;</span> <span class="no">rank_max_min_val</span> <span class="kw">!=</span> <span class="no">fl_teacher_increase_number</span>){
   <span class="co"># rank_max_min_val = 0 if rho &gt; 0</span>
   <span class="co"># rank_max_min_val = fl_teacher_increase_number if rho &lt; 0</span>
@@ -31748,7 +31750,7 @@ n.distinct
 
 <span class="co"># Run cum sum function</span>
 <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span>
-                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
+                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
 <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_panel_cumsum_grouplast.html">ff_panel_cumsum_grouplast</a></span>(<span class="no">df_rev_il_long_onerho</span>,
                                                    <span class="kw">svr_id</span><span class="kw">=</span><span class="st">'id_i'</span>, <span class="kw">svr_x</span><span class="kw">=</span><span class="no">svr_inpalc</span>, <span class="kw">svr_y</span><span class="kw">=</span><span class="no">svr_V_cumu_l</span>,
                                                    <span class="kw">svr_cumsumtop</span> <span class="kw">=</span> <span class="no">svr_V_inner_Q_il</span>,
@@ -31760,12 +31762,12 @@ n.distinct
 <span class="co"># but after reach rank = 1, V_inner_Q_il starts decreasing, because each incremental allocation with rho&lt;0 power has lower</span>
 <span class="co"># value compared to less allocation. When generating outter power rank = 0 when sorted is at first decreasing, then increasing</span>
 <span class="co"># after reach rank = 1, do not need to keep rank =0, drop them after cumsum, needed only for proper cumsum calculations.</span>
-<span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">!=</span> <span class="fl">0</span>)
+<span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">!=</span> <span class="fl">0</span>)
 <span class="co"># view(df_rev_il_long_onerho %&gt;% filter(id_i==1) %&gt;% arrange(!!sym(svr_V_cumu_l)))</span>
 
 <span class="co"># Outter power</span>
 <span class="no">df_rev_Ail_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">:=</span> (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_inner_Q_il</span>))^(<span class="fl">1</span>/<span class="no">fl_rho</span>))
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">:=</span> (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_inner_Q_il</span>))^(<span class="fl">1</span>/<span class="no">fl_rho</span>))
 <span class="co"># view(df_rev_Ail_onerho %&gt;% filter(id_i==1) %&gt;% arrange(!!sym(svr_V_cumu_l)))</span>
 <span class="co"># view(df_rev_Ail_onerho %&gt;% arrange(Q_il))</span></pre></body></html></div>
 </div>
@@ -31773,10 +31775,10 @@ n.distinct
 <h5 class="hasAnchor">
 <a href="#compute-rev" class="anchor"></a>Compute REV</h5>
 <p>Now, given the current utility given optimal allocation with a particular preference, we can find REV. We simply look for the level of allocation needed (which <span class="math inline">\(Q_{il}\)</span>) point where the corresponding <span class="math inline">\(V\)</span> utility level equals the utility form uniform allocation.</p>
-<div class="sourceCode" id="cb125"><html><body><pre class="r"><span class="co"># Note column !!sym(svr_V_star_Q_il) by construction is sorted and increasing</span>
+<div class="sourceCode" id="cb134"><html><body><pre class="r"><span class="co"># Note column !!sym(svr_V_star_Q_il) by construction is sorted and increasing</span>
 <span class="co"># if it is not sorted an increasing big problem.</span>
-<span class="no">it_w_exp_min</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">df_rev_Ail_onerho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">&gt;=</span> <span class="no">fl_util_unif_alloc_testlam</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>)))
+<span class="no">it_w_exp_min</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">df_rev_Ail_onerho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">&gt;=</span> <span class="no">fl_util_unif_alloc_testlam</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>)))
 <span class="no">fl_REV</span> <span class="kw">&lt;-</span> <span class="fl">1</span> - (<span class="no">it_w_exp_min</span>/<span class="no">fl_teacher_increase_number</span>)
 <span class="co"># Print</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'fl_REV:'</span>, <span class="no">fl_REV</span>))</pre></body></html></div>
@@ -31791,7 +31793,7 @@ n.distinct
 <div id="utility-uniform-allocation-1" class="section level4">
 <h4 class="hasAnchor">
 <a href="#utility-uniform-allocation-1" class="anchor"></a>Utility Uniform Allocation</h4>
-<div class="sourceCode" id="cb127"><html><body><pre class="r"><span class="co"># Alternative Allocation Utility across rho (rho)</span>
+<div class="sourceCode" id="cb136"><html><body><pre class="r"><span class="co"># Alternative Allocation Utility across rho (rho)</span>
 <span class="co"># both df_input_ib, fl_rho are first tier inputs</span>
 <span class="co"># Assume that column names conform</span>
 <span class="co"># ffi_disc_v_alt: function, discrete, value, alternative</span>
@@ -31801,14 +31803,14 @@ n.distinct
                            <span class="no">svr_beta_i</span> <span class="kw">=</span> <span class="st">'beta_i'</span>){
 
     <span class="no">fl_util_alter_alloc</span> <span class="kw">&lt;-</span> <span class="no">df_input_ib</span> <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">v_unif_i</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_beta_i</span>)*((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_i_l0</span>) + !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_alpha_o_i</span>))^<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">v_unif_i</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_beta_i</span>)*((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_i_l0</span>) + !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_alpha_o_i</span>))^<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">v_sum_unif_i</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">v_unif_i</span>)^(<span class="fl">1</span>/<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>()
 
     <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">fl_util_alter_alloc</span>)
 }</pre></body></html></div>
 <p>Test loop vs sapply invoke, they produce the same results.</p>
-<div class="sourceCode" id="cb128"><html><body><pre class="r"><span class="co"># Loop Results</span>
+<div class="sourceCode" id="cb137"><html><body><pre class="r"><span class="co"># Loop Results</span>
 <span class="no">ar_util_unif_alloc_loop</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))
 <span class="kw">for</span> (<span class="no">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))) {
   <span class="no">fl_rho</span> <span class="kw">&lt;-</span> <span class="no">ar_rho</span>[<span class="no">it_rho_ctr</span>]
@@ -31821,9 +31823,9 @@ n.distinct
 <span class="co"># Print</span>
 <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'ar_util_unif_alloc_loop:'</span>, <span class="no">ar_util_unif_alloc_loop</span>,<span class="st">'\n'</span>)</pre></body></html></div>
 <pre><code>## ar_util_unif_alloc_loop: 654.4112 654.3646 653.3524 635.9258</code></pre>
-<div class="sourceCode" id="cb130"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'ar_util_unif_alloc_sapply:'</span>, <span class="no">ar_util_unif_alloc_sapply</span>,<span class="st">'\n'</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb139"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'ar_util_unif_alloc_sapply:'</span>, <span class="no">ar_util_unif_alloc_sapply</span>,<span class="st">'\n'</span>)</pre></body></html></div>
 <pre><code>## ar_util_unif_alloc_sapply: 654.4112 654.3646 653.3524 635.9258</code></pre>
-<div class="sourceCode" id="cb132"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="no">ar_util_unif_alloc_loop</span>-<span class="no">ar_util_unif_alloc_sapply</span>,<span class="st">'\n'</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb141"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="no">ar_util_unif_alloc_loop</span>-<span class="no">ar_util_unif_alloc_sapply</span>,<span class="st">'\n'</span>)</pre></body></html></div>
 <pre><code>## 0 0 0 0</code></pre>
 </div>
 <div id="utility-at-zero-allocation-for-each-i" class="section level4">
@@ -31831,7 +31833,7 @@ n.distinct
 <a href="#utility-at-zero-allocation-for-each-i" class="anchor"></a>Utility at Zero Allocation for each <span class="math inline">\(i\)</span>
 </h4>
 <p>Given <span class="math inline">\(\rho\)</span>, what is utility without additional allocations, not cumulative summed across individuals, only within individual inner power sum.</p>
-<div class="sourceCode" id="cb134"><html><body><pre class="r"><span class="co"># ffi_disc_di0_onerho: function, discrete, allocation D_i = 0, one rho (rho)</span>
+<div class="sourceCode" id="cb143"><html><body><pre class="r"><span class="co"># ffi_disc_di0_onerho: function, discrete, allocation D_i = 0, one rho (rho)</span>
 <span class="co"># Note that input could be either df_input_il or df_queue_il, df_queue_il inherits the following variables from df_input_il</span>
 <span class="no">ffi_disc_dizr_onerho</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">fl_rho</span>, <span class="no">df_input_il</span>,
                                  <span class="no">svr_id_i</span> <span class="kw">=</span> <span class="st">'id_i'</span>,
@@ -31863,16 +31865,16 @@ n.distinct
     <span class="co"># print(str(df_rev_Di0_i_onerho))</span>
 
     <span class="no">df_rev_Di0_i_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_input_il</span> <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_il</span>) <span class="kw">==</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_beta_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_il</span>)) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_beta_i</span>)*((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_il</span>))^<span class="no">fl_rho</span>),
-             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">:=</span> <span class="fl">0</span>) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_il</span>) <span class="kw">==</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_beta_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_il</span>)) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_beta_i</span>)*((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_il</span>))^<span class="no">fl_rho</span>),
+             !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">:=</span> <span class="fl">0</span>) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
 
     <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">df_rev_Di0_i_onerho</span>)
 }</pre></body></html></div>
 <p>Test loop vs sapply results.</p>
-<div class="sourceCode" id="cb135"><html><body><pre class="r"><span class="co"># Loop Results</span>
+<div class="sourceCode" id="cb144"><html><body><pre class="r"><span class="co"># Loop Results</span>
 <span class="no">ls_util_di0_loop</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">vector</a></span>(<span class="kw">mode</span> <span class="kw">=</span> <span class="st">"list"</span>, <span class="kw">length</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))
 <span class="kw">for</span> (<span class="no">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))) {
   <span class="no">fl_rho</span> <span class="kw">&lt;-</span> <span class="no">ar_rho</span>[<span class="no">it_rho_ctr</span>]
@@ -31885,15 +31887,15 @@ n.distinct
 <span class="co"># Compare and Print</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'ls_util_di0_loop[[1]][[3]][111]'</span>)</pre></body></html></div>
 <pre><code>## [1] "ls_util_di0_loop[[1]][[3]][111]"</code></pre>
-<div class="sourceCode" id="cb137"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ls_util_di0_loop</span><span class="kw">[[</span><span class="fl">1</span>]]<span class="kw">[[</span><span class="fl">3</span>]][<span class="fl">111</span>])</pre></body></html></div>
+<div class="sourceCode" id="cb146"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ls_util_di0_loop</span><span class="kw">[[</span><span class="fl">1</span>]]<span class="kw">[[</span><span class="fl">3</span>]][<span class="fl">111</span>])</pre></body></html></div>
 <pre><code>## [1] 1.45082</code></pre>
-<div class="sourceCode" id="cb139"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'ls_util_di0_sapply[[3,1]][111]'</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb148"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'ls_util_di0_sapply[[3,1]][111]'</span>)</pre></body></html></div>
 <pre><code>## [1] "ls_util_di0_sapply[[3,1]][111]"</code></pre>
-<div class="sourceCode" id="cb141"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ls_util_di0_sapply</span><span class="kw">[[</span><span class="fl">3</span>,<span class="fl">1</span>]][<span class="fl">111</span>])</pre></body></html></div>
+<div class="sourceCode" id="cb150"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ls_util_di0_sapply</span><span class="kw">[[</span><span class="fl">3</span>,<span class="fl">1</span>]][<span class="fl">111</span>])</pre></body></html></div>
 <pre><code>## [1] 1.45082</code></pre>
-<div class="sourceCode" id="cb143"><html><body><pre class="r"><span class="no">ls_util_di0_loop</span><span class="kw">[[</span><span class="fl">1</span>]]<span class="kw">[[</span><span class="fl">3</span>]][<span class="fl">1</span>] - <span class="no">ls_util_di0_sapply</span><span class="kw">[[</span><span class="fl">3</span>,<span class="fl">1</span>]][<span class="fl">1</span>]</pre></body></html></div>
+<div class="sourceCode" id="cb152"><html><body><pre class="r"><span class="no">ls_util_di0_loop</span><span class="kw">[[</span><span class="fl">1</span>]]<span class="kw">[[</span><span class="fl">3</span>]][<span class="fl">1</span>] - <span class="no">ls_util_di0_sapply</span><span class="kw">[[</span><span class="fl">3</span>,<span class="fl">1</span>]][<span class="fl">1</span>]</pre></body></html></div>
 <pre><code>## [1] 0</code></pre>
-<div class="sourceCode" id="cb145"><html><body><pre class="r"><span class="no">ls_util_di0_loop</span><span class="kw">[[</span><span class="fl">1</span>]]<span class="kw">[[</span><span class="fl">3</span>]][<span class="fl">111</span>] - <span class="no">ls_util_di0_sapply</span><span class="kw">[[</span><span class="fl">3</span>,<span class="fl">1</span>]][<span class="fl">111</span>]</pre></body></html></div>
+<div class="sourceCode" id="cb154"><html><body><pre class="r"><span class="no">ls_util_di0_loop</span><span class="kw">[[</span><span class="fl">1</span>]]<span class="kw">[[</span><span class="fl">3</span>]][<span class="fl">111</span>] - <span class="no">ls_util_di0_sapply</span><span class="kw">[[</span><span class="fl">3</span>,<span class="fl">1</span>]][<span class="fl">111</span>]</pre></body></html></div>
 <pre><code>## [1] 0</code></pre>
 </div>
 <div id="utility-cumulative-from-optimal-allocation-1" class="section level4">
@@ -31901,7 +31903,7 @@ n.distinct
 <a href="#utility-cumulative-from-optimal-allocation-1" class="anchor"></a>Utility Cumulative from Optimal Allocation</h4>
 <p>Calls the function just created <em>ffi_disc_Di0_onerho</em>, and callas the REconTools Function <a href="https://fanwangecon.github.io/REconTools/reference/ff_panel_cumsum_grouplast.html">ff_panel_cumsum_grouplast</a>.</p>
 <p>The function below generates a new cumulative aggregate Utility at each allocation availability.</p>
-<div class="sourceCode" id="cb147"><html><body><pre class="r"><span class="co"># ffi_disc_Diall_onerho: function, discrete, allocation D_i_all = 1 to D_max, all, one rho (rho)</span>
+<div class="sourceCode" id="cb156"><html><body><pre class="r"><span class="co"># ffi_disc_Diall_onerho: function, discrete, allocation D_i_all = 1 to D_max, all, one rho (rho)</span>
 <span class="co"># This function invokes two functions, project function ffi_disc_Di0_onerho, and REconTools Function ff_panel_cumsum_grouplast.</span>
 <span class="co"># df_queue_il is obtained from df_queue_il_long, for only one rho</span>
 <span class="co"># Note that svr_V_cumu_l, svr_V_inner_Q_il, svr_V_star_Q_il are generated by function, all other are input variables</span>
@@ -31919,15 +31921,15 @@ n.distinct
 
   <span class="co"># B. Cumulative Within Person Utility Inner Power Di, only D_Wbin_il == 1, those within allocaiton bound</span>
   <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il</span> <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>) <span class="kw">==</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span>
-                                       !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_beta_i</span>)*((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_il</span>)+!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_alpha_il</span>))^<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_D_Wbin_il</span>) <span class="kw">==</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>) <span class="kw">:=</span>
+                                       !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_beta_i</span>)*((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_il</span>)+!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_alpha_il</span>))^<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
 
   <span class="co"># C. Run cum sum function</span>
   <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(<span class="no">df_rev_dizr_i_onerho</span>, <span class="no">df_rev_il_long_onerho</span>)
   <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_id_i</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_cumu_l</span>))
   <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_panel_cumsum_grouplast.html">ff_panel_cumsum_grouplast</a></span>(<span class="no">df_rev_il_long_onerho</span>,
                                                      <span class="kw">svr_id</span><span class="kw">=</span><span class="no">svr_id_i</span>, <span class="kw">svr_x</span><span class="kw">=</span><span class="no">svr_inpalc</span>, <span class="kw">svr_y</span><span class="kw">=</span><span class="no">svr_V_cumu_l</span>,
                                                      <span class="kw">svr_cumsumtop</span> <span class="kw">=</span> <span class="no">svr_V_inner_Q_il</span>,
@@ -31935,45 +31937,45 @@ n.distinct
 
   <span class="co"># C. Outter power</span>
   <span class="co"># Exclude Rank = 0, already used them to calculate total cumulative</span>
-  <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">!=</span> <span class="fl">0</span>)
+  <span class="no">df_rev_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>) <span class="kw">!=</span> <span class="fl">0</span>)
   <span class="no">df_rev_Ail_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_rev_il_long_onerho</span> <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">:=</span> (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_inner_Q_il</span>))^(<span class="fl">1</span>/<span class="no">fl_rho</span>))
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">:=</span> (!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_inner_Q_il</span>))^(<span class="fl">1</span>/<span class="no">fl_rho</span>))
 
   <span class="co"># Return</span>
   <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">df_rev_Ail_onerho</span>)
 }</pre></body></html></div>
 <p>Test loop vs sapply results.</p>
-<div class="sourceCode" id="cb148"><html><body><pre class="r"><span class="co"># Loop Results</span>
+<div class="sourceCode" id="cb157"><html><body><pre class="r"><span class="co"># Loop Results</span>
 <span class="no">ls_util_diall_loop</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">vector</a></span>(<span class="kw">mode</span> <span class="kw">=</span> <span class="st">"list"</span>, <span class="kw">length</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))
 <span class="kw">for</span> (<span class="no">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))) {
   <span class="no">fl_rho</span> <span class="kw">&lt;-</span> <span class="no">ar_rho</span>[<span class="no">it_rho_ctr</span>]
-  <span class="no">df_queue_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="no">it_rho_ctr</span>)
+  <span class="no">df_queue_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="no">it_rho_ctr</span>)
   <span class="no">ls_util_diall_loop</span><span class="kw">[[</span><span class="no">it_rho_ctr</span>]] <span class="kw">&lt;-</span> <span class="fu">ffi_disc_diall_onerho</span>(<span class="kw">fl_rho</span><span class="kw">=</span><span class="no">fl_rho</span>, <span class="kw">df_queue_il</span> <span class="kw">=</span> <span class="no">df_queue_il_long_onerho</span>)
 }
 
 <span class="co"># Sapply Results</span>
-<span class="no">df_queue_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="fl">2</span>)
+<span class="no">df_queue_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="fl">2</span>)
 <span class="no">ls_util_diall_sapply</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(<span class="no">ar_rho</span>, <span class="no">ffi_disc_diall_onerho</span>, <span class="kw">df_queue_il</span><span class="kw">=</span><span class="no">df_queue_il_long_onerho</span>)
 
 <span class="co"># Compare and Print</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'ls_util_diall_loop[[2]][[\'v_sum_l\']][1]'</span>)</pre></body></html></div>
 <pre><code>## [1] "ls_util_diall_loop[[2]][['v_sum_l']][1]"</code></pre>
-<div class="sourceCode" id="cb150"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ls_util_diall_loop</span><span class="kw">[[</span><span class="fl">2</span>]]<span class="kw">[[</span><span class="st">'V_sum_l'</span>]][<span class="fl">1</span>])</pre></body></html></div>
+<div class="sourceCode" id="cb159"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ls_util_diall_loop</span><span class="kw">[[</span><span class="fl">2</span>]]<span class="kw">[[</span><span class="st">'V_sum_l'</span>]][<span class="fl">1</span>])</pre></body></html></div>
 <pre><code>## [1] 0.3799078</code></pre>
-<div class="sourceCode" id="cb152"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'ls_util_diall_sapply[[\'v_sum_l\',2]][1]'</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb161"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'ls_util_diall_sapply[[\'v_sum_l\',2]][1]'</span>)</pre></body></html></div>
 <pre><code>## [1] "ls_util_diall_sapply[['v_sum_l',2]][1]"</code></pre>
-<div class="sourceCode" id="cb154"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ls_util_diall_sapply</span><span class="kw">[[</span><span class="st">'V_sum_l'</span>,<span class="fl">2</span>]][<span class="fl">1</span>])</pre></body></html></div>
+<div class="sourceCode" id="cb163"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ls_util_diall_sapply</span><span class="kw">[[</span><span class="st">'V_sum_l'</span>,<span class="fl">2</span>]][<span class="fl">1</span>])</pre></body></html></div>
 <pre><code>## [1] 0.3799078</code></pre>
-<div class="sourceCode" id="cb156"><html><body><pre class="r"><span class="no">ls_util_diall_loop</span><span class="kw">[[</span><span class="fl">2</span>]]<span class="kw">[[</span><span class="st">'V_sum_l'</span>]][<span class="fl">1</span>] - <span class="no">ls_util_diall_sapply</span><span class="kw">[[</span><span class="st">'V_sum_l'</span>,<span class="fl">2</span>]][<span class="fl">1</span>]</pre></body></html></div>
+<div class="sourceCode" id="cb165"><html><body><pre class="r"><span class="no">ls_util_diall_loop</span><span class="kw">[[</span><span class="fl">2</span>]]<span class="kw">[[</span><span class="st">'V_sum_l'</span>]][<span class="fl">1</span>] - <span class="no">ls_util_diall_sapply</span><span class="kw">[[</span><span class="st">'V_sum_l'</span>,<span class="fl">2</span>]][<span class="fl">1</span>]</pre></body></html></div>
 <pre><code>## [1] 0</code></pre>
-<div class="sourceCode" id="cb158"><html><body><pre class="r"><span class="no">ls_util_diall_loop</span><span class="kw">[[</span><span class="fl">2</span>]]<span class="kw">[[</span><span class="st">'V_sum_l'</span>]][<span class="fl">111</span>] - <span class="no">ls_util_diall_sapply</span><span class="kw">[[</span><span class="st">'V_sum_l'</span>,<span class="fl">2</span>]][<span class="fl">111</span>]</pre></body></html></div>
+<div class="sourceCode" id="cb167"><html><body><pre class="r"><span class="no">ls_util_diall_loop</span><span class="kw">[[</span><span class="fl">2</span>]]<span class="kw">[[</span><span class="st">'V_sum_l'</span>]][<span class="fl">111</span>] - <span class="no">ls_util_diall_sapply</span><span class="kw">[[</span><span class="st">'V_sum_l'</span>,<span class="fl">2</span>]][<span class="fl">111</span>]</pre></body></html></div>
 <pre><code>## [1] 0</code></pre>
 </div>
 <div id="utility-alternative-and-optimal-comparison-compute-rev" class="section level4">
 <h4 class="hasAnchor">
 <a href="#utility-alternative-and-optimal-comparison-compute-rev" class="anchor"></a>Utility Alternative and Optimal Comparison, Compute REV</h4>
 <p>Resource Equivalent Variations.</p>
-<div class="sourceCode" id="cb160"><html><body><pre class="r"><span class="co"># ffi_disc_Diall_onerho: function, discrete, allocation D_i = 1 to D_max, one rho (rho)</span>
+<div class="sourceCode" id="cb169"><html><body><pre class="r"><span class="co"># ffi_disc_Diall_onerho: function, discrete, allocation D_i = 1 to D_max, one rho (rho)</span>
 <span class="co"># This function invokes two functions, project function ffi_disc_Di0_onerho, and REconTools Function ff_panel_cumsum_grouplast.</span>
 <span class="no">ffi_disc_rev_onerho_test</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">fl_rho</span>,
                                 <span class="no">fl_teacher_increase_number</span>,
@@ -32001,8 +32003,8 @@ n.distinct
 
   <span class="co"># C. Generate rho specific REV</span>
   <span class="no">it_w_exp_min</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">df_rev_Ail_onerho</span> <span class="kw">%&gt;%</span>
-                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">&gt;=</span> <span class="no">fl_util_alter_alloc</span>) <span class="kw">%&gt;%</span>
-                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>)))
+                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">&gt;=</span> <span class="no">fl_util_alter_alloc</span>) <span class="kw">%&gt;%</span>
+                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>)))
   <span class="no">fl_REV</span> <span class="kw">&lt;-</span> <span class="fl">1</span> - (<span class="no">it_w_exp_min</span>/<span class="no">fl_teacher_increase_number</span>)
 
 
@@ -32010,12 +32012,12 @@ n.distinct
   <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">fl_REV</span>)
 }</pre></body></html></div>
 <p>Test loop vs sapply results.</p>
-<div class="sourceCode" id="cb161"><html><body><pre class="r"><span class="co"># Loop Results</span>
+<div class="sourceCode" id="cb170"><html><body><pre class="r"><span class="co"># Loop Results</span>
 <span class="no">start_time_loop</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>()
 <span class="no">ar_util_rev_loop</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))
 <span class="kw">for</span> (<span class="no">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))) {
   <span class="no">fl_rho</span> <span class="kw">&lt;-</span> <span class="no">ar_rho</span>[<span class="no">it_rho_ctr</span>]
-  <span class="no">df_queue_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="no">it_rho_ctr</span>)
+  <span class="no">df_queue_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="no">it_rho_ctr</span>)
   <span class="no">ar_util_rev_loop</span>[<span class="no">it_rho_ctr</span>] <span class="kw">&lt;-</span>
     <span class="fu">ffi_disc_rev_onerho_test</span>(<span class="kw">fl_rho</span><span class="kw">=</span><span class="no">fl_rho</span>,
                              <span class="kw">fl_teacher_increase_number</span><span class="kw">=</span><span class="no">fl_teacher_increase_number</span>,
@@ -32027,11 +32029,11 @@ n.distinct
 
 ## Warning in min(df_rev_Ail_onerho %&gt;% filter(!!sym(svr_V_star_Q_il) &gt;=
 ## fl_util_alter_alloc) %&gt;% : no non-missing arguments to min; returning Inf</code></pre>
-<div class="sourceCode" id="cb163"><html><body><pre class="r"><span class="no">end_time_loop</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>()
+<div class="sourceCode" id="cb172"><html><body><pre class="r"><span class="no">end_time_loop</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>()
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'LOOP loop time:'</span>, <span class="no">end_time_loop</span> - <span class="no">start_time_loop</span>))</pre></body></html></div>
-<pre><code>## [1] "LOOP loop time:4.87034106254578"</code></pre>
-<div class="sourceCode" id="cb165"><html><body><pre class="r"><span class="co"># Sapply Results</span>
-<span class="no">df_queue_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="fl">4</span>)
+<pre><code>## [1] "LOOP loop time:7.07754397392273"</code></pre>
+<div class="sourceCode" id="cb174"><html><body><pre class="r"><span class="co"># Sapply Results</span>
+<span class="no">df_queue_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="fl">4</span>)
 <span class="no">ar_util_rev_sapply</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(<span class="no">ar_rho</span>, <span class="no">ffi_disc_rev_onerho_test</span>,
                                <span class="kw">fl_teacher_increase_number</span><span class="kw">=</span><span class="no">fl_teacher_increase_number</span>,
                                <span class="kw">df_input_ib</span><span class="kw">=</span><span class="no">df_input_ib</span>,
@@ -32041,14 +32043,14 @@ n.distinct
 
 ## Warning in min(df_rev_Ail_onerho %&gt;% filter(!!sym(svr_V_star_Q_il) &gt;=
 ## fl_util_alter_alloc) %&gt;% : no non-missing arguments to min; returning Inf</code></pre>
-<div class="sourceCode" id="cb167"><html><body><pre class="r"><span class="co"># Compare and Print, only the 4th result should match up because sapply is not changing input data matrix</span>
+<div class="sourceCode" id="cb176"><html><body><pre class="r"><span class="co"># Compare and Print, only the 4th result should match up because sapply is not changing input data matrix</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'ar_util_rev_sapply'</span>)</pre></body></html></div>
 <pre><code>## [1] "ar_util_rev_sapply"</code></pre>
-<div class="sourceCode" id="cb169"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ar_util_rev_sapply</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb178"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ar_util_rev_sapply</span>)</pre></body></html></div>
 <pre><code>## [1]      -Inf      -Inf 0.9990775 0.9990775</code></pre>
-<div class="sourceCode" id="cb171"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'ar_util_rev_loop'</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb180"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'ar_util_rev_loop'</span>)</pre></body></html></div>
 <pre><code>## [1] "ar_util_rev_loop"</code></pre>
-<div class="sourceCode" id="cb173"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ar_util_rev_loop</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb182"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ar_util_rev_loop</span>)</pre></body></html></div>
 <pre><code>## [1]      -Inf      -Inf 0.9990775 0.9990775</code></pre>
 </div>
 </div>
@@ -32061,7 +32063,7 @@ n.distinct
 <h4 class="hasAnchor">
 <a href="#generate-value-mt_rev" class="anchor"></a>Generate value <em>mt_rev</em>
 </h4>
-<div class="sourceCode" id="cb175"><html><body><pre class="r"><span class="co"># ffi_disc_Diall_onerho: function, discrete, allocation D_i = 1 to D_max, one rho (rho)</span>
+<div class="sourceCode" id="cb184"><html><body><pre class="r"><span class="co"># ffi_disc_Diall_onerho: function, discrete, allocation D_i = 1 to D_max, one rho (rho)</span>
 <span class="co"># This function invokes two functions, project function ffi_disc_Di0_onerho, and REconTools Function ff_panel_cumsum_grouplast.</span>
 <span class="no">ffi_disc_rev_onerho</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">fl_rho</span>,
                                 <span class="no">fl_teacher_increase_number</span>,
@@ -32077,14 +32079,14 @@ n.distinct
 
   <span class="co"># B. Aggregate utility given Alternative Allocation</span>
   <span class="no">fl_util_alter_alloc</span> <span class="kw">&lt;-</span> <span class="no">df_input_ib</span> <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">v_altern_i</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_beta_i</span>)*((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_A_i_l0</span>) + !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_alpha_o_i</span>))^<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">v_altern_i</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_beta_i</span>)*((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A_i_l0</span>) + !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_alpha_o_i</span>))^<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">v_altern_unif_i</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">v_altern_i</span>)^(<span class="fl">1</span>/<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>()
 
   <span class="co"># C. Generate rho specific REV</span>
   <span class="no">it_w_exp_min</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">df_queue_il_with_V</span> <span class="kw">%&gt;%</span>
-                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">&gt;=</span> <span class="no">fl_util_alter_alloc</span>) <span class="kw">%&gt;%</span>
-                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>)))
+                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_V_star_Q_il</span>) <span class="kw">&gt;=</span> <span class="no">fl_util_alter_alloc</span>) <span class="kw">%&gt;%</span>
+                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>)))
   <span class="no">fl_REV</span> <span class="kw">&lt;-</span> <span class="fl">1</span> - (<span class="no">it_w_exp_min</span>/<span class="no">fl_teacher_increase_number</span>)
 
   <span class="co"># Return</span>
@@ -32095,7 +32097,7 @@ n.distinct
 <div id="rev-function" class="section level4">
 <h4 class="hasAnchor">
 <a href="#rev-function" class="anchor"></a>REV Function</h4>
-<div class="sourceCode" id="cb176"><html><body><pre class="r"><span class="no">ffi_disc_rev</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">ar_rho</span>,
+<div class="sourceCode" id="cb185"><html><body><pre class="r"><span class="no">ffi_disc_rev</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">ar_rho</span>,
                          <span class="no">fl_teacher_increase_number</span>,
                          <span class="no">df_input_ib</span>, <span class="no">df_queue_il_long_with_V</span>,
                          <span class="no">svr_rho</span> <span class="kw">=</span> <span class="st">'rho'</span>, <span class="no">svr_rho_val</span> <span class="kw">=</span> <span class="st">'rho_val'</span>,
@@ -32106,7 +32108,7 @@ n.distinct
 
     <span class="co"># Evaluate REV</span>
     <span class="no">ar_util_rev_loop</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long_with_V</span> <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho</span>)) <span class="kw">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>)) <span class="kw">%&gt;%</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/do.html">do</a></span>(<span class="kw">rev</span> <span class="kw">=</span> <span class="fu">ffi_disc_rev_onerho</span>(<span class="kw">fl_rho</span> <span class="kw">=</span> <span class="no">.</span><span class="kw">[[</span><span class="no">svr_rho_val</span>]],
                                    <span class="kw">fl_teacher_increase_number</span> <span class="kw">=</span> <span class="no">fl_teacher_increase_number</span>,
                                    <span class="kw">df_input_ib</span> <span class="kw">=</span> <span class="no">df_input_ib</span>, <span class="kw">df_queue_il_with_V</span> <span class="kw">=</span> <span class="no">.</span>,
@@ -32125,7 +32127,7 @@ n.distinct
 <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">tb_rho_rev</span>)
 }</pre></body></html></div>
 <p>Call Function.</p>
-<div class="sourceCode" id="cb177"><html><body><pre class="r"><span class="co"># the func version supercede the earlier versions, because they have some more outputs</span>
+<div class="sourceCode" id="cb186"><html><body><pre class="r"><span class="co"># the func version supercede the earlier versions, because they have some more outputs</span>
 <span class="co"># but the nonfunction version have additional variables inside needed for line by line code</span>
 <span class="no">df_queue_il_long</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long_func</span>
 <span class="no">df_alloc_i_long</span> <span class="kw">&lt;-</span> <span class="no">df_alloc_i_long_func</span>
@@ -32138,17 +32140,17 @@ n.distinct
 
 ## Warning in min(df_queue_il_with_V %&gt;% filter(!!sym(svr_V_star_Q_il) &gt;=
 ## fl_util_alter_alloc) %&gt;% : no non-missing arguments to min; returning Inf</code></pre>
-<pre><code>## Warning: `cols` is now required.
+<pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(rev)`</code></pre>
-<div class="sourceCode" id="cb180"><html><body><pre class="r"><span class="no">ar_util_rev_loop_func</span> <span class="kw">&lt;-</span> <span class="no">tb_rho_rev</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">REV</span>)
+<div class="sourceCode" id="cb189"><html><body><pre class="r"><span class="no">ar_util_rev_loop_func</span> <span class="kw">&lt;-</span> <span class="no">tb_rho_rev</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">REV</span>)
 <span class="no">end_time_nest</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>()
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'DPLYR nested loop time:'</span>, <span class="no">end_time_nest</span> - <span class="no">start_time_nest</span>))</pre></body></html></div>
-<pre><code>## [1] "DPLYR nested loop time:0.0968749523162842"</code></pre>
-<div class="sourceCode" id="cb182"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'ar_util_rev_loop_func'</span>)</pre></body></html></div>
+<pre><code>## [1] "DPLYR nested loop time:0.0944459438323975"</code></pre>
+<div class="sourceCode" id="cb191"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'ar_util_rev_loop_func'</span>)</pre></body></html></div>
 <pre><code>## [1] "ar_util_rev_loop_func"</code></pre>
-<div class="sourceCode" id="cb184"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ar_util_rev_loop_func</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb193"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ar_util_rev_loop_func</span>)</pre></body></html></div>
 <pre><code>## [1]      -Inf      -Inf 0.9990775 0.9990775</code></pre>
-<div class="sourceCode" id="cb186"><html><body><pre class="r"><span class="co"># Compare Results, if 0 match</span>
+<div class="sourceCode" id="cb195"><html><body><pre class="r"><span class="co"># Compare Results, if 0 match</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">ar_util_rev_loop</span> - <span class="no">ar_util_rev_loop_func</span>)</pre></body></html></div>
 <pre><code>## [1] NaN</code></pre>
 </div>

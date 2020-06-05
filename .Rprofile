@@ -23,7 +23,7 @@ library(dplyr)
 
 # RMD Options
 options(knitr.duplicate.label = "allow")
-knitr::opts_chunk$set(fig.width=7, fig.height=4, fig.align="center")
+knitr::opts_chunk$set(fig.width=7, fig.height=5, fig.align="center")
 
 # Output HTML or Latex
 if (knitr::is_latex_output()) {

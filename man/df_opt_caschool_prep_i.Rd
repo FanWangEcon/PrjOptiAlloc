@@ -32,7 +32,7 @@ does not start with allocation at zero, but each district already has some exist
 }
 \examples{
 data(df_opt_caschool_prep_i)
-head(df_opt_caschool_prep_i, 10)
+head(df_opt_caschool_prep_i, 30)
 }
 \references{
 Stock, James H. and Mark W. Watson (2003) Introduction to Econometrics, Addison-Wesley Educational Publishers, chapter 4–7.

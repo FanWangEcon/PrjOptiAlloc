@@ -26,8 +26,10 @@ re75, real earnings in 1975.
 re78, real earnings in 1978.
 }
 \examples{
+library(REconTools)
 data(df_opt_lalonde_training)
 head(df_opt_lalonde_training, 10)
+REconTools::ff_summ_percentiles(df_opt_lalonde_training)
 }
 \references{
 Lalonde, R. (1986) "Evaluating the Econometric Evaluations of Training Programs with Experimental Data", American Economic Review, 604–620.

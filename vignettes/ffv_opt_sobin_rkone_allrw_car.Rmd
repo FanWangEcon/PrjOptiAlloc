@@ -30,23 +30,6 @@ Given $N$ individuals, if each individual could or could not receive the provisi
 4. Treat the $m$ components of the function as slope and intercept, the $q$ remaining component is the $x$, for each individual, there is a unique $x$
 5. The randk order fully determin the sequence of provisions. This is similar to how rank order is determined in the continuous problem, with just a tiny difference of $\alpha$ added in the numerator.
 
-## Input and Output
-
-There is a dataset with child attributes, nutritional inputs and outputs. Run regression to estimate some input output relationship first. Then generate required inputs for code.
-
-1. Required Input
-  + @param df tibble data table including variables using svr names below each row is potentially an individual who will receive alternative allocations
-  + @param svr_A_i string name of the A_i variable, dot product of covariates and coefficients
-  + @param svr_alpha_i string name of the alpha_i variable, individual specific elasticity information
-  + @param svr_beta_i string name of the beta_i variable, relative preference weight for each child
-  + @param svr_N_i string name of the vector of existing inputs, based on which to compute aggregate resource
-  + @param fl_N_hat float total resource avaible for allocation, if not specific, sum by svr_N_i
-  + @param fl_rho float preference for equality for the planner
-  + @return a dataframe that expands the df inputs with additional results.
-2. The structure assumes some regression has already taken place to generate the i specific variables listed. and
-
-Doing this allows for lagged intereaction that are time specific in an arbitrary way.
-
 ## Load Packages and Data
 
 ### Load Dependencies
@@ -100,7 +83,13 @@ tb_mtcars$vs <- factor(tb_mtcars$vs,
 tb_mtcars$am <- factor(tb_mtcars$am,
                         levels = c(0,1),
                         labels = c("automatic", "manual"))
+```
 
+## Exploration
+
+### Tabulation
+
+```{r}
 # tabulate
 tb_mtcars %>%
   group_by(am, vs) %>%
@@ -108,9 +97,18 @@ tb_mtcars %>%
   pivot_wider(names_from = vs, values_from = freq)
 ```
 
-## Regression with Data and Construct Input Arrays
+Summarize all, conditional on shift status. *am* variable is Transmission (0 = automatic, 1 = manual):
 
-### Regress MPG on Manual Transmission
+```{R}
+# summarize all
+REconTools::ff_summ_percentiles(tb_mtcars, bl_statsasrows = FALSE)
+# summarize auto transition
+REconTools::ff_summ_percentiles(tb_mtcars %>% filter(am == 0), bl_statsasrows = FALSE)
+# summarize manual transition
+REconTools::ff_summ_percentiles(tb_mtcars %>% filter(am == 1), bl_statsasrows = FALSE) 
+```
+
+### Exploration Regressions
 
 ```{r Linear Regression Testing}
 # A. Regree MPG on horse power and binary if Manual or not (manual = 1)
@@ -120,18 +118,16 @@ print(summary(lm(mpg ~ hp + wt + factor(am) - 1)))
 
 # B. Also incorporate now engine shape, vs = 0 if v-shaped
 print(summary(lm(mpg ~ hp + factor(am) - 1)))
-
 print(summary(lm(mpg ~ hp + carb + factor(am):factor(vs) - 1)))
-
-#
 print(summary(lm(mpg ~ hp + carb + factor(vs) + factor(am):factor(vs))))
+```
 
-# Preferred way of appearing, in the following regression we can se:
-# 1. more more power less MPG, Straight engine slightly higher MPG
-# 2. V-shape engine car, going from auto to manual trans gain 4.1 MPG
-# 2. straight shape engine, going from auto to manual trans gain 6.67 MPG
+## Regression with Data and Construct Input Arrays
 
-# Store Regression Results
+### Regress MPG on Manual Transmission
+
+```{r Linear Regression Testing}
+# regress and store results
 mt_model <- model.matrix(~ hp + qsec + factor(vs) + factor(am):factor(vs))
 rs_mpg_on_auto = lm(mpg ~ mt_model - 1)
 print(summary(rs_mpg_on_auto))
@@ -194,7 +190,7 @@ tb_opti_unique <- tb_key_alpha_A_beta %>% group_by(!!!syms(ar_st_varnames)) %>%
 
 
 # Only include currently automatic cars
-# tb_key_alpha_A_beta <-tb_key_alpha_A_beta %>% filter(am == 'automatic')
+tb_key_alpha_A_beta <-tb_key_alpha_A_beta %>% filter(am == 'automatic')
 
 # Show cars
 head(tb_key_alpha_A_beta, 32)
@@ -209,13 +205,9 @@ head(tb_key_alpha_A_beta, 32)
 it_obs = dim(tb_opti_unique)[1]
 
 # Vector of Planner Preference
-ar_rho <- c(-100, 0.8)
-ar_rho <- c(-50, -25, -10)
-ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.8)
-ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))
-ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.99)
-ar_rho <- c(-100, -10, -1, -0.5, -0.1, 0.01, 0.05, 0.10, 0.20,  0.9)
+ar_rho <- 1 - (10^(c(seq(-0.5, 0.5, length.out=18))))
 ar_rho <- unique(ar_rho)
+print(ar_rho)
 ```
 
 ### Optimal binary Allocation (CRS)
@@ -322,6 +314,15 @@ str(tb_opti_alloc_all_rho_long)
 
 ```{r binary allocation bump plot, fig.height = 8, fig.width = 12, fig.align = "center"}
 
+st_title = paste0("Binary Allocation Rank, Miles Per Gallon and Manual Shift")
+st_subtitle = paste0("Which automatic car to convert to manual shift first?\n",
+                     "The expected outcome of interest is miles per gallon\n",
+                     "Switch from Auto to Manual shift to improve mpg\n",
+                     "Rank = 1, conver this car first from auto to manual shift")
+st_caption = paste0("Linear regression of mpg on shift-type. mtcars dataset (R Core Team 2019).")
+st_x_lab = paste0("More Efficient --> Cobb-Douglas --> More Equal")
+st_y_lab = paste0("Rank Along Binary Allocation Queue ( 1 = highest ranked)")
+
 tb_opti_alloc_all_rho_long %>%
   ggplot(aes(x = rho_num, y = rank, group = carname)) +
     geom_line(aes(color = carname, alpha = 1), size = 2) +
@@ -329,9 +330,11 @@ tb_opti_alloc_all_rho_long %>%
     scale_x_discrete(expand = c(0.85,0))+
     scale_y_reverse(breaks = 1:nrow(tb_opti_alloc_all_rho_long))+
     theme(legend.position = "none") +
-    labs(x = "Equality vs Efficiency",
-         y = "Rank",
-         title = "Binary Allocation Rank, Convert to Automatic and MPG") +
+    labs(x = st_x_lab,
+         y = st_y_lab, 
+         title = st_title, 
+         subtitle = st_subtitle,
+         caption = st_caption) +
     ffy_opt_ghthm_dk() +
     geom_text(data = tb_opti_alloc_all_rho, aes(y=rho_c1_rk, x=0.6, label=carname),hjust="right")
 

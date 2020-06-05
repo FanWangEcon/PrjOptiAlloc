@@ -43,9 +43,27 @@ bl_save_img = FALSE
 Generate four categories by initial height and mother's education levels combinations.
 
 ```{r Load Packages and Process Data}
-# Load Data
+# Dataset
 data(df_opt_lalonde_training)
-dft <- df_opt_lalonde_training %>% mutate(id = X) %>%
+
+# Add a binary variable for if there are wage in year 1975
+dft <- df_opt_lalonde_training %>% 
+  mutate(re75_zero = case_when(re75 <= 1 ~ 1, 
+                               TRUE ~ 0)) %>%
+  select(trt, re75_zero, everything())
+
+# summary
+REconTools::ff_summ_percentiles(dft)
+# summary treated only
+REconTools::ff_summ_percentiles(dft %>% filter(trt == 1))
+REconTools::ff_summ_percentiles(dft %>% filter(trt == 0))
+# within 297 treated, 111 (37%) had zero wage in 1975
+# within 425 untreated, 178 (42%) had zero wage in 1975
+```
+
+```{r}
+# Load Data
+dft <- dft %>% mutate(id = X) %>%
            select(-X) %>%
            select(id, everything())
 # Summarize
@@ -216,6 +234,7 @@ mt_model <- model.matrix( ~ age + I(age^2) + factor(age_m2) +
                           + factor(race)
                           + factor(marr)
                           + factor(nodeg)
+                          + factor(re75_zero)
                           + factor(age_m2):factor(trt),
                           data = dft)
 rs_wage_on_trt = lm(re78 ~ mt_model - 1, data = dft)
@@ -356,20 +375,20 @@ if (bl_save_rda) {
 df_all_rho_rho_c1 <- df_all_rho %>% select(id, rho_c1_rk_wage)
 
 # Merge
-df_all_rho_long <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>%
+df_all_rho_long_more <- df_all_rho_long %>% mutate(rho = as.numeric(rho)) %>%
                       left_join(df_all_rho_rho_c1, by='id')
 
 # Select subset to graph
-df_rank_graph <- df_all_rho_long %>%
+df_rank_graph <- df_all_rho_long_more %>%
                     mutate(id = factor(id)) %>%
-                    filter((id == 200) |  # utilitarian rank = 1
-                           (id == 110) |  # utilitarian rank = 101
-                           (id == 95)  |  # utilitarian rank = 201
-                           (id == 217) |  # utilitarian rank = 301
-                           (id == 2741)|  # utilitarian rank = 401
-                           (id == 101) |  # utilitarian rank = 501
-                           (id == 131) |  # utilitarian rank = 601
-                           (id == 3610)   # utilitarian rank = 701
+                    filter((id == 167) |  # utilitarian rank = 1
+                           (id == 175) |  # utilitarian rank = 101
+                           (id == 3710)  |  # utilitarian rank = 202
+                           (id == 2151) |  # utilitarian rank = 306
+                           (id == 27)|  # utilitarian rank = 405
+                           (id == 58) |  # utilitarian rank = 503
+                           (id == 184) |  # utilitarian rank = 603
+                           (id == 1481)   # utilitarian rank = 701
                              ) %>%
                     mutate(one_minus_rho = 1 - !!sym(svr_rho_val)) %>%
                     mutate(rho_c1_rk_wage = factor(rho_c1_rk_wage))

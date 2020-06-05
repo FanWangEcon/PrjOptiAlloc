@@ -50,9 +50,15 @@ spt_img_save_draft <- 'C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/HgtOptiAll
 The regression is the same as prior. Subgroup allocation is based on the idea of targeting only a subset of individuals, when we know the marginal effects and needs of all individuals.
 
 ```{r data set up}
+# Dataset
 data(df_opt_lalonde_training)
+
+# Add a binary variable for if there are wage in year 1975
+dft <- df_opt_lalonde_training %>% 
+  mutate(re75_zero = case_when(re75 == 0 ~ 1, re75 != 0 ~ 0))
+
 # dft stands for dataframe training
-dft <- df_opt_lalonde_training %>% mutate(id = X) %>%
+dft <- dft %>% mutate(id = X) %>%
            select(-X) %>%
            select(id, everything()) %>%
            mutate(emp78 =

@@ -349,7 +349,9 @@ svr_number_col <- 'value'
 svr_id_bisect_iter <- paste0(svr_id_var, '_bisect_ier')
 
 # pivot wide to very long
-tb_states_choices_bisec_long <- tb_states_choices_bisec %>% sample_n(9, replace = FALSE) %>%
+set.seed(123)
+tb_states_choices_bisec_long <- 
+  tb_states_choices_bisec[sample(dim(tb_states_choices_bisec)[1], 9, replace=FALSE),] %>%
   pivot_longer(
     cols = starts_with(st_bisec_prefix),
     names_to = c(svr_abfafb_long_name, svr_bisect_iter),

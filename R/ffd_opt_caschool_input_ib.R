@@ -23,5 +23,5 @@
 #'
 #' @examples
 #' data(df_opt_caschool_input_ib)
-#' head(df_opt_caschool_input_ib, 10)
+#' head(df_opt_caschool_input_ib, 30)
 "df_opt_caschool_input_ib"

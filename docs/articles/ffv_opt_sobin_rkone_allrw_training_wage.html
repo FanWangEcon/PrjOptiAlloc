@@ -123,7 +123,7 @@ Solve for optimal binary allocation queues.
 
       
 
-      </header><script src="ffv_opt_sobin_rkone_allrw_training_wage_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
+      </header><script src="ffv_opt_sobin_rkone_allrw_training_wage_files/header-attrs-2.2/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Linear Wage Binary Allocation Lalonde Training Example</h1>
@@ -163,51 +163,158 @@ Solve for optimal binary allocation queues.
 <h2 class="hasAnchor">
 <a href="#load-data-and-generate-new-variables" class="anchor"></a>Load Data and Generate New Variables</h2>
 <p>Generate four categories by initial height and mother’s education levels combinations.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># Load Data</span>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># Dataset</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">df_opt_lalonde_training</span>)
-<span class="no">dft</span> <span class="kw">&lt;-</span> <span class="no">df_opt_lalonde_training</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="no">X</span>) <span class="kw">%&gt;%</span>
+
+<span class="co"># Add a binary variable for if there are wage in year 1975</span>
+<span class="no">dft</span> <span class="kw">&lt;-</span> <span class="no">df_opt_lalonde_training</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">re75_zero</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">re75</span> <span class="kw">&lt;=</span> <span class="fl">1</span> ~ <span class="fl">1</span>,
+                               <span class="fl">TRUE</span> ~ <span class="fl">0</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">trt</span>, <span class="no">re75_zero</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">everything</a></span>())
+
+<span class="co"># summary</span>
+<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">dft</span>)</pre></body></html></div>
+<pre><code>## Warning: `funs()` is deprecated as of dplyr 0.8.0.
+## Please use a list of either functions or lambdas: 
+## 
+##   # Simple named list: 
+##   list(mean = mean, median = median)
+## 
+##   # Auto named with `tibble::lst()`: 
+##   tibble::lst(mean, median)
+## 
+##   # Using lambdas
+##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
+<pre><code>## Warning: `as.tibble()` is deprecated as of tibble 2.0.0.
+## Please use `as_tibble()` instead.
+## The signature and semantics have changed, see `?as_tibble`.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have column names if `.name_repair` is omitted as of tibble 2.0.0.
+## Using compatibility `.name_repair`.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
+<pre><code>## # A tibble: 17 x 13
+##    stats age   black educ  hisp  marr  nodeg re74  re75  re75.zero re78  trt  
+##    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;
+##  1 n     "722" "722" "722" "722" "722" "722" "722" "722" "722"     "722" "722"
+##  2 NAobs "  0" "  0" "  0" "  0" "  0" "  0" "277" "  0" "  0"     "  0" "  0"
+##  3 ZERO~ "  0" "144" "  0" "646" "605" "159"  &lt;NA&gt; "289" "433"     "196" "425"
+##  4 mean  "  2~ "   ~ "  1~ "   ~ "   ~ "   ~ "210~ "304~ "   0.40~ "545~ "   ~
+##  5 sd    "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "536~ "506~ "   0.49~ "625~ "   ~
+##  6 cv    "0.2~ "0.4~ "0.1~ "2.9~ "2.2~ "0.5~ "2.5~ "1.6~ "1.22488~ "1.1~ "1.1~
+##  7 min   "17"  " 0"  " 3"  " 0"  " 0"  " 0"  " 0"  " 0"  " 0"      " 0"  " 0" 
+##  8 p01   "17.~ " 0.~ " 5.~ " 0.~ " 0.~ " 0.~ " 0.~ " 0.~ " 0.00"   " 0.~ " 0.~
+##  9 p05   "17.~ " 0.~ " 8.~ " 0.~ " 0.~ " 0.~ " 0.~ " 0.~ " 0.00"   " 0.~ " 0.~
+## 10 p10   "18.~ " 0.~ " 8.~ " 0.~ " 0.~ " 0.~ " 0.~ " 0.~ " 0.0"    " 0.~ " 0.~
+## 11 p25   " 19~ "  1~ "  9~ "  0~ "  0~ "  1~ "  0~ "  0~ "  0.00"  "  0~ "  0~
+## 12 p50   "  2~ "   ~ "  1~ "   ~ "   ~ "   ~ "   ~ " 93~ "   0.00~ "395~ "   ~
+## 13 p75   "  2~ "   ~ "  1~ "   ~ "   ~ "   ~ " 82~ "399~ "   1.00~ "877~ "   ~
+## 14 p90   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ " 78~ " 89~ "    1.0~ "128~ "   ~
+## 15 p95   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "122~ "122~ "    1.0~ "166~ "   ~
+## 16 p99   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "270~ "242~ "    1.0~ "260~ "   ~
+## 17 max   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "395~ "374~ "    1.0~ "603~ "   ~
+## # ... with 1 more variable: X &lt;chr&gt;</code></pre>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># summary treated only</span>
+<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">trt</span> <span class="kw">==</span> <span class="fl">1</span>))</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 17 x 13
+##    stats age   black educ  hisp  marr  nodeg re74  re75  re75.zero re78  trt  
+##    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;
+##  1 n     "297" "297" "297" "297" "297" "297" "297" "297" "297"     "297" "297"
+##  2 NAobs "  0" "  0" "  0" "  0" "  0" "  0" "112" "  0" "  0"     "  0" "  0"
+##  3 ZERO~ "  0" " 59" "  0" "269" "247" " 80"  &lt;NA&gt; "111" "186"     " 67" "  0"
+##  4 mean  "2.4~ "8.0~ "1.0~ "9.4~ "1.6~ "7.3~ "2.0~ "3.0~ "3.73737~ "5.9~ "1.0~
+##  5 sd    "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "488~ "487~ "   0.48~ "692~ "   ~
+##  6 cv    "0.2~ "0.4~ "0.1~ "3.1~ "2.2~ "0.6~ "2.3~ "1.5~ "1.29666~ "1.1~ "0.0~
+##  7 min   " 17" "  0" "  4" "  0" "  0" "  0" "  0" "  0" "  0"     "  0" "  1"
+##  8 p01   " 17~ "  0~ "  4~ "  0~ "  0~ "  0~ "  0~ "  0~ "  0.0"   "  0~ "  1~
+##  9 p05   " 17" "  0" "  8" "  0" "  0" "  0" "  0" "  0" "  0"     "  0" "  1"
+## 10 p10   " 18" "  0" "  8" "  0" "  0" "  0" "  0" "  0" "  0"     "  0" "  1"
+## 11 p25   "  2~ "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "   0.00~ " 54~ "   ~
+## 12 p50   "  2~ "   ~ "  1~ "   ~ "   ~ "   ~ "   ~ "111~ "   0.00~ "423~ "   ~
+## 13 p75   "  2~ "   ~ "  1~ "   ~ "   ~ "   ~ "129~ "431~ "   1.00~ "938~ "   ~
+## 14 p90   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ " 84~ " 84~ "    1.0~ "134~ "   ~
+## 15 p95   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "123~ "122~ "    1.0~ "173~ "   ~
+## 16 p99   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "211~ "231~ "    1.0~ "271~ "   ~
+## 17 max   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "350~ "374~ "    1.0~ "603~ "   ~
+## # ... with 1 more variable: X &lt;chr&gt;</code></pre>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">trt</span> <span class="kw">==</span> <span class="fl">0</span>))</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 17 x 13
+##    stats age   black educ  hisp  marr  nodeg re74  re75  re75.zero re78  trt  
+##    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;
+##  1 n     "425" "425" "425" "425" "425" "425" "425" "425" "425"     "425" "425"
+##  2 NAobs "  0" "  0" "  0" "  0" "  0" "  0" "165" "  0" "  0"     "  0" "  0"
+##  3 ZERO~ "  0" " 85" "  0" "377" "358" " 79"  &lt;NA&gt; "178" "247"     "129" "425"
+##  4 mean  "  2~ "   ~ "  1~ "   ~ "   ~ "   ~ "210~ "302~ "   0.41~ "509~ "   ~
+##  5 sd    "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "568~ "520~ "   0.49~ "571~ "   ~
+##  6 cv    "0.2~ "0.5~ "0.1~ "2.8~ "2.3~ "0.4~ "2.6~ "1.7~ "1.17936~ "1.1~  &lt;NA&gt;
+##  7 min   "17"  " 0"  " 3"  " 0"  " 0"  " 0"  " 0"  " 0"  " 0"      " 0"  " 0" 
+##  8 p01   "17.~ " 0.~ " 5.~ " 0.~ " 0.~ " 0.~ " 0.~ " 0.~ " 0.00"   " 0.~ " 0.~
+##  9 p05   "17.~ " 0.~ " 8.~ " 0.~ " 0.~ " 0.~ " 0.~ " 0.~ " 0.0"    " 0.~ " 0.~
+## 10 p10   "18.~ " 0.~ " 8.~ " 0.~ " 0.~ " 0.~ " 0.~ " 0.~ " 0.0"    " 0.~ " 0.~
+## 11 p25   " 19" "  1" "  9" "  0" "  0" "  1" "  0" "  0" "  0"     "  0" "  0"
+## 12 p50   "  2~ "   ~ "  1~ "   ~ "   ~ "   ~ "   ~ " 82~ "   0.00~ "374~ "   ~
+## 13 p75   "  2~ "   ~ "  1~ "   ~ "   ~ "   ~ " 13~ "364~ "   1.00~ "832~ "   ~
+## 14 p90   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ " 76~ " 91~ "    1.0~ "124~ "   ~
+## 15 p95   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "106~ "121~ "    1.0~ "162~ "   ~
+## 16 p99   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "295~ "242~ "    1.0~ "209~ "   ~
+## 17 max   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "395~ "369~ "    1.0~ "394~ "   ~
+## # ... with 1 more variable: X &lt;chr&gt;</code></pre>
+<div class="sourceCode" id="cb15"><html><body><pre class="r"># within 297 treated, 111 (37%) had zero wage in 1975
+# within 425 untreated, 178 (42%) had zero wage in 1975</pre></body></html></div>
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="co"># Load Data</span>
+<span class="no">dft</span> <span class="kw">&lt;-</span> <span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="no">X</span>) <span class="kw">%&gt;%</span>
            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="no">X</span>) <span class="kw">%&gt;%</span>
            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">everything</a></span>())
 <span class="co"># Summarize</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">dft</span>)</pre></body></html></div>
-<pre><code>## 'data.frame':    722 obs. of  11 variables:
-##  $ id   : int  1 2 3 4 5 6 7 8 9 10 ...
-##  $ trt  : int  0 0 0 0 0 0 0 0 0 0 ...
-##  $ age  : int  23 26 22 34 18 45 18 27 24 34 ...
-##  $ educ : int  10 12 9 9 9 11 9 12 8 11 ...
-##  $ black: int  1 0 1 1 1 1 1 1 0 1 ...
-##  $ hisp : int  0 0 0 0 0 0 0 0 0 0 ...
-##  $ marr : int  0 0 0 0 0 0 0 0 0 1 ...
-##  $ nodeg: int  1 0 1 1 1 1 1 0 1 1 ...
-##  $ re74 : num  0 0 0 NA 0 0 0 NA 0 0 ...
-##  $ re75 : num  0 0 0 4368 0 ...
-##  $ re78 : num  0 12384 0 14051 10740 ...</code></pre>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">dft</span>)</pre></body></html></div>
-<pre><code>##        id              trt              age             educ      
-##  Min.   :   1.0   Min.   :0.0000   Min.   :17.00   Min.   : 3.00  
-##  1st Qu.: 181.2   1st Qu.:0.0000   1st Qu.:19.00   1st Qu.: 9.00  
-##  Median : 361.5   Median :0.0000   Median :23.00   Median :10.00  
-##  Mean   : 854.4   Mean   :0.4114   Mean   :24.52   Mean   :10.27  
-##  3rd Qu.:1458.5   3rd Qu.:1.0000   3rd Qu.:27.00   3rd Qu.:11.00  
-##  Max.   :4110.0   Max.   :1.0000   Max.   :55.00   Max.   :16.00  
-##                                                                   
-##      black             hisp             marr           nodeg       
-##  Min.   :0.0000   Min.   :0.0000   Min.   :0.000   Min.   :0.0000  
-##  1st Qu.:1.0000   1st Qu.:0.0000   1st Qu.:0.000   1st Qu.:1.0000  
-##  Median :1.0000   Median :0.0000   Median :0.000   Median :1.0000  
-##  Mean   :0.8006   Mean   :0.1053   Mean   :0.162   Mean   :0.7798  
-##  3rd Qu.:1.0000   3rd Qu.:0.0000   3rd Qu.:0.000   3rd Qu.:1.0000  
-##  Max.   :1.0000   Max.   :1.0000   Max.   :1.000   Max.   :1.0000  
+<pre><code>## 'data.frame':    722 obs. of  12 variables:
+##  $ id       : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ trt      : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ re75_zero: num  1 1 1 0 1 1 1 0 1 1 ...
+##  $ age      : int  23 26 22 34 18 45 18 27 24 34 ...
+##  $ educ     : int  10 12 9 9 9 11 9 12 8 11 ...
+##  $ black    : int  1 0 1 1 1 1 1 1 0 1 ...
+##  $ hisp     : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ marr     : int  0 0 0 0 0 0 0 0 0 1 ...
+##  $ nodeg    : int  1 0 1 1 1 1 1 0 1 1 ...
+##  $ re74     : num  0 0 0 NA 0 0 0 NA 0 0 ...
+##  $ re75     : num  0 0 0 4368 0 ...
+##  $ re78     : num  0 12384 0 14051 10740 ...</code></pre>
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">dft</span>)</pre></body></html></div>
+<pre><code>##        id              trt           re75_zero           age       
+##  Min.   :   1.0   Min.   :0.0000   Min.   :0.0000   Min.   :17.00  
+##  1st Qu.: 181.2   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:19.00  
+##  Median : 361.5   Median :0.0000   Median :0.0000   Median :23.00  
+##  Mean   : 854.4   Mean   :0.4114   Mean   :0.4003   Mean   :24.52  
+##  3rd Qu.:1458.5   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:27.00  
+##  Max.   :4110.0   Max.   :1.0000   Max.   :1.0000   Max.   :55.00  
 ##                                                                    
-##       re74              re75              re78      
-##  Min.   :    0.0   Min.   :    0.0   Min.   :    0  
-##  1st Qu.:    0.0   1st Qu.:    0.0   1st Qu.:    0  
-##  Median :    0.0   Median :  936.3   Median : 3952  
-##  Mean   : 2102.3   Mean   : 3042.9   Mean   : 5455  
-##  3rd Qu.:  824.4   3rd Qu.: 3993.2   3rd Qu.: 8772  
-##  Max.   :39570.7   Max.   :37431.7   Max.   :60308  
-##  NA's   :277</code></pre>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># Generate Employment 0 or 1 status Variable, and non-zero wages variable</span>
+##       educ           black             hisp             marr      
+##  Min.   : 3.00   Min.   :0.0000   Min.   :0.0000   Min.   :0.000  
+##  1st Qu.: 9.00   1st Qu.:1.0000   1st Qu.:0.0000   1st Qu.:0.000  
+##  Median :10.00   Median :1.0000   Median :0.0000   Median :0.000  
+##  Mean   :10.27   Mean   :0.8006   Mean   :0.1053   Mean   :0.162  
+##  3rd Qu.:11.00   3rd Qu.:1.0000   3rd Qu.:0.0000   3rd Qu.:0.000  
+##  Max.   :16.00   Max.   :1.0000   Max.   :1.0000   Max.   :1.000  
+##                                                                   
+##      nodeg             re74              re75              re78      
+##  Min.   :0.0000   Min.   :    0.0   Min.   :    0.0   Min.   :    0  
+##  1st Qu.:1.0000   1st Qu.:    0.0   1st Qu.:    0.0   1st Qu.:    0  
+##  Median :1.0000   Median :    0.0   Median :  936.3   Median : 3952  
+##  Mean   :0.7798   Mean   : 2102.3   Mean   : 3042.9   Mean   : 5455  
+##  3rd Qu.:1.0000   3rd Qu.:  824.4   3rd Qu.: 3993.2   3rd Qu.: 8772  
+##  Max.   :1.0000   Max.   :39570.7   Max.   :37431.7   Max.   :60308  
+##                   NA's   :277</code></pre>
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="co"># Generate Employment 0 or 1 status Variable, and non-zero wages variable</span>
 <span class="no">dft</span> <span class="kw">&lt;-</span> <span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">emp78</span> <span class="kw">=</span>
                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">re78</span> <span class="kw">&lt;=</span> <span class="fl">0</span> ~ <span class="fl">0</span>,
                                 <span class="fl">TRUE</span> ~ <span class="fl">1</span>)) <span class="kw">%&gt;%</span>
@@ -261,202 +368,200 @@ Solve for optimal binary allocation queues.
 <h3 class="hasAnchor">
 <a href="#tabulate-and-summarize-averages" class="anchor"></a>Tabulate and Summarize Averages</h3>
 <p>What is the average difference in wage between treatment and control, do they match what is reported in Lalonde (1986)?</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># Summarize average for all variables grouping by treatment status</span>
+<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="co"># Summarize average for all variables grouping by treatment status</span>
 <span class="co"># re78 is significantly different</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>) <span class="kw">%&gt;%</span>
         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
-<pre><code>## Warning: funs() is soft deprecated as of dplyr 0.8.0
-## Please use a list of either functions or lambdas: 
-## 
-##   # Simple named list: 
-##   list(mean = mean, median = median)
-## 
-##   # Auto named with `tibble::lst()`: 
-##   tibble::lst(mean, median)
-## 
-##   # Using lambdas
-##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
-## This warning is displayed once per session.</code></pre>
-<pre><code>##                 [,1]     [,2]
-## trt            0.000    1.000
-## id_mean      213.000 1772.316
-## age_mean      24.447   24.626
-## educ_mean     10.188   10.380
-## black_mean     0.800    0.801
-## hisp_mean      0.113    0.094
-## marr_mean      0.158    0.168
-## nodeg_mean     0.814    0.731
-## re74_mean   2107.027 2095.574
-## re75_mean   3026.683 3066.098
-## re78_mean   5090.048 5976.352
-## emp78_mean     0.696    0.774
-## emp75_mean     0.581    0.626
-## emp74_mean     0.541    0.559
-## race_mean      1.026    0.990
-## age_m2_mean    1.489    1.481
-## age_m3_mean    1.948    1.990</code></pre>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">marr</span>, <span class="no">age_m2</span>) <span class="kw">%&gt;%</span>
+<pre><code>##                    [,1]     [,2]
+## trt               0.000    1.000
+## id_mean         213.000 1772.316
+## re75_zero_mean    0.419    0.374
+## age_mean         24.447   24.626
+## educ_mean        10.188   10.380
+## black_mean        0.800    0.801
+## hisp_mean         0.113    0.094
+## marr_mean         0.158    0.168
+## nodeg_mean        0.814    0.731
+## re74_mean      2107.027 2095.574
+## re75_mean      3026.683 3066.098
+## re78_mean      5090.048 5976.352
+## emp78_mean        0.696    0.774
+## emp75_mean        0.581    0.626
+## emp74_mean        0.541    0.559
+## race_mean         1.026    0.990
+## age_m2_mean       1.489    1.481
+## age_m3_mean       1.948    1.990</code></pre>
+<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">marr</span>, <span class="no">age_m2</span>) <span class="kw">%&gt;%</span>
         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
-<pre><code>##                 [,1]     [,2]     [,3]     [,4]
-## marr           0.000    0.000    1.000    1.000
-## age_m2         1.000    2.000    1.000    2.000
-## id_mean      840.140  823.626 1083.179  928.270
-## trt_mean       0.411    0.405    0.464    0.416
-## age_mean      19.569   29.485   20.929   30.124
-## educ_mean     10.105   10.412   10.143   10.506
-## black_mean     0.778    0.824    0.607    0.876
-## hisp_mean      0.134    0.069    0.250    0.056
-## nodeg_mean     0.845    0.698    0.821    0.753
-## re74_mean   1991.445 1509.914 2758.832 3996.214
-## re75_mean   2304.886 2950.030 5827.808 5284.371
-## re78_mean   5219.173 5516.690 7153.395 5644.975
-## emp78_mean     0.752    0.683    0.893    0.719
-## emp75_mean     0.650    0.511    0.786    0.607
-## emp74_mean     0.615    0.447    0.714    0.539
-## race_mean      1.047    0.962    1.107    0.989
-## age_m3_mean    1.309    2.630    1.607    2.652</code></pre>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="co"># Summarize by finer sub groups: RACE</span>
+<pre><code>##                    [,1]     [,2]     [,3]     [,4]
+## marr              0.000    0.000    1.000    1.000
+## age_m2            1.000    2.000    1.000    2.000
+## id_mean         840.140  823.626 1083.179  928.270
+## trt_mean          0.411    0.405    0.464    0.416
+## re75_zero_mean    0.350    0.489    0.214    0.393
+## age_mean         19.569   29.485   20.929   30.124
+## educ_mean        10.105   10.412   10.143   10.506
+## black_mean        0.778    0.824    0.607    0.876
+## hisp_mean         0.134    0.069    0.250    0.056
+## nodeg_mean        0.845    0.698    0.821    0.753
+## re74_mean      1991.445 1509.914 2758.832 3996.214
+## re75_mean      2304.886 2950.030 5827.808 5284.371
+## re78_mean      5219.173 5516.690 7153.395 5644.975
+## emp78_mean        0.752    0.683    0.893    0.719
+## emp75_mean        0.650    0.511    0.786    0.607
+## emp74_mean        0.615    0.447    0.714    0.539
+## race_mean         1.047    0.962    1.107    0.989
+## age_m3_mean       1.309    2.630    1.607    2.652</code></pre>
+<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="co"># Summarize by finer sub groups: RACE</span>
 <span class="co"># big increase for black, but not for other group</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">race</span>) <span class="kw">%&gt;%</span>
         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
-<pre><code>##                 [,1]     [,2]     [,3]     [,4]     [,5]     [,6]
-## trt            0.000    0.000    0.000    1.000    1.000    1.000
-## race           0.000    1.000    2.000    0.000    1.000    2.000
-## id_mean      233.027  209.679  221.083 1700.129 1782.723 1763.786
-## age_mean      23.351   24.812   22.708   25.677   24.853   21.536
-## educ_mean     10.486   10.285    9.271   10.839   10.382    9.857
-## black_mean     0.000    1.000    0.000    0.000    1.000    0.000
-## hisp_mean      0.000    0.000    1.000    0.000    0.000    1.000
-## marr_mean      0.135    0.162    0.146    0.161    0.168    0.179
-## nodeg_mean     0.649    0.821    0.896    0.548    0.739    0.857
-## re74_mean   3791.631 2086.477 1242.022 1305.037 2155.013 2546.219
-## re75_mean   5373.717 2862.948 2377.296 4038.830 2785.916 4370.691
-## re78_mean   7114.471 4654.996 6611.178 7034.041 5814.419 6181.772
-## emp78_mean     0.838    0.659    0.854    0.935    0.739    0.893
-## emp75_mean     0.757    0.565    0.562    0.677    0.597    0.821
-## emp74_mean     0.676    0.521    0.583    0.548    0.534    0.786
-## age_m2_mean    1.514    1.506    1.354    1.484    1.513    1.214
-## age_m3_mean    1.946    1.988    1.667    2.065    2.021    1.643</code></pre>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="co"># Summarize by finer sub groups: MARRIAGE</span>
+<pre><code>##                    [,1]     [,2]     [,3]     [,4]     [,5]     [,6]
+## trt               0.000    0.000    0.000    1.000    1.000    1.000
+## race              0.000    1.000    2.000    0.000    1.000    2.000
+## id_mean         233.027  209.679  221.083 1700.129 1782.723 1763.786
+## re75_zero_mean    0.243    0.435    0.438    0.323    0.403    0.179
+## age_mean         23.351   24.812   22.708   25.677   24.853   21.536
+## educ_mean        10.486   10.285    9.271   10.839   10.382    9.857
+## black_mean        0.000    1.000    0.000    0.000    1.000    0.000
+## hisp_mean         0.000    0.000    1.000    0.000    0.000    1.000
+## marr_mean         0.135    0.162    0.146    0.161    0.168    0.179
+## nodeg_mean        0.649    0.821    0.896    0.548    0.739    0.857
+## re74_mean      3791.631 2086.477 1242.022 1305.037 2155.013 2546.219
+## re75_mean      5373.717 2862.948 2377.296 4038.830 2785.916 4370.691
+## re78_mean      7114.471 4654.996 6611.178 7034.041 5814.419 6181.772
+## emp78_mean        0.838    0.659    0.854    0.935    0.739    0.893
+## emp75_mean        0.757    0.565    0.562    0.677    0.597    0.821
+## emp74_mean        0.676    0.521    0.583    0.548    0.534    0.786
+## age_m2_mean       1.514    1.506    1.354    1.484    1.513    1.214
+## age_m3_mean       1.946    1.988    1.667    2.065    2.021    1.643</code></pre>
+<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="co"># Summarize by finer sub groups: MARRIAGE</span>
 <span class="co"># big increase for black, but not for other group</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">marr</span>) <span class="kw">%&gt;%</span>
         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
-<pre><code>##                 [,1]     [,2]     [,3]     [,4]
-## trt            0.000    0.000    1.000    1.000
-## marr           0.000    1.000    0.000    1.000
-## id_mean      210.176  228.090 1735.688 1953.260
-## age_mean      23.933   27.194   23.761   28.900
-## educ_mean     10.131   10.493   10.393   10.320
-## black_mean     0.796    0.821    0.802    0.800
-## hisp_mean      0.115    0.104    0.093    0.100
-## nodeg_mean     0.818    0.791    0.729    0.740
-## re74_mean   1834.893 3603.759 1646.427 4020.488
-## re75_mean   2465.121 6027.269 2756.966 4593.212
-## re78_mean   5105.237 5008.892 5699.897 7342.041
-## emp78_mean     0.701    0.672    0.753    0.880
-## emp75_mean     0.573    0.627    0.615    0.680
-## emp74_mean     0.534    0.582    0.555    0.580
-## race_mean      1.025    1.030    0.988    1.000
-## age_m2_mean    1.436    1.776    1.429    1.740
-## age_m3_mean    1.866    2.388    1.903    2.420</code></pre>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="co"># Summarize by finer sub groups: AGE GROUPS</span>
+<pre><code>##                    [,1]     [,2]     [,3]     [,4]
+## trt               0.000    0.000    1.000    1.000
+## marr              0.000    1.000    0.000    1.000
+## id_mean         210.176  228.090 1735.688 1953.260
+## re75_zero_mean    0.427    0.373    0.385    0.320
+## age_mean         23.933   27.194   23.761   28.900
+## educ_mean        10.131   10.493   10.393   10.320
+## black_mean        0.796    0.821    0.802    0.800
+## hisp_mean         0.115    0.104    0.093    0.100
+## nodeg_mean        0.818    0.791    0.729    0.740
+## re74_mean      1834.893 3603.759 1646.427 4020.488
+## re75_mean      2465.121 6027.269 2756.966 4593.212
+## re78_mean      5105.237 5008.892 5699.897 7342.041
+## emp78_mean        0.701    0.672    0.753    0.880
+## emp75_mean        0.573    0.627    0.615    0.680
+## emp74_mean        0.534    0.582    0.555    0.580
+## race_mean         1.025    1.030    0.988    1.000
+## age_m2_mean       1.436    1.776    1.429    1.740
+## age_m3_mean       1.866    2.388    1.903    2.420</code></pre>
+<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="co"># Summarize by finer sub groups: AGE GROUPS</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">age_m2</span>) <span class="kw">%&gt;%</span>
         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
-<pre><code>##                 [,1]     [,2]     [,3]     [,4]
-## trt            0.000    0.000    1.000    1.000
-## age_m2         1.000    2.000    1.000    2.000
-## id_mean      241.908  182.841 1727.292 1820.804
-## age_mean      19.539   29.567   19.857   29.762
-## educ_mean      9.977   10.409   10.292   10.476
-## black_mean     0.774    0.827    0.753    0.853
-## hisp_mean      0.143    0.082    0.143    0.042
-## marr_mean      0.069    0.250    0.084    0.259
-## nodeg_mean     0.899    0.726    0.766    0.692
-## re74_mean   2333.261 1900.754 1571.490 2486.164
-## re75_mean   2313.545 3770.677 2933.215 3209.204
-## re78_mean   5095.991 5083.849 5744.425 6226.119
-## emp78_mean     0.728    0.663    0.812    0.734
-## emp75_mean     0.618    0.543    0.721    0.524
-## emp74_mean     0.590    0.490    0.669    0.441
-## race_mean      1.060    0.990    1.039    0.937
-## age_m3_mean    1.290    2.635    1.390    2.636</code></pre>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">age_m3</span>) <span class="kw">%&gt;%</span>
+<pre><code>##                    [,1]     [,2]     [,3]     [,4]
+## trt               0.000    0.000    1.000    1.000
+## age_m2            1.000    2.000    1.000    2.000
+## id_mean         241.908  182.841 1727.292 1820.804
+## re75_zero_mean    0.382    0.457    0.279    0.476
+## age_mean         19.539   29.567   19.857   29.762
+## educ_mean         9.977   10.409   10.292   10.476
+## black_mean        0.774    0.827    0.753    0.853
+## hisp_mean         0.143    0.082    0.143    0.042
+## marr_mean         0.069    0.250    0.084    0.259
+## nodeg_mean        0.899    0.726    0.766    0.692
+## re74_mean      2333.261 1900.754 1571.490 2486.164
+## re75_mean      2313.545 3770.677 2933.215 3209.204
+## re78_mean      5095.991 5083.849 5744.425 6226.119
+## emp78_mean        0.728    0.663    0.812    0.734
+## emp75_mean        0.618    0.543    0.721    0.524
+## emp74_mean        0.590    0.490    0.669    0.441
+## race_mean         1.060    0.990    1.039    0.937
+## age_m3_mean       1.290    2.635    1.390    2.636</code></pre>
+<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">age_m3</span>) <span class="kw">%&gt;%</span>
         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
-<pre><code>##                 [,1]     [,2]     [,3]     [,4]     [,5]     [,6]
-## trt            0.000    0.000    0.000    1.000    1.000    1.000
-## age_m3         1.000    2.000    3.000    1.000    2.000    3.000
-## id_mean      261.675  180.475  190.462 1646.723 1918.705 1721.879
-## age_mean      18.532   23.626   32.212   18.479   23.402   32.484
-## educ_mean      9.877   10.209   10.530    9.851   10.902   10.286
-## black_mean     0.740    0.835    0.833    0.777    0.777    0.857
-## hisp_mean      0.175    0.072    0.083    0.160    0.071    0.055
-## marr_mean      0.039    0.209    0.242    0.053    0.170    0.286
-## nodeg_mean     0.922    0.806    0.697    0.883    0.607    0.725
-## re74_mean    827.694 3297.704 2095.804 1466.314 2840.083 1794.839
-## re75_mean   1564.343 3604.432 4124.358 2302.777 4136.499 2537.167
-## re78_mean   4987.829 5320.403 4966.734 5498.803 5744.032 6755.577
-## emp78_mean     0.760    0.676    0.644    0.777    0.795    0.747
-## emp75_mean     0.617    0.547    0.576    0.734    0.634    0.505
-## emp74_mean     0.584    0.532    0.500    0.670    0.598    0.396
-## race_mean      1.091    0.978    1.000    1.096    0.920    0.967
-## age_m2_mean    1.000    1.547    2.000    1.000    1.464    2.000</code></pre>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">marr</span>, <span class="no">age_m2</span>) <span class="kw">%&gt;%</span>
+<pre><code>##                    [,1]     [,2]     [,3]     [,4]     [,5]     [,6]
+## trt               0.000    0.000    0.000    1.000    1.000    1.000
+## age_m3            1.000    2.000    3.000    1.000    2.000    3.000
+## id_mean         261.675  180.475  190.462 1646.723 1918.705 1721.879
+## re75_zero_mean    0.383    0.453    0.424    0.266    0.366    0.495
+## age_mean         18.532   23.626   32.212   18.479   23.402   32.484
+## educ_mean         9.877   10.209   10.530    9.851   10.902   10.286
+## black_mean        0.740    0.835    0.833    0.777    0.777    0.857
+## hisp_mean         0.175    0.072    0.083    0.160    0.071    0.055
+## marr_mean         0.039    0.209    0.242    0.053    0.170    0.286
+## nodeg_mean        0.922    0.806    0.697    0.883    0.607    0.725
+## re74_mean       827.694 3297.704 2095.804 1466.314 2840.083 1794.839
+## re75_mean      1564.343 3604.432 4124.358 2302.777 4136.499 2537.167
+## re78_mean      4987.829 5320.403 4966.734 5498.803 5744.032 6755.577
+## emp78_mean        0.760    0.676    0.644    0.777    0.795    0.747
+## emp75_mean        0.617    0.547    0.576    0.734    0.634    0.505
+## emp74_mean        0.584    0.532    0.500    0.670    0.598    0.396
+## race_mean         1.091    0.978    1.000    1.096    0.920    0.967
+## age_m2_mean       1.000    1.547    2.000    1.000    1.464    2.000</code></pre>
+<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">marr</span>, <span class="no">age_m2</span>) <span class="kw">%&gt;%</span>
         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
-<pre><code>##                 [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
-## trt            0.000    0.000    0.000    0.000    1.000    1.000    1.000
-## marr           0.000    0.000    1.000    1.000    0.000    0.000    1.000
-## age_m2         1.000    2.000    1.000    2.000    1.000    2.000    1.000
-## id_mean      243.302  167.282  223.133  229.519 1695.184 1789.566 2075.538
-## age_mean      19.450   29.737   20.733   29.058   19.738   29.113   21.154
-## educ_mean      9.965   10.346   10.133   10.596   10.305   10.509   10.154
-## black_mean     0.782    0.814    0.667    0.865    0.773    0.840    0.538
-## hisp_mean      0.139    0.083    0.200    0.077    0.128    0.047    0.308
-## nodeg_mean     0.896    0.718    0.933    0.750    0.773    0.670    0.692
-## re74_mean   2215.155 1386.863 5144.184 3383.698 1621.704 1669.249 1055.009
-## re75_mean   2033.499 3024.016 6084.840 6010.662 2693.681 2841.146 5531.232
-## re78_mean   5009.475 5229.235 6261.061 4647.690 5519.591 5939.737 8183.010
-## emp78_mean     0.723    0.673    0.800    0.635    0.794    0.698    1.000
-## emp75_mean     0.609    0.526    0.733    0.596    0.709    0.491    0.846
-## emp74_mean     0.579    0.474    0.733    0.538    0.667    0.406    0.692
-## race_mean      1.059    0.981    1.067    1.019    1.028    0.934    1.154
-## age_m3_mean    1.267    2.641    1.600    2.615    1.369    2.613    1.615
-##                 [,8]
-## trt            1.000
-## marr           1.000
-## age_m2         2.000
-## id_mean     1910.297
-## age_mean      31.622
-## educ_mean     10.378
-## black_mean     0.892
-## hisp_mean      0.027
-## nodeg_mean     0.757
-## re74_mean   4761.858
-## re75_mean   4263.638
-## re78_mean   7046.565
-## emp78_mean     0.838
-## emp75_mean     0.622
-## emp74_mean     0.541
-## race_mean      0.946
-## age_m3_mean    2.703</code></pre>
+<pre><code>##                    [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
+## trt               0.000    0.000    0.000    0.000    1.000    1.000    1.000
+## marr              0.000    0.000    1.000    1.000    0.000    0.000    1.000
+## age_m2            1.000    2.000    1.000    2.000    1.000    2.000    1.000
+## id_mean         243.302  167.282  223.133  229.519 1695.184 1789.566 2075.538
+## re75_zero_mean    0.391    0.474    0.267    0.404    0.291    0.509    0.154
+## age_mean         19.450   29.737   20.733   29.058   19.738   29.113   21.154
+## educ_mean         9.965   10.346   10.133   10.596   10.305   10.509   10.154
+## black_mean        0.782    0.814    0.667    0.865    0.773    0.840    0.538
+## hisp_mean         0.139    0.083    0.200    0.077    0.128    0.047    0.308
+## nodeg_mean        0.896    0.718    0.933    0.750    0.773    0.670    0.692
+## re74_mean      2215.155 1386.863 5144.184 3383.698 1621.704 1669.249 1055.009
+## re75_mean      2033.499 3024.016 6084.840 6010.662 2693.681 2841.146 5531.232
+## re78_mean      5009.475 5229.235 6261.061 4647.690 5519.591 5939.737 8183.010
+## emp78_mean        0.723    0.673    0.800    0.635    0.794    0.698    1.000
+## emp75_mean        0.609    0.526    0.733    0.596    0.709    0.491    0.846
+## emp74_mean        0.579    0.474    0.733    0.538    0.667    0.406    0.692
+## race_mean         1.059    0.981    1.067    1.019    1.028    0.934    1.154
+## age_m3_mean       1.267    2.641    1.600    2.615    1.369    2.613    1.615
+##                    [,8]
+## trt               1.000
+## marr              1.000
+## age_m2            2.000
+## id_mean        1910.297
+## re75_zero_mean    0.378
+## age_mean         31.622
+## educ_mean        10.378
+## black_mean        0.892
+## hisp_mean         0.027
+## nodeg_mean        0.757
+## re74_mean      4761.858
+## re75_mean      4263.638
+## re78_mean      7046.565
+## emp78_mean        0.838
+## emp75_mean        0.622
+## emp74_mean        0.541
+## race_mean         0.946
+## age_m3_mean       2.703</code></pre>
 </div>
 <div id="tabulate" class="section level3">
 <h3 class="hasAnchor">
 <a href="#tabulate" class="anchor"></a>Tabulate</h3>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="co"># Tabulate groups, how many in each group, enough for group heterogeneity in effects?</span>
+<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="co"># Tabulate groups, how many in each group, enough for group heterogeneity in effects?</span>
 <span class="no">dft</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">marr</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">freq</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n.html">n</a></span>()) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">freq</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>()) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span>(<span class="kw">names_from</span> <span class="kw">=</span> <span class="no">trt</span>, <span class="kw">values_from</span> <span class="kw">=</span> <span class="no">freq</span>)</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'trt' (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 2 x 3
 ##    marr   `0`   `1`
 ##   &lt;int&gt; &lt;int&gt; &lt;int&gt;
 ## 1     0   358   247
 ## 2     1    67    50</code></pre>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="co"># Tabulate groups, how many in each group, enough for group heterogeneity in effects?</span>
+<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="co"># Tabulate groups, how many in each group, enough for group heterogeneity in effects?</span>
 <span class="no">dft</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">age_m2</span>, <span class="no">marr</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">freq</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n.html">n</a></span>()) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">freq</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>()) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span>(<span class="kw">names_from</span> <span class="kw">=</span> <span class="no">trt</span>, <span class="kw">values_from</span> <span class="kw">=</span> <span class="no">freq</span>)</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'trt', 'age_m2' (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 4 x 4
 ## # Groups:   age_m2 [2]
 ##   age_m2  marr   `0`   `1`
@@ -469,7 +574,7 @@ Solve for optimal binary allocation queues.
 <div id="regression-testing" class="section level3">
 <h3 class="hasAnchor">
 <a href="#regression-testing" class="anchor"></a>Regression Testing</h3>
-<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="co"># As noted in Lalonde (1986), functional form assumptions do not matter much</span>
+<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="co"># As noted in Lalonde (1986), functional form assumptions do not matter much</span>
 <span class="co"># Dummies, treatment effect average about 801 dollars</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">re78</span> ~ <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">age</span>)
                   + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">educ</span>)
@@ -548,7 +653,7 @@ Solve for optimal binary allocation queues.
 ## Residual standard error: 6189 on 671 degrees of freedom
 ## Multiple R-squared:  0.4826, Adjusted R-squared:  0.4433 
 ## F-statistic: 12.27 on 51 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="co"># cts Controls and treatment effects about 761 dollars</span>
+<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="co"># cts Controls and treatment effects about 761 dollars</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">re78</span> ~  <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">age</span>^<span class="fl">2</span>) +
                    <span class="no">educ</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">educ</span>^<span class="fl">2</span>) +
                   + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>)
@@ -583,7 +688,7 @@ Solve for optimal binary allocation queues.
 ## Residual standard error: 6206 on 712 degrees of freedom
 ## Multiple R-squared:  0.448,  Adjusted R-squared:  0.4402 
 ## F-statistic: 57.78 on 10 and 712 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="co"># Treatment interactions by marriage status, 476 unmarried, vs 2216 for married</span>
+<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="co"># Treatment interactions by marriage status, 476 unmarried, vs 2216 for married</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">re78</span> ~  <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">age</span>^<span class="fl">2</span>) +
                    <span class="no">educ</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">educ</span>^<span class="fl">2</span>) +
                   + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>)
@@ -620,7 +725,7 @@ Solve for optimal binary allocation queues.
 ## Residual standard error: 6202 on 711 degrees of freedom
 ## Multiple R-squared:  0.4494, Adjusted R-squared:  0.4409 
 ## F-statistic: 52.76 on 11 and 711 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="co"># Treatment interactions by marriage status, 453 vs 1070 each age group</span>
+<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="co"># Treatment interactions by marriage status, 453 vs 1070 each age group</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">re78</span> ~  <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">age</span>^<span class="fl">2</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">age_m2</span>) +
                    <span class="no">educ</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">educ</span>^<span class="fl">2</span>) +
                   + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>)
@@ -658,7 +763,7 @@ Solve for optimal binary allocation queues.
 ## Residual standard error: 6212 on 710 degrees of freedom
 ## Multiple R-squared:  0.4484, Adjusted R-squared:  0.4391 
 ## F-statistic:  48.1 on 12 and 710 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="co"># Treatment interactions by marriage status, greater effect for older married + younger married</span>
+<div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="co"># Treatment interactions by marriage status, greater effect for older married + younger married</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">re78</span> ~  <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">age</span>^<span class="fl">2</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">age_m2</span>) +
                    <span class="no">educ</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">educ</span>^<span class="fl">2</span>) +
                   + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>)
@@ -728,12 +833,13 @@ Solve for optimal binary allocation queues.
 <div id="linear-binary-problem" class="section level4">
 <h4 class="hasAnchor">
 <a href="#linear-binary-problem" class="anchor"></a>Linear Binary Problem</h4>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="co"># Store Regression Results</span>
+<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="co"># Store Regression Results</span>
 <span class="no">mt_model</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>( ~ <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">age</span>^<span class="fl">2</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">age_m2</span>) +
                             <span class="no">educ</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">educ</span>^<span class="fl">2</span>) +
                           + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>)
                           + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">marr</span>)
                           + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">nodeg</span>)
+                          + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">re75_zero</span>)
                           + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">age_m2</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">trt</span>),
                           <span class="kw">data</span> <span class="kw">=</span> <span class="no">dft</span>)
 <span class="no">rs_wage_on_trt</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">re78</span> ~ <span class="no">mt_model</span> - <span class="fl">1</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">dft</span>)
@@ -744,45 +850,47 @@ Solve for optimal binary allocation queues.
 ## 
 ## Residuals:
 ##    Min     1Q Median     3Q    Max 
-##  -9281  -4664  -1521   3260  54557 
+##  -9457  -4550  -1555   3407  54173 
 ## 
 ## Coefficients:
 ##                                        Estimate Std. Error t value Pr(&gt;|t|)  
-## mt_model(Intercept)                   8890.8921  6129.7194   1.450    0.147  
-## mt_modelage                             73.5664   317.3603   0.232    0.817  
-## mt_modelI(age^2)                        -0.7038     4.7486  -0.148    0.882  
-## mt_modelfactor(age_m2)2               -653.7465  1032.5521  -0.633    0.527  
-## mt_modeleduc                         -1137.5178  1025.7038  -1.109    0.268  
-## mt_modelI(educ^2)                       75.1320    56.3181   1.334    0.183  
-## mt_modelfactor(race)1                -1782.6432   804.4433  -2.216    0.027 *
-## mt_modelfactor(race)2                 -130.3132  1055.7904  -0.123    0.902  
-## mt_modelfactor(marr)1                  590.5769   651.5151   0.906    0.365  
-## mt_modelfactor(nodeg)1                 139.6452   916.7444   0.152    0.879  
-## mt_modelfactor(age_m2)1:factor(trt)1   453.7963   659.7260   0.688    0.492  
-## mt_modelfactor(age_m2)2:factor(trt)1  1070.8127   677.9949   1.579    0.115  
+## mt_model(Intercept)                  10052.3179  6160.1001   1.632   0.1032  
+## mt_modelage                             52.9924   317.1787   0.167   0.8674  
+## mt_modelI(age^2)                        -0.2876     4.7488  -0.061   0.9517  
+## mt_modelfactor(age_m2)2               -588.1949  1031.9301  -0.570   0.5689  
+## mt_modeleduc                         -1263.1725  1027.0533  -1.230   0.2191  
+## mt_modelI(educ^2)                       80.5134    56.3343   1.429   0.1534  
+## mt_modelfactor(race)1                -1676.5079   805.8386  -2.080   0.0378 *
+## mt_modelfactor(race)2                  -86.6527  1054.7258  -0.082   0.9345  
+## mt_modelfactor(marr)1                  506.4687   652.5609   0.776   0.4379  
+## mt_modelfactor(nodeg)1                 162.4342   915.6448   0.177   0.8592  
+## mt_modelfactor(re75_zero)1            -823.5052   486.9104  -1.691   0.0912 .
+## mt_modelfactor(age_m2)1:factor(trt)1   379.3939   660.3304   0.575   0.5658  
+## mt_modelfactor(age_m2)2:factor(trt)1  1079.5020   677.1278   1.594   0.1113  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 6212 on 710 degrees of freedom
-## Multiple R-squared:  0.4484, Adjusted R-squared:  0.4391 
-## F-statistic:  48.1 on 12 and 710 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="no">rs_wage_on_trt_tidy</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">tidy</a></span>(<span class="no">rs_wage_on_trt</span>)
+## Residual standard error: 6204 on 709 degrees of freedom
+## Multiple R-squared:  0.4506, Adjusted R-squared:  0.4406 
+## F-statistic: 44.74 on 13 and 709 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb53"><html><body><pre class="r"><span class="no">rs_wage_on_trt_tidy</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">tidy</a></span>(<span class="no">rs_wage_on_trt</span>)
 <span class="no">rs_wage_on_trt_tidy</span></pre></body></html></div>
-<pre><code>## # A tibble: 12 x 5
+<pre><code>## # A tibble: 13 x 5
 ##    term                                  estimate std.error statistic p.value
 ##    &lt;chr&gt;                                    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-##  1 mt_model(Intercept)                   8891.      6130.       1.45   0.147 
-##  2 mt_modelage                             73.6      317.       0.232  0.817 
-##  3 mt_modelI(age^2)                        -0.704      4.75    -0.148  0.882 
-##  4 mt_modelfactor(age_m2)2               -654.      1033.      -0.633  0.527 
-##  5 mt_modeleduc                         -1138.      1026.      -1.11   0.268 
-##  6 mt_modelI(educ^2)                       75.1       56.3      1.33   0.183 
-##  7 mt_modelfactor(race)1                -1783.       804.      -2.22   0.0270
-##  8 mt_modelfactor(race)2                 -130.      1056.      -0.123  0.902 
-##  9 mt_modelfactor(marr)1                  591.       652.       0.906  0.365 
-## 10 mt_modelfactor(nodeg)1                 140.       917.       0.152  0.879 
-## 11 mt_modelfactor(age_m2)1:factor(trt)1   454.       660.       0.688  0.492 
-## 12 mt_modelfactor(age_m2)2:factor(trt)1  1071.       678.       1.58   0.115</code></pre>
+##  1 mt_model(Intercept)                  10052.      6160.      1.63    0.103 
+##  2 mt_modelage                             53.0      317.      0.167   0.867 
+##  3 mt_modelI(age^2)                        -0.288      4.75   -0.0606  0.952 
+##  4 mt_modelfactor(age_m2)2               -588.      1032.     -0.570   0.569 
+##  5 mt_modeleduc                         -1263.      1027.     -1.23    0.219 
+##  6 mt_modelI(educ^2)                       80.5       56.3     1.43    0.153 
+##  7 mt_modelfactor(race)1                -1677.       806.     -2.08    0.0378
+##  8 mt_modelfactor(race)2                  -86.7     1055.     -0.0822  0.935 
+##  9 mt_modelfactor(marr)1                  506.       653.      0.776   0.438 
+## 10 mt_modelfactor(nodeg)1                 162.       916.      0.177   0.859 
+## 11 mt_modelfactor(re75_zero)1            -824.       487.     -1.69    0.0912
+## 12 mt_modelfactor(age_m2)1:factor(trt)1   379.       660.      0.575   0.566 
+## 13 mt_modelfactor(age_m2)2:factor(trt)1  1080.       677.      1.59    0.111</code></pre>
 </div>
 </div>
 <div id="construct-input-arrays-a_i-and-alpha_i" class="section level3">
@@ -793,18 +901,18 @@ Solve for optimal binary allocation queues.
 <h4 class="hasAnchor">
 <a href="#linear-binary-regression" class="anchor"></a>Linear Binary Regression</h4>
 <p>Multiply coefficient vector by covariate matrix to generate <em>A</em> vector that is child/individual specific.</p>
-<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="co"># Estimates Table</span>
+<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="co"># Estimates Table</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">rs_wage_on_trt_tidy</span>, <span class="fl">6</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 6 x 5
 ##   term                     estimate std.error statistic p.value
 ##   &lt;chr&gt;                       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-## 1 mt_model(Intercept)      8891.      6130.       1.45    0.147
-## 2 mt_modelage                73.6      317.       0.232   0.817
-## 3 mt_modelI(age^2)           -0.704      4.75    -0.148   0.882
-## 4 mt_modelfactor(age_m2)2  -654.      1033.      -0.633   0.527
-## 5 mt_modeleduc            -1138.      1026.      -1.11    0.268
-## 6 mt_modelI(educ^2)          75.1       56.3      1.33    0.183</code></pre>
-<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="co"># Covariates</span>
+## 1 mt_model(Intercept)     10052.      6160.      1.63     0.103
+## 2 mt_modelage                53.0      317.      0.167    0.867
+## 3 mt_modelI(age^2)           -0.288      4.75   -0.0606   0.952
+## 4 mt_modelfactor(age_m2)2  -588.      1032.     -0.570    0.569
+## 5 mt_modeleduc            -1263.      1027.     -1.23     0.219
+## 6 mt_modelI(educ^2)          80.5       56.3     1.43     0.153</code></pre>
+<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="co"># Covariates</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">mt_model</span>, <span class="fl">5</span>)</pre></body></html></div>
 <pre><code>##   (Intercept) age I(age^2) factor(age_m2)2 educ I(educ^2) factor(race)1
 ## 1           1  23      529               0   10       100             1
@@ -812,33 +920,33 @@ Solve for optimal binary allocation queues.
 ## 3           1  22      484               0    9        81             1
 ## 4           1  34     1156               1    9        81             1
 ## 5           1  18      324               0    9        81             1
-##   factor(race)2 factor(marr)1 factor(nodeg)1 factor(age_m2)1:factor(trt)1
-## 1             0             0              1                            0
-## 2             0             0              0                            0
-## 3             0             0              1                            0
-## 4             0             0              1                            0
-## 5             0             0              1                            0
-##   factor(age_m2)2:factor(trt)1
-## 1                            0
-## 2                            0
-## 3                            0
-## 4                            0
-## 5                            0</code></pre>
-<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="co"># Covariates coefficients from regression (including constant)</span>
+##   factor(race)2 factor(marr)1 factor(nodeg)1 factor(re75_zero)1
+## 1             0             0              1                  1
+## 2             0             0              0                  1
+## 3             0             0              1                  1
+## 4             0             0              1                  0
+## 5             0             0              1                  1
+##   factor(age_m2)1:factor(trt)1 factor(age_m2)2:factor(trt)1
+## 1                            0                            0
+## 2                            0                            0
+## 3                            0                            0
+## 4                            0                            0
+## 5                            0                            0</code></pre>
+<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="co"># Covariates coefficients from regression (including constant)</span>
 <span class="no">ar_fl_cova_esti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="no">rs_wage_on_trt_tidy</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(<span class="no">term</span>, <span class="st">'trt'</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">estimate</span>))
 <span class="no">ar_fl_main_esti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="no">rs_wage_on_trt_tidy</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(<span class="no">term</span>, <span class="st">'trt'</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">estimate</span>))
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_fl_cova_esti</span>, <span class="fl">5</span>)</pre></body></html></div>
 <pre><code>##           estimate
-## [1,]  8890.8920639
-## [2,]    73.5663594
-## [3,]    -0.7038167
-## [4,]  -653.7464536
-## [5,] -1137.5178067</code></pre>
-<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_fl_main_esti</span>, <span class="fl">5</span>)</pre></body></html></div>
+## [1,] 10052.3178902
+## [2,]    52.9923510
+## [3,]    -0.2876203
+## [4,]  -588.1948533
+## [5,] -1263.1724715</code></pre>
+<div class="sourceCode" id="cb61"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_fl_main_esti</span>, <span class="fl">5</span>)</pre></body></html></div>
 <pre><code>##       estimate
-## [1,]  453.7963
-## [2,] 1070.8127</code></pre>
-<div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="co"># Select Matrix subcomponents</span>
+## [1,]  379.3939
+## [2,] 1079.5020</code></pre>
+<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="co"># Select Matrix subcomponents</span>
 <span class="no">mt_cova</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_model</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">"trt"</span>)))
 <span class="no">mt_intr</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>(~ <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">marr</span>) - <span class="fl">1</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">dft</span>)
 
@@ -846,26 +954,26 @@ Solve for optimal binary allocation queues.
 <span class="no">ar_A_m</span> <span class="kw">&lt;-</span> <span class="no">mt_cova</span> <span class="kw">%*%</span> <span class="no">ar_fl_cova_esti</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_A_m</span>, <span class="fl">5</span>)</pre></body></html></div>
 <pre><code>##      estimate
-## [1,] 4705.623
-## [2,] 6842.885
-## [3,] 4373.738
-## [4,] 4129.823
-## [5,] 4192.084</code></pre>
-<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="co"># Generate alpha_i</span>
+## [1,] 4201.030
+## [2,] 6259.851
+## [3,] 3894.398
+## [4,] 4572.335
+## [5,] 3728.447</code></pre>
+<div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="co"># Generate alpha_i</span>
 <span class="no">ar_alpha_m</span> <span class="kw">&lt;-</span> <span class="no">mt_intr</span> <span class="kw">%*%</span> <span class="no">ar_fl_main_esti</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_alpha_m</span>, <span class="fl">5</span>)</pre></body></html></div>
 <pre><code>##   estimate
-## 1 453.7963
-## 2 453.7963
-## 3 453.7963
-## 4 453.7963
-## 5 453.7963</code></pre>
+## 1 379.3939
+## 2 379.3939
+## 3 379.3939
+## 4 379.3939
+## 5 379.3939</code></pre>
 </div>
 </div>
 <div id="individual-weight" class="section level3">
 <h3 class="hasAnchor">
 <a href="#individual-weight" class="anchor"></a>Individual Weight</h3>
-<div class="sourceCode" id="cb53"><html><body><pre class="r"><span class="co"># Child Weight</span>
+<div class="sourceCode" id="cb67"><html><body><pre class="r"><span class="co"># Child Weight</span>
 <span class="no">ar_beta_m</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>/<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_A_m</span>), <span class="kw">times</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_A_m</span>))</pre></body></html></div>
 </div>
 <div id="matrix-with-required-inputs-for-allocation" class="section level3">
@@ -874,17 +982,13 @@ Solve for optimal binary allocation queues.
 <div id="linear-binary-matrix" class="section level4">
 <h4 class="hasAnchor">
 <a href="#linear-binary-matrix" class="anchor"></a>Linear Binary Matrix</h4>
-<div class="sourceCode" id="cb54"><html><body><pre class="r"><span class="co"># Initate Dataframe that will store all estimates and optimal allocation relevant information</span>
+<div class="sourceCode" id="cb68"><html><body><pre class="r"><span class="co"># Initate Dataframe that will store all estimates and optimal allocation relevant information</span>
 <span class="co"># combine identifying key information along with estimation A, alpha results</span>
 <span class="co"># note that we only need indi.id as key</span>
 <span class="no">mt_opti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_alpha_m</span>, <span class="no">ar_A_m</span>, <span class="no">ar_beta_m</span>)
 <span class="no">ar_st_varnames</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span>)
-<span class="no">df_esti_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_opti</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span>(~<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ar_st_varnames</span>))</pre></body></html></div>
-<pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have column names if `.name_repair` is omitted as of tibble 2.0.0.
-## Using compatibility `.name_repair`.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
-<div class="sourceCode" id="cb56"><html><body><pre class="r"><span class="no">tb_key_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="no">dft</span>, <span class="no">df_esti_alpha_A_beta</span>) <span class="kw">%&gt;%</span>
+<span class="no">df_esti_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_opti</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span>(~<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ar_st_varnames</span>))
+<span class="no">tb_key_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="no">dft</span>, <span class="no">df_esti_alpha_A_beta</span>) <span class="kw">%&gt;%</span>
               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'id'</span>, <span class="st">'trt'</span>, <span class="st">'age'</span>, <span class="st">'educ'</span>, <span class="st">'race'</span>, <span class="st">'marr'</span>, <span class="st">'nodeg'</span>, <span class="st">'re78'</span>,
                               <span class="no">ar_st_varnames</span>)))
 
@@ -896,52 +1000,52 @@ Solve for optimal binary allocation queues.
 <span class="co"># tb_key_alpha_A_beta &lt;- tb_key_alpha_A_beta %&gt;% filter(trt == 0)</span>
 
 <span class="co"># Unique beta, A, and alpha check</span>
-<span class="no">tb_opti_unique</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">n_obs_group</span><span class="kw">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/n.html">n</a></span>())
-
-<span class="co"># Show cars</span>
+<span class="no">tb_opti_unique</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">n_obs_group</span><span class="kw">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>())</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'alpha', 'A' (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="co"># Show cars</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">tb_key_alpha_A_beta</span>, <span class="fl">32</span>)</pre></body></html></div>
 <pre><code>##    id trt age educ race marr nodeg      re78     alpha        A        beta
-## 1   1   0  23   10    1    0     1     0.000 0.4537963 4.705623 0.001385042
-## 2   2   0  26   12    0    0     0 12383.680 0.4537963 6.842885 0.001385042
-## 3   3   0  22    9    1    0     1     0.000 0.4537963 4.373738 0.001385042
-## 4   4   0  34    9    1    0     1 14051.160 0.4537963 4.129823 0.001385042
-## 5   5   0  18    9    1    0     1 10740.080 0.4537963 4.192084 0.001385042
-## 6   6   0  45   11    1    0     1 11796.470 0.4537963 5.057681 0.001385042
-## 7   7   0  18    9    1    0     1  9227.052 0.4537963 4.192084 0.001385042
-## 8   8   0  27   12    1    0     0  3552.268 0.4537963 5.096506 0.001385042
-## 9   9   0  24    8    0    0     1 10569.270 0.4537963 5.445291 0.001385042
-## 10 10   0  34   11    1    1     1  6040.335 1.0708127 5.450645 0.001385042
-## 11 11   0  20   13    1    0     0  9199.563 0.4537963 6.207626 0.001385042
-## 12 12   0  24    4    2    0     1  3880.833 0.4537963 6.258713 0.001385042
-## 13 13   0  36   10    1    0     1     0.000 0.4537963 4.468412 0.001385042
-## 14 14   0  21   10    1    0     1     0.000 0.4537963 4.620426 0.001385042
-## 15 15   0  28   12    1    1     0 10067.430 1.0708127 5.721940 0.001385042
-## 16 16   0  21   14    1    0     0  5775.062 0.4537963 7.143382 0.001385042
-## 17 17   0  28    9    1    0     1     0.000 0.4537963 3.950245 0.001385042
-## 18 18   0  21   11    1    1     1  8976.826 1.0708127 5.651258 0.001385042
-## 19 19   0  27    7    1    1     1     0.000 1.0708127 4.376777 0.001385042
-## 20 20   0  18   12    0    0     0  2502.526 0.4537963 7.155844 0.001385042
-## 21 21   0  19   11    0    0     1     0.000 0.4537963 6.752496 0.001385042
-## 22 22   0  30   13    1    0     0     0.000 0.4537963 5.937635 0.001385042
-## 23 23   0  26   11    2    0     1     0.000 0.4537963 6.261699 0.001385042
-## 24 24   0  20    8    1    0     1     0.000 0.4537963 4.146000 0.001385042
-## 25 25   0  31    4    0    0     1     0.000 0.4537963 6.633021 0.001385042
-## 26 26   0  18   12    1    0     0 14444.710 0.4537963 5.373201 0.001385042
-## 27 27   0  34   12    1    0     0  2113.722 0.4537963 5.310941 0.001385042
-## 28 28   0  24   10    1    0     1  7618.639 0.4537963 4.092364 0.001385042
-## 29 29   0  22    8    2    0     1  9920.945 0.4537963 5.886342 0.001385042
-## 30 30   0  28    8    1    0     1  4623.188 0.4537963 3.810519 0.001385042
-## 31 31   0  25   11    1    0     1  4196.375 0.4537963 4.571697 0.001385042
-## 32 32   0  39    9    1    0     1     0.000 0.4537963 4.240762 0.001385042</code></pre>
+## 1   1   0  23   10    1    0     1     0.000 0.3793939 4.201030 0.001385042
+## 2   2   0  26   12    0    0     0 12383.680 0.3793939 6.259851 0.001385042
+## 3   3   0  22    9    1    0     1     0.000 0.3793939 3.894398 0.001385042
+## 4   4   0  34    9    1    0     1 14051.160 0.3793939 4.572335 0.001385042
+## 5   5   0  18    9    1    0     1 10740.080 0.3793939 3.728447 0.001385042
+## 6   6   0  45   11    1    0     1 11796.470 0.3793939 4.775996 0.001385042
+## 7   7   0  18    9    1    0     1  9227.052 0.3793939 3.728447 0.001385042
+## 8   8   0  27   12    1    0     0  3552.268 0.3793939 5.444597 0.001385042
+## 9   9   0  24    8    0    0     1 10569.270 0.3793939 4.956678 0.001385042
+## 10 10   0  34   11    1    1     1  6040.335 1.0795020 4.949491 0.001385042
+## 11 11   0  20   13    1    0     0  9199.563 0.3793939 6.506135 0.001385042
+## 12 12   0  24    4    2    0     1  3880.833 0.3793939 6.058071 0.001385042
+## 13 13   0  36   10    1    0     1     0.000 0.3793939 4.081130 0.001385042
+## 14 14   0  21   10    1    0     1     0.000 0.3793939 4.943861 0.001385042
+## 15 15   0  28   12    1    1     0 10067.430 1.0795020 5.988239 0.001385042
+## 16 16   0  21   14    1    0     0  5775.062 0.3793939 6.634520 0.001385042
+## 17 17   0  28    9    1    0     1     0.000 0.3793939 3.537871 0.001385042
+## 18 18   0  21   11    1    1     1  8976.826 1.0795020 5.877939 0.001385042
+## 19 19   0  27    7    1    1     1     0.000 1.0795020 3.957082 0.001385042
+## 20 20   0  18   12    0    0     0  2502.526 0.3793939 7.348854 0.001385042
+## 21 21   0  19   11    0    0     1     0.000 0.3793939 6.141498 0.001385042
+## 22 22   0  30   13    1    0     0     0.000 0.3793939 6.304054 0.001385042
+## 23 23   0  26   11    2    0     1     0.000 0.3793939 6.570501 0.001385042
+## 24 24   0  20    8    1    0     1     0.000 0.3793939 3.707017 0.001385042
+## 25 25   0  31    4    0    0     1     0.000 0.3793939 7.228442 0.001385042
+## 26 26   0  18   12    1    0     0 14444.710 0.3793939 5.672347 0.001385042
+## 27 27   0  34   12    1    0     0  2113.722 0.3793939 4.869224 0.001385042
+## 28 28   0  24   10    1    0     1  7618.639 0.3793939 3.652309 0.001385042
+## 29 29   0  22    8    2    0     1  9920.945 0.3793939 5.378697 0.001385042
+## 30 30   0  28    8    1    0     1  4623.188 0.3793939 4.255820 0.001385042
+## 31 31   0  25   11    1    0     1  4196.375 0.3793939 4.118817 0.001385042
+## 32 32   0  39    9    1    0     1     0.000 0.3793939 3.908810 0.001385042</code></pre>
 </div>
 </div>
 </div>
 <div id="optimal-linear-allocations" class="section level2">
 <h2 class="hasAnchor">
 <a href="#optimal-linear-allocations" class="anchor"></a>Optimal Linear Allocations</h2>
-<div class="sourceCode" id="cb58"><html><body><pre class="r"><span class="no">svr_inpalc</span> <span class="kw">&lt;-</span> <span class="st">'opti_alloc_queue'</span>
+<div class="sourceCode" id="cb72"><html><body><pre class="r"><span class="no">svr_inpalc</span> <span class="kw">&lt;-</span> <span class="st">'opti_alloc_queue'</span>
 
 <span class="co"># Child Count</span>
 <span class="no">it_obs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">tb_opti_unique</span>)[<span class="fl">1</span>]
@@ -970,19 +1074,19 @@ Solve for optimal binary allocation queues.
                           <span class="kw">svr_inpalc</span> <span class="kw">=</span> <span class="no">svr_inpalc</span>,
                           <span class="kw">svr_expout</span> <span class="kw">=</span> <span class="st">'opti_exp_outcome'</span>)</pre></body></html></div>
 <pre><code>## Joining, by = "id"</code></pre>
-<div class="sourceCode" id="cb60"><html><body><pre class="r"><span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">ls_bin_solu_all_rhos</span>$<span class="no">df_all_rho</span>
+<div class="sourceCode" id="cb74"><html><body><pre class="r"><span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">ls_bin_solu_all_rhos</span>$<span class="no">df_all_rho</span>
 <span class="no">df_all_rho_long</span> <span class="kw">&lt;-</span> <span class="no">ls_bin_solu_all_rhos</span>$<span class="no">df_all_rho_long</span>
 
 <span class="co"># How many people have different ranks across rhos</span>
 <span class="no">it_how_many_vary_rank</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">df_all_rho</span>$<span class="no">rank_max</span> - <span class="no">df_all_rho</span>$<span class="no">rank_min</span>)
 <span class="no">it_how_many_vary_rank</span></pre></body></html></div>
-<pre><code>## [1] -98120</code></pre>
+<pre><code>## [1] -94434</code></pre>
 <div id="save-results" class="section level3">
 <h3 class="hasAnchor">
 <a href="#save-results" class="anchor"></a>Save Results</h3>
-<div class="sourceCode" id="cb62"><html><body><pre class="r"><span class="co"># Change Variable names so that this can becombined with logit file later</span>
+<div class="sourceCode" id="cb76"><html><body><pre class="r"><span class="co"># Change Variable names so that this can becombined with logit file later</span>
 <span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_at</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="st">"rho_"</span>)), <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html">str_replace</a></span>(<span class="no">.</span>, <span class="st">"rk"</span>, <span class="st">"rk_wage"</span>)))
-<span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">rename</a></span>(<span class="kw">A_i_wage</span> <span class="kw">=</span> <span class="no">A</span>, <span class="kw">alpha_i_wage</span> <span class="kw">=</span> <span class="no">alpha</span>, <span class="kw">beta_i_wage</span> <span class="kw">=</span> <span class="no">beta</span>,
+<span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">A_i_wage</span> <span class="kw">=</span> <span class="no">A</span>, <span class="kw">alpha_i_wage</span> <span class="kw">=</span> <span class="no">alpha</span>, <span class="kw">beta_i_wage</span> <span class="kw">=</span> <span class="no">beta</span>,
                                     <span class="kw">rank_min_wage</span> <span class="kw">=</span> <span class="no">rank_min</span>, <span class="kw">rank_max_wage</span> <span class="kw">=</span> <span class="no">rank_max</span>, <span class="kw">avg_rank_wage</span> <span class="kw">=</span> <span class="no">avg_rank</span>)
 
 <span class="co"># Save File</span>
@@ -994,45 +1098,45 @@ Solve for optimal binary allocation queues.
 <div id="change-in-rank-along-rho" class="section level3">
 <h3 class="hasAnchor">
 <a href="#change-in-rank-along-rho" class="anchor"></a>Change in Rank along rho</h3>
-<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="co"># get rank when wage rho = 1</span>
+<div class="sourceCode" id="cb77"><html><body><pre class="r"><span class="co"># get rank when wage rho = 1</span>
 <span class="no">df_all_rho_rho_c1</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">rho_c1_rk_wage</span>)
 
 <span class="co"># Merge</span>
-<span class="no">df_all_rho_long</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(<span class="no">rho</span>)) <span class="kw">%&gt;%</span>
-                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(<span class="no">df_all_rho_rho_c1</span>, <span class="kw">by</span><span class="kw">=</span><span class="st">'id'</span>)
+<span class="no">df_all_rho_long_more</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(<span class="no">rho</span>)) <span class="kw">%&gt;%</span>
+                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_all_rho_rho_c1</span>, <span class="kw">by</span><span class="kw">=</span><span class="st">'id'</span>)
 
 <span class="co"># Select subset to graph</span>
-<span class="no">df_rank_graph</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho_long</span> <span class="kw">%&gt;%</span>
+<span class="no">df_rank_graph</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho_long_more</span> <span class="kw">%&gt;%</span>
                     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">id</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>((<span class="no">id</span> <span class="kw">==</span> <span class="fl">200</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 1</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">110</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 101</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">95</span>)  <span class="kw">|</span>  <span class="co"># utilitarian rank = 201</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">217</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 301</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">2741</span>)<span class="kw">|</span>  <span class="co"># utilitarian rank = 401</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">101</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 501</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">131</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 601</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">3610</span>)   <span class="co"># utilitarian rank = 701</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>((<span class="no">id</span> <span class="kw">==</span> <span class="fl">167</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 1</span>
+                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">175</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 101</span>
+                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">3710</span>)  <span class="kw">|</span>  <span class="co"># utilitarian rank = 202</span>
+                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">2151</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 306</span>
+                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">27</span>)<span class="kw">|</span>  <span class="co"># utilitarian rank = 405</span>
+                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">58</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 503</span>
+                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">184</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 603</span>
+                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">1481</span>)   <span class="co"># utilitarian rank = 701</span>
                              ) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">one_minus_rho</span> <span class="kw">=</span> <span class="fl">1</span> - !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_rho_val</span>)) <span class="kw">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">one_minus_rho</span> <span class="kw">=</span> <span class="fl">1</span> - !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho_val</span>)) <span class="kw">%&gt;%</span>
                     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho_c1_rk_wage</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">rho_c1_rk_wage</span>))
 
 <span class="no">df_rank_graph</span>$<span class="no">rho_c1_rk_wage</span></pre></body></html></div>
-<pre><code>##   [1] 198 198 198 198 198 198 198 198 198 198 198 198 198 198 198 198 198 198
-##  [19] 198 198 198 198 198 198 198 198 198 198 198 198 500 500 500 500 500 500
-##  [37] 500 500 500 500 500 500 500 500 500 500 500 500 500 500 500 500 500 500
-##  [55] 500 500 500 500 500 500 101 101 101 101 101 101 101 101 101 101 101 101
-##  [73] 101 101 101 101 101 101 101 101 101 101 101 101 101 101 101 101 101 101
-##  [91] 599 599 599 599 599 599 599 599 599 599 599 599 599 599 599 599 599 599
-## [109] 599 599 599 599 599 599 599 599 599 599 599 599 1   1   1   1   1   1  
-## [127] 1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1  
-## [145] 1   1   1   1   1   1   301 301 301 301 301 301 301 301 301 301 301 301
-## [163] 301 301 301 301 301 301 301 301 301 301 301 301 301 301 301 301 301 301
+<pre><code>##   [1] 405 405 405 405 405 405 405 405 405 405 405 405 405 405 405 405 405 405
+##  [19] 405 405 405 405 405 405 405 405 405 405 405 405 503 503 503 503 503 503
+##  [37] 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503
+##  [55] 503 503 503 503 503 503 1   1   1   1   1   1   1   1   1   1   1   1  
+##  [73] 1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1  
+##  [91] 101 101 101 101 101 101 101 101 101 101 101 101 101 101 101 101 101 101
+## [109] 101 101 101 101 101 101 101 101 101 101 101 101 603 603 603 603 603 603
+## [127] 603 603 603 603 603 603 603 603 603 603 603 603 603 603 603 603 603 603
+## [145] 603 603 603 603 603 603 202 202 202 202 202 202 202 202 202 202 202 202
+## [163] 202 202 202 202 202 202 202 202 202 202 202 202 202 202 202 202 202 202
 ## [181] 701 701 701 701 701 701 701 701 701 701 701 701 701 701 701 701 701 701
-## [199] 701 701 701 701 701 701 701 701 701 701 701 701 407 407 407 407 407 407
-## [217] 407 407 407 407 407 407 407 407 407 407 407 407 407 407 407 407 407 407
-## [235] 407 407 407 407 407 407
-## Levels: 1 101 198 301 407 500 599 701</code></pre>
-<div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="no">df_rank_graph</span>$<span class="no">id</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">df_rank_graph</span>$<span class="no">rho_c1_rk_wage</span>,
+## [199] 701 701 701 701 701 701 701 701 701 701 701 701 306 306 306 306 306 306
+## [217] 306 306 306 306 306 306 306 306 306 306 306 306 306 306 306 306 306 306
+## [235] 306 306 306 306 306 306
+## Levels: 1 101 202 306 405 503 603 701</code></pre>
+<div class="sourceCode" id="cb79"><html><body><pre class="r"><span class="no">df_rank_graph</span>$<span class="no">id</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">df_rank_graph</span>$<span class="no">rho_c1_rk_wage</span>,
                            <span class="kw">labels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Rank= 1 when &lt;U+03BB&gt;=0.99'</span>, <span class="co">#200</span>
                                       <span class="st">'Rank= 101 when &lt;U+03BB&gt;=0.99'</span>, <span class="co">#110</span>
                                       <span class="st">'Rank= 201 when &lt;U+03BB&gt;=0.99'</span>, <span class="co">#95</span>
@@ -1053,7 +1157,7 @@ Solve for optimal binary allocation queues.
 
 <span class="co"># Graph Results--Draw</span>
 <span class="no">line.plot</span> <span class="kw">&lt;-</span> <span class="no">df_rank_graph</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span><span class="no">one_minus_rho</span>, <span class="kw">y</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>),
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span><span class="no">one_minus_rho</span>, <span class="kw">y</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>),
              <span class="kw">group</span><span class="kw">=</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_rev.html">fct_rev</a></span>(<span class="no">id</span>),
              <span class="kw">colour</span><span class="kw">=</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_rev.html">fct_rev</a></span>(<span class="no">id</span>),
              <span class="kw">size</span><span class="kw">=</span><span class="fl">2</span>)) +
@@ -1073,7 +1177,7 @@ Solve for optimal binary allocation queues.
 <div id="bump-plot-for-optimal-binary-allocations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#bump-plot-for-optimal-binary-allocations" class="anchor"></a>Bump Plot for Optimal Binary Allocations</h3>
-<div class="sourceCode" id="cb66"><html><body><pre class="r"># tb_opti_alloc_all_rho_long %&gt;%
+<div class="sourceCode" id="cb80"><html><body><pre class="r"># tb_opti_alloc_all_rho_long %&gt;%
 #   ggplot(aes(x = rho, y = rank, group = id)) +
 #     geom_line(aes(color = race, alpha = 1), size = 2) +
 #     geom_point(aes(color = race, alpha = 1), size = 4) +

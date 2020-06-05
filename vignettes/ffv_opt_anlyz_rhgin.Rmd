@@ -1,5 +1,5 @@
 ---
-title: Function Test Bounded-Continuous Function with Height Nutrition Data
+title: Allocation Test Bounded-Continuous Function with Height Nutrition Data
 description: |
   Given allocation space parameters (A, alpha), test the lower-bounded continuous optimal allocation function.
   Compare inequality measures given optimal allocations across planner preferences.

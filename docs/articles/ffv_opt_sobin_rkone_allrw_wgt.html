@@ -123,7 +123,7 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
 
       
 
-      </header><script src="ffv_opt_sobin_rkone_allrw_wgt_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
+      </header><script src="ffv_opt_sobin_rkone_allrw_wgt_files/header-attrs-2.2/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Function Test Binary Allocation with Linear Regression</h1>
@@ -150,7 +150,10 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tibble</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stringr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">forcats</span>)
+
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
+
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">REconTools</span>)
 
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">PrjOptiAlloc</span>)
@@ -211,7 +214,15 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
                                <span class="kw">labels</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"young"</span>,<span class="st">"older"</span>))) <span class="kw">%&gt;%</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">ftvm3</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span>(<span class="no">ftv</span>,
                                <span class="kw">breaks</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">Inf</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">Inf</span>),
+                               <span class="kw">labels</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"novisit"</span>,<span class="st">"1visit"</span>,<span class="st">"morevisit"</span>))) <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">ftvm3</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span>(<span class="no">ftv</span>,
+                               <span class="kw">breaks</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">Inf</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">Inf</span>),
                                <span class="kw">labels</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"novisit"</span>,<span class="st">"1visit"</span>,<span class="st">"morevisit"</span>)))
+
+<span class="co"># Generate Not Smoke Variable</span>
+<span class="no">not_smoke_levels</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"1"</span> <span class="kw">=</span> <span class="st">"0"</span>, <span class="st">"0"</span> <span class="kw">=</span> <span class="st">"1"</span>)
+<span class="no">df_opt_birthwt</span> <span class="kw">&lt;-</span> <span class="no">df_opt_birthwt</span> <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">notsmoke</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">smoke</span> <span class="kw">==</span> <span class="fl">0</span> ~ <span class="fl">1</span>, <span class="fl">TRUE</span> ~ <span class="fl">0</span>))
 
 <span class="fu"><a href="https://rdrr.io/r/base/attach.html">attach</a></span>(<span class="no">df_opt_birthwt</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">df_opt_birthwt</span>)</pre></body></html></div>
@@ -236,18 +247,28 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
 ##  Mean   :0.1481   Mean   :0.7937   Mean   :2945                            
 ##  3rd Qu.:0.0000   3rd Qu.:1.0000   3rd Qu.:3487                            
 ##  Max.   :1.0000   Max.   :6.0000   Max.   :4990                            
-##        ftvm3    
-##  novisit  :147  
-##  1visit   : 30  
-##  morevisit: 12  
-##                 
-##                 
-## </code></pre>
+##        ftvm3        notsmoke     
+##  novisit  :147   Min.   :0.0000  
+##  1visit   : 30   1st Qu.:0.0000  
+##  morevisit: 12   Median :1.0000  
+##                  Mean   :0.6085  
+##                  3rd Qu.:1.0000  
+##                  Max.   :1.0000</code></pre>
+</div>
+</div>
+<div id="exploration" class="section level2">
+<h2 class="hasAnchor">
+<a href="#exploration" class="anchor"></a>Exploration</h2>
+<div id="tabulation" class="section level3">
+<h3 class="hasAnchor">
+<a href="#tabulation" class="anchor"></a>Tabulation</h3>
+<p>Tabulate:</p>
 <div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># tabulate</span>
 <span class="no">df_opt_birthwt</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">race</span>, <span class="no">smoke</span>, <span class="no">ftv</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">freq</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n.html">n</a></span>()) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">freq</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>()) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span>(<span class="kw">names_from</span> <span class="kw">=</span> <span class="no">race</span>, <span class="kw">values_from</span> <span class="kw">=</span> <span class="no">freq</span>)</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'race', 'smoke' (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 11 x 5
 ## # Groups:   smoke [2]
 ##    smoke   ftv   `1`   `2`   `3`
@@ -263,7 +284,94 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
 ##  9     1     3     3     1    NA
 ## 10     1     4     1    NA    NA
 ## 11     1     6    NA    NA     1</code></pre>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">mombirthage</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ht</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ui</span>)))</pre></body></html></div>
+<p>Summarize all, conditional on smoking or not:</p>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># summarize all</span>
+<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">df_opt_birthwt</span>, <span class="kw">bl_statsasrows</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>## Warning: `funs()` is deprecated as of dplyr 0.8.0.
+## Please use a list of either functions or lambdas: 
+## 
+##   # Simple named list: 
+##   list(mean = mean, median = median)
+## 
+##   # Auto named with `tibble::lst()`: 
+##   tibble::lst(mean, median)
+## 
+##   # Using lambdas
+##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
+<pre><code>## Warning: `as.tibble()` is deprecated as of tibble 2.0.0.
+## Please use `as_tibble()` instead.
+## The signature and semantics have changed, see `?as_tibble`.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 12 x 18
+##    var       n NAobs ZEROobs    mean      sd    cv   min    p01    p05    p10
+##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1 age     189     0       0 2.32e+1   5.30  0.228    14   14     16     17  
+##  2 bwt     189     0       0 2.94e+3 729.    0.248   709 1121.  1801.  2038  
+##  3 ftv     189     0     100 7.94e-1   1.06  1.33      0    0      0      0  
+##  4 ht      189     0     177 6.35e-2   0.244 3.85      0    0      0      0  
+##  5 Index   189     0       0 1.21e+2  63.3   0.523     4   10.9   20.8   30.8
+##  6 low     189     0     130 3.12e-1   0.465 1.49      0    0      0      0  
+##  7 lwt     189     0       0 1.30e+2  30.6   0.236    80   85     94.4   99.6
+##  8 nots~   189     0      74 6.08e-1   0.489 0.804     0    0      0      0  
+##  9 ptl     189     0     159 1.96e-1   0.493 2.52      0    0      0      0  
+## 10 race    189     0       0 1.85e+0   0.918 0.497     1    1      1      1  
+## 11 smoke   189     0     115 3.92e-1   0.489 1.25      0    0      0      0  
+## 12 ui      189     0     161 1.48e-1   0.356 2.40      0    0      0      0  
+## # ... with 7 more variables: p25 &lt;dbl&gt;, p50 &lt;dbl&gt;, p75 &lt;dbl&gt;, p90 &lt;dbl&gt;,
+## #   p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="co"># summarize smoking only</span>
+<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">df_opt_birthwt</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">smoke</span> <span class="kw">==</span> <span class="fl">0</span>), <span class="kw">bl_statsasrows</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 12 x 18
+##    var       n NAobs ZEROobs    mean      sd      cv   min    p01    p05    p10
+##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1 age     115     0       0 2.34e+1   5.47    0.233    14   14.1   16     17  
+##  2 bwt     115     0       0 3.06e+3 753.      0.246  1021 1350.  1721.  2055  
+##  3 ftv     115     0      55 8.17e-1   0.979   1.20      0    0      0      0  
+##  4 ht      115     0     108 6.09e-2   0.240   3.95      0    0      0      0  
+##  5 Index   115     0       0 1.31e+2  64.8     0.496    10   13.3   18.7   31.4
+##  6 low     115     0      86 2.52e-1   0.436   1.73      0    0      0      0  
+##  7 lwt     115     0       0 1.31e+2  28.4     0.217    85   89.8   96.7  102. 
+##  8 nots~   115     0       0 1.00e+0   0       0         1    1      1      1  
+##  9 ptl     115     0     103 1.22e-1   0.378   3.11      0    0      0      0  
+## 10 race    115     0       0 2.10e+0   0.927   0.442     1    1      1      1  
+## 11 smoke   115     0     115 0.        0     NaN         0    0      0      0  
+## 12 ui      115     0     100 1.30e-1   0.338   2.59      0    0      0      0  
+## # ... with 7 more variables: p25 &lt;dbl&gt;, p50 &lt;dbl&gt;, p75 &lt;dbl&gt;, p90 &lt;dbl&gt;,
+## #   p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="co"># summarize non-smoking only, 74 smokers</span>
+<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">df_opt_birthwt</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">smoke</span> <span class="kw">==</span> <span class="fl">1</span>), <span class="kw">bl_statsasrows</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 12 x 18
+##    var       n NAobs ZEROobs    mean      sd      cv   min    p01    p05    p10
+##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1 age      74     0       0 2.29e+1   5.05    0.220    14 1.55e1   17     17.3
+##  2 bwt      74     0       0 2.77e+3 660.      0.238   709 1.02e3 1862.  1980. 
+##  3 ftv      74     0      45 7.57e-1   1.18    1.56      0 0.        0      0  
+##  4 ht       74     0      69 6.76e-2   0.253   3.74      0 0.        0      0  
+##  5 Index    74     0       0 1.06e+2  58.1     0.548     4 9.11e0   22.6   30.5
+##  6 low      74     0      44 4.05e-1   0.494   1.22      0 0.        0      0  
+##  7 lwt      74     0       0 1.28e+2  33.8     0.264    80 8.36e1   90     94.3
+##  8 nots~    74     0      74 0.        0     NaN         0 0.        0      0  
+##  9 ptl      74     0      56 3.11e-1   0.618   1.99      0 0.        0      0  
+## 10 race     74     0       0 1.46e+0   0.762   0.522     1 1.00e0    1      1  
+## 11 smoke    74     0       0 1.00e+0   0       0         1 1.00e0    1      1  
+## 12 ui       74     0      61 1.76e-1   0.383   2.18      0 0.        0      0  
+## # ... with 7 more variables: p25 &lt;dbl&gt;, p50 &lt;dbl&gt;, p75 &lt;dbl&gt;, p90 &lt;dbl&gt;,
+## #   p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+</div>
+<div id="explorational-regressions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#explorational-regressions" class="anchor"></a>Explorational Regressions</h3>
+<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="co"># birth weight on mother age, race, ht and ui</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">mombirthage</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ht</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ui</span>)))</pre></body></html></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = bwt ~ lwt + factor(mombirthage) + factor(race) + 
@@ -288,10 +396,14 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
 ## Residual standard error: 664.4 on 182 degrees of freedom
 ## Multiple R-squared:  0.1964, Adjusted R-squared:  0.1699 
 ## F-statistic: 7.412 on 6 and 182 DF,  p-value: 4.131e-07</code></pre>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">smoke</span>) - <span class="fl">1</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="co"># # summary(lm(bwt ~ factor(ftv) - 1))</span>
+<span class="co"># summary(lm(bwt ~ factor(ftv) + factor(ht) + factor(ui) + factor(ptl) - 1))</span>
+
+<span class="co"># Birth wegith on mother's weight last menstral cycle, and mother age, race and smoking interaction</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">notsmoke</span>) - <span class="fl">1</span>))</pre></body></html></div>
 <pre><code>## 
 ## Call:
-## lm(formula = bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 
+## lm(formula = bwt ~ lwt + age + factor(race) + factor(race):factor(notsmoke) - 
 ##     1)
 ## 
 ## Residuals:
@@ -299,121 +411,22 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
 ## -2360.77  -434.48    42.18   469.28  1710.36 
 ## 
 ## Coefficients:
-##                              Estimate Std. Error t value Pr(&gt;|t|)    
-## lwt                             3.711      1.739   2.134 0.034154 *  
-## age                            -4.760     10.054  -0.473 0.636500    
-## factor(race)1                3037.381    339.863   8.937 4.55e-16 ***
-## factor(race)2                2394.843    344.390   6.954 6.25e-11 ***
-## factor(race)3                2480.085    293.002   8.464 8.57e-15 ***
-## factor(race)1:factor(smoke)1 -570.605    143.546  -3.975 0.000102 ***
-## factor(race)2:factor(smoke)1 -305.314    277.419  -1.101 0.272553    
-## factor(race)3:factor(smoke)1  -75.981    216.468  -0.351 0.725994    
+##                                 Estimate Std. Error t value Pr(&gt;|t|)    
+## lwt                                3.711      1.739   2.134 0.034154 *  
+## age                               -4.760     10.054  -0.473 0.636500    
+## factor(race)1                   2466.776    304.057   8.113 7.29e-14 ***
+## factor(race)2                   2089.529    381.625   5.475 1.44e-07 ***
+## factor(race)3                   2404.104    345.416   6.960 6.04e-11 ***
+## factor(race)1:factor(notsmoke)1  570.605    143.546   3.975 0.000102 ***
+## factor(race)2:factor(notsmoke)1  305.314    277.419   1.101 0.272553    
+## factor(race)3:factor(notsmoke)1   75.981    216.468   0.351 0.725994    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 678.9 on 181 degrees of freedom
 ## Multiple R-squared:  0.952,  Adjusted R-squared:  0.9499 
 ## F-statistic: 448.9 on 8 and 181 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">smoke</span>) - <span class="fl">1</span>))</pre></body></html></div>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 
-##     1)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -2360.77  -434.48    42.18   469.28  1710.36 
-## 
-## Coefficients:
-##                              Estimate Std. Error t value Pr(&gt;|t|)    
-## lwt                             3.711      1.739   2.134 0.034154 *  
-## age                            -4.760     10.054  -0.473 0.636500    
-## factor(race)1                3037.381    339.863   8.937 4.55e-16 ***
-## factor(race)2                2394.843    344.390   6.954 6.25e-11 ***
-## factor(race)3                2480.085    293.002   8.464 8.57e-15 ***
-## factor(race)1:factor(smoke)1 -570.605    143.546  -3.975 0.000102 ***
-## factor(race)2:factor(smoke)1 -305.314    277.419  -1.101 0.272553    
-## factor(race)3:factor(smoke)1  -75.981    216.468  -0.351 0.725994    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 678.9 on 181 degrees of freedom
-## Multiple R-squared:  0.952,  Adjusted R-squared:  0.9499 
-## F-statistic: 448.9 on 8 and 181 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ftv</span>) - <span class="fl">1</span>))</pre></body></html></div>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ factor(ftv) - 1)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -2156.1  -484.1     0.0   578.9  1882.0 
-## 
-## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## factor(ftv)0  2865.14      72.57  39.481  &lt; 2e-16 ***
-## factor(ftv)1  3108.00     105.85  29.361  &lt; 2e-16 ***
-## factor(ftv)2  3010.33     132.49  22.721  &lt; 2e-16 ***
-## factor(ftv)3  2521.86     274.29   9.194  &lt; 2e-16 ***
-## factor(ftv)4  3167.75     362.85   8.730 1.57e-15 ***
-## factor(ftv)6  3303.00     725.70   4.551 9.69e-06 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 725.7 on 183 degrees of freedom
-## Multiple R-squared:  0.9446, Adjusted R-squared:  0.9428 
-## F-statistic: 519.8 on 6 and 183 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ftv</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ht</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ui</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ptl</span>) - <span class="fl">1</span>))</pre></body></html></div>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ factor(ftv) + factor(ht) + factor(ui) + factor(ptl) - 
-##     1)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1549.7  -443.4    30.2   490.4  1689.2 
-## 
-## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## factor(ftv)0  3046.85      75.04  40.605  &lt; 2e-16 ***
-## factor(ftv)1  3300.80     104.23  31.669  &lt; 2e-16 ***
-## factor(ftv)2  3138.61     124.69  25.172  &lt; 2e-16 ***
-## factor(ftv)3  2668.40     255.84  10.430  &lt; 2e-16 ***
-## factor(ftv)4  3419.95     343.36   9.960  &lt; 2e-16 ***
-## factor(ftv)6  3303.00     669.62   4.933 1.85e-06 ***
-## factor(ht)1   -457.90     203.35  -2.252 0.025560 *  
-## factor(ui)1   -567.88     143.45  -3.959 0.000109 ***
-## factor(ptl)1  -504.40     152.28  -3.312 0.001121 ** 
-## factor(ptl)2  -154.48     308.71  -0.500 0.617411    
-## factor(ptl)3  1158.03     684.48   1.692 0.092428 .  
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 669.6 on 178 degrees of freedom
-## Multiple R-squared:  0.9541, Adjusted R-squared:  0.9513 
-## F-statistic: 336.3 on 11 and 178 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + (<span class="no">ftv</span>) - <span class="fl">1</span>))</pre></body></html></div>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ lwt + factor(race) + (ftv) - 1)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -2088.45  -445.67    49.21   489.85  1927.65 
-## 
-## Coefficients:
-##               Estimate Std. Error t value Pr(&gt;|t|)    
-## lwt              4.609      1.769   2.605  0.00993 ** 
-## factor(race)1 2483.595    243.002  10.220  &lt; 2e-16 ***
-## factor(race)2 2033.475    292.413   6.954 5.99e-11 ***
-## factor(race)3 2244.345    227.567   9.862  &lt; 2e-16 ***
-## ftv             11.821     49.171   0.240  0.81028    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 704.9 on 184 degrees of freedom
-## Multiple R-squared:  0.9474, Adjusted R-squared:  0.946 
-## F-statistic: 663.1 on 5 and 184 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb27"><html><body><pre class="r"># summary(lm(bwt ~ lwt + factor(race) + (ftv) - 1))</pre></body></html></div>
 </div>
 </div>
 <div id="regression-with-data-and-construct-input-arrays" class="section level2">
@@ -422,184 +435,17 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
 <div id="binary-problem-regress-birth-weight-on-mothers-smoking-status" class="section level3">
 <h3 class="hasAnchor">
 <a href="#binary-problem-regress-birth-weight-on-mothers-smoking-status" class="anchor"></a>Binary Problem Regress Birth Weight on Mother’s Smoking Status</h3>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="co"># A. Regress child birth weight on mother's age, race and mother's weight</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">mombirthage</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>))))</pre></body></html></div>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ lwt + factor(mombirthage) + factor(race))
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -2032.96  -430.84    31.49   454.21  1985.68 
-## 
-## Coefficients:
-##                          Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)              2494.551    242.319  10.294  &lt; 2e-16 ***
-## lwt                         4.910      1.774   2.767  0.00623 ** 
-## factor(mombirthage)older  -94.175    108.852  -0.865  0.38808    
-## factor(race)2            -473.966    159.734  -2.967  0.00340 ** 
-## factor(race)3            -247.629    114.199  -2.168  0.03141 *  
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 703.5 on 184 degrees of freedom
-## Multiple R-squared:  0.08898,    Adjusted R-squared:  0.06918 
-## F-statistic: 4.493 on 4 and 184 DF,  p-value: 0.001736</code></pre>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">mombirthage</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ht</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ui</span>))))</pre></body></html></div>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ lwt + factor(mombirthage) + factor(race) + 
-##     factor(ht) + factor(ui))
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1594.45  -453.35    40.06   468.89  1891.04 
-## 
-## Coefficients:
-##                          Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)              2572.173    237.094  10.849  &lt; 2e-16 ***
-## lwt                         5.216      1.735   3.006  0.00302 ** 
-## factor(mombirthage)older -114.841    102.918  -1.116  0.26596    
-## factor(race)2            -453.756    150.971  -3.006  0.00302 ** 
-## factor(race)3            -216.550    108.069  -2.004  0.04657 *  
-## factor(ht)1              -633.028    205.271  -3.084  0.00236 ** 
-## factor(ui)1              -563.302    138.153  -4.077  6.8e-05 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 664.4 on 182 degrees of freedom
-## Multiple R-squared:  0.1964, Adjusted R-squared:  0.1699 
-## F-statistic: 7.412 on 6 and 182 DF,  p-value: 4.131e-07</code></pre>
-<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ht</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ui</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ptl</span>))))</pre></body></html></div>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) + 
-##     factor(ptl))
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1657.31  -411.29    36.18   456.73  1767.04 
-## 
-## Coefficients:
-##               Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)   2579.886    300.172   8.595 4.05e-15 ***
-## lwt              4.764      1.734   2.748  0.00661 ** 
-## age              1.269      9.530   0.133  0.89423    
-## factor(race)2 -395.097    150.621  -2.623  0.00946 ** 
-## factor(race)3 -180.030    107.653  -1.672  0.09621 .  
-## factor(ht)1   -600.670    202.597  -2.965  0.00344 ** 
-## factor(ui)1   -557.704    140.164  -3.979  0.00010 ***
-## factor(ptl)1  -378.084    146.938  -2.573  0.01089 *  
-## factor(ptl)2   -85.706    300.941  -0.285  0.77613    
-## factor(ptl)3  1130.511    672.124   1.682  0.09431 .  
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 654.1 on 179 degrees of freedom
-## Multiple R-squared:  0.2339, Adjusted R-squared:  0.1954 
-## F-statistic: 6.072 on 9 and 179 DF,  p-value: 1.975e-07</code></pre>
-<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">smoke</span>))))</pre></body></html></div>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ lwt + age + factor(race) + factor(smoke))
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -2281.9  -449.1    24.3   474.1  1746.2 
-## 
-## Coefficients:
-##                Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)    2839.433    321.435   8.834  8.2e-16 ***
-## lwt               4.000      1.738   2.301  0.02249 *  
-## age              -1.948      9.820  -0.198  0.84299    
-## factor(race)2  -510.501    157.077  -3.250  0.00137 ** 
-## factor(race)3  -398.644    119.579  -3.334  0.00104 ** 
-## factor(smoke)1 -401.720    109.241  -3.677  0.00031 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 682.1 on 183 degrees of freedom
-## Multiple R-squared:  0.1483, Adjusted R-squared:  0.125 
-## F-statistic: 6.373 on 5 and 183 DF,  p-value: 1.758e-05</code></pre>
-<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ht</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ui</span>) +  <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">smoke</span>))))</pre></body></html></div>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) + 
-##     factor(smoke))
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1819.85  -452.86    59.91   460.49  1726.15 
-## 
-## Coefficients:
-##                Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)    2933.466    310.773   9.439  &lt; 2e-16 ***
-## lwt               4.396      1.707   2.575 0.010815 *  
-## age              -4.673      9.337  -0.500 0.617383    
-## factor(race)2  -490.638    149.188  -3.289 0.001209 ** 
-## factor(race)3  -356.613    113.856  -3.132 0.002024 ** 
-## factor(ht)1    -590.029    200.290  -2.946 0.003644 ** 
-## factor(ui)1    -528.534    135.088  -3.913 0.000129 ***
-## factor(smoke)1 -360.708    104.027  -3.467 0.000656 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 647.3 on 181 degrees of freedom
-## Multiple R-squared:  0.2414, Adjusted R-squared:  0.2121 
-## F-statistic:  8.23 on 7 and 181 DF,  p-value: 1.057e-08</code></pre>
-<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">momwgtLowHigh</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">smoke</span>) - <span class="fl">1</span>)))</pre></body></html></div>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ lwt + age + factor(momwgtLowHigh):factor(smoke) - 
-##     1)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -2075.34  -433.57    33.95   512.59  1781.49 
-## 
-## Coefficients:
-##                                        Estimate Std. Error t value Pr(&gt;|t|)    
-## lwt                                       4.639      2.584   1.795   0.0743 .  
-## age                                       7.426     10.009   0.742   0.4591    
-## factor(momwgtLowHigh)LW:factor(smoke)0 2303.715    360.918   6.383 1.39e-09 ***
-## factor(momwgtLowHigh)HW:factor(smoke)0 2236.467    462.299   4.838 2.78e-06 ***
-## factor(momwgtLowHigh)LW:factor(smoke)1 2019.699    358.516   5.634 6.57e-08 ***
-## factor(momwgtLowHigh)HW:factor(smoke)1 1987.478    473.861   4.194 4.26e-05 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 712.3 on 183 degrees of freedom
-## Multiple R-squared:  0.9466, Adjusted R-squared:  0.9448 
-## F-statistic: 540.6 on 6 and 183 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ht</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ui</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">smoke</span>))))</pre></body></html></div>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ lwt + age + factor(ht) + factor(ui) + factor(race) + 
-##     factor(race):factor(smoke))
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1866.50  -416.40    20.14   404.49  1678.65 
-## 
-## Coefficients:
-##                              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                  3103.394    329.074   9.431  &lt; 2e-16 ***
-## lwt                             3.950      1.714   2.305  0.02234 *  
-## age                            -6.177      9.543  -0.647  0.51833    
-## factor(ht)1                  -543.753    200.920  -2.706  0.00746 ** 
-## factor(ui)1                  -550.326    136.026  -4.046 7.75e-05 ***
-## factor(race)2                -544.929    199.565  -2.731  0.00695 ** 
-## factor(race)3                -500.559    138.465  -3.615  0.00039 ***
-## factor(race)1:factor(smoke)1 -497.444    137.338  -3.622  0.00038 ***
-## factor(race)2:factor(smoke)1 -414.559    264.495  -1.567  0.11880    
-## factor(race)3:factor(smoke)1  -13.101    207.582  -0.063  0.94975    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 644 on 179 degrees of freedom
-## Multiple R-squared:  0.2573, Adjusted R-squared:  0.2199 
-## F-statistic:  6.89 on 9 and 179 DF,  p-value: 1.69e-08</code></pre>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">smoke</span>) - <span class="fl">1</span>)))</pre></body></html></div>
+<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="co"># A. Regress child birth weight on mother's age, race and mother's weight</span>
+<span class="co"># print(summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race))))</span>
+<span class="co"># print(summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race) + factor(ht) + factor(ui))))</span>
+<span class="co"># print(summary(lm(bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) + factor(ptl))))</span>
+<span class="co"># </span>
+<span class="co"># print(summary(lm(bwt ~ lwt + age + factor(race) + factor(smoke))))</span>
+<span class="co"># print(summary(lm(bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) +  factor(smoke))))</span>
+<span class="co"># </span>
+<span class="co"># print(summary(lm(bwt ~ lwt + age + factor(momwgtLowHigh):factor(smoke) - 1)))</span>
+<span class="co"># print(summary(lm(bwt ~ lwt + age + factor(ht) + factor(ui) + factor(race) + factor(race):factor(smoke))))</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">lwt</span> + <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">smoke</span>) - <span class="fl">1</span>)))</pre></body></html></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 
@@ -625,13 +471,13 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
 ## Residual standard error: 678.9 on 181 degrees of freedom
 ## Multiple R-squared:  0.952,  Adjusted R-squared:  0.9499 
 ## F-statistic: 448.9 on 8 and 181 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="co"># Preferred way of appearing, in the following regression we can se:</span>
+<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="co"># Preferred way of appearing, in the following regression we can se:</span>
 <span class="co"># 1. more more power less MPG, Straight engine slightly higher MPG</span>
 <span class="co"># 2. V-shape engine car, going from auto to manual trans gain 4.1 MPG</span>
 <span class="co"># 2. straight shape engine, going from auto to manual trans gain 6.67 MPG</span>
 
 <span class="co"># Store Regression Results</span>
-<span class="no">mt_model</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>(~ <span class="no">lwt</span> + <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ht</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ui</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">ptl</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">smoke</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>))
+<span class="no">mt_model</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>(~ <span class="no">lwt</span> + <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">notsmoke</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>))
 <span class="no">rs_wgt_on_smke</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">bwt</span> ~ <span class="no">mt_model</span> - <span class="fl">1</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">rs_wgt_on_smke</span>))</pre></body></html></div>
 <pre><code>## 
@@ -640,189 +486,174 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1863.18  -380.81    12.97   406.28  1623.16 
+## -2360.77  -434.48    42.18   469.28  1710.36 
 ## 
 ## Coefficients:
-##                                      Estimate Std. Error t value Pr(&gt;|t|)    
-## mt_model(Intercept)                  3052.734    325.825   9.369  &lt; 2e-16 ***
-## mt_modellwt                             3.926      1.700   2.309 0.022110 *  
-## mt_modelage                            -3.750      9.580  -0.391 0.695949    
-## mt_modelfactor(ht)1                  -530.489    198.071  -2.678 0.008101 ** 
-## mt_modelfactor(ui)1                  -570.137    137.361  -4.151 5.16e-05 ***
-## mt_modelfactor(ptl)1                 -281.977    145.534  -1.938 0.054281 .  
-## mt_modelfactor(ptl)2                  -50.395    293.124  -0.172 0.863695    
-## mt_modelfactor(ptl)3                 1347.020    654.426   2.058 0.041033 *  
-## mt_modelfactor(race)2                -501.650    198.139  -2.532 0.012223 *  
-## mt_modelfactor(race)3                -462.499    137.560  -3.362 0.000949 ***
-## mt_modelfactor(race)1:factor(smoke)1 -471.806    138.040  -3.418 0.000784 ***
-## mt_modelfactor(race)2:factor(smoke)1 -407.064    260.512  -1.563 0.119954    
-## mt_modelfactor(race)3:factor(smoke)1   29.264    205.896   0.142 0.887139    
+##                                         Estimate Std. Error t value Pr(&gt;|t|)
+## mt_model(Intercept)                     2466.776    304.057   8.113 7.29e-14
+## mt_modellwt                                3.711      1.739   2.134 0.034154
+## mt_modelage                               -4.760     10.054  -0.473 0.636500
+## mt_modelfactor(race)2                   -377.246    236.212  -1.597 0.111995
+## mt_modelfactor(race)3                    -62.672    217.474  -0.288 0.773538
+## mt_modelfactor(race)1:factor(notsmoke)1  570.605    143.546   3.975 0.000102
+## mt_modelfactor(race)2:factor(notsmoke)1  305.314    277.419   1.101 0.272553
+## mt_modelfactor(race)3:factor(notsmoke)1   75.981    216.468   0.351 0.725994
+##                                            
+## mt_model(Intercept)                     ***
+## mt_modellwt                             *  
+## mt_modelage                                
+## mt_modelfactor(race)2                      
+## mt_modelfactor(race)3                      
+## mt_modelfactor(race)1:factor(notsmoke)1 ***
+## mt_modelfactor(race)2:factor(notsmoke)1    
+## mt_modelfactor(race)3:factor(notsmoke)1    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 634.2 on 176 degrees of freedom
-## Multiple R-squared:  0.9593, Adjusted R-squared:  0.9563 
-## F-statistic:   319 on 13 and 176 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="no">rs_wgt_on_smke_tidy</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">tidy</a></span>(<span class="no">rs_wgt_on_smke</span>)
+## Residual standard error: 678.9 on 181 degrees of freedom
+## Multiple R-squared:  0.952,  Adjusted R-squared:  0.9499 
+## F-statistic: 448.9 on 8 and 181 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="no">rs_wgt_on_smke_tidy</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">tidy</a></span>(<span class="no">rs_wgt_on_smke</span>)
 <span class="no">rs_wgt_on_smke_tidy</span></pre></body></html></div>
-<pre><code>## # A tibble: 13 x 5
-##    term                                 estimate std.error statistic  p.value
-##    &lt;chr&gt;                                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-##  1 mt_model(Intercept)                   3053.      326.       9.37  3.53e-17
-##  2 mt_modellwt                              3.93      1.70     2.31  2.21e- 2
-##  3 mt_modelage                             -3.75      9.58    -0.391 6.96e- 1
-##  4 mt_modelfactor(ht)1                   -530.      198.      -2.68  8.10e- 3
-##  5 mt_modelfactor(ui)1                   -570.      137.      -4.15  5.16e- 5
-##  6 mt_modelfactor(ptl)1                  -282.      146.      -1.94  5.43e- 2
-##  7 mt_modelfactor(ptl)2                   -50.4     293.      -0.172 8.64e- 1
-##  8 mt_modelfactor(ptl)3                  1347.      654.       2.06  4.10e- 2
-##  9 mt_modelfactor(race)2                 -502.      198.      -2.53  1.22e- 2
-## 10 mt_modelfactor(race)3                 -462.      138.      -3.36  9.49e- 4
-## 11 mt_modelfactor(race)1:factor(smoke)1  -472.      138.      -3.42  7.84e- 4
-## 12 mt_modelfactor(race)2:factor(smoke)1  -407.      261.      -1.56  1.20e- 1
-## 13 mt_modelfactor(race)3:factor(smoke)1    29.3     206.       0.142 8.87e- 1</code></pre>
+<pre><code>## # A tibble: 8 x 5
+##   term                                    estimate std.error statistic  p.value
+##   &lt;chr&gt;                                      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 mt_model(Intercept)                      2467.      304.       8.11  7.29e-14
+## 2 mt_modellwt                                 3.71      1.74     2.13  3.42e- 2
+## 3 mt_modelage                                -4.76     10.1     -0.473 6.36e- 1
+## 4 mt_modelfactor(race)2                    -377.      236.      -1.60  1.12e- 1
+## 5 mt_modelfactor(race)3                     -62.7     217.      -0.288 7.74e- 1
+## 6 mt_modelfactor(race)1:factor(notsmoke)1   571.      144.       3.98  1.02e- 4
+## 7 mt_modelfactor(race)2:factor(notsmoke)1   305.      277.       1.10  2.73e- 1
+## 8 mt_modelfactor(race)3:factor(notsmoke)1    76.0     216.       0.351 7.26e- 1</code></pre>
 </div>
 <div id="construct-input-arrays-a_i-and-alpha_i" class="section level3">
 <h3 class="hasAnchor">
 <a href="#construct-input-arrays-a_i-and-alpha_i" class="anchor"></a>Construct Input Arrays <span class="math inline">\(A_i\)</span> and <span class="math inline">\(\alpha_i\)</span>
 </h3>
 <p>Multiply coefficient vector by covariate matrix to generate <em>A</em> vector that is child/individual specific.</p>
-<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="co"># Estimates Table</span>
+<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="co"># Estimates Table</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">rs_wgt_on_smke_tidy</span>, <span class="fl">6</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 6 x 5
-##   term                 estimate std.error statistic  p.value
-##   &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 mt_model(Intercept)   3053.      326.       9.37  3.53e-17
-## 2 mt_modellwt              3.93      1.70     2.31  2.21e- 2
-## 3 mt_modelage             -3.75      9.58    -0.391 6.96e- 1
-## 4 mt_modelfactor(ht)1   -530.      198.      -2.68  8.10e- 3
-## 5 mt_modelfactor(ui)1   -570.      137.      -4.15  5.16e- 5
-## 6 mt_modelfactor(ptl)1  -282.      146.      -1.94  5.43e- 2</code></pre>
-<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="co"># Covariates</span>
+##   term                                    estimate std.error statistic  p.value
+##   &lt;chr&gt;                                      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 mt_model(Intercept)                      2467.      304.       8.11  7.29e-14
+## 2 mt_modellwt                                 3.71      1.74     2.13  3.42e- 2
+## 3 mt_modelage                                -4.76     10.1     -0.473 6.36e- 1
+## 4 mt_modelfactor(race)2                    -377.      236.      -1.60  1.12e- 1
+## 5 mt_modelfactor(race)3                     -62.7     217.      -0.288 7.74e- 1
+## 6 mt_modelfactor(race)1:factor(notsmoke)1   571.      144.       3.98  1.02e- 4</code></pre>
+<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="co"># Covariates</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">mt_model</span>, <span class="fl">5</span>)</pre></body></html></div>
-<pre><code>##   (Intercept) lwt age factor(ht)1 factor(ui)1 factor(ptl)1 factor(ptl)2
-## 1           1 182  19           0           1            0            0
-## 2           1 155  33           0           0            0            0
-## 3           1 105  20           0           0            0            0
-## 4           1 108  21           0           1            0            0
-## 5           1 107  18           0           1            0            0
-##   factor(ptl)3 factor(race)2 factor(race)3 factor(race)1:factor(smoke)1
-## 1            0             1             0                            0
-## 2            0             0             1                            0
-## 3            0             0             0                            1
-## 4            0             0             0                            1
-## 5            0             0             0                            1
-##   factor(race)2:factor(smoke)1 factor(race)3:factor(smoke)1
-## 1                            0                            0
-## 2                            0                            0
-## 3                            0                            0
-## 4                            0                            0
-## 5                            0                            0</code></pre>
-<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="co"># Covariates coefficients from regression (including constant)</span>
-<span class="no">ar_fl_cova_esti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="no">rs_wgt_on_smke_tidy</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(<span class="no">term</span>, <span class="st">'smoke'</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">estimate</span>))
-<span class="no">ar_fl_main_esti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="no">rs_wgt_on_smke_tidy</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(<span class="no">term</span>, <span class="st">'smoke'</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">estimate</span>))
+<pre><code>##   (Intercept) lwt age factor(race)2 factor(race)3
+## 1           1 182  19             1             0
+## 2           1 155  33             0             1
+## 3           1 105  20             0             0
+## 4           1 108  21             0             0
+## 5           1 107  18             0             0
+##   factor(race)1:factor(notsmoke)1 factor(race)2:factor(notsmoke)1
+## 1                               0                               1
+## 2                               0                               0
+## 3                               0                               0
+## 4                               0                               0
+## 5                               0                               0
+##   factor(race)3:factor(notsmoke)1
+## 1                               0
+## 2                               1
+## 3                               0
+## 4                               0
+## 5                               0</code></pre>
+<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="co"># Covariates coefficients from regression (including constant)</span>
+<span class="no">ar_fl_cova_esti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="no">rs_wgt_on_smke_tidy</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(<span class="no">term</span>, <span class="st">'notsmoke'</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">estimate</span>))
+<span class="no">ar_fl_main_esti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="no">rs_wgt_on_smke_tidy</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(<span class="no">term</span>, <span class="st">'notsmoke'</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">estimate</span>))
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_fl_cova_esti</span>, <span class="fl">5</span>)</pre></body></html></div>
 <pre><code>##         estimate
-## [1,] 3052.733875
-## [2,]    3.925643
-## [3,]   -3.749898
-## [4,] -530.488594
-## [5,] -570.136918</code></pre>
-<div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_fl_main_esti</span>, <span class="fl">5</span>)</pre></body></html></div>
+## [1,] 2466.775608
+## [2,]    3.710935
+## [3,]   -4.759693
+## [4,] -377.246401
+## [5,]  -62.671843</code></pre>
+<div class="sourceCode" id="cb40"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_fl_main_esti</span>, <span class="fl">5</span>)</pre></body></html></div>
 <pre><code>##       estimate
-## [1,] -471.8059
-## [2,] -407.0641
-## [3,]   29.2642</code></pre>
-<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="co"># Select Matrix subcomponents</span>
-<span class="no">mt_cova</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_model</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">"smoke"</span>)))
+## [1,] 570.60493
+## [2,] 305.31426
+## [3,]  75.98101</code></pre>
+<div class="sourceCode" id="cb42"><html><body><pre class="r"><span class="co"># Select Matrix subcomponents</span>
+<span class="no">mt_cova</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_model</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">"notsmoke"</span>)))
 <span class="no">mt_intr</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>(~ <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>) - <span class="fl">1</span>)
 
 <span class="co"># Generate A_i, use mt_cova_wth_const</span>
 <span class="no">ar_A_m</span> <span class="kw">&lt;-</span> <span class="no">mt_cova</span> <span class="kw">%*%</span> <span class="no">ar_fl_cova_esti</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_A_m</span>, <span class="fl">5</span>)</pre></body></html></div>
 <pre><code>##      estimate
-## [1,] 2624.166
-## [2,] 3074.963
-## [3,] 3389.928
-## [4,] 2827.819
-## [5,] 2835.143</code></pre>
-<div class="sourceCode" id="cb53"><html><body><pre class="r"><span class="co"># Generate alpha_i</span>
+## [1,] 2674.485
+## [2,] 2822.229
+## [3,] 2761.230
+## [4,] 2767.603
+## [5,] 2778.171</code></pre>
+<div class="sourceCode" id="cb44"><html><body><pre class="r"><span class="co"># Generate alpha_i</span>
 <span class="no">ar_alpha_m</span> <span class="kw">&lt;-</span> <span class="no">mt_intr</span> <span class="kw">%*%</span> <span class="no">ar_fl_main_esti</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_alpha_m</span>, <span class="fl">5</span>)</pre></body></html></div>
 <pre><code>##    estimate
-## 1 -407.0641
-## 2   29.2642
-## 3 -471.8059
-## 4 -471.8059
-## 5 -471.8059</code></pre>
+## 1 305.31426
+## 2  75.98101
+## 3 570.60493
+## 4 570.60493
+## 5 570.60493</code></pre>
 </div>
 <div id="individual-weight" class="section level3">
 <h3 class="hasAnchor">
 <a href="#individual-weight" class="anchor"></a>Individual Weight</h3>
-<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="co"># Child Weight</span>
+<div class="sourceCode" id="cb46"><html><body><pre class="r"><span class="co"># Child Weight</span>
 <span class="no">ar_beta_m</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>/<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_A_m</span>), <span class="kw">times</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_A_m</span>))</pre></body></html></div>
 </div>
 <div id="matrix-with-required-inputs-for-allocation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#matrix-with-required-inputs-for-allocation" class="anchor"></a>Matrix with Required Inputs for Allocation</h3>
-<div class="sourceCode" id="cb56"><html><body><pre class="r"><span class="co"># Initate Dataframe that will store all estimates and optimal allocation relevant information</span>
+<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="co"># Initate Dataframe that will store all estimates and optimal allocation relevant information</span>
 <span class="co"># combine identifying key information along with estimation A, alpha results</span>
 <span class="co"># note that we only need indi.id as key</span>
-<span class="no">mt_opti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_alpha_m</span>, <span class="no">ar_A_m</span>, <span class="no">ar_beta_m</span>)
+<span class="no">mt_opti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_alpha_m</span>*<span class="fl">0.01</span>, <span class="no">ar_A_m</span>*<span class="fl">0.01</span>, <span class="no">ar_beta_m</span>)
 <span class="no">ar_st_varnames</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span>)
 <span class="no">df_esti_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_opti</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span>(~<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ar_st_varnames</span>))</pre></body></html></div>
 <pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have column names if `.name_repair` is omitted as of tibble 2.0.0.
 ## Using compatibility `.name_repair`.
 ## This warning is displayed once every 8 hours.
 ## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
-<div class="sourceCode" id="cb58"><html><body><pre class="r"><span class="no">tb_key_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="no">df_opt_birthwt</span>, <span class="no">df_esti_alpha_A_beta</span>) <span class="kw">%&gt;%</span>
-              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Index'</span>, <span class="st">'age'</span>, <span class="st">'lwt'</span>, <span class="st">'race'</span>, <span class="st">'smoke'</span>, <span class="st">'ptl'</span>, <span class="st">'ht'</span>, <span class="st">'ui'</span>, <span class="no">ar_st_varnames</span>)))
+<div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="no">tb_key_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="no">df_opt_birthwt</span>, <span class="no">df_esti_alpha_A_beta</span>) <span class="kw">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Index'</span>, <span class="st">'age'</span>, <span class="st">'lwt'</span>, <span class="st">'race'</span>, <span class="st">'notsmoke'</span>, <span class="st">'ptl'</span>, <span class="st">'ht'</span>, <span class="st">'ui'</span>, <span class="no">ar_st_varnames</span>)))
 
 <span class="co"># Need to only include the smokers here</span>
-<span class="co"># tb_key_alpha_A_beta &lt;- tb_key_alpha_A_beta %&gt;% filter(smoke == 1)</span>
-<span class="co"># Randomly select 30 people</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">123</span>)
-<span class="no">it_include</span> <span class="kw">&lt;-</span> <span class="fl">30</span>
-<span class="no">tb_key_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span>[<span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">tb_key_alpha_A_beta</span>)[<span class="fl">1</span>], <span class="no">it_include</span>, <span class="kw">replace</span><span class="kw">=</span><span class="fl">FALSE</span>),]
+<span class="no">tb_key_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">smoke</span> <span class="kw">==</span> <span class="fl">1</span>)
+
+<span class="co"># Randomly select 15 smokers for easier visualization.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">999</span>)
+<span class="no">it_include</span> <span class="kw">&lt;-</span> <span class="fl">15</span>
+<span class="no">tb_key_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span>[<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">tb_key_alpha_A_beta</span>)[<span class="fl">1</span>], <span class="no">it_include</span>, <span class="kw">replace</span><span class="kw">=</span><span class="fl">FALSE</span>),]
 
 <span class="co"># Unique beta, A, and alpha check</span>
-<span class="no">tb_opti_unique</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">n_obs_group</span><span class="kw">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/n.html">n</a></span>())
-
-<span class="co"># Show cars</span>
+<span class="no">tb_opti_unique</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">n_obs_group</span><span class="kw">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>())</pre></body></html></div>
+<pre><code>## `summarise()` regrouping output by 'alpha', 'A' (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="co"># Show cars</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">tb_key_alpha_A_beta</span>, <span class="fl">32</span>)</pre></body></html></div>
-<pre><code>##     Index age lwt race smoke ptl ht ui     alpha        A        beta
-## 159    43  27 130    2     0   0  0  1 -407.0641 2390.034 0.005291005
-## 179    69  23 110    1     1   1  0  0 -471.8059 3116.330 0.005291005
-## 14     99  30 107    3     0   1  0  1   29.2642 2045.668 0.005291005
-## 170    57  15 110    1     0   0  0  0 -471.8059 3428.306 0.005291005
-## 50    137  22  85    3     1   0  0  0   29.2642 2841.417 0.005291005
-## 118   214  28 130    3     0   0  0  0   29.2642 2995.571 0.005291005
-## 43    130  23 130    2     0   0  0  0 -407.0641 2975.170 0.005291005
-## 187    82  23  94    3     1   0  0  0   29.2642 2872.998 0.005291005
-## 184    78  14 101    3     1   1  0  0   29.2642 2652.249 0.005291005
-## 153    34  19 112    1     1   0  0  1 -471.8059 2851.021 0.005291005
-## 90    184  22 125    1     0   0  0  0 -471.8059 3460.941 0.005291005
-## 91    185  24 133    1     0   0  0  0 -471.8059 3484.847 0.005291005
-## 178    68  17 120    1     1   0  0  0 -471.8059 3460.063 0.005291005
-## 92    186  21 134    3     0   0  0  0   29.2642 3037.523 0.005291005
-## 137    17  23  97    3     0   0  0  1   29.2642 2314.638 0.005291005
-## 99    193  19 147    1     1   0  0  0 -471.8059 3558.555 0.005291005
-## 72    163  31 150    3     1   0  0  0   29.2642 3062.834 0.005291005
-## 26    112  28 167    1     0   0  0  0 -471.8059 3603.319 0.005291005
-## 7      92  22 118    1     0   0  0  0 -471.8059 3433.462 0.005291005
-## 186    81  14 100    3     0   0  0  0   29.2642 2930.301 0.005291005
-## 175    63  23 120    3     0   0  0  0   29.2642 2975.064 0.005291005
-## 164    49  18 148    3     0   0  0  0   29.2642 3103.732 0.005291005
-## 78    170  32 134    1     1   1  0  0 -471.8059 3176.796 0.005291005
-## 81    174  22 131    1     0   0  0  0 -471.8059 3484.495 0.005291005
-## 183    77  26 190    1     1   0  0  0 -471.8059 3701.109 0.005291005
-## 103   199  24 110    3     0   1  0  0   29.2642 2650.081 0.005291005
-## 117   213  14 135    1     0   0  0  0 -471.8059 3530.197 0.005291005
-## 76    168  18 229    2     0   0  0  0 -407.0641 3382.558 0.005291005
-## 143    24  25 115    3     0   0  0  0   29.2642 2947.936 0.005291005
-## 32    118  24  90    1     1   1  0  0 -471.8059 3034.067 0.005291005</code></pre>
+<pre><code>##    Index age lwt race notsmoke ptl ht ui     alpha        A        beta
+## 27   159  28 250    3        0   0  0  0 0.7598101 31.98566 0.005291005
+## 68    68  17 120    1        0   0  0  0 5.7060493 28.31173 0.005291005
+## 61    51  20 121    1        0   1  0  1 5.7060493 28.20605 0.005291005
+## 71    78  14 101    3        0   1  0  0 0.7598101 27.12273 0.005291005
+## 14   123  29 140    1        0   0  0  0 5.7060493 28.48275 0.005291005
+## 65    61  24 105    2        0   0  0  0 3.0531426 23.64945 0.005291005
+## 58    44  20  80    3        0   0  0  1 0.7598101 26.05785 0.005291005
+## 10   113  17 122    1        0   0  0  0 5.7060493 28.38595 0.005291005
+## 22   137  22  85    3        0   0  0  0 0.7598101 26.14820 0.005291005
+## 35   187  19 235    1        0   0  1  0 5.7060493 32.48411 0.005291005
+## 23   140  22 130    1        0   0  0  0 5.7060493 28.44484 0.005291005
+## 56    40  20 120    2        0   0  0  0 3.0531426 24.39648 0.005291005
+## 15   124  19 138    1        0   0  0  0 5.7060493 28.88451 0.005291005
+## 5     95  26 113    1        0   0  0  0 5.7060493 27.62359 0.005291005
+## 7    101  18 100    1        0   0  0  0 5.7060493 27.52195 0.005291005</code></pre>
 </div>
 </div>
 <div id="optimal-linear-allocations" class="section level2">
@@ -831,26 +662,24 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
 <div id="parameters-for-optimal-allocation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#parameters-for-optimal-allocation" class="anchor"></a>Parameters for Optimal Allocation</h3>
-<div class="sourceCode" id="cb60"><html><body><pre class="r"><span class="co"># Child Count</span>
+<div class="sourceCode" id="cb53"><html><body><pre class="r"><span class="co"># Child Count</span>
 <span class="no">it_obs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">tb_opti_unique</span>)[<span class="fl">1</span>]
 
 <span class="co"># Vector of Planner Preference</span>
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">100</span>, <span class="fl">0.8</span>)
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">50</span>, -<span class="fl">25</span>, -<span class="fl">10</span>)
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">100</span>, -<span class="fl">5</span>, -<span class="fl">1</span>, <span class="fl">0.1</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>)
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">200</span>, -<span class="fl">100</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">100</span>, -<span class="fl">25</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">25</span>, -<span class="fl">5</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">5</span>, -<span class="fl">1</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">1</span>, -<span class="fl">0.01</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.01</span>, <span class="fl">0.25</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.25</span>, <span class="fl">0.90</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>))
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">100</span>, -<span class="fl">5</span>, -<span class="fl">1</span>, <span class="fl">0.1</span>, <span class="fl">0.6</span>, <span class="fl">0.99</span>)
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">100</span>, -<span class="fl">10</span>, -<span class="fl">1</span>, <span class="fl">0.05</span>, <span class="fl">0.9</span>)
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fl">1</span> - (<span class="fl">10</span>^(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">2</span>,<span class="fl">2</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">10</span>))))
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">100</span>, -<span class="fl">10</span>, -<span class="fl">1</span>, -<span class="fl">0.5</span>, -<span class="fl">0.1</span>, <span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.20</span>,  <span class="fl">0.9</span>)
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">110</span>, -<span class="fl">90</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">10</span>), -<span class="fl">50</span>, <span class="fl">10</span>, -<span class="fl">1</span>, -<span class="fl">0.5</span>, -<span class="fl">0.1</span>, <span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.20</span>,  <span class="fl">0.9</span>)
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">ar_rho</span>)</pre></body></html></div>
+<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fl">1</span> - (<span class="fl">10</span>^(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">2</span>, <span class="fl">2</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">30</span>))))
+<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">ar_rho</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ar_rho</span>)</pre></body></html></div>
+<pre><code>##  [1]   0.9900000   0.9862618   0.9811261   0.9740706   0.9643775   0.9510610
+##  [7]   0.9327664   0.9076329   0.8731039   0.8256671   0.7604973   0.6709655
+## [13]   0.5479646   0.3789831   0.1468321  -0.1721023  -0.6102620  -1.2122163
+## [19]  -2.0391954  -3.1753189  -4.7361525  -6.8804628  -9.8263673 -13.8735211
+## [25] -19.4335972 -27.0721620 -37.5662042 -51.9831691 -71.7895384 -99.0000000</code></pre>
 </div>
 <div id="optimal-binary-allocation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optimal-binary-allocation" class="anchor"></a>Optimal binary Allocation</h3>
 <p>This also works with any CRS CES.</p>
-<div class="sourceCode" id="cb61"><html><body><pre class="r"><span class="co"># Optimal Linear Equation</span>
+<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="co"># Optimal Linear Equation</span>
 <span class="no">svr_inpalc</span> <span class="kw">&lt;-</span> <span class="st">'rank'</span>
 
 <span class="co"># Solve with Function</span>
@@ -861,7 +690,7 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
                           <span class="kw">svr_inpalc</span> <span class="kw">=</span> <span class="no">svr_inpalc</span>,
                           <span class="kw">svr_expout</span> <span class="kw">=</span> <span class="st">'opti_exp_outcome'</span>)</pre></body></html></div>
 <pre><code>## Joining, by = "Index"</code></pre>
-<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="no">tb_opti_alloc_all_rho</span> <span class="kw">&lt;-</span> <span class="no">ls_bin_solu_all_rhos</span>$<span class="no">df_all_rho</span>
+<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="no">tb_opti_alloc_all_rho</span> <span class="kw">&lt;-</span> <span class="no">ls_bin_solu_all_rhos</span>$<span class="no">df_all_rho</span>
 <span class="no">tb_opti_alloc_all_rho_long</span> <span class="kw">&lt;-</span> <span class="no">ls_bin_solu_all_rhos</span>$<span class="no">df_all_rho_long</span>
 
 <span class="co"># Converge rho to numeric so the graph below sorts along x-axis properly </span>
@@ -869,21 +698,32 @@ Use the the birthwt testing dataset. Regression birth weight on smoking status.
 
 <span class="co"># Merge to get Race Data</span>
 <span class="no">tb_opti_alloc_all_rho_long</span> <span class="kw">&lt;-</span> <span class="no">tb_opti_alloc_all_rho_long</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(<span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">Index</span>, <span class="no">race</span>), <span class="kw">by</span><span class="kw">=</span><span class="st">'Index'</span>)</pre></body></html></div>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">Index</span>, <span class="no">race</span>), <span class="kw">by</span><span class="kw">=</span><span class="st">'Index'</span>)</pre></body></html></div>
 </div>
 <div id="bump-plot-for-optimal-binary-allocations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#bump-plot-for-optimal-binary-allocations" class="anchor"></a>Bump Plot for Optimal Binary Allocations</h3>
-<div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="no">tb_opti_alloc_all_rho_long</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">rho_num</span>, <span class="kw">y</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_inpalc</span>), <span class="kw">group</span> <span class="kw">=</span> <span class="no">Index</span>)) +
+<div class="sourceCode" id="cb58"><html><body><pre class="r"><span class="no">st_title</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Binary Deallocation Rank, Birth Weight and Mother Smoking"</span>)
+<span class="no">st_subtitle</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Which individual to encourage to stop smoking first\n"</span>,
+                     <span class="st">"The expected outcome of interest is child birth weight\n"</span>,
+                     <span class="st">"Deallocate smoking among 15 randomly selected smokers\n"</span>,
+                     <span class="st">"Rank = 1, encourage this woman to stop smoking first"</span>)
+<span class="no">st_caption</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Linear regression of birth weight on smoking. Data from Hosmer et. al. (1998)"</span>)
+<span class="no">st_x_lab</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Efficiency (Utilitarian) --&gt; Cobb-Douglas --&gt; Equity (Rawlsian)"</span>)
+<span class="no">st_y_lab</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Rank Along Binary Allocation Queue ( 1 = highest ranked)"</span>)
+
+<span class="no">tb_opti_alloc_all_rho_long</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">rho_num</span>, <span class="kw">y</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>), <span class="kw">group</span> <span class="kw">=</span> <span class="no">Index</span>)) +
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">color</span> <span class="kw">=</span> <span class="no">race</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>), <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>) +
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">color</span> <span class="kw">=</span> <span class="no">race</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>), <span class="kw">size</span> <span class="kw">=</span> <span class="fl">4</span>) +
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_x_discrete</a></span>(<span class="kw">expand</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.85</span>,<span class="fl">0</span>))+
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_reverse</a></span>(<span class="kw">breaks</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">tb_opti_alloc_all_rho_long</span>))+
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">"none"</span>) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="st">"Equality vs Efficiency"</span>,
-         <span class="kw">y</span> <span class="kw">=</span> <span class="st">"Rank"</span>,
-         <span class="kw">title</span> <span class="kw">=</span> <span class="st">"Binary Deallocation Rank, Weight and Smokng"</span>) +
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">st_x_lab</span>,
+         <span class="kw">y</span> <span class="kw">=</span> <span class="no">st_y_lab</span>,
+         <span class="kw">title</span> <span class="kw">=</span> <span class="no">st_title</span>,
+         <span class="kw">subtitle</span> <span class="kw">=</span> <span class="no">st_subtitle</span>,
+         <span class="kw">caption</span> <span class="kw">=</span> <span class="no">st_caption</span>) +
     <span class="fu"><a href="../reference/ffy_opt_ghthm_dk.html">ffy_opt_ghthm_dk</a></span>() +
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_text</a></span>(<span class="kw">data</span> <span class="kw">=</span><span class="no">tb_opti_alloc_all_rho</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span><span class="kw">=</span><span class="no">rho_c1_rk</span>,<span class="kw">x</span><span class="kw">=</span><span class="fl">0.6</span>,<span class="kw">label</span><span class="kw">=</span><span class="no">Index</span>),<span class="kw">hjust</span><span class="kw">=</span><span class="st">"right"</span>)</pre></body></html></div>
 <p><img src="ffv_opt_sobin_rkone_allrw_wgt_files/figure-html/binary%20allocation%20bump%20plot-1.png" width="960" style="display: block; margin: auto;"></p>

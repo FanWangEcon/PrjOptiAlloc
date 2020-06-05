@@ -26,7 +26,7 @@ to toal allocation count, if this is distribution additional teachers, this is e
 }
 \examples{
 data(df_opt_caschool_input_il)
-head(df_opt_caschool_input_il, 10)
+head(df_opt_caschool_input_il, 30)
 }
 \references{
 Stock, James H. and Mark W. Watson (2003) Introduction to Econometrics, Addison-Wesley Educational Publishers, chapter 4–7.

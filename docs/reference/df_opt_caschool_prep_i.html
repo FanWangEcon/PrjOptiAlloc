@@ -220,7 +220,7 @@ does not start with allocation at zero, but each district already has some exist
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_caschool_prep_i</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_opt_caschool_prep_i</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt;    id_i D_max_i D_o_i  Omega_i    theta_i      beta_i enrltot teachers   stravg
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_opt_caschool_prep_i</span>, <span class='fl'>30</span>)</div><div class='output co'>#&gt;    id_i D_max_i D_o_i  Omega_i    theta_i      beta_i enrltot teachers   stravg
 #&gt; 1     1       1     0 706.2218 -0.8699505 0.002380952     195       11 17.72727
 #&gt; 2     2       1     0 673.2570 -0.8699505 0.002380952     240       11 21.81818
 #&gt; 3     3       8     2 657.0958 -0.8699505 0.002380952    1550       83 18.67470
@@ -231,6 +231,26 @@ does not start with allocation at zero, but each district already has some exist
 #&gt; 8     8       4     1 635.6090 -0.8699505 0.002380952     888       42 21.14286
 #&gt; 9     9       1     0 642.0002 -0.8699505 0.002380952     379       19 19.94737
 #&gt; 10   10      10     2 640.0966 -0.8699505 0.002380952    2247      108 20.80556
+#&gt; 11   11       2     0 644.5079 -0.8699505 0.002380952     446       21 21.23810
+#&gt; 12   12       4     1 639.3819 -0.8699505 0.002380952     987       47 21.00000
+#&gt; 13   13       0     0 639.7038 -0.8699505 0.002380952     103        5 20.60000
+#&gt; 14   14       2     0 652.1242 -0.8699505 0.002380952     487       24 20.29167
+#&gt; 15   15       3     1 652.4853 -0.8699505 0.002380952     649       36 18.02778
+#&gt; 16   16       4     1 641.9899 -0.8699505 0.002380952     852       42 20.28571
+#&gt; 17   17       2     1 636.8108 -0.8699505 0.002380952     491       29 16.93103
+#&gt; 18   18       2     1 648.4906 -0.8699505 0.002380952     421       26 16.19231
+#&gt; 19   19      30     6 640.4754 -0.8699505 0.002380952    6880      303 22.70627
+#&gt; 20   20      13     3 639.6701 -0.8699505 0.002380952    2688      135 19.91111
+#&gt; 21   21       2     0 638.0266 -0.8699505 0.002380952     440       24 18.33333
+#&gt; 22   22       2     0 643.5756 -0.8699505 0.002380952     475       21 22.61905
+#&gt; 23   23      13     3 652.8261 -0.8699505 0.002380952    2538      130 19.52308
+#&gt; 24   24       1     0 638.9334 -0.8699505 0.002380952     476       19 25.05263
+#&gt; 25   25      11     2 641.6650 -0.8699505 0.002380952    2357      114 20.67544
+#&gt; 26   26       8     2 647.3510 -0.8699505 0.002380952    1588       85 18.68235
+#&gt; 27   27      32     6 637.3398 -0.8699505 0.002380952    7306      320 22.83125
+#&gt; 28   28      13     3 640.1394 -0.8699505 0.002380952    2601      135 19.26667
+#&gt; 29   29       4     1 644.2859 -0.8699505 0.002380952     847       44 19.25000
+#&gt; 30   30       2     0 649.6760 -0.8699505 0.002380952     452       22 20.54545
 #&gt;    distcod      county                        district grspan    avginc testscr
 #&gt; 1    75119     Alameda              Sunol Glen Unified  KK-08 22.690001  690.80
 #&gt; 2    61499       Butte            Manzanita Elementary  KK-08  9.824000  661.20
@@ -241,7 +261,27 @@ does not start with allocation at zero, but each district already has some exist
 #&gt; 7    68536 San Joaquin           Holt Union Elementary  KK-08  6.577000  606.75
 #&gt; 8    63834        Kern             Vineland Elementary  KK-08  8.174000  609.00
 #&gt; 9    62331      Fresno        Orange Center Elementary  KK-08  7.385000  612.50
-#&gt; 10   67306  Sacramento     Del Paso Heights Elementary  KK-06 11.613333  612.65</div></pre>
+#&gt; 10   67306  Sacramento     Del Paso Heights Elementary  KK-06 11.613333  612.65
+#&gt; 11   65722      Merced       Le Grand Union Elementary  KK-08  8.931000  615.75
+#&gt; 12   62174      Fresno          West Fresno Elementary  KK-08  7.385000  616.30
+#&gt; 13   71795      Tulare          Allensworth Elementary  KK-08  5.335000  616.30
+#&gt; 14   72181      Tulare      Sunnyside Union Elementary  KK-08  8.279000  616.30
+#&gt; 15   72298      Tulare            Woodville Elementary  KK-08  9.630000  616.45
+#&gt; 16   72041      Tulare         Pixley Union Elementary  KK-08  7.454000  617.35
+#&gt; 17   63594        Kern     Lost Hills Union Elementary  KK-08  6.216000  618.05
+#&gt; 18   63370        Kern   Buttonwillow Union Elementary  KK-08  7.764000  618.30
+#&gt; 19   64709 Los Angeles               Lennox Elementary  KK-08  7.022000  619.80
+#&gt; 20   63560        Kern               Lamont Elementary  KK-08  5.699000  620.30
+#&gt; 21   63230    Imperial    Westmorland Union Elementary  KK-08  7.941000  620.50
+#&gt; 22   72058      Tulare        Pleasant View Elementary  KK-08  9.630000  621.40
+#&gt; 23   63842        Kern          Wasco Union Elementary  KK-08  7.405000  621.75
+#&gt; 24   71811      Tulare           Alta Vista Elementary  KK-08  9.630000  622.05
+#&gt; 25   65748      Merced     Livingston Union Elementary  KK-08  8.019000  622.60
+#&gt; 26   72272      Tulare       Woodlake Union Elementary  KK-08  8.523000  623.10
+#&gt; 27   65961    Monterey         Alisal Union Elementary  KK-06  7.983181  623.20
+#&gt; 28   63313        Kern          Arvin Union Elementary  KK-08  7.305000  623.45
+#&gt; 29   72199      Tulare    Terra Bella Union Elementary  KK-08  8.934000  623.60
+#&gt; 30   72215      Tulare               Tipton Elementary  KK-08  8.554000  624.15</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

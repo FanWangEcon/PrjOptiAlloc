@@ -27,7 +27,10 @@ library(tidyr)
 library(tibble)
 library(stringr)
 library(broom)
+library(forcats)
+
 library(ggplot2)
+
 library(REconTools)
 
 library(PrjOptiAlloc)
@@ -58,25 +61,58 @@ df_opt_birthwt <- df_opt_birthwt %>%
                                labels=c("young","older"))) %>%
     mutate(ftvm3 = cut(ftv,
                                breaks=c(-Inf, 1, 2, Inf),
+                               labels=c("novisit","1visit","morevisit"))) %>%
+    mutate(ftvm3 = cut(ftv,
+                               breaks=c(-Inf, 1, 2, Inf),
                                labels=c("novisit","1visit","morevisit")))
+
+# Generate Not Smoke Variable
+not_smoke_levels <- c("1" = "0", "0" = "1")
+df_opt_birthwt <- df_opt_birthwt %>% 
+    mutate(notsmoke = case_when(smoke == 0 ~ 1, TRUE ~ 0))
 
 attach(df_opt_birthwt)
 summary(df_opt_birthwt)
+```
 
+## Exploration 
+
+### Tabulation
+
+Tabulate:
+
+```{R}
 # tabulate
 df_opt_birthwt %>%
   group_by(race, smoke, ftv) %>%
   summarize(freq = n()) %>%
   pivot_wider(names_from = race, values_from = freq)
+```
 
+Summarize all, conditional on smoking or not:
+
+```{R}
+# summarize all
+REconTools::ff_summ_percentiles(df_opt_birthwt, bl_statsasrows = FALSE)
+# summarize smoking only
+REconTools::ff_summ_percentiles(df_opt_birthwt %>% filter(smoke == 0), bl_statsasrows = FALSE)
+# summarize non-smoking only, 74 smokers
+REconTools::ff_summ_percentiles(df_opt_birthwt %>% filter(smoke == 1), bl_statsasrows = FALSE) 
+```
+
+
+### Explorational Regressions
+
+```{R}
+# birth weight on mother age, race, ht and ui
 summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race) + factor(ht) + factor(ui)))
-summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1))
-summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1))
+# # summary(lm(bwt ~ factor(ftv) - 1))
+# summary(lm(bwt ~ factor(ftv) + factor(ht) + factor(ui) + factor(ptl) - 1))
 
-summary(lm(bwt ~ factor(ftv) - 1))
-summary(lm(bwt ~ factor(ftv) + factor(ht) + factor(ui) + factor(ptl) - 1))
+# Birth wegith on mother's weight last menstral cycle, and mother age, race and smoking interaction
+summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(notsmoke) - 1))
 
-summary(lm(bwt ~ lwt + factor(race) + (ftv) - 1))
+# summary(lm(bwt ~ lwt + factor(race) + (ftv) - 1))
 ```
 
 ## Regression with Data and Construct Input Arrays
@@ -85,15 +121,15 @@ summary(lm(bwt ~ lwt + factor(race) + (ftv) - 1))
 
 ```{r Linear Regression Testing}
 # A. Regress child birth weight on mother's age, race and mother's weight
-print(summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race))))
-print(summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race) + factor(ht) + factor(ui))))
-print(summary(lm(bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) + factor(ptl))))
-
-print(summary(lm(bwt ~ lwt + age + factor(race) + factor(smoke))))
-print(summary(lm(bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) +  factor(smoke))))
-
-print(summary(lm(bwt ~ lwt + age + factor(momwgtLowHigh):factor(smoke) - 1)))
-print(summary(lm(bwt ~ lwt + age + factor(ht) + factor(ui) + factor(race) + factor(race):factor(smoke))))
+# print(summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race))))
+# print(summary(lm(bwt ~ lwt + factor(mombirthage) + factor(race) + factor(ht) + factor(ui))))
+# print(summary(lm(bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) + factor(ptl))))
+# 
+# print(summary(lm(bwt ~ lwt + age + factor(race) + factor(smoke))))
+# print(summary(lm(bwt ~ lwt + age + factor(race) + factor(ht) + factor(ui) +  factor(smoke))))
+# 
+# print(summary(lm(bwt ~ lwt + age + factor(momwgtLowHigh):factor(smoke) - 1)))
+# print(summary(lm(bwt ~ lwt + age + factor(ht) + factor(ui) + factor(race) + factor(race):factor(smoke))))
 print(summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1)))
 
 # Preferred way of appearing, in the following regression we can se:
@@ -102,7 +138,7 @@ print(summary(lm(bwt ~ lwt + age + factor(race) + factor(race):factor(smoke) - 1
 # 2. straight shape engine, going from auto to manual trans gain 6.67 MPG
 
 # Store Regression Results
-mt_model <- model.matrix(~ lwt + age + factor(ht) + factor(ui) + factor(ptl) + factor(race) + factor(smoke):factor(race))
+mt_model <- model.matrix(~ lwt + age + factor(race) + factor(notsmoke):factor(race))
 rs_wgt_on_smke = lm(bwt ~ mt_model - 1)
 print(summary(rs_wgt_on_smke))
 rs_wgt_on_smke_tidy = tidy(rs_wgt_on_smke)
@@ -120,13 +156,13 @@ head(rs_wgt_on_smke_tidy, 6)
 head(mt_model, 5)
 
 # Covariates coefficients from regression (including constant)
-ar_fl_cova_esti <- as.matrix(rs_wgt_on_smke_tidy %>% filter(!str_detect(term, 'smoke')) %>% select(estimate))
-ar_fl_main_esti <- as.matrix(rs_wgt_on_smke_tidy %>% filter(str_detect(term, 'smoke')) %>% select(estimate))
+ar_fl_cova_esti <- as.matrix(rs_wgt_on_smke_tidy %>% filter(!str_detect(term, 'notsmoke')) %>% select(estimate))
+ar_fl_main_esti <- as.matrix(rs_wgt_on_smke_tidy %>% filter(str_detect(term, 'notsmoke')) %>% select(estimate))
 head(ar_fl_cova_esti, 5)
 head(ar_fl_main_esti, 5)
 
 # Select Matrix subcomponents
-mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("smoke")))
+mt_cova <- as.matrix(as_tibble(mt_model) %>% select(-contains("notsmoke")))
 mt_intr <- model.matrix(~ factor(race) - 1)
 
 # Generate A_i, use mt_cova_wth_const
@@ -151,17 +187,18 @@ ar_beta_m <- rep(1/length(ar_A_m), times=length(ar_A_m))
 # Initate Dataframe that will store all estimates and optimal allocation relevant information
 # combine identifying key information along with estimation A, alpha results
 # note that we only need indi.id as key
-mt_opti <- cbind(ar_alpha_m, ar_A_m, ar_beta_m)
+mt_opti <- cbind(ar_alpha_m*0.01, ar_A_m*0.01, ar_beta_m)
 ar_st_varnames <- c('alpha', 'A', 'beta')
 df_esti_alpha_A_beta <- as_tibble(mt_opti) %>% rename_all(~c(ar_st_varnames))
 tb_key_alpha_A_beta <- bind_cols(df_opt_birthwt, df_esti_alpha_A_beta) %>%
-              select(one_of(c('Index', 'age', 'lwt', 'race', 'smoke', 'ptl', 'ht', 'ui', ar_st_varnames)))
+              select(one_of(c('Index', 'age', 'lwt', 'race', 'notsmoke', 'ptl', 'ht', 'ui', ar_st_varnames)))
 
 # Need to only include the smokers here
-# tb_key_alpha_A_beta <- tb_key_alpha_A_beta %>% filter(smoke == 1)
-# Randomly select 30 people
-set.seed(123)
-it_include <- 30
+tb_key_alpha_A_beta <- tb_key_alpha_A_beta %>% filter(smoke == 1)
+
+# Randomly select 15 smokers for easier visualization.
+set.seed(999)
+it_include <- 15
 tb_key_alpha_A_beta <- tb_key_alpha_A_beta[sample(dim(tb_key_alpha_A_beta)[1], it_include, replace=FALSE),]
 
 # Unique beta, A, and alpha check
@@ -182,16 +219,9 @@ head(tb_key_alpha_A_beta, 32)
 it_obs = dim(tb_opti_unique)[1]
 
 # Vector of Planner Preference
-ar_rho <- c(-100, 0.8)
-ar_rho <- c(-50, -25, -10)
-ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.8)
-ar_rho <- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))
-ar_rho <- c(-100, -5, -1, 0.1, 0.6, 0.99)
-ar_rho <- c(-100, -10, -1, 0.05, 0.9)
-ar_rho <- 1 - (10^(c(seq(-2,2, length.out=10))))
-ar_rho <- c(-100, -10, -1, -0.5, -0.1, 0.01, 0.05, 0.10, 0.20,  0.9)
-ar_rho <- c(seq(-110, -90, length.out=10), -50, 10, -1, -0.5, -0.1, 0.01, 0.05, 0.10, 0.20,  0.9)
+ar_rho <- 1 - (10^(c(seq(-2, 2, length.out=30))))
 ar_rho <- unique(ar_rho)
+print(ar_rho)
 ```
 
 ### Optimal binary Allocation
@@ -223,7 +253,16 @@ tb_opti_alloc_all_rho_long <- tb_opti_alloc_all_rho_long %>%
 
 ### Bump Plot for Optimal Binary Allocations
 
-```{r binary allocation bump plot, fig.height = 10, fig.width = 10, fig.align = "center"}
+```{r binary allocation bump plot, fig.height = 7, fig.width = 10, fig.align = "center"}
+
+st_title = paste0("Binary Deallocation Rank, Birth Weight and Mother Smoking")
+st_subtitle = paste0("Which individual to encourage to stop smoking first\n",
+                     "The expected outcome of interest is child birth weight\n",
+                     "Deallocate smoking among 15 randomly selected smokers\n",
+                     "Rank = 1, encourage this woman to stop smoking first")
+st_caption = paste0("Linear regression of birth weight on smoking. Data from Hosmer et. al. (1998)")
+st_x_lab = paste0("Efficiency (Utilitarian) --> Cobb-Douglas --> Equity (Rawlsian)")
+st_y_lab = paste0("Rank Along Binary Allocation Queue ( 1 = highest ranked)")
 
 tb_opti_alloc_all_rho_long %>%
   ggplot(aes(x = rho_num, y = !!sym(svr_inpalc), group = Index)) +
@@ -232,9 +271,11 @@ tb_opti_alloc_all_rho_long %>%
     scale_x_discrete(expand = c(0.85,0))+
     scale_y_reverse(breaks = 1:nrow(tb_opti_alloc_all_rho_long))+
     theme(legend.position = "none") +
-    labs(x = "Equality vs Efficiency",
-         y = "Rank",
-         title = "Binary Deallocation Rank, Weight and Smokng") +
+    labs(x = st_x_lab,
+         y = st_y_lab, 
+         title = st_title, 
+         subtitle = st_subtitle,
+         caption = st_caption) +
     ffy_opt_ghthm_dk() +
     geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=Index),hjust="right")
 

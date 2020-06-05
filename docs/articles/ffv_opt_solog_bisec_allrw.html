@@ -124,7 +124,7 @@ The root search is very fast when initial condition is zero.
 
       
 
-      </header><script src="ffv_opt_solog_bisec_allrw_files/header-attrs-2.1/header-attrs.js"></script><script src="ffv_opt_solog_bisec_allrw_files/kePrint-0.0.1/kePrint.js"></script><div class="row">
+      </header><script src="ffv_opt_solog_bisec_allrw_files/header-attrs-2.2/header-attrs.js"></script><script src="ffv_opt_solog_bisec_allrw_files/kePrint-0.0.1/kePrint.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Line by Line Test Log Linear Allocation Test</h1>
@@ -277,20 +277,20 @@ The root search is very fast when initial condition is zero.
 
 <span class="co"># mesh expand</span>
 <span class="no">tb_states_choices</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span>(<span class="no">mt_nn_by_nq_a_alpha</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rowid_to_column</a></span>(<span class="kw">var</span><span class="kw">=</span><span class="no">svr_id_var</span>)
-<span class="no">tb_states_choices_ttest</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample.html">sample_n</a></span>(<span class="fl">9</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="fl">FALSE</span>) <span class="kw">%&gt;%</span>
+<span class="no">tb_states_choices_ttest</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html">sample_n</a></span>(<span class="fl">9</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="fl">FALSE</span>) <span class="kw">%&gt;%</span>
                               <span class="fu"><a href="https://tidyr.tidyverse.org/reference/expand_grid.html">expand_grid</a></span>(<span class="kw">choices</span> <span class="kw">=</span> <span class="no">ar_n_choices_ttest</span>)
-<span class="no">tb_states_choices_dense</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample.html">sample_n</a></span>(<span class="fl">9</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="fl">FALSE</span>) <span class="kw">%&gt;%</span>
+<span class="no">tb_states_choices_dense</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html">sample_n</a></span>(<span class="fl">9</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="fl">FALSE</span>) <span class="kw">%&gt;%</span>
                               <span class="fu"><a href="https://tidyr.tidyverse.org/reference/expand_grid.html">expand_grid</a></span>(<span class="kw">choices</span> <span class="kw">=</span> <span class="no">ar_n_choices_dense</span>)
 
 <span class="co"># display</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_states_choices_dense</span>)</pre></body></html></div>
 <pre><code>##     indi_id          ar_nn_a       ar_nn_alpha          choices   
-##  Min.   : 173.0   Min.   :4.310   Min.   :0.006687   Min.   :  0  
-##  1st Qu.: 396.0   1st Qu.:4.334   1st Qu.:0.006687   1st Qu.: 25  
-##  Median : 488.0   Median :4.351   Median :0.012090   Median : 50  
-##  Mean   : 503.8   Mean   :4.348   Mean   :0.010796   Mean   : 50  
-##  3rd Qu.: 582.0   3rd Qu.:4.358   3rd Qu.:0.013940   3rd Qu.: 75  
-##  Max.   :1030.0   Max.   :4.390   Max.   :0.013940   Max.   :100</code></pre>
+##  Min.   : 265.0   Min.   :4.326   Min.   :0.006687   Min.   :  0  
+##  1st Qu.: 415.0   1st Qu.:4.333   1st Qu.:0.006687   1st Qu.: 25  
+##  Median : 619.0   Median :4.339   Median :0.006687   Median : 50  
+##  Mean   : 642.3   Mean   :4.341   Mean   :0.009184   Mean   : 50  
+##  3rd Qu.: 910.0   3rd Qu.:4.350   3rd Qu.:0.012090   3rd Qu.: 75  
+##  Max.   :1034.0   Max.   :4.356   Max.   :0.013940   Max.   :100</code></pre>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">tb_states_choices_ttest</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span>(<span class="kw">bootstrap_options</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</pre></body></html></div>
 <table class="table table table-striped table-hover table-condensed table-responsive">
@@ -311,178 +311,10 @@ choices
 <tbody>
 <tr>
 <td style="text-align:right;">
-364
+171
 </td>
 <td style="text-align:right;">
-4.361184
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-364
-</td>
-<td style="text-align:right;">
-4.361184
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-364
-</td>
-<td style="text-align:right;">
-4.361184
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-549
-</td>
-<td style="text-align:right;">
-4.343748
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-549
-</td>
-<td style="text-align:right;">
-4.343748
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-549
-</td>
-<td style="text-align:right;">
-4.343748
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-70
-</td>
-<td style="text-align:right;">
-4.347508
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-70
-</td>
-<td style="text-align:right;">
-4.347508
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-70
-</td>
-<td style="text-align:right;">
-4.347508
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-936
-</td>
-<td style="text-align:right;">
-4.324252
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-936
-</td>
-<td style="text-align:right;">
-4.324252
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-936
-</td>
-<td style="text-align:right;">
-4.324252
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-216
-</td>
-<td style="text-align:right;">
-4.356171
+4.349022
 </td>
 <td style="text-align:right;">
 0.0092514
@@ -493,69 +325,27 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-216
+171
 </td>
 <td style="text-align:right;">
-4.356171
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-216
-</td>
-<td style="text-align:right;">
-4.356171
+4.349022
 </td>
 <td style="text-align:right;">
 0.0092514
 </td>
 <td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-691
-</td>
-<td style="text-align:right;">
-4.338005
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-691
-</td>
-<td style="text-align:right;">
-4.338005
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
 50
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-691
+171
 </td>
 <td style="text-align:right;">
-4.338005
+4.349022
 </td>
 <td style="text-align:right;">
-0.0120902
+0.0092514
 </td>
 <td style="text-align:right;">
 100
@@ -563,10 +353,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-894
+235
 </td>
 <td style="text-align:right;">
-4.336925
+4.346102
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -577,10 +367,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-894
+235
 </td>
 <td style="text-align:right;">
-4.336925
+4.346102
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -591,10 +381,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-894
+235
 </td>
 <td style="text-align:right;">
-4.336925
+4.346102
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -605,10 +395,52 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-1014
+875
 </td>
 <td style="text-align:right;">
-4.336227
+4.327174
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+875
+</td>
+<td style="text-align:right;">
+4.327174
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+875
+</td>
+<td style="text-align:right;">
+4.327174
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+298
+</td>
+<td style="text-align:right;">
+4.340905
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -619,10 +451,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-1014
+298
 </td>
 <td style="text-align:right;">
-4.336227
+4.340905
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -633,10 +465,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-1014
+298
 </td>
 <td style="text-align:right;">
-4.336227
+4.340905
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -647,10 +479,94 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-923
+850
 </td>
 <td style="text-align:right;">
-4.352355
+4.325589
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+850
+</td>
+<td style="text-align:right;">
+4.325589
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+850
+</td>
+<td style="text-align:right;">
+4.325589
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+496
+</td>
+<td style="text-align:right;">
+4.335723
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+496
+</td>
+<td style="text-align:right;">
+4.335723
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+496
+</td>
+<td style="text-align:right;">
+4.335723
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+429
+</td>
+<td style="text-align:right;">
+4.363504
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -661,10 +577,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-923
+429
 </td>
 <td style="text-align:right;">
-4.352355
+4.363504
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -675,13 +591,97 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-923
+429
 </td>
 <td style="text-align:right;">
-4.352355
+4.363504
 </td>
 <td style="text-align:right;">
 0.0139396
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+564
+</td>
+<td style="text-align:right;">
+4.347655
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+564
+</td>
+<td style="text-align:right;">
+4.347655
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+564
+</td>
+<td style="text-align:right;">
+4.347655
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+4.347518
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+4.347518
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+4.347518
+</td>
+<td style="text-align:right;">
+0.0120902
 </td>
 <td style="text-align:right;">
 100
@@ -761,214 +761,10 @@ dplyr_eval
 <tbody>
 <tr>
 <td style="text-align:right;">
-364
+171
 </td>
 <td style="text-align:right;">
-4.361184
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-364
-</td>
-<td style="text-align:right;">
-4.361184
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--38284.99
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-364
-</td>
-<td style="text-align:right;">
-4.361184
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--76640.24
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-549
-</td>
-<td style="text-align:right;">
-4.343748
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-549
-</td>
-<td style="text-align:right;">
-4.343748
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--44390.14
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-549
-</td>
-<td style="text-align:right;">
-4.343748
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--88868.67
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-70
-</td>
-<td style="text-align:right;">
-4.347508
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-70
-</td>
-<td style="text-align:right;">
-4.347508
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--80729.88
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-70
-</td>
-<td style="text-align:right;">
-4.347508
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--161660.09
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-936
-</td>
-<td style="text-align:right;">
-4.324252
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-936
-</td>
-<td style="text-align:right;">
-4.324252
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--81107.56
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-936
-</td>
-<td style="text-align:right;">
-4.324252
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--162415.91
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-216
-</td>
-<td style="text-align:right;">
-4.356171
+4.349022
 </td>
 <td style="text-align:right;">
 0.0092514
@@ -982,95 +778,44 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-216
+171
 </td>
 <td style="text-align:right;">
-4.356171
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--58061.23
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-216
-</td>
-<td style="text-align:right;">
-4.356171
+4.349022
 </td>
 <td style="text-align:right;">
 0.0092514
 </td>
 <td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--116253.18
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-691
-</td>
-<td style="text-align:right;">
-4.338005
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-691
-</td>
-<td style="text-align:right;">
-4.338005
-</td>
-<td style="text-align:right;">
-0.0120902
-</td>
-<td style="text-align:right;">
 50
 </td>
 <td style="text-align:right;">
--44441.39
+-58144.64
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-691
+171
 </td>
 <td style="text-align:right;">
-4.338005
+4.349022
 </td>
 <td style="text-align:right;">
-0.0120902
+0.0092514
 </td>
 <td style="text-align:right;">
 100
 </td>
 <td style="text-align:right;">
--88971.15
+-116420.04
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-894
+235
 </td>
 <td style="text-align:right;">
-4.336925
+4.346102
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -1084,10 +829,10 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-894
+235
 </td>
 <td style="text-align:right;">
-4.336925
+4.346102
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -1096,15 +841,15 @@ dplyr_eval
 50
 </td>
 <td style="text-align:right;">
--80901.54
+-80752.67
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-894
+235
 </td>
 <td style="text-align:right;">
-4.336925
+4.346102
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -1113,15 +858,66 @@ dplyr_eval
 100
 </td>
 <td style="text-align:right;">
--162003.62
+-161705.70
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-1014
+875
 </td>
 <td style="text-align:right;">
-4.336227
+4.327174
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+875
+</td>
+<td style="text-align:right;">
+4.327174
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-81060.01
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+875
+</td>
+<td style="text-align:right;">
+4.327174
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-162320.75
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+298
+</td>
+<td style="text-align:right;">
+4.340905
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -1135,10 +931,10 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-1014
+298
 </td>
 <td style="text-align:right;">
-4.336227
+4.340905
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -1147,15 +943,15 @@ dplyr_eval
 50
 </td>
 <td style="text-align:right;">
--44457.27
+-44415.50
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-1014
+298
 </td>
 <td style="text-align:right;">
-4.336227
+4.340905
 </td>
 <td style="text-align:right;">
 0.0120902
@@ -1164,15 +960,117 @@ dplyr_eval
 100
 </td>
 <td style="text-align:right;">
--89002.91
+-88919.39
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-923
+850
 </td>
 <td style="text-align:right;">
-4.352355
+4.325589
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+850
+</td>
+<td style="text-align:right;">
+4.325589
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-81085.80
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+850
+</td>
+<td style="text-align:right;">
+4.325589
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-162372.37
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+496
+</td>
+<td style="text-align:right;">
+4.335723
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+496
+</td>
+<td style="text-align:right;">
+4.335723
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-80921.05
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+496
+</td>
+<td style="text-align:right;">
+4.335723
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-162042.68
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+429
+</td>
+<td style="text-align:right;">
+4.363504
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -1186,10 +1084,10 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-923
+429
 </td>
 <td style="text-align:right;">
-4.352355
+4.363504
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -1198,15 +1096,15 @@ dplyr_eval
 50
 </td>
 <td style="text-align:right;">
--38352.98
+-38267.14
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-923
+429
 </td>
 <td style="text-align:right;">
-4.352355
+4.363504
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -1215,7 +1113,109 @@ dplyr_eval
 100
 </td>
 <td style="text-align:right;">
--76776.17
+-76604.56
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+564
+</td>
+<td style="text-align:right;">
+4.347655
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+564
+</td>
+<td style="text-align:right;">
+4.347655
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-44355.31
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+564
+</td>
+<td style="text-align:right;">
+4.347655
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-88799.03
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+4.347518
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+4.347518
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-44356.54
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+4.347518
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-88801.48
 </td>
 </tr>
 </tbody>
@@ -1235,18 +1235,18 @@ dplyr_eval
 <pre><code>## [1] 900   5</code></pre>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_states_choices_dense_eval</span>)</pre></body></html></div>
 <pre><code>##     indi_id            fl_a          fl_alpha             fl_n    
-##  Min.   : 173.0   Min.   :4.310   Min.   :0.006687   Min.   :  0  
-##  1st Qu.: 396.0   1st Qu.:4.334   1st Qu.:0.006687   1st Qu.: 25  
-##  Median : 488.0   Median :4.351   Median :0.012090   Median : 50  
-##  Mean   : 503.8   Mean   :4.348   Mean   :0.010796   Mean   : 50  
-##  3rd Qu.: 582.0   3rd Qu.:4.358   3rd Qu.:0.013940   3rd Qu.: 75  
-##  Max.   :1030.0   Max.   :4.390   Max.   :0.013940   Max.   :100  
+##  Min.   : 265.0   Min.   :4.326   Min.   :0.006687   Min.   :  0  
+##  1st Qu.: 415.0   1st Qu.:4.333   1st Qu.:0.006687   1st Qu.: 25  
+##  Median : 619.0   Median :4.339   Median :0.006687   Median : 50  
+##  Mean   : 642.3   Mean   :4.341   Mean   :0.009184   Mean   : 50  
+##  3rd Qu.: 910.0   3rd Qu.:4.350   3rd Qu.:0.012090   3rd Qu.: 75  
+##  Max.   :1034.0   Max.   :4.356   Max.   :0.013940   Max.   :100  
 ##    dplyr_eval     
-##  Min.   :-162868  
-##  1st Qu.: -74765  
-##  Median : -49537  
-##  Mean   : -55413  
-##  3rd Qu.: -24562  
+##  Min.   :-162366  
+##  1st Qu.: -94933  
+##  Median : -58742  
+##  Mean   : -64873  
+##  3rd Qu.: -29280  
 ##  Max.   :    100</code></pre>
 <div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">lineplot</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_dense_eval</span> <span class="kw">%&gt;%</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span><span class="no">fl_n</span>, <span class="kw">y</span><span class="kw">=</span><span class="no">dplyr_eval</span>)) +
@@ -1292,14 +1292,14 @@ dplyr_eval
 
 <span class="co"># add initial a and b</span>
 <span class="no">tb_states_choices_bisec</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices</span> <span class="kw">%&gt;%</span>
-                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_a_lst</span>) <span class="kw">:=</span> <span class="no">fl_n_min</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_b_lst</span>) <span class="kw">:=</span> <span class="no">fl_n_agg</span>)
+                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_a_lst</span>) <span class="kw">:=</span> <span class="no">fl_n_min</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_b_lst</span>) <span class="kw">:=</span> <span class="no">fl_n_agg</span>)
 
 <span class="co"># evaluate function f(a_0) and f(b_0)</span>
 <span class="no">tb_states_choices_bisec</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html">rowwise</a></span>() <span class="kw">%&gt;%</span>
-                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_fa_lst</span>) <span class="kw">:=</span> <span class="fu">ffi_nonlin_dplyrdo</span>(<span class="no">fl_a</span>, <span class="no">fl_alpha</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_a_lst</span>),
+                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fa_lst</span>) <span class="kw">:=</span> <span class="fu">ffi_nonlin_dplyrdo</span>(<span class="no">fl_a</span>, <span class="no">fl_alpha</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_a_lst</span>),
                                                                           <span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>,
                                                                           <span class="no">fl_n_agg</span>, <span class="no">fl_rho</span>),
-                                   !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_fb_lst</span>) <span class="kw">:=</span> <span class="fu">ffi_nonlin_dplyrdo</span>(<span class="no">fl_a</span>, <span class="no">fl_alpha</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_b_lst</span>),
+                                   !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fb_lst</span>) <span class="kw">:=</span> <span class="fu">ffi_nonlin_dplyrdo</span>(<span class="no">fl_a</span>, <span class="no">fl_alpha</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_b_lst</span>),
                                                                           <span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>,
                                                                           <span class="no">fl_n_agg</span>, <span class="no">fl_rho</span>))
 <span class="co"># summarize</span>
@@ -1347,30 +1347,30 @@ dplyr_eval
   <span class="co"># 2. generate f_p</span>
   <span class="co"># 3. generate f_p*f_a</span>
   <span class="no">tb_states_choices_bisec</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html">rowwise</a></span>() <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">p</span> <span class="kw">=</span> ((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_a_lst</span>) + !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_b_lst</span>))/<span class="fl">2</span>)) <span class="kw">%&gt;%</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">p</span> <span class="kw">=</span> ((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_a_lst</span>) + !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_b_lst</span>))/<span class="fl">2</span>)) <span class="kw">%&gt;%</span>
                               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">f_p</span> <span class="kw">=</span> <span class="fu">ffi_nonlin_dplyrdo</span>(<span class="no">fl_a</span>, <span class="no">fl_alpha</span>, <span class="no">p</span>,
                                                               <span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>,
                                                               <span class="no">fl_n_agg</span>, <span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">f_p_t_f_a</span> <span class="kw">=</span> <span class="no">f_p</span>*!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_fa_lst</span>))
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">f_p_t_f_a</span> <span class="kw">=</span> <span class="no">f_p</span>*!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fa_lst</span>))
   <span class="co"># fl_p_dist2zr = sum(abs(p))</span>
   <span class="no">fl_p_dist2zr</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">f_p</span>)))
 
   <span class="co"># update a and b</span>
   <span class="no">tb_states_choices_bisec</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_a_cur</span>) <span class="kw">:=</span>
-                                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">f_p_t_f_a</span> <span class="kw">&lt;</span> <span class="fl">0</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_a_lst</span>),
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_a_cur</span>) <span class="kw">:=</span>
+                                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">f_p_t_f_a</span> <span class="kw">&lt;</span> <span class="fl">0</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_a_lst</span>),
                                                  <span class="fl">TRUE</span> ~ <span class="no">p</span>)) <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_b_cur</span>) <span class="kw">:=</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_b_cur</span>) <span class="kw">:=</span>
                                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">f_p_t_f_a</span> <span class="kw">&lt;</span> <span class="fl">0</span> ~ <span class="no">p</span>,
-                                                 <span class="fl">TRUE</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_b_lst</span>)))
+                                                 <span class="fl">TRUE</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_b_lst</span>)))
   <span class="co"># update f(a) and f(b)</span>
   <span class="no">tb_states_choices_bisec</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_fa_cur</span>) <span class="kw">:=</span>
-                                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">f_p_t_f_a</span> <span class="kw">&lt;</span> <span class="fl">0</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_fa_lst</span>),
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fa_cur</span>) <span class="kw">:=</span>
+                                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">f_p_t_f_a</span> <span class="kw">&lt;</span> <span class="fl">0</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fa_lst</span>),
                                                  <span class="fl">TRUE</span> ~ <span class="no">f_p</span>)) <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_fb_cur</span>) <span class="kw">:=</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fb_cur</span>) <span class="kw">:=</span>
                                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">f_p_t_f_a</span> <span class="kw">&lt;</span> <span class="fl">0</span> ~ <span class="no">f_p</span>,
-                                                 <span class="fl">TRUE</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_fb_lst</span>)))
+                                                 <span class="fl">TRUE</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fb_lst</span>)))
   <span class="co"># save from last</span>
   <span class="no">svr_a_lst</span> <span class="kw">&lt;-</span> <span class="no">svr_a_cur</span>
   <span class="no">svr_b_lst</span> <span class="kw">&lt;-</span> <span class="no">svr_b_cur</span>
@@ -1425,10 +1425,8 @@ dplyr_eval
 <h4 class="hasAnchor">
 <a href="#table-onevery-wide" class="anchor"></a>Table One–very wide</h4>
 <div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">tb_states_choices_bisec</span>, <span class="fl">10</span>)</pre></body></html></div>
-<pre><code>## Source: local data frame [10 x 154]
-## Groups: &lt;by row&gt;
-## 
-## # A tibble: 10 x 154
+<pre><code>## # A tibble: 10 x 154
+## # Rowwise: 
 ##    indi_id  fl_a fl_alpha bisec_a_0 bisec_b_0 bisec_fa_0 bisec_fb_0      p
 ##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;
 ##  1       1  4.34  0.00669         0       100        100   -161823. 0.0622
@@ -1482,7 +1480,9 @@ dplyr_eval
 <span class="no">svr_id_bisect_iter</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">svr_id_var</span>, <span class="st">'_bisect_ier'</span>)
 
 <span class="co"># pivot wide to very long</span>
-<span class="no">tb_states_choices_bisec_long</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample.html">sample_n</a></span>(<span class="fl">9</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="fl">FALSE</span>) <span class="kw">%&gt;%</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">123</span>)
+<span class="no">tb_states_choices_bisec_long</span> <span class="kw">&lt;-</span>
+  <span class="no">tb_states_choices_bisec</span>[<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">tb_states_choices_bisec</span>)[<span class="fl">1</span>], <span class="fl">9</span>, <span class="kw">replace</span><span class="kw">=</span><span class="fl">FALSE</span>),] <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(
     <span class="kw">cols</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="no">st_bisec_prefix</span>),
     <span class="kw">names_to</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">svr_abfafb_long_name</span>, <span class="no">svr_bisect_iter</span>),
@@ -1493,55 +1493,55 @@ dplyr_eval
 <span class="co"># print</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_states_choices_bisec_long</span>)</pre></body></html></div>
 <pre><code>##     indi_id           fl_a          fl_alpha              p          
-##  Min.   : 19.0   Min.   :4.336   Min.   :0.006687   Min.   :0.06208  
-##  1st Qu.: 64.0   1st Qu.:4.346   1st Qu.:0.009251   1st Qu.:0.08604  
-##  Median :282.0   Median :4.349   Median :0.013940   Median :0.12938  
-##  Mean   :343.6   Mean   :4.348   Mean   :0.011601   Mean   :0.10783  
-##  3rd Qu.:687.0   3rd Qu.:4.350   3rd Qu.:0.013940   3rd Qu.:0.12955  
-##  Max.   :883.0   Max.   :4.357   Max.   :0.013940   Max.   :0.12972  
+##  Min.   :179.0   Min.   :4.330   Min.   :0.006687   Min.   :0.06205  
+##  1st Qu.:415.0   1st Qu.:4.333   1st Qu.:0.009251   1st Qu.:0.08607  
+##  Median :526.0   Median :4.350   Median :0.012090   Median :0.11231  
+##  Mean   :521.3   Mean   :4.346   Mean   :0.011396   Mean   :0.10591  
+##  3rd Qu.:665.0   3rd Qu.:4.356   3rd Qu.:0.013940   3rd Qu.:0.12969  
+##  Max.   :938.0   Max.   :4.361   Max.   :0.013940   Max.   :0.12983  
 ##       f_p               f_p_t_f_a            varname         
-##  Min.   :-1.140e-06   Min.   :-1.375e-12   Length:1332       
-##  1st Qu.:-6.580e-07   1st Qu.:-3.272e-13   Class :character  
-##  Median :-1.286e-07   Median :-2.556e-13   Mode  :character  
-##  Mean   :-2.561e-07   Mean   :-1.198e-13                     
-##  3rd Qu.:-3.974e-08   3rd Qu.:-4.303e-14                     
-##  Max.   : 9.019e-07   Max.   : 1.827e-12                     
+##  Min.   :-1.383e-06   Min.   :-1.334e-12   Length:1332       
+##  1st Qu.:-8.178e-07   1st Qu.:-4.099e-13   Class :character  
+##  Median :-1.467e-07   Median :-1.525e-13   Mode  :character  
+##  Mean   :-3.205e-07   Mean   : 1.368e-13                     
+##  3rd Qu.: 1.672e-07   3rd Qu.: 2.153e-13                     
+##  Max.   : 1.022e-06   Max.   : 3.444e-12                     
 ##   biseciter             value           
-##  Length:1332        Min.   :-162039.11  
+##  Length:1332        Min.   :-162130.75  
 ##  Class :character   1st Qu.:      0.00  
 ##  Mode  :character   Median :      0.06  
-##                     Mean   :  -1355.95  
+##                     Mean   :  -1374.64  
 ##                     3rd Qu.:      0.13  
 ##                     Max.   :    100.00</code></pre>
 <div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">tb_states_choices_bisec_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span>)), <span class="fl">30</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 30 x 6
-##    indi_id  fl_a fl_alpha varname biseciter   value
-##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt;
-##  1     687  4.35   0.0121 a       0              0 
-##  2     687  4.35   0.0121 b       0            100 
-##  3     687  4.35   0.0121 fa      0            100 
-##  4     687  4.35   0.0121 fb      0         -88834.
-##  5     687  4.35   0.0121 a       1              0 
-##  6     687  4.35   0.0121 b       1             50 
-##  7     687  4.35   0.0121 fa      1            100 
-##  8     687  4.35   0.0121 fb      1         -44373.
-##  9     687  4.35   0.0121 a       2              0 
-## 10     687  4.35   0.0121 b       2             25 
+##    indi_id  fl_a fl_alpha varname biseciter    value
+##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;        &lt;dbl&gt;
+##  1     415  4.33  0.00669 a       0               0 
+##  2     415  4.33  0.00669 b       0             100 
+##  3     415  4.33  0.00669 fa      0             100 
+##  4     415  4.33  0.00669 fb      0         -162131.
+##  5     415  4.33  0.00669 a       1               0 
+##  6     415  4.33  0.00669 b       1              50 
+##  7     415  4.33  0.00669 fa      1             100 
+##  8     415  4.33  0.00669 fb      1          -80965.
+##  9     415  4.33  0.00669 a       2               0 
+## 10     415  4.33  0.00669 b       2              25 
 ## # ... with 20 more rows</code></pre>
 <div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span>(<span class="no">tb_states_choices_bisec_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span>)), <span class="fl">30</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 30 x 6
-##    indi_id  fl_a fl_alpha varname biseciter       value
-##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;           &lt;dbl&gt;
-##  1     698  4.35  0.00925 fa      29         0.00000103
-##  2     698  4.35  0.00925 fb      29        -0.000216  
-##  3     698  4.35  0.00925 a       30         0.0860    
-##  4     698  4.35  0.00925 b       30         0.0860    
-##  5     698  4.35  0.00925 fa      30         0.00000103
-##  6     698  4.35  0.00925 fb      30        -0.000107  
-##  7     698  4.35  0.00925 a       31         0.0860    
-##  8     698  4.35  0.00925 b       31         0.0860    
-##  9     698  4.35  0.00925 fa      31         0.00000103
-## 10     698  4.35  0.00925 fb      31        -0.0000531 
+##    indi_id  fl_a fl_alpha varname biseciter      value
+##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+##  1     709  4.33   0.0121 fa      29         0.0000610
+##  2     709  4.33   0.0121 fb      29        -0.000105 
+##  3     709  4.33   0.0121 a       30         0.112    
+##  4     709  4.33   0.0121 b       30         0.112    
+##  5     709  4.33   0.0121 fa      30         0.0000610
+##  6     709  4.33   0.0121 fb      30        -0.0000222
+##  7     709  4.33   0.0121 a       31         0.112    
+##  8     709  4.33   0.0121 b       31         0.112    
+##  9     709  4.33   0.0121 fa      31         0.0000194
+## 10     709  4.33   0.0121 fb      31        -0.0000222
 ## # ... with 20 more rows</code></pre>
 </div>
 <div id="table-twovery-very-long-to-wider-again" class="section level4">
@@ -1551,7 +1551,7 @@ dplyr_eval
 <div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="co"># pivot wide to very long to a little wide</span>
 <span class="no">tb_states_choices_bisec_wider</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec_long</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span>(
-    <span class="kw">names_from</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>),
+    <span class="kw">names_from</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>),
     <span class="kw">values_from</span> <span class="kw">=</span> <span class="no">svr_number_col</span>
   )</pre></body></html></div>
 <pre><code>## Note: Using an external vector in selections is ambiguous.
@@ -1561,55 +1561,55 @@ dplyr_eval
 <div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="co"># print</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_states_choices_bisec_wider</span>)</pre></body></html></div>
 <pre><code>##     indi_id           fl_a          fl_alpha              p          
-##  Min.   : 19.0   Min.   :4.336   Min.   :0.006687   Min.   :0.06208  
-##  1st Qu.: 64.0   1st Qu.:4.346   1st Qu.:0.009251   1st Qu.:0.08604  
-##  Median :282.0   Median :4.349   Median :0.013940   Median :0.12938  
-##  Mean   :343.6   Mean   :4.348   Mean   :0.011601   Mean   :0.10783  
-##  3rd Qu.:687.0   3rd Qu.:4.350   3rd Qu.:0.013940   3rd Qu.:0.12955  
-##  Max.   :883.0   Max.   :4.357   Max.   :0.013940   Max.   :0.12972  
+##  Min.   :179.0   Min.   :4.330   Min.   :0.006687   Min.   :0.06205  
+##  1st Qu.:415.0   1st Qu.:4.333   1st Qu.:0.009251   1st Qu.:0.08607  
+##  Median :526.0   Median :4.350   Median :0.012090   Median :0.11231  
+##  Mean   :521.3   Mean   :4.346   Mean   :0.011396   Mean   :0.10591  
+##  3rd Qu.:665.0   3rd Qu.:4.356   3rd Qu.:0.013940   3rd Qu.:0.12969  
+##  Max.   :938.0   Max.   :4.361   Max.   :0.013940   Max.   :0.12983  
 ##       f_p               f_p_t_f_a           biseciter               a          
-##  Min.   :-1.140e-06   Min.   :-1.375e-12   Length:333         Min.   :0.00000  
-##  1st Qu.:-6.580e-07   1st Qu.:-3.272e-13   Class :character   1st Qu.:0.00000  
-##  Median :-1.286e-07   Median :-2.556e-13   Mode  :character   Median :0.08604  
-##  Mean   :-2.561e-07   Mean   :-1.198e-13                      Mean   :0.07629  
-##  3rd Qu.:-3.974e-08   3rd Qu.:-4.303e-14                      3rd Qu.:0.12938  
-##  Max.   : 9.019e-07   Max.   : 1.827e-12                      Max.   :0.12972  
+##  Min.   :-1.383e-06   Min.   :-1.334e-12   Length:333         Min.   :0.00000  
+##  1st Qu.:-8.178e-07   1st Qu.:-4.099e-13   Class :character   1st Qu.:0.00000  
+##  Median :-1.467e-07   Median :-1.525e-13   Mode  :character   Median :0.08607  
+##  Mean   :-3.205e-07   Mean   : 1.368e-13                      Mean   :0.07498  
+##  3rd Qu.: 1.672e-07   3rd Qu.: 2.153e-13                      3rd Qu.:0.12817  
+##  Max.   : 1.022e-06   Max.   : 3.444e-12                      Max.   :0.12983  
 ##        b                   fa                  fb            
-##  Min.   :  0.06208   Min.   :  0.00000   Min.   :-162039.11  
-##  1st Qu.:  0.11230   1st Qu.:  0.00032   1st Qu.:   -127.06  
-##  Median :  0.12963   Median :  0.13067   Median :     -0.14  
-##  Mean   :  5.48170   Mean   : 29.52858   Mean   :  -5458.87  
+##  Min.   :  0.06205   Min.   :  0.00000   Min.   :-162130.75  
+##  1st Qu.:  0.11195   1st Qu.:  0.00033   1st Qu.:   -126.98  
+##  Median :  0.12969   Median :  0.15876   Median :     -0.09  
+##  Mean   :  5.48039   Mean   : 29.47787   Mean   :  -5533.61  
 ##  3rd Qu.:  0.19531   3rd Qu.:100.00000   3rd Qu.:      0.00  
 ##  Max.   :100.00000   Max.   :100.00000   Max.   :      0.00</code></pre>
 <div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">tb_states_choices_bisec_wider</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span>)), <span class="fl">30</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 30 x 8
 ##    indi_id  fl_a fl_alpha biseciter     a       b    fa       fb
 ##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-##  1     687  4.35   0.0121 0             0 100       100 -88834. 
-##  2     687  4.35   0.0121 1             0  50       100 -44373. 
-##  3     687  4.35   0.0121 2             0  25       100 -22139. 
-##  4     687  4.35   0.0121 3             0  12.5     100 -11021. 
-##  5     687  4.35   0.0121 4             0   6.25    100  -5461. 
-##  6     687  4.35   0.0121 5             0   3.12    100  -2681. 
-##  7     687  4.35   0.0121 6             0   1.56    100  -1291. 
-##  8     687  4.35   0.0121 7             0   0.781   100   -595. 
-##  9     687  4.35   0.0121 8             0   0.391   100   -248. 
-## 10     687  4.35   0.0121 9             0   0.195   100    -73.9
+##  1     415  4.33  0.00669 0             0 100       100 -162131.
+##  2     415  4.33  0.00669 1             0  50       100  -80965.
+##  3     415  4.33  0.00669 2             0  25       100  -40407.
+##  4     415  4.33  0.00669 3             0  12.5     100  -20141.
+##  5     415  4.33  0.00669 4             0   6.25    100  -10014.
+##  6     415  4.33  0.00669 5             0   3.12    100   -4954.
+##  7     415  4.33  0.00669 6             0   1.56    100   -2425.
+##  8     415  4.33  0.00669 7             0   0.781   100   -1162.
+##  9     415  4.33  0.00669 8             0   0.391   100    -531.
+## 10     415  4.33  0.00669 9             0   0.195   100    -215.
 ## # ... with 20 more rows</code></pre>
 <div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span>(<span class="no">tb_states_choices_bisec_wider</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span>)), <span class="fl">30</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 30 x 8
-##    indi_id  fl_a fl_alpha biseciter      a      b      fa      fb
-##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-##  1     698  4.35  0.00925 7         0      0.781  100     -809.  
-##  2     698  4.35  0.00925 8         0      0.391  100     -354.  
-##  3     698  4.35  0.00925 9         0      0.195  100     -127.  
-##  4     698  4.35  0.00925 10        0      0.0977 100      -13.5 
-##  5     698  4.35  0.00925 11        0.0488 0.0977  43.3    -13.5 
-##  6     698  4.35  0.00925 12        0.0732 0.0977  14.9    -13.5 
-##  7     698  4.35  0.00925 13        0.0854 0.0977   0.692  -13.5 
-##  8     698  4.35  0.00925 14        0.0854 0.0916   0.692   -6.40
-##  9     698  4.35  0.00925 15        0.0854 0.0885   0.692   -2.86
-## 10     698  4.35  0.00925 16        0.0854 0.0870   0.692   -1.08
+##    indi_id  fl_a fl_alpha biseciter      a     b      fa       fb
+##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+##  1     709  4.33   0.0121 7         0      0.781 100     -598.   
+##  2     709  4.33   0.0121 8         0      0.391 100     -249.   
+##  3     709  4.33   0.0121 9         0      0.195 100      -74.4  
+##  4     709  4.33   0.0121 10        0.0977 0.195  12.8    -74.4  
+##  5     709  4.33   0.0121 11        0.0977 0.146  12.8    -30.8  
+##  6     709  4.33   0.0121 12        0.0977 0.122  12.8     -9.04 
+##  7     709  4.33   0.0121 13        0.110  0.122   1.86    -9.04 
+##  8     709  4.33   0.0121 14        0.110  0.116   1.86    -3.59 
+##  9     709  4.33   0.0121 15        0.110  0.113   1.86    -0.863
+## 10     709  4.33   0.0121 16        0.111  0.113   0.499   -0.863
 ## # ... with 20 more rows</code></pre>
 </div>
 </div>
@@ -1619,12 +1619,12 @@ dplyr_eval
 <p>actually we want to graph based on the long results, not the wider. wider easier to view in table.</p>
 <div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="co"># graph results</span>
 <span class="no">lineplot</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec_long</span> <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_bisect_iter</span>) <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_bisect_iter</span>))) <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>) <span class="kw">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'a'</span>, <span class="st">'b'</span>)) <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_bisect_iter</span>), <span class="kw">y</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_number_col</span>),
-               <span class="kw">colour</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>),
-               <span class="kw">linetype</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>),
-               <span class="kw">shape</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>))) +
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_bisect_iter</span>) <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_bisect_iter</span>))) <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>) <span class="kw">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'a'</span>, <span class="st">'b'</span>)) <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_bisect_iter</span>), <span class="kw">y</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_number_col</span>),
+               <span class="kw">colour</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>),
+               <span class="kw">linetype</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>),
+               <span class="kw">shape</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>))) +
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>( ~ <span class="no">indi_id</span>) +
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>() +
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() +
