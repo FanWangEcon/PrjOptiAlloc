@@ -170,9 +170,9 @@ Some parameters that can be determined regardless of actual data. Note that we w
 
 ```{r control policy}
 # 100 percent teacher at most per school, discretize floor as needed
-fl_fi_max = 0.10
+fl_fi_max = 1.00
 # 20 percent total additional of all teachers
-fl_fa_max = 0.02
+fl_fa_max = 0.20
 # Rho values to consider
 # ar_rho = c(-100, -0.001,  0.95)
 ar_rho <- 1 - (10^(c(seq(-2,2, length.out=4))))

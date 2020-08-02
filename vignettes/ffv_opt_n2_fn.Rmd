@@ -29,7 +29,7 @@ library(dplyr)
 
 library(PrjOptiAlloc)
 
-bl_save_img = TRUE
+bl_save_img = FALSE
 ```
 
 Test Theorem 1 and Theorem 2 optimal allocation functions when N=2. Use randomly generated A and alpha parameters for two individuals' discrete and bounded-continuous allocation problems.
@@ -1014,7 +1014,7 @@ st_caption <- paste0('Expected Outcome Two Candidate Recipients Example')
 st_x_label <- expression(EH[1]~'('~D[1]~'): '~Expected~Outcome~Recipient~1)
 st_y_label <- expression(EH[2]~'('~D[2]~'): '~Expected~Outcome~Recipient~2)
 plt_disc_paper <- plt_disc_paper +
-  labs(title = st_title, 
+  labs(title = st_title,
        subtitle = st_subtitle,
        x = st_x_label,
        y = st_y_label,

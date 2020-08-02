@@ -124,7 +124,7 @@ allocation problems.
 
       
 
-      </header><script src="ffv_opt_n2_fn_files/header-attrs-2.2/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example Discrete and Bounded-Continuous Optimal Allocation for N=2</h1>
@@ -1180,20 +1180,15 @@ allocation problems.
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_disc_paper</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
   <span class="co"># Prin here</span>
-}</pre></body></html></div>
-<pre><code>## Warning: Removed 1043 rows containing missing values (geom_point).
-
-## Warning: Removed 1043 rows containing missing values (geom_point).</code></pre>
-<pre><code>## png 
-##   2</code></pre>
-<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_disc_paper</span>)</pre></body></html></div>
+}
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_disc_paper</span>)</pre></body></html></div>
 <pre><code>## Warning: Removed 1043 rows containing missing values (geom_point).</code></pre>
 <p><img src="ffv_opt_n2_fn_files/figure-html/unnamed-chunk-23-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div id="discrete-utility-and-choices-jointly" class="section level4">
 <h4 class="hasAnchor">
 <a href="#discrete-utility-and-choices-jointly" class="anchor"></a>Discrete Utility and Choices Jointly</h4>
-<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="co"># Data</span>
+<div class="sourceCode" id="cb56"><html><body><pre class="r"><span class="co"># Data</span>
 <span class="no">tb_dis</span> <span class="kw">&lt;-</span> <span class="no">tb_all_points</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">vartype</span><span class="kw">==</span><span class="st">'discrete'</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho_val_str</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">rho_val</span> <span class="kw">==</span> <span class="fl">9999</span> ~ <span class="st">'Feasible'</span>,
                                 <span class="fl">TRUE</span> ~ <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'&lt;U+03BB&gt;='</span>,<span class="no">rho_val</span>)))
@@ -1266,13 +1261,8 @@ allocation problems.
       <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">5</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_disc_paper</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
-}</pre></body></html></div>
-<pre><code>## Warning: Removed 1043 rows containing missing values (geom_point).
-
-## Warning: Removed 1043 rows containing missing values (geom_point).</code></pre>
-<pre><code>## png 
-##   2</code></pre>
-<div class="sourceCode" id="cb62"><html><body><pre class="r"><span class="co"># Prin here</span>
+}
+<span class="co"># Prin here</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_disc_paper</span>)</pre></body></html></div>
 <pre><code>## Warning: Removed 1043 rows containing missing values (geom_point).</code></pre>
 <p><img src="ffv_opt_n2_fn_files/figure-html/unnamed-chunk-24-1.png" width="700" style="display: block; margin: auto;"></p>
@@ -1280,7 +1270,7 @@ allocation problems.
 <div id="continuous-expected-outcomes-grid" class="section level4">
 <h4 class="hasAnchor">
 <a href="#continuous-expected-outcomes-grid" class="anchor"></a>Continuous Expected Outcomes Grid</h4>
-<div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="co"># Data</span>
+<div class="sourceCode" id="cb58"><html><body><pre class="r"><span class="co"># Data</span>
 <span class="no">tb_cts</span> <span class="kw">&lt;-</span> <span class="no">tb_all_points</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">vartype</span><span class="kw">==</span><span class="st">'discrete'</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">rho_val</span> <span class="kw">!=</span> <span class="fl">9999</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho_val_str</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">rho_val</span> <span class="kw">==</span> <span class="fl">9999</span> ~ <span class="st">'Feasible Choices'</span>,
@@ -1341,24 +1331,17 @@ allocation problems.
       <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">5</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_cnts_paper</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
-}</pre></body></html></div>
-<pre><code>## Warning: Removed 1077 rows containing missing values (geom_point).</code></pre>
-<pre><code>## Warning: Removed 11 row(s) containing missing values (geom_path).</code></pre>
-<pre><code>## Warning: Removed 1077 rows containing missing values (geom_point).</code></pre>
-<pre><code>## Warning: Removed 11 row(s) containing missing values (geom_path).</code></pre>
-<pre><code>## png 
-##   2</code></pre>
-<div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="co"># Prin here</span>
+}
+<span class="co"># Prin here</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_cnts_paper</span>)</pre></body></html></div>
-<pre><code>## Warning: Removed 1077 rows containing missing values (geom_point).
-
-## Warning: Removed 11 row(s) containing missing values (geom_path).</code></pre>
+<pre><code>## Warning: Removed 1077 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 11 row(s) containing missing values (geom_path).</code></pre>
 <p><img src="ffv_opt_n2_fn_files/figure-html/unnamed-chunk-25-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div id="continuous-utility-and-choices-jointly" class="section level4">
 <h4 class="hasAnchor">
 <a href="#continuous-utility-and-choices-jointly" class="anchor"></a>Continuous Utility and Choices Jointly</h4>
-<div class="sourceCode" id="cb72"><html><body><pre class="r"><span class="co"># Data</span>
+<div class="sourceCode" id="cb61"><html><body><pre class="r"><span class="co"># Data</span>
 <span class="no">tb_cts</span> <span class="kw">&lt;-</span> <span class="no">tb_all_points</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">vartype</span><span class="kw">==</span><span class="st">'continuous'</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">rho_val</span> <span class="kw">!=</span> <span class="fl">9999</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho_val_str</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">rho_val</span> <span class="kw">==</span> <span class="fl">9999</span> ~ <span class="st">'Feasible Choices'</span>,
@@ -1387,7 +1370,7 @@ allocation problems.
              <span class="fu">aes</span>(<span class="kw">x</span><span class="kw">=</span><span class="no">EH_1l</span>, <span class="kw">y</span><span class="kw">=</span><span class="no">EH_2l</span>, <span class="kw">colour</span><span class="kw">=</span><span class="no">rho_val_str</span>, <span class="kw">shape</span><span class="kw">=</span><span class="no">rho_val_str</span>),
              <span class="kw">size</span><span class="kw">=</span><span class="fl">2</span>, <span class="kw">width</span> <span class="kw">=</span> <span class="fl">0</span>)</pre></body></html></div>
 <pre><code>## Warning: Ignoring unknown parameters: width</code></pre>
-<div class="sourceCode" id="cb74"><html><body><pre class="r"><span class="co"># Plot Axis Setting</span>
+<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="co"># Plot Axis Setting</span>
 <span class="no">plt_cnts_paper</span> <span class="kw">&lt;-</span> <span class="no">plt_cnts_paper</span> +
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">xlim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">tb_cts</span>$<span class="no">EH_1l</span>-<span class="fl">0.4</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">tb_cts</span>$<span class="no">EH_1l</span>+<span class="fl">0.4</span>)) +
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">tb_cts</span>$<span class="no">EH_2l</span>-<span class="fl">0.4</span>), <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">tb_cts</span>$<span class="no">EH_2l</span>+<span class="fl">0.4</span>))
@@ -1421,16 +1404,12 @@ allocation problems.
       <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">5</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_cnts_paper</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
-}</pre></body></html></div>
-<pre><code>## Warning: Removed 1019 rows containing missing values (geom_point).</code></pre>
-<pre><code>## Warning: Removed 1019 rows containing missing values (geom_point).</code></pre>
-<pre><code>## png 
-##   2</code></pre>
-<div class="sourceCode" id="cb78"><html><body><pre class="r"><span class="co"># Prin here</span>
+}
+<span class="co"># Prin here</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_cnts_paper</span>)</pre></body></html></div>
 <pre><code>## Warning: Removed 1019 rows containing missing values (geom_point).</code></pre>
 <p><img src="ffv_opt_n2_fn_files/figure-html/unnamed-chunk-26-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb80"><html><body><pre class="r"><span class="no">ar_w_solve_at_disc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>,<span class="fl">18</span>)
+<div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="no">ar_w_solve_at_disc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>,<span class="fl">18</span>)
 <span class="no">it_alpha_1l_zr</span> <span class="kw">&lt;-</span> <span class="fl">10</span>
 <span class="no">it_alpha_2l_zr</span> <span class="kw">&lt;-</span> <span class="fl">10</span>
 <span class="kw">for</span> (<span class="no">it_w</span> <span class="kw">in</span> <span class="no">ar_w_solve_at_disc</span>){

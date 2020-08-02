@@ -1,0 +1,257 @@
+---
+title: Function Test Discrete Allocation with Linear Regression
+description: |
+  Test binary optimal allocation solution function from package.
+  Use the California student test score dataset, same as line by line.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Function Test Discrete Allocation with Linear Regression}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+urlcolor: blue
+---
+
+
+Test discrete optimal allocation solution line by line without function. Use the California student test score dataset. Regress student English and Math test scores on Student-Teacher-Ratio.
+
+
+This function produces the same results as [DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html). The differences are:
+
+1. the program here uses the dataframes created by the line by line file as Inputs
+2. the program here uses functions that are identical to the line by line function, but are saved in the R folder.
+
+This file, by invoking functions, is much shorter than the line by line program.
+
+
+```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
+rm(list = ls(all.names = TRUE))
+options(knitr.duplicate.label = 'allow')
+```
+```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
+library(dplyr)
+library(tidyr)
+library(tibble)
+library(stringr)
+library(broom)
+library(ggplot2)
+library(REconTools)
+
+library(PrjOptiAlloc)
+
+library(knitr)
+library(kableExtra)
+```
+
+## Load Pre-Generated Data
+
+These are data thata were generated in the [DISCRETE--Discrete Optimal Allocation California Teacher Student Ratio (Line by Line)](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html) function.
+
+But here, select only a small subset of data to clarity and debugging. Select on 3 school districts. Select them randomly. 
+
+First, load data:
+
+```{r}
+# Load Data
+data(df_opt_caschool_prep_i)
+data(df_opt_caschool_input_il)
+data(df_opt_caschool_input_ib)
+
+# Rescaling to avoid out of possibility calculations
+fl_rescale_ratio = 0.01
+df_opt_caschool_input_il <- df_opt_caschool_input_il %>%
+  mutate(A_il = A_il*fl_rescale_ratio, 
+         alpha_il = alpha_il*fl_rescale_ratio)
+df_opt_caschool_input_ib <- df_opt_caschool_input_ib %>%
+  mutate(A_i_l0 = A_i_l0*fl_rescale_ratio, 
+         alpha_o_i = alpha_o_i*fl_rescale_ratio)
+```
+
+Second, select a subset of rows form dataframe with i-specific rows: 
+
+```{r}
+# Select three random school IDs
+set.seed(11)
+it_select <- dim(df_opt_caschool_prep_i)[1]
+ar_it_sample_rows <- sample(dim(df_opt_caschool_prep_i)[1],
+                            it_select, replace=FALSE)
+df_opt_caschool_prep_i <- df_opt_caschool_prep_i[ar_it_sample_rows,]
+ar_selected_keys <- sort(df_opt_caschool_prep_i %>% pull(id_i))
+print(ar_selected_keys)
+```
+
+Third select only based on subset of keys from the three dataframes:
+
+```{r}
+df_opt_caschool_prep_i <- df_opt_caschool_prep_i %>% filter(id_i %in% ar_selected_keys)
+df_opt_caschool_input_il <- df_opt_caschool_input_il %>% filter(id_i %in% ar_selected_keys)
+df_opt_caschool_input_ib <- df_opt_caschool_input_ib %>% filter(id_i %in% ar_selected_keys)
+```
+
+## Solve All Districts Discrete Optimal Allocation Across Planner Preferences
+
+### Specify Policy Parameters
+
+Note that *input_il* function already is based on *fl_fi_max*.
+
+```{r control policy}
+# 100 percent teacher at most per school☺, discretize floor as needed
+# This is not○ a parameter t•hat matters here, already a part of the input_il function
+fl_fi_max = 0.20
+# 20 percent total additional of all teachers
+fl_fa_max = 0.05
+# What is the number of teachers we can increase by
+fl_teacher_increase_number <- sum(df_opt_caschool_prep_i$teachers)*fl_fa_max
+fl_teacher_increase_number <- floor(fl_teacher_increase_number)
+
+# Rho values to consider
+ar_rho <- 1 - (10^(c(seq(-2.2,2.2, length.out=60))))
+ar_rho <- unique(ar_rho)
+```
+
+## Optimal Queue and Allocations
+
+Use the discrete allocation function across preference [ffp_opt_anlyz_rhgin_dis.html](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin_dis.html) function. This computes optimal allocation for multiple planner inequality aversion $\lambda$ parameters at the same time. Note that in the function $\lambda=\rho$.
+
+```{r}
+ls_df_queue <- PrjOptiAlloc::ffp_opt_anlyz_rhgin_dis(ar_rho,
+                                       fl_teacher_increase_number,
+                                       bl_df_alloc_il = TRUE,
+                                       df_input_il = df_opt_caschool_input_il,
+                                       svr_rho = 'rho',
+                                       svr_id_i = 'id_i', svr_id_il = 'id_il',
+                                       svr_D_max_i = 'D_max_i', svr_D_il = 'D_il',
+                                       svr_D_star_i = 'D_star_i', svr_F_star_i = 'F_star_i',
+                                       svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
+                                       svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
+                                       svr_expout = 'opti_exp_outcome',
+                                       st_idcol_prefix = 'sid_')
+df_queue_il_long <- ls_df_queue$df_queue_il_long
+df_queue_il_wide <- ls_df_queue$df_queue_il_wide
+df_alloc_i_long <- ls_df_queue$df_alloc_i_long
+df_rho_gini  <- ls_df_queue$df_rho_gini
+df_alloc_il_long <- ls_df_queue$df_alloc_il_long
+```
+
+Show output dataframes:
+
+```{r}
+# Display Results
+print(head(df_queue_il_long, 10))
+# print(str(df_queue_il_long))
+print(head(df_queue_il_wide, 10))
+# print(str(df_queue_il_wide))
+print(head(df_alloc_i_long, 10))
+# print(str(df_alloc_i_long))
+print(head(df_alloc_il_long, 10))
+```
+
+Show GINI results: 
+
+```{r}
+print(head(df_rho_gini, 30))
+```
+
+### Aggregate Statistics Outcome Grapher 
+
+Create a function to facilitate graphing over various outcomes of interest:
+
+```{r}
+ffi_plot_agg_stats <- function(df_rho_gini, svr_agg_outcome='gini_EH_star'){
+  # All figures share the same x-axis, just plot out different aggregate y outcomes
+  
+  x.labels <- c('lambda=0.99', 'lambda=0.90', 'lambda=0', 'lambda=-10', 'lambda=-100')
+  x.breaks <- c(0.01, 0.10, 1, 10, 100)
+  
+  pl_out <- df_rho_gini %>%
+    mutate(one_minus_rho = 1 - rho_val) %>%
+    ggplot(aes(x=one_minus_rho, y=!!sym(svr_agg_outcome))) +
+    geom_line() + geom_point() +
+    scale_x_continuous(trans='log10', labels = x.labels, breaks = x.breaks) +
+    theme_bw(base_size=8)  
+  
+  return(pl_out)
+}
+```
+
+
+#### Atkinson Graph
+
+```{r}
+pl_out_atkinson_EH_star <- ffi_plot_agg_stats(df_rho_gini, svr_agg_outcome='atkinson_EH_star')
+pl_out_atkinson_EH_star
+```
+
+#### GINI of Allocations Graph
+
+```{r}
+pl_out_gini_D_star <- ffi_plot_agg_stats(df_rho_gini, svr_agg_outcome='gini_D_star')
+pl_out_gini_D_star
+```
+
+#### GINI of Outcome Graph
+
+```{r}
+pl_out_gini_EH_star <- ffi_plot_agg_stats(df_rho_gini, svr_agg_outcome='gini_EH_star')
+pl_out_gini_EH_star
+```
+
+#### Minimum outcomes
+
+Should be increasing with x-axis.
+
+```{r}
+pl_out_min_EH_star <- ffi_plot_agg_stats(df_rho_gini, svr_agg_outcome='min_EH_star')
+pl_out_min_EH_star
+```
+
+#### Average Outcomes
+
+Should be decreasing with x-axis.
+
+```{r}
+pl_out_mean_EH_star <- ffi_plot_agg_stats(df_rho_gini, svr_agg_outcome='mean_EH_star')
+pl_out_mean_EH_star
+```
+
+#### SD of Outcomes
+
+```{r}
+pl_out_sd_EH_star <- ffi_plot_agg_stats(df_rho_gini, svr_agg_outcome='sd_EH_star')
+pl_out_sd_EH_star
+```
+
+
+## REV Compute and Graph
+
+### Compute REV 
+
+```{r}
+tb_rho_rev <-
+  PrjOptiAlloc::ffp_opt_anlyz_sodis_rev(
+    ar_rho,
+    fl_teacher_increase_number,
+    df_input_ib = df_opt_caschool_input_ib,
+    df_queue_il_long_with_V = df_queue_il_long)
+```
+
+```{r}
+# Display Results
+print(tb_rho_rev)
+```
+
+### REV Graph
+
+```{r}
+x.labels <- c('lambda=0.99', 'lambda=0.90', 'lambda=0', 'lambda=-10', 'lambda=-100')
+x.breaks <- c(0.01, 0.10, 1, 10, 100)
+tb_rho_rev %>%
+  mutate(one_minus_rho = 1 - rho_val) %>%
+  mutate(REV = 100*REV) %>%
+  ggplot(aes(x=one_minus_rho, y=REV)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(trans='log10', labels = x.labels, breaks = x.breaks) +
+  theme_bw(base_size=8) +
+  ylim(0, 100)
+```
+

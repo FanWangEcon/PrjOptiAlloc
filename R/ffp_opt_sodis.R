@@ -77,18 +77,61 @@ ffp_opt_anlyz_rhgin_dis <- function(ar_rho,
       mutate(!!sym(svr_EH_star_i) :=
                case_when(!!sym(svr_D_star_i) == 0 ~ !!sym(svr_A_il), # no choice no allocation
                          TRUE ~ !!sym(svr_A_il) + !!sym(svr_alpha_il)))
-    # Step 7
-    # Gini Calculations
+
+    # Step 7 Aggregate Statistics: EH_star_mean = EH_star_i_mean
+    svr_D_star_i_demean <- 'EH_star_i_demean'
+    df_alloc_i_long_demean <- df_alloc_i_long %>%
+      group_by(rho) %>%
+      mutate(EH_star_i_mean = mean(EH_star_i)) %>%
+      mutate(!!sym(svr_D_star_i_demean) := !!sym(svr_EH_star_i)/EH_star_i_mean)
+
+    # 7a. Demeaned Gini Calculations
     ar_gini_D_star <- df_alloc_i_long %>% select(one_of(svr_rho, svr_D_star_i)) %>%
       group_by(!!sym(svr_rho)) %>%
       do(D_star_gini = ff_dist_gini_vector_pos(.[[svr_D_star_i]])) %>%
       unnest(c(D_star_gini)) %>% pull()
-    ar_gini_EH_star <- df_alloc_i_long %>% select(one_of(svr_rho, svr_EH_star_i)) %>%
+    ar_gini_EH_star <- df_alloc_i_long_demean %>%
+      select(one_of(svr_rho, svr_D_star_i_demean)) %>%
       group_by(!!sym(svr_rho)) %>%
-        do(EH_star_gini = ff_dist_gini_vector_pos(.[[svr_EH_star_i]])) %>%
+        do(EH_star_gini = ff_dist_gini_vector_pos(.[[svr_D_star_i_demean]])) %>%
         unnest(c(EH_star_gini)) %>% pull()
-    mt_rho_gini <- cbind(ar_rho, ar_gini_D_star, ar_gini_EH_star)
-    colnames(mt_rho_gini) <- c(svr_rho_val, 'gini_D_star', 'gini_EH_star')
+    # 7b. variance
+    ar_sd_D_star <- df_alloc_i_long %>% select(one_of(svr_rho, svr_D_star_i)) %>%
+      group_by(!!sym(svr_rho)) %>%
+      do(D_star_sd = sd(.[[svr_D_star_i]])) %>%
+      unnest(c(D_star_sd)) %>% pull()
+    ar_sd_EH_star <- df_alloc_i_long %>% select(one_of(svr_rho, svr_EH_star_i)) %>%
+      group_by(!!sym(svr_rho)) %>%
+        do(EH_star_sd = sd(.[[svr_EH_star_i]])) %>%
+        unnest(c(EH_star_sd)) %>% pull()
+    # 7c. min and mean outcomes
+    ar_mean_EH_star <- df_alloc_i_long %>% select(one_of(svr_rho, svr_EH_star_i)) %>%
+      group_by(!!sym(svr_rho)) %>%
+        do(EH_star_mean = mean(.[[svr_EH_star_i]])) %>%
+        unnest(c(EH_star_mean)) %>% pull()
+    ar_min_EH_star <- df_alloc_i_long %>% select(one_of(svr_rho, svr_EH_star_i)) %>%
+      group_by(!!sym(svr_rho)) %>%
+        do(EH_star_min = min(.[[svr_EH_star_i]])) %>%
+        unnest(c(EH_star_min)) %>% pull()
+    # 7d. atkinson inequality
+    ar_atkinson_EH_star <- df_alloc_i_long_demean %>%
+      select(one_of(svr_rho, svr_rho_val, svr_D_star_i_demean)) %>%
+      group_by(!!sym(svr_rho)) %>%
+      mutate(beta = 1/n()) %>%
+      mutate(EH_star_atk_compo = beta*((!!sym(svr_D_star_i_demean))^(!!sym(svr_rho_val)))) %>%
+      summarize(EH_star_atk = 1 - sum(EH_star_atk_compo)^(1/(!!sym(svr_rho_val)))) %>%
+      pull(EH_star_atk)
+    # 7z. collect stats
+    mt_rho_gini <- cbind(ar_rho, ar_gini_D_star,
+                         ar_gini_EH_star,
+                         ar_atkinson_EH_star,
+                         ar_sd_D_star, ar_sd_EH_star,
+                         ar_mean_EH_star, ar_min_EH_star)
+    colnames(mt_rho_gini) <- c(svr_rho_val, 'gini_D_star',
+                               'gini_EH_star',
+                               'atkinson_EH_star',
+                               'sd_D_star', 'sd_EH_star',
+                               'mean_EH_star', 'min_EH_star')
     df_rho_gini <- as_tibble(mt_rho_gini) %>% rowid_to_column(var = svr_rho)
 
     # Step 5a, value at Q points

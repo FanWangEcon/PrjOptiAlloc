@@ -98,6 +98,10 @@ reference:
   - df_opt_caschool_prep_i
   - df_opt_caschool_input_ib
   - df_opt_caschool_input_il
+- subtitle: For Optimal Allocation of Stimulus Checks
+  desc: Allocation files for Nygaard, Sorensen and Wang (2020) the optimal allocation of COVID-19 simulus checks.
+  contents:
+  - starts_with("ffp_snw")
 - title: Support Files
   desc: Support functions and sample files that generate allocation space parameters from estimation space
   contents:
@@ -106,9 +110,10 @@ reference:
 
 articles:
 - title: Example N=2 Discrete and Bounded-Continuous Optimal Allocation
-  desc: Demonstrate optimal allocation between two simulated individuals graphically
+  desc: Demonstrate optimal allocation and welfare between two simulated individuals graphically
   contents:
   - ffv_opt_n2_fn
+  - ffv_opt_n2_fn_welfare
 - title: Binary Allocation Testing Vignettes (mtcars, birthwt)
   desc: Testing the binary allocation solution line by line and with function. Use standard R testing datasets mtcars and birthwt. Test Welfare (REV) with hand-input example data.
   contents:

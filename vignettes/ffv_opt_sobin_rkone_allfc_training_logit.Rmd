@@ -50,7 +50,7 @@ library(knitr)
 library(kableExtra)
 
 bl_save_rda = FALSE
-bl_save_img = TRUE
+bl_save_img = FALSE
 ```
 
 ## Get Data

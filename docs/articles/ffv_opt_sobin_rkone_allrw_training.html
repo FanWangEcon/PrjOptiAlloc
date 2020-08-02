@@ -123,7 +123,7 @@ Wage and Employment allocation space parameters comparison.
 
       
 
-      </header><script src="ffv_opt_sobin_rkone_allrw_training_files/header-attrs-2.2/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Wage and Employment Comparison Binary Allocation Lalonde Training Example</h1>
@@ -165,7 +165,7 @@ Wage and Employment allocation space parameters comparison.
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">knitr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">kableExtra</span>)
 
-<span class="no">bl_save_img</span> <span class="kw">=</span> <span class="fl">TRUE</span></pre></body></html></div>
+<span class="no">bl_save_img</span> <span class="kw">=</span> <span class="fl">FALSE</span></pre></body></html></div>
 </div>
 <div id="merge-the-wage-and-employmennt-rsults" class="section level2">
 <h2 class="hasAnchor">
@@ -494,26 +494,27 @@ Wage and Employment allocation space parameters comparison.
 ## Using compatibility `.name_repair`.
 ## This warning is displayed once every 8 hours.
 ## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
-<pre><code>## # A tibble: 17 x 3
+<pre><code>## # A tibble: 18 x 3
 ##    stats   id           re75        
 ##    &lt;chr&gt;   &lt;chr&gt;        &lt;chr&gt;       
 ##  1 n       "297"        "297"       
-##  2 NAobs   "0"          "0"         
-##  3 ZEROobs "  0"        "289"       
-##  4 mean    "593.329966" "  3.839997"
-##  5 sd      "833.38918"  " 23.99207" 
-##  6 cv      "1.404596"   "6.247941"  
-##  7 min     "1"          "0"         
-##  8 p01     "4.92"       "0.00"      
-##  9 p05     "26.4"       " 0.0"      
-## 10 p10     "46.8"       " 0.0"      
-## 11 p25     "110"        "  0"       
-## 12 p50     "228"        "  0"       
-## 13 p75     "781"        "  0"       
-## 14 p90     "1430.4"     "   0.0"    
-## 15 p95     "2730"       "   0"      
-## 16 p99     "3814.0000"  " 160.0976" 
-## 17 max     "4110.0000"  " 192.7995"</code></pre>
+##  2 unique  "297"        "  8"       
+##  3 NAobs   "0"          "0"         
+##  4 ZEROobs "  0"        "289"       
+##  5 mean    "593.329966" "  3.839997"
+##  6 sd      "833.38918"  " 23.99207" 
+##  7 cv      "1.404596"   "6.247941"  
+##  8 min     "1"          "0"         
+##  9 p01     "4.92"       "0.00"      
+## 10 p05     "26.4"       " 0.0"      
+## 11 p10     "46.8"       " 0.0"      
+## 12 p25     "110"        "  0"       
+## 13 p50     "228"        "  0"       
+## 14 p75     "781"        "  0"       
+## 15 p90     "1430.4"     "   0.0"    
+## 16 p95     "2730"       "   0"      
+## 17 p99     "3814.0000"  " 160.0976" 
+## 18 max     "4110.0000"  " 192.7995"</code></pre>
 <div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="co"># The 297 lowest wages in 1975</span>
 <span class="no">dfj</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">re75</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">re75_zero</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">re75</span> <span class="kw">==</span> <span class="fl">0</span> ~ <span class="fl">1</span>, <span class="no">re75</span> <span class="kw">!=</span> <span class="fl">0</span> ~ <span class="fl">0</span>)) <span class="kw">%&gt;%</span>
@@ -524,26 +525,27 @@ Wage and Employment allocation space parameters comparison.
 <span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">re75_zero</span>, <span class="no">re75_rank</span>))</pre></body></html></div>
 <pre><code>## Warning: attributes are not identical across measure variables;
 ## they will be dropped</code></pre>
-<pre><code>## # A tibble: 17 x 3
+<pre><code>## # A tibble: 18 x 3
 ##    stats   re75.rank     re75.zero    
 ##    &lt;chr&gt;   &lt;chr&gt;         &lt;chr&gt;        
 ##  1 n       "722"         "722"        
-##  2 NAobs   "0"           "0"          
-##  3 ZEROobs "  0"         "433"        
-##  4 mean    "361.500000"  "  0.400277" 
-##  5 sd      "208.5677348" "  0.4902941"
-##  6 cv      "0.5769509"   "1.2248869"  
-##  7 min     "1"           "0"          
-##  8 p01     "8.21"        "0.00"       
-##  9 p05     "37.05"       " 0.00"      
-## 10 p10     "73.1"        " 0.0"       
-## 11 p25     "181.25"      "  0.00"     
-## 12 p50     "361.5"       "  0.0"      
-## 13 p75     "541.75"      "  1.00"     
-## 14 p90     "649.9"       "  1.0"      
-## 15 p95     "685.95"      "  1.00"     
-## 16 p99     "714.79"      "  1.00"     
-## 17 max     "722"         "  1"</code></pre>
+##  2 unique  "722"         "  2"        
+##  3 NAobs   "0"           "0"          
+##  4 ZEROobs "  0"         "433"        
+##  5 mean    "361.500000"  "  0.400277" 
+##  6 sd      "208.5677348" "  0.4902941"
+##  7 cv      "0.5769509"   "1.2248869"  
+##  8 min     "1"           "0"          
+##  9 p01     "8.21"        "0.00"       
+## 10 p05     "37.05"       " 0.00"      
+## 11 p10     "73.1"        " 0.0"       
+## 12 p25     "181.25"      "  0.00"     
+## 13 p50     "361.5"       "  0.0"      
+## 14 p75     "541.75"      "  1.00"     
+## 15 p90     "649.9"       "  1.0"      
+## 16 p95     "685.95"      "  1.00"     
+## 17 p99     "714.79"      "  1.00"     
+## 18 max     "722"         "  1"</code></pre>
 </div>
 <div id="compute-rev-1" class="section level3">
 <h3 class="hasAnchor">
@@ -706,7 +708,7 @@ Wage and Employment allocation space parameters comparison.
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="no">st_title</span>,
        <span class="kw">subtitle</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">title_line1</span>, <span class="st">'\n'</span>, <span class="no">title_line2</span>, <span class="st">'\n'</span>, <span class="no">title_line3</span>),
        <span class="kw">x</span> <span class="kw">=</span> <span class="st">'log10 Rescale of &lt;U+03BB&gt;, Log10(1-&lt;U+03BB&gt;)\n&lt;U+03BB&gt;=1 Utilitarian (Maximize Average), &lt;U+03BB&gt;=-infty Rawlsian (Maximize Minimum)'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'REV (Resource Equivalent Variations)'</span>),
+       <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'100 x REV (Resource Equivalent Variations)'</span>),
        <span class="kw">caption</span> <span class="kw">=</span> <span class="st">'Based on a logistic regression of the employment effects of a training RCT. Data: Lalonde (AER, 1986).'</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span>(<span class="kw">trans</span><span class="kw">=</span><span class="st">'log10'</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="no">x.labels</span>, <span class="kw">breaks</span> <span class="kw">=</span> <span class="no">x.breaks</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="kw">base_size</span><span class="kw">=</span><span class="fl">8</span>) +
@@ -735,8 +737,6 @@ Wage and Employment allocation space parameters comparison.
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">line.plot</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
 }</pre></body></html></div>
-<pre><code>## png 
-##   2</code></pre>
 </div>
 </div>
 <div id="analysis-of-a-and-alpha" class="section level2">
@@ -746,7 +746,7 @@ Wage and Employment allocation space parameters comparison.
 <div id="scatter-plots" class="section level3">
 <h3 class="hasAnchor">
 <a href="#scatter-plots" class="anchor"></a>Scatter Plots</h3>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="co"># Binary Marginal Effects and Prediction without Binary</span>
+<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="co"># Binary Marginal Effects and Prediction without Binary</span>
 <span class="no">ggplot.A.alpha</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">df</span>, <span class="no">svr_alpha</span> <span class="kw">=</span> <span class="st">'alpha_i'</span>, <span class="no">svr_A</span> <span class="kw">=</span> <span class="st">"A_i"</span>,
                            <span class="no">slb_title</span> <span class="kw">=</span> <span class="st">'A_i and alpha_i (red)'</span>){
   <span class="no">scatter</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="no">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A</span>))) +
@@ -764,7 +764,7 @@ Wage and Employment allocation space parameters comparison.
                <span class="kw">svr_alpha</span> <span class="kw">=</span> <span class="st">'alpha_i_wage'</span>, <span class="kw">svr_A</span> <span class="kw">=</span> <span class="st">"A_i_wage"</span>,
                <span class="kw">slb_title</span> <span class="kw">=</span> <span class="st">'A_i and alpha_i, wage'</span>)</pre></body></html></div>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="fu">ggplot.A.alpha</span>(<span class="kw">df</span> <span class="kw">=</span> <span class="no">dfj</span>,
+<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="fu">ggplot.A.alpha</span>(<span class="kw">df</span> <span class="kw">=</span> <span class="no">dfj</span>,
                <span class="kw">svr_alpha</span> <span class="kw">=</span> <span class="st">'alpha_i_employ'</span>, <span class="kw">svr_A</span> <span class="kw">=</span> <span class="st">"A_i_employ"</span>,
                <span class="kw">slb_title</span> <span class="kw">=</span> <span class="st">'Employment A_i and alpha_i Joint Distribution'</span>)</pre></body></html></div>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;"></p>
@@ -773,7 +773,7 @@ Wage and Employment allocation space parameters comparison.
 <h3 class="hasAnchor">
 <a href="#histogram-plots" class="anchor"></a>Histogram Plots</h3>
 <p>What is the distribution of A given alpha. This is relevant in the linear regression case</p>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="co"># Keep only relevant columns, and reshape data</span>
+<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="co"># Keep only relevant columns, and reshape data</span>
 <span class="no">dfj_hist</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">A_i_wage</span>, <span class="no">alpha_i_wage</span>)
 <span class="no">dfj_hist</span>$<span class="no">alpha_i_wage</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">dfj_hist</span>$<span class="no">alpha_i_wage</span>)
 <span class="no">dfj_hist</span>$<span class="no">alpha_i_wage</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">dfj_hist</span>$<span class="no">alpha_i_wage</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Age &lt;= 23\nalpha_i=$454'</span>, <span class="st">'Age &gt; 23\nalpha_i=$1071'</span>))
@@ -802,7 +802,7 @@ Wage and Employment allocation space parameters comparison.
 <h3 class="hasAnchor">
 <a href="#histogram-plots-and-table-highest-rank-reached" class="anchor"></a>Histogram Plots and Table highest Rank Reached</h3>
 <p>Looked highest rank reached for each (highest rank (smallest number ever reached)).</p>
-<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="co"># Generate min and max gaps</span>
+<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="co"># Generate min and max gaps</span>
 <span class="no">dfj_highest</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">rank_max_wage</span>, <span class="no">rank_max_employ</span>)
 
 <span class="co"># Wide to long</span>
@@ -832,7 +832,7 @@ Wage and Employment allocation space parameters comparison.
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">fill</span><span class="kw">=</span><span class="st">""</span>)</pre></body></html></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-9-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb40"><html><body><pre class="r"><span class="co"># Table</span>
+<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="co"># Table</span>
 <span class="no">dfj_highest_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">employvswwage</span>, <span class="no">highestrank_grp</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">count</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>())</pre></body></html></div>
 <pre><code>## `summarise()` regrouping output by 'employvswwage' (override with `.groups` argument)</code></pre>
@@ -863,7 +863,7 @@ Wage and Employment allocation space parameters comparison.
 <li>show table summary statistics differences</li>
 <li>show graph differences</li>
 </ol>
-<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="co"># Generate min and max gaps</span>
+<div class="sourceCode" id="cb42"><html><body><pre class="r"><span class="co"># Generate min and max gaps</span>
 <span class="no">dfj_gap</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rank_gap_wage</span> <span class="kw">=</span> <span class="no">rank_min_wage</span> - <span class="no">rank_max_wage</span>,
                           <span class="kw">rank_gap_employ</span> <span class="kw">=</span> <span class="no">rank_min_employ</span> - <span class="no">rank_max_employ</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">rank_gap_wage</span>, <span class="no">rank_gap_employ</span>)
@@ -895,7 +895,7 @@ Wage and Employment allocation space parameters comparison.
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">fill</span><span class="kw">=</span><span class="st">""</span>)</pre></body></html></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-10-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="co"># Table</span>
+<div class="sourceCode" id="cb44"><html><body><pre class="r"><span class="co"># Table</span>
 <span class="no">dfj_gap_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">employvswwage</span>, <span class="no">rank_gap_grp</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">count</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>())</pre></body></html></div>
 <pre><code>## `summarise()` regrouping output by 'employvswwage' (override with `.groups` argument)</code></pre>
@@ -919,7 +919,7 @@ Wage and Employment allocation space parameters comparison.
 <div id="table-of-top-10-individuals" class="section level2">
 <h2 class="hasAnchor">
 <a href="#table-of-top-10-individuals" class="anchor"></a>Table of Top 10 Individuals</h2>
-<div class="sourceCode" id="cb48"><html><body><pre class="r">#
+<div class="sourceCode" id="cb47"><html><body><pre class="r">#
 # # Calculat the maximum rank reached by each from all the rhos we have
 # # The difference between this and the other max, this computes across all rhos, employment and wage
 #

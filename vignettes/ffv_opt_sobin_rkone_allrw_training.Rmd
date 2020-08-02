@@ -44,7 +44,7 @@ library(PrjOptiAlloc)
 library(knitr)
 library(kableExtra)
 
-bl_save_img = TRUE
+bl_save_img = FALSE
 ```
 
 ## Merge the Wage and Employmennt Rsults
@@ -287,7 +287,7 @@ line.plot <- tb_rev_wage_employ_long_fig %>%
   labs(title = st_title,
        subtitle = paste0(title_line1, '\n', title_line2, '\n', title_line3),
        x = 'log10 Rescale of λ, Log10(1-λ)\nλ=1 Utilitarian (Maximize Average), λ=-infty Rawlsian (Maximize Minimum)',
-       y = paste0('REV (Resource Equivalent Variations)'),
+       y = paste0('100 x REV (Resource Equivalent Variations)'),
        caption = 'Based on a logistic regression of the employment effects of a training RCT. Data: Lalonde (AER, 1986).') +
   scale_x_continuous(trans='log10', labels = x.labels, breaks = x.breaks) +
   theme_bw(base_size=8) +

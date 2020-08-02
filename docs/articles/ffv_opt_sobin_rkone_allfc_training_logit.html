@@ -123,7 +123,7 @@ Solve for optimal binary allocation queues.
 
       
 
-      </header><script src="ffv_opt_sobin_rkone_allfc_training_logit_files/header-attrs-2.2/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Logit Employment Binary Allocation Lalonde Training Example</h1>
@@ -169,7 +169,7 @@ Solve for optimal binary allocation queues.
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">kableExtra</span>)
 
 <span class="no">bl_save_rda</span> <span class="kw">=</span> <span class="fl">FALSE</span>
-<span class="no">bl_save_img</span> <span class="kw">=</span> <span class="fl">TRUE</span></pre></body></html></div>
+<span class="no">bl_save_img</span> <span class="kw">=</span> <span class="fl">FALSE</span></pre></body></html></div>
 </div>
 <div id="get-data" class="section level2">
 <h2 class="hasAnchor">
@@ -490,14 +490,12 @@ Solve for optimal binary allocation queues.
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">plt_A_alpha</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
 }</pre></body></html></div>
-<pre><code>## png 
-##   2</code></pre>
 </div>
 <div id="x-variables-and-a-and-alpha" class="section level3">
 <h3 class="hasAnchor">
 <a href="#x-variables-and-a-and-alpha" class="anchor"></a>X variables and A and alpha</h3>
 <p>Given the x-variables included in the logit regression, how do they relate to A_i and alpha_i</p>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="co"># Generate Gap Variable</span>
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="co"># Generate Gap Variable</span>
 <span class="no">dft</span> <span class="kw">&lt;-</span> <span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">alpha_i</span> <span class="kw">=</span> <span class="no">p_mpg_hp_bi1</span> - <span class="no">p_mpg_hp_bi0</span>) <span class="kw">%&gt;%</span>
                 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">A_i</span> <span class="kw">=</span> <span class="no">p_mpg_hp_bi0</span>)
 
@@ -548,7 +546,7 @@ Solve for optimal binary allocation queues.
 <h3 class="hasAnchor">
 <a href="#solve-for-optimal-allocaions-across-preference-parameters" class="anchor"></a>Solve for Optimal Allocaions Across Preference Parameters</h3>
 <p>Invoke the binary optimal allocation function <em>ffp_opt_anlyz_rhgin_bin</em> that loops over rhos.</p>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">svr_inpalc</span> <span class="kw">&lt;-</span> <span class="st">'rank'</span>
+<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">svr_inpalc</span> <span class="kw">&lt;-</span> <span class="st">'rank'</span>
 
 <span class="no">beta_i</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>/<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">dft</span>)[<span class="fl">1</span>], <span class="kw">times</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">dft</span>)[<span class="fl">1</span>])
 <span class="no">dft</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">dft</span>, <span class="no">beta_i</span>)
@@ -621,7 +619,7 @@ Solve for optimal binary allocation queues.
 ##  $ rho_c29_rk  : int  88 588 94 146 210 133 210 290 578 147 ...
 ##  $ rho_c30_rk  : int  88 587 94 146 210 133 210 290 578 147 ...</code></pre>
 <pre><code>## Joining, by = "id"</code></pre>
-<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">ls_bin_solu_all_rhos</span>$<span class="no">df_all_rho</span>
+<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">ls_bin_solu_all_rhos</span>$<span class="no">df_all_rho</span>
 <span class="no">df_all_rho_long</span> <span class="kw">&lt;-</span> <span class="no">ls_bin_solu_all_rhos</span>$<span class="no">df_all_rho_long</span>
 
 <span class="co"># How many people have different ranks across rhos</span>
@@ -632,7 +630,7 @@ Solve for optimal binary allocation queues.
 <div id="change-in-rank-along-rho" class="section level3">
 <h3 class="hasAnchor">
 <a href="#change-in-rank-along-rho" class="anchor"></a>Change in Rank along rho</h3>
-<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="co"># get rank when wage rho = 1</span>
+<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="co"># get rank when wage rho = 1</span>
 <span class="no">df_all_rho_rho_c1</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">rho_c1_rk</span>)
 <span class="co"># Merge</span>
 <span class="no">df_all_rho_long_more</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(<span class="no">rho</span>)) <span class="kw">%&gt;%</span>
@@ -668,7 +666,7 @@ Solve for optimal binary allocation queues.
 ## [217] 402 402 402 402 402 402 402 402 402 402 402 402 402 402 402 402 402 402
 ## [235] 402 402 402 402 402 402
 ## Levels: 1 101 207 300 402 500 600 700</code></pre>
-<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="no">df_rank_graph</span>$<span class="no">id</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">df_rank_graph</span>$<span class="no">rho_c1_rk</span>,
+<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="no">df_rank_graph</span>$<span class="no">id</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">df_rank_graph</span>$<span class="no">rho_c1_rk</span>,
                            <span class="kw">labels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Rank= 1  '</span>, <span class="co">#200</span>
                                       <span class="st">'Rank= 101'</span>, <span class="co">#110</span>
                                       <span class="st">'Rank= 201'</span>, <span class="co">#95</span>
@@ -709,7 +707,7 @@ Solve for optimal binary allocation queues.
 <span class="co"># Print</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">line.plot</span>)</pre></body></html></div>
 <p><img src="ffv_opt_sobin_rkone_allfc_training_logit_files/figure-html/graph%20of%20rank%20change-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="kw">if</span> (<span class="no">bl_save_img</span>) {
+<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="kw">if</span> (<span class="no">bl_save_img</span>) {
   <span class="no">snm_cnts</span> <span class="kw">&lt;-</span> <span class="st">'Lalonde_employ_rank.png'</span>
   <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">spt_img_save</span>, <span class="no">snm_cnts</span>),
         <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>, <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">7</span>)
@@ -721,13 +719,11 @@ Solve for optimal binary allocation queues.
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">line.plot</span>)
   <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
 }</pre></body></html></div>
-<pre><code>## png 
-##   2</code></pre>
 </div>
 <div id="save-results" class="section level3">
 <h3 class="hasAnchor">
 <a href="#save-results" class="anchor"></a>Save Results</h3>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="co"># Change Variable names so that this can becombined with logit file later</span>
+<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="co"># Change Variable names so that this can becombined with logit file later</span>
 <span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_at</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="st">"rho_"</span>)), <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html">str_replace</a></span>(<span class="no">.</span>, <span class="st">"rk"</span>, <span class="st">"rk_employ"</span>)))</pre></body></html></div>
 <pre><code>## Warning: `funs()` is deprecated as of dplyr 0.8.0.
 ## Please use a list of either functions or lambdas: 
@@ -742,7 +738,7 @@ Solve for optimal binary allocation queues.
 ##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
 ## This warning is displayed once every 8 hours.
 ## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho</span> <span class="kw">%&gt;%</span>
         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">A_i_employ</span> <span class="kw">=</span> <span class="no">A_i</span>, <span class="kw">alpha_i_employ</span> <span class="kw">=</span> <span class="no">alpha_i</span>, <span class="kw">beta_i_employ</span> <span class="kw">=</span> <span class="no">beta_i</span>,
                <span class="kw">rank_min_employ</span> <span class="kw">=</span> <span class="no">rank_min</span>, <span class="kw">rank_max_employ</span> <span class="kw">=</span> <span class="no">rank_max</span>, <span class="kw">avg_rank_employ</span> <span class="kw">=</span> <span class="no">avg_rank</span>)
 
@@ -756,7 +752,7 @@ Solve for optimal binary allocation queues.
 <h3 class="hasAnchor">
 <a href="#binary-marginal-effects-and-prediction-without-binary" class="anchor"></a>Binary Marginal Effects and Prediction without Binary</h3>
 <p>What is the relationship between ranking,</p>
-<div class="sourceCode" id="cb38"><html><body><pre class="r"># ggplot.A.alpha.x &lt;- function(svr_x, df,
+<div class="sourceCode" id="cb36"><html><body><pre class="r"># ggplot.A.alpha.x &lt;- function(svr_x, df,
 #                              svr_alpha = 'alpha_i', svr_A = "A_i"){
 #
 #   scatter &lt;- ggplot(df, aes(x=!!sym(svr_x))) +

@@ -1,7 +1,7 @@
 ---
 title: Discrete Optimal Allocation for N=2 and Welfare Distance REV
 description: |
-  Compare welfare between all feasible discrete allocations and observed allocations when N=2.
+  Compare welfare between all feasible discrete allocations and possible observed allocations when N=2.
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Discrete Optimal Allocation for N=2 and Welfare Distance REV}
@@ -154,7 +154,7 @@ df_queue_il_long_n2 %>%
 
 ## The Rev Function, compare aginst some Alternative Allocation
 
-### Generate All Outcome Combinations 
+### Generate All Outcome Combinations
 
 Generate all outcome combinations, and expected outcome combinations for the two individuals at all combinations. If allocations are binary, then there are 4 possible combinations, but have to skip zero/zero.
 
@@ -162,8 +162,8 @@ First generate combination index frame:
 
 ```{r}
 # generate index frame
-df_feasible_allocate <- 
-  as_tibble(expand.grid(id_1l = seq(0, it_D_1l), 
+df_feasible_allocate <-
+  as_tibble(expand.grid(id_1l = seq(0, it_D_1l),
                         id_2l = seq(0, it_D_2l))) %>%
   filter(!(id_1l == 0 & id_2l == 0)) %>%
   rowid_to_column(var = "id_alloc") %>%
@@ -175,7 +175,7 @@ df_feasible_allocate$id_i = as.factor(df_feasible_allocate$id_i)
 df_feasible_allocate$id_1l = as.factor(df_feasible_allocate$id_1l)
 df_feasible_allocate$id_2l = as.factor(df_feasible_allocate$id_2l)
 # print
-df_feasible_allocate
+head(df_feasible_allocate, 10)
 ```
 
 Generate $\alpha$ matrix for the two individuals to prep for merging:
@@ -217,22 +217,20 @@ df_input_ib_all <- df_feasible_allocate %>%
   select(-alpha_il_cum.x, -alpha_il_cum.y) %>%
   mutate(alpha_o_i = case_when(is.na(alpha_o_i) ~ 0,
                               TRUE ~ alpha_o_i)) %>%
-  mutate(A_i_l0 = case_when(id_i == 1 ~ fl_A_1, 
+  mutate(A_i_l0 = case_when(id_i == 1 ~ fl_A_1,
                             id_i == 2 ~ fl_A_2)) %>%
   select(id_alloc, id_i, id_1l, id_2l, A_i_l0, alpha_o_i, beta_i) %>%
   mutate(w_agg = as.numeric(id_1l) + as.numeric(id_2l))
-  
+
 print(df_input_ib_all)
 ```
 
 
 ### REV Test for One Observed Set of Allocations at One Resource Point
 
-There are only two individuals, pick any feasible point, and compare against optimal allocations, at one aggregate resource point. The welfare function only takes one set of allocations, and the optimal allocation results contain welfare along optimal allocation queues for all individuals. 
+There are only two individuals, pick any feasible point, and compare against optimal allocations, at one aggregate resource point. The welfare function only takes one set of allocations, and the optimal allocation results contain welfare along optimal allocation queues for all individuals.
 
 In the code below, I loop over each possible set of observed allocation from *df_input_ib_all* (2 rows at a time, each row an individual, 2 row is a set of allocations). Within each loop, resource equivalent variation is computed comparing the welfare at this "observed allocations" set to welfare along the optimal allocation queue, and finding out, along the resource expansion path (allocation queue), how much less resources are needed to achieve the same welfare as achieved by the "observed allocations".
-
-First, test at one aggregate resources level:
 
 ```{r}
 # Optimal Allocation Results Along Queue with Value
@@ -255,7 +253,9 @@ ffp_opt_anlyz_sodis_rev(
 
 ```
 
-Second, compute REV all all feasible allocation combinations, using [(MxP by N) to (MxQ by N+Z-1)](https://fanwangecon.github.io/R4Econ/function/dof/htmlpdfr/fs_funceval_groupwider.html):
+### REV for all Possible Allocation Points Compared to What is Optimal
+
+Compute REV all all feasible allocation combinations, using [(MxP by N) to (MxQ by N+Z-1)](https://fanwangecon.github.io/R4Econ/function/dof/htmlpdfr/fs_funceval_groupwider.html):
 
 ```{r}
 # Temp function
@@ -272,34 +272,51 @@ ffi_opt_anlyz_sodis_rev_wrapper <- function(df_input_ib_sub){
 
 # Function over Groups
 df_rev_allrho <- suppressWarnings(
-  df_input_ib_all %>% 
+  df_input_ib_all %>%
     group_by(id_alloc) %>%
     do(df_rev = ffi_opt_anlyz_sodis_rev_wrapper(.)) %>%
     unnest() %>%
     rowid_to_column(var = "id_alloc_rho")) %>%
-  left_join(df_input_ib_all %>% 
+  left_join(df_input_ib_all %>%
               group_by(id_alloc) %>% slice(1L) %>% ungroup() %>%
-              select(id_alloc, id_1l, id_2l, w_agg), 
+              select(id_alloc, id_1l, id_2l, w_agg),
             join='id_alloc') %>%
   arrange(w_agg, rho, id_1l, id_2l)
 
 # show results
-print(df_rev_allrho)
+head(df_rev_allrho, 50)
 ```
 
-Third review results: 
+### REV Summary Statistics
+
+REV grouped by Rho:
 
 ```{r}
-# group by rho, group by w, sort by id_1l and id_2l
-view(df_rev_allrho)
+df <- df_rev_allrho
+vars.group <- c('rho_val')
+var.numeric <- 'REV'
+str.stats.group <- 'allperc'
+ar.perc <- c(0.01, 0.05, 0.10, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99)
+ls_summ_by_group <- REconTools::ff_summ_bygroup(df, vars.group, var.numeric, str.stats.group, ar.perc)
+df_table_grp_stats <- ls_summ_by_group$df_table_grp_stats
+df_row_grp_stats <- ls_summ_by_group$df_row_grp_stats
+df_overall_stats <- ls_summ_by_group$df_overall_stats
+df_row_stats_all <- ls_summ_by_group$df_row_stats_all
+print(df_table_grp_stats)
 ```
 
+REV grouped by Aggregate Resources:
 
-
-
-
-
-
-
-
-
+```{r}
+df <- df_rev_allrho
+vars.group <- c('w_agg')
+var.numeric <- 'REV'
+str.stats.group <- 'allperc'
+ar.perc <- c(0.01, 0.05, 0.10, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99)
+ls_summ_by_group <- REconTools::ff_summ_bygroup(df, vars.group, var.numeric, str.stats.group, ar.perc)
+df_table_grp_stats <- ls_summ_by_group$df_table_grp_stats
+df_row_grp_stats <- ls_summ_by_group$df_row_grp_stats
+df_overall_stats <- ls_summ_by_group$df_overall_stats
+df_row_stats_all <- ls_summ_by_group$df_row_stats_all
+print(df_table_grp_stats)
+```

@@ -123,7 +123,7 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 
       
 
-      </header><script src="ffv_opt_sobin_rkone_allrw_car_files/header-attrs-2.2/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Line by Line Test Binary Allocation with Linear Regression</h1>
@@ -298,21 +298,21 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
 <pre><code>## Warning: attributes are not identical across measure variables;
 ## they will be dropped</code></pre>
-<pre><code>## # A tibble: 10 x 18
-##    var       n NAobs ZEROobs   mean      sd    cv   min   p01   p05   p10    p25
-##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-##  1 carb     32     0       0   2.81   1.62  0.574  1     1     1     1      2   
-##  2 cyl      32     0       0   6.19   1.79  0.289  4     4     4     4      4   
-##  3 disp     32     0       0 231.   124.    0.537 71.1  72.5  77.4  80.6  121.  
-##  4 drat     32     0       0   3.60   0.535 0.149  2.76  2.76  2.85  3.01   3.08
-##  5 gear     32     0       0   3.69   0.738 0.200  3     3     3     3      3   
-##  6 hp       32     0       0 147.    68.6   0.467 52    55.1  63.6  66     96.5 
-##  7 mpg      32     0       0  20.1    6.03  0.300 10.4  10.4  12.0  14.3   15.4 
-##  8 qsec     32     0       0  17.8    1.79  0.100 14.5  14.5  15.0  15.5   16.9 
-##  9 rowid    32     0       0  16.5    9.38  0.569  1     1.31  2.55  4.1    8.75
-## 10 wt       32     0       0   3.22   0.978 0.304  1.51  1.54  1.74  1.96   2.58
-## # ... with 6 more variables: p50 &lt;dbl&gt;, p75 &lt;dbl&gt;, p90 &lt;dbl&gt;, p95 &lt;dbl&gt;,
-## #   p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+<pre><code>## # A tibble: 10 x 19
+##    var       n unique NAobs ZEROobs   mean      sd    cv   min   p01   p05   p10
+##    &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 carb     32      6     0       0   2.81   1.62  0.574  1     1     1     1   
+##  2 cyl      32      3     0       0   6.19   1.79  0.289  4     4     4     4   
+##  3 disp     32     27     0       0 231.   124.    0.537 71.1  72.5  77.4  80.6 
+##  4 drat     32     22     0       0   3.60   0.535 0.149  2.76  2.76  2.85  3.01
+##  5 gear     32      3     0       0   3.69   0.738 0.200  3     3     3     3   
+##  6 hp       32     22     0       0 147.    68.6   0.467 52    55.1  63.6  66   
+##  7 mpg      32     25     0       0  20.1    6.03  0.300 10.4  10.4  12.0  14.3 
+##  8 qsec     32     30     0       0  17.8    1.79  0.100 14.5  14.5  15.0  15.5 
+##  9 rowid    32     32     0       0  16.5    9.38  0.569  1     1.31  2.55  4.1 
+## 10 wt       32     29     0       0   3.22   0.978 0.304  1.51  1.54  1.74  1.96
+## # ... with 7 more variables: p25 &lt;dbl&gt;, p50 &lt;dbl&gt;, p75 &lt;dbl&gt;, p90 &lt;dbl&gt;,
+## #   p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
 <div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="co"># summarize auto transition</span>
 <span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">tb_mtcars</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">am</span> <span class="kw">==</span> <span class="fl">0</span>), <span class="kw">bl_statsasrows</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
 <pre><code>## Warning in min(rowid, na.rm = TRUE): no non-missing arguments to min; returning
@@ -355,21 +355,21 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## Inf</code></pre>
 <pre><code>## Warning: attributes are not identical across measure variables;
 ## they will be dropped</code></pre>
-<pre><code>## # A tibble: 10 x 18
-##    var       n NAobs ZEROobs  mean    sd    cv   min   p01   p05   p10   p25
-##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 carb      0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  2 cyl       0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  3 disp      0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  4 drat      0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  5 gear      0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  6 hp        0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  7 mpg       0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  8 qsec      0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  9 rowid     0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-## 10 wt        0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-## # ... with 6 more variables: p50 &lt;dbl&gt;, p75 &lt;dbl&gt;, p90 &lt;dbl&gt;, p95 &lt;dbl&gt;,
-## #   p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+<pre><code>## # A tibble: 10 x 19
+##    var       n unique NAobs ZEROobs  mean    sd    cv   min   p01   p05   p10
+##    &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 carb      0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  2 cyl       0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  3 disp      0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  4 drat      0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  5 gear      0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  6 hp        0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  7 mpg       0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  8 qsec      0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  9 rowid     0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+## 10 wt        0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+## # ... with 7 more variables: p25 &lt;dbl&gt;, p50 &lt;dbl&gt;, p75 &lt;dbl&gt;, p90 &lt;dbl&gt;,
+## #   p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
 <div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="co"># summarize manual transition</span>
 <span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">tb_mtcars</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">am</span> <span class="kw">==</span> <span class="fl">1</span>), <span class="kw">bl_statsasrows</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
 <pre><code>## Warning in min(rowid, na.rm = TRUE): no non-missing arguments to min; returning
@@ -412,21 +412,21 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## Inf</code></pre>
 <pre><code>## Warning: attributes are not identical across measure variables;
 ## they will be dropped</code></pre>
-<pre><code>## # A tibble: 10 x 18
-##    var       n NAobs ZEROobs  mean    sd    cv   min   p01   p05   p10   p25
-##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 carb      0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  2 cyl       0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  3 disp      0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  4 drat      0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  5 gear      0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  6 hp        0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  7 mpg       0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  8 qsec      0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-##  9 rowid     0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-## 10 wt        0     0       0   NaN    NA    NA   Inf    NA    NA    NA    NA
-## # ... with 6 more variables: p50 &lt;dbl&gt;, p75 &lt;dbl&gt;, p90 &lt;dbl&gt;, p95 &lt;dbl&gt;,
-## #   p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+<pre><code>## # A tibble: 10 x 19
+##    var       n unique NAobs ZEROobs  mean    sd    cv   min   p01   p05   p10
+##    &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 carb      0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  2 cyl       0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  3 disp      0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  4 drat      0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  5 gear      0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  6 hp        0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  7 mpg       0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  8 qsec      0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+##  9 rowid     0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+## 10 wt        0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
+## # ... with 7 more variables: p25 &lt;dbl&gt;, p50 &lt;dbl&gt;, p75 &lt;dbl&gt;, p90 &lt;dbl&gt;,
+## #   p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
 </div>
 <div id="exploration-regressions" class="section level3">
 <h3 class="hasAnchor">
