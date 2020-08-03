@@ -10,7 +10,9 @@ ffp_opt_anlyz_rhgin_dis <- function(ar_rho,
                                     svr_D_max_i = 'D_max_i', svr_D_il = 'D_il',
                                     svr_D_star_i = 'D_star_i', svr_F_star_i = 'F_star_i', svr_EH_star_i = 'EH_star_i',
                                     svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
-                                    svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
+                                    svr_A_il = 'A_il', svr_alpha_il = 'alpha_il',
+                                    svr_beta_i = 'beta_i',
+                                    svr_measure_i = NA, svr_mass_cumu_il = 'mass_cumu_il',
                                     svr_expout = 'opti_exp_outcome',
                                     svr_V_star_Q_il = 'V_star_Q_il',
                                     st_idcol_prefix = 'sid_'){
@@ -19,6 +21,13 @@ ffp_opt_anlyz_rhgin_dis <- function(ar_rho,
   #' @description
   #' Optimal ALlocation Queues for Discrete Problems, Allocation Amount, Value
   #'
+  #' @param fl_teacher_increase_number is the amount of resources (in measure if svr_measure_i is not NA)
+  #' available for allocation.
+  #' @param svr_beta_i string variable name for planner bias
+  #' @param svr_measure_i string variable name for mass for this type of recipient, default NA
+  #' mass of recipient is the measure of recipient of this type in the population. This measure
+  #' does not impact relative ranking optimal allocation across types, but determines how much
+  #' to push individual types further along the allocation queue back.
   #' @author Fan Wang, \url{http://fanwangecon.github.io}
   #' @references
   #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin_dis.html}
@@ -40,11 +49,35 @@ ffp_opt_anlyz_rhgin_dis <- function(ar_rho,
     df_queue_il_wide <- ls_df_queues$df_all_rho
 
     # Step 2
-    # Allocations that would be below resource threshold.
+    if (is.na(svr_measure_i)) {
+      # Allocations that would be below resource threshold, discrete units
+      # fl_teacher_increase_number = discrete units of available
+      df_queue_il_long <- df_queue_il_long %>%
+        mutate(!!sym(svr_D_Wbin_il) :=
+                 case_when(!!sym(svr_inpalc) <= fl_teacher_increase_number ~ 1,
+                           TRUE ~ 0))
+    } else {
+      # Resource Threshold is in Measure, Cumulative Sum measure first
+      # fl_teacher_increase_number = measure of available
+      # 1. group by rho: svr_rho
+      # 2. sort by rank queue: svr_inpalc
+      # 3. cumulative sum the measure within rho by queue rank: mass_cumu_queue
+      # 4. set cutoff allocating threshold based on measure of resources available: fl_teacher_increase_number
+      df_queue_il_long <- df_queue_il_long %>%
+        left_join(df_input_il %>%
+                    select(!!sym(svr_id_il), !!sym(svr_measure_i)),
+                  by=svr_id_il) %>%
+        group_by(!!sym(svr_rho)) %>%
+        arrange(!!sym(svr_inpalc)) %>%
+        mutate(!!sym(svr_mass_cumu_il) := cumsum(!!sym(svr_measure_i))) %>%
+        ungroup() %>%
+        mutate(!!sym(svr_D_Wbin_il) :=
+                 case_when(!!sym(svr_mass_cumu_il) <= fl_teacher_increase_number ~ 1,
+                           TRUE ~ 0))
+    }
+
+    # add some variables to long frame
     df_queue_il_long <- df_queue_il_long %>%
-      mutate(!!sym(svr_D_Wbin_il) :=
-               case_when(!!sym(svr_inpalc) <= fl_teacher_increase_number ~ 1,
-                         TRUE ~ 0)) %>%
       left_join(df_input_il %>%
                   select(!!sym(svr_id_i), !!sym(svr_id_il),
                          !!sym(svr_D_max_i), !!sym(svr_D_il)),
@@ -52,9 +85,13 @@ ffp_opt_anlyz_rhgin_dis <- function(ar_rho,
 
     # Step 3
     # Optimal Allocation Discrete Levels
+    svr_select_list <- c(svr_rho, svr_rho_val, svr_id_i, svr_D_max_i, svr_D_Wbin_il)
+    if (!is.na(svr_measure_i)) {
+      svr_select_list <- c(svr_select_list, svr_mass_cumu_il)
+    }
+
     df_alloc_i_long <- df_queue_il_long %>%
-      select(!!sym(svr_rho), !!sym(svr_rho_val), !!sym(svr_id_i),
-             !!sym(svr_D_max_i), !!sym(svr_D_Wbin_il)) %>%
+      select(one_of(svr_select_list)) %>%
       group_by(!!sym(svr_id_i), !!sym(svr_rho)) %>%
       summarize(!!sym(svr_rho_val)  := mean(!!sym(svr_rho_val)),
                 !!sym(svr_D_max_i)  := mean(!!sym(svr_D_max_i)),
@@ -134,22 +171,27 @@ ffp_opt_anlyz_rhgin_dis <- function(ar_rho,
                                'mean_EH_star', 'min_EH_star')
     df_rho_gini <- as_tibble(mt_rho_gini) %>% rowid_to_column(var = svr_rho)
 
-    # Step 5a, value at Q points
+    # Step 8, value at Q points
     svr_return_list <- c(svr_rho, svr_rho_val, svr_id_i, svr_id_il,
                          svr_D_max_i, svr_D_il, svr_inpalc, svr_D_Wbin_il)
+    if (!is.na(svr_measure_i)) {
+      svr_return_list <- c(svr_return_list, svr_mass_cumu_il)
+    }
+
     # svr_A_il, svr_alpha_il, svr_beta_i
     if (bl_return_V){
       mt_util_rev_loop <- df_queue_il_long %>%
         group_by(!!sym(svr_rho)) %>%
         do(rev = ffp_opt_sodis_value(fl_rho = .[[svr_rho_val]],
-                                       df_queue_il = .,
-                                       bl_return_allQ_V = bl_return_allQ_V,
-                                       bl_return_inner_V = bl_return_inner_V,
-                                       svr_id_i = svr_id_i,
-                                       svr_D_il = svr_D_il, svr_inpalc = svr_inpalc, svr_D_Wbin_il = svr_D_Wbin_il,
-                                       svr_A_il = svr_A_il, svr_alpha_il = svr_alpha_il, svr_beta_i = svr_beta_i,
-                                       svr_V_star_Q_il = svr_V_star_Q_il)) %>%
-            unnest()
+                                     df_queue_il = .,
+                                     bl_return_allQ_V = bl_return_allQ_V,
+                                     bl_return_inner_V = bl_return_inner_V,
+                                     svr_id_i = svr_id_i,
+                                     svr_D_il = svr_D_il, svr_inpalc = svr_inpalc, svr_D_Wbin_il = svr_D_Wbin_il,
+                                     svr_A_il = svr_A_il, svr_alpha_il = svr_alpha_il,
+                                     svr_beta_i = svr_beta_i, svr_measure_i = svr_measure_i,
+                                     svr_V_star_Q_il = svr_V_star_Q_il)) %>%
+        unnest()
       # Step 5b, merge values to queue df
       df_queue_il_long <- df_queue_il_long %>% left_join(mt_util_rev_loop,
                                      by=setNames(c(svr_rho, svr_inpalc), c(svr_rho, svr_inpalc))) %>%

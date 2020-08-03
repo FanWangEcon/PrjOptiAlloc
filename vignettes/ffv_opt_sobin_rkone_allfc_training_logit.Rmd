@@ -65,7 +65,7 @@ spt_img_save_draft <- 'C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/HgtOptiAll
 data(df_opt_lalonde_training)
 
 # Add a binary variable for if there are wage in year 1975
-dft <- df_opt_lalonde_training %>% 
+dft <- df_opt_lalonde_training %>%
   mutate(re75_zero = case_when(re75 == 0 ~ 1, re75 != 0 ~ 0))
 
 # dft stands for dataframe training
@@ -133,7 +133,7 @@ rs_logit_bi <- glm(emp78 ~
                      age + I(age^2) + factor(age_m2)
                    + educ + I(educ^2) +
                    + educ + black + hisp + marr + nodeg
-                   + factor(re75_zero) + 
+                   + factor(re75_zero) +
                    + factor(trt)
                    + factor(age_m2)*factor(trt)
                    , data = dft, family = "binomial")
@@ -223,7 +223,7 @@ plt_A_alpha <- dft_graph %>% ggplot(aes(x=A_i)) +
                      shape=factor(age_m2)), size=4) +
       geom_abline(intercept = 0, slope = 1) + # 45 degree line
       scale_colour_manual(values=c("#69b3a2", "#404080")) +
-      labs(title = st_title, 
+      labs(title = st_title,
            subtitle = paste0(title_line1, '\n', title_line2, '\n', title_line3),
            x = st_x_label,
            y = st_y_label,
@@ -285,7 +285,7 @@ lapply(ls_st_xs,
 
 ## Optimal Binary Allocation
 
-### Solve for Optimal Allocaions Across Preference Parameters
+### Solve for Optimal Allocations Across Preference Parameters
 
 Invoke the binary optimal allocation function *ffp_opt_anlyz_rhgin_bin* that loops over rhos.
 

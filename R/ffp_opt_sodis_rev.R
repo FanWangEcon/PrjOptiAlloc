@@ -5,6 +5,7 @@ ffp_opt_anlyz_sodis_rev <- function(ar_rho,
                                     svr_A_i_l0 = 'A_i_l0', svr_alpha_o_i = 'alpha_o_i',
                                     svr_inpalc = 'Q_il',
                                     svr_beta_i = 'beta_i',
+                                    svr_measure_i = NA, svr_mass_cumu_il = 'mass_cumu_il',
                                     svr_V_star_Q_il = 'V_star_Q_il'){
   #' Discrete Problem Resource Equivalent Variation Multiple Rhos
   #'
@@ -63,6 +64,7 @@ ffp_opt_anlyz_sodis_rev <- function(ar_rho,
                                svr_A_i_l0 = svr_A_i_l0, svr_alpha_o_i = svr_alpha_o_i,
                                svr_inpalc = svr_inpalc,
                                svr_beta_i = svr_beta_i,
+                               svr_measure_i = svr_measure_i, svr_mass_cumu_il = svr_mass_cumu_il,
                                svr_V_star_Q_il = svr_V_star_Q_il)$fl_REV) %>%
     unnest() %>% pull()
 
@@ -82,6 +84,7 @@ ffp_opt_sodis_rev <- function(fl_rho,
                               svr_A_i_l0 = 'A_i_l0', svr_alpha_o_i = 'alpha_o_i',
                               svr_inpalc = 'Q_il',
                               svr_beta_i = 'beta_i',
+                              svr_measure_i = NA, svr_mass_cumu_il = 'mass_cumu_il',
                               svr_V_star_Q_il = 'V_star_Q_il'){
   #' Discrete Problem Resource Equivalent Variation
   #'
@@ -100,16 +103,35 @@ ffp_opt_sodis_rev <- function(fl_rho,
     fl_rho <- fl_rho[1]
   }
 
+  # A. Bias and Mass
+  if (is.na(svr_measure_i)) {
+    # do not modify beta
+    df_input_ib <- df_input_ib %>%
+      mutate(bias_weight = (!!sym(svr_beta_i)) )
+  } else {
+    # Update the weight column so that weight considers both mass and bias
+    df_input_ib <- df_input_ib %>%
+      mutate(bias_weight = (!!sym(svr_beta_i)*!!sym(svr_measure_i)) )
+  }
+
   # B. Aggregate utility given Alternative Allocation
   fl_util_alter_alloc <- df_input_ib %>%
-    mutate(v_altern_i = !!sym(svr_beta_i)*((!!sym(svr_A_i_l0) + !!sym(svr_alpha_o_i))^fl_rho)) %>%
+    mutate(v_altern_i = bias_weight*((!!sym(svr_A_i_l0) + !!sym(svr_alpha_o_i))^fl_rho)) %>%
     summarize(v_altern_unif_i = sum(v_altern_i)^(1/fl_rho)) %>%
     pull()
 
   # C. Generate rho specific REV
+  if (is.na(svr_measure_i)) {
+    svr_mass_or_queue <- svr_inpalc
+  } else {
+    # see ffp_opt_anlyz_rhgin_dis-L205
+    svr_mass_or_queue <- svr_mass_cumu_il
+  }
+
   it_w_exp_min <- min(df_queue_il_with_V %>%
                         filter(!!sym(svr_V_star_Q_il) >= fl_util_alter_alloc) %>%
-                        pull(!!sym(svr_inpalc)))
+                        pull(!!sym(svr_mass_or_queue)))
+
   # D. There are some exceptions:
   # it could be that when optimal choice is observed, value are almost so identical yet slighlty not
   # this leads to empty it_w_exp_min, no value selectec, no allocation gives better than Observed

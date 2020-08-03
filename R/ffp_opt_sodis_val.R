@@ -3,11 +3,12 @@ ffp_opt_sodis_value <- function(fl_rho, df_queue_il,
                                 bl_return_inner_V = FALSE,
                                 svr_id_i = 'id_i',
                                 svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
-                                svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', svr_beta_i = 'beta_i',
+                                svr_A_il = 'A_il', svr_alpha_il = 'alpha_il',
+                                svr_beta_i = 'beta_i', svr_measure_i = NA,
                                 svr_V_cumu_l = 'V_sum_l',
                                 svr_V_inner_Q_il = 'V_inner_Q_il',
                                 svr_V_star_Q_il = 'V_star_Q_il'){
-#' Value at each W point along Queue, given optimal allocation
+#' Value at each W point along Queue, for one planner rho, given optimal allocation
 #'
 #' @description
 #' After solving for optimal allocating queue, at each Q point, which corresponds to
@@ -15,6 +16,11 @@ ffp_opt_sodis_value <- function(fl_rho, df_queue_il,
 #' this is an array of values, at each Q point. Potentially output for all Q. Or
 #' only show this for all queue points up to the actual resource limit, D_Wbin_il = 1.
 #'
+#' @param svr_beta_i string variable name for planner bias
+#' @param svr_measure_i string variable name for mass for this type of recipient, default NA
+#' mass of recipient is the measure of recipient of this type in the population. This measure
+#' does not impact relative ranking optimal allocation across types, but determines how much
+#' to push individual types further along the allocation queue back.
 #' @author Fan Wang, \url{http://fanwangecon.github.io}
 #' @references
 #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sodis_value.html}
@@ -27,11 +33,29 @@ ffp_opt_sodis_value <- function(fl_rho, df_queue_il,
     fl_rho <- fl_rho[1]
   }
 
+  if (is.na(svr_measure_i)) {
+    # do not modify beta
+    df_queue_il <- df_queue_il %>%
+      mutate(bias_weight_cumusum_groupi = (!!sym(svr_beta_i)) )
+  } else {
+    # Update the weight column so that weight considers both mass and bias
+    # df_queue_il <- df_queue_il %>%
+    #   group_by(!!sym(svr_id_i)) %>%
+    #   arrange(!!sym(svr_D_il)) %>%
+    #   mutate(cumu_sum_group_i_mass = cumsum(!!sym(svr_measure_i))) %>%
+    #   arrange(id_i, D_il) %>%
+    #   ungroup() %>%
+    #   mutate(bias_weight_cumusum_groupi = (!!sym(svr_beta_i)*cumu_sum_group_i_mass))
+    # Initially did bias_weight_cumusum_groupi, but incorrect
+    df_queue_il <- df_queue_il %>%
+      mutate(bias_weight_cumusum_groupi = (!!sym(svr_beta_i)*!!sym(svr_measure_i)))
+  }
+
   # A.1 Di=0 Utility for all
   df_rev_dizr_i_onerho <- df_queue_il %>%
       filter(!!sym(svr_D_il) == 1) %>%
-      select(!!sym(svr_id_i), !!sym(svr_beta_i), !!sym(svr_A_il)) %>%
-      mutate(!!sym(svr_V_cumu_l) := !!sym(svr_beta_i)*((!!sym(svr_A_il))^fl_rho),
+      select(!!sym(svr_id_i), bias_weight_cumusum_groupi, !!sym(svr_A_il)) %>%
+      mutate(!!sym(svr_V_cumu_l) := bias_weight_cumusum_groupi*((!!sym(svr_A_il))^fl_rho),
              !!sym(svr_inpalc) := 0) %>%
       select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
 
@@ -44,7 +68,7 @@ ffp_opt_sodis_value <- function(fl_rho, df_queue_il,
   }
   df_rev_il_long_onerho <- df_rev_il_long_onerho %>%
                               mutate(!!sym(svr_V_cumu_l) :=
-                                       !!sym(svr_beta_i)*((!!sym(svr_A_il)+!!sym(svr_alpha_il))^fl_rho)) %>%
+                                       bias_weight_cumusum_groupi*((!!sym(svr_A_il)+!!sym(svr_alpha_il))^fl_rho)) %>%
                               select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
 
   # A.3 Run cum sum function
