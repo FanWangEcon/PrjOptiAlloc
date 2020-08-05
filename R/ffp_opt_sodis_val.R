@@ -1,7 +1,7 @@
 ffp_opt_sodis_value <- function(fl_rho, df_queue_il,
                                 bl_return_allQ_V = FALSE,
                                 bl_return_inner_V = FALSE,
-                                svr_id_i = 'id_i',
+                                svr_id_i = 'id_i', svr_id_il = 'id_il',
                                 svr_D_il = 'D_il', svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
                                 svr_A_il = 'A_il', svr_alpha_il = 'alpha_il',
                                 svr_beta_i = 'beta_i', svr_measure_i = NA,
@@ -20,7 +20,8 @@ ffp_opt_sodis_value <- function(fl_rho, df_queue_il,
 #' @param svr_measure_i string variable name for mass for this type of recipient, default NA
 #' mass of recipient is the measure of recipient of this type in the population. This measure
 #' does not impact relative ranking optimal allocation across types, but determines how much
-#' to push individual types further along the allocation queue back.
+#' to push individual types further along the allocation queue back. this should be 'mass_i',
+#' representing the measure of individuals in this group
 #' @author Fan Wang, \url{http://fanwangecon.github.io}
 #' @references
 #' \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sodis_value.html}
@@ -54,10 +55,11 @@ ffp_opt_sodis_value <- function(fl_rho, df_queue_il,
   # A.1 Di=0 Utility for all
   df_rev_dizr_i_onerho <- df_queue_il %>%
       filter(!!sym(svr_D_il) == 1) %>%
-      select(!!sym(svr_id_i), bias_weight_cumusum_groupi, !!sym(svr_A_il)) %>%
+      select(!!sym(svr_id_i), !!sym(svr_id_il), bias_weight_cumusum_groupi, !!sym(svr_A_il)) %>%
       mutate(!!sym(svr_V_cumu_l) := bias_weight_cumusum_groupi*((!!sym(svr_A_il))^fl_rho),
-             !!sym(svr_inpalc) := 0) %>%
-      select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
+             !!sym(svr_inpalc) := 0,
+             !!sym(svr_D_il) := 0) %>%
+      select(!!sym(svr_id_i), !!sym(svr_id_il), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
 
   # A.2 Cumulative Within Person Utility Inner Power Di, only D_Wbin_il == 1, those within allocaiton bound
   if (bl_return_allQ_V) {
@@ -69,12 +71,12 @@ ffp_opt_sodis_value <- function(fl_rho, df_queue_il,
   df_rev_il_long_onerho <- df_rev_il_long_onerho %>%
                               mutate(!!sym(svr_V_cumu_l) :=
                                        bias_weight_cumusum_groupi*((!!sym(svr_A_il)+!!sym(svr_alpha_il))^fl_rho)) %>%
-                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
+                              select(!!sym(svr_id_i), !!sym(svr_id_il), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
 
   # A.3 Run cum sum function
   df_rev_il_long_onerho <- rbind(df_rev_dizr_i_onerho, df_rev_il_long_onerho)
   df_rev_il_long_onerho <- df_rev_il_long_onerho %>%
-                              select(!!sym(svr_id_i), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
+                              select(!!sym(svr_id_i), !!sym(svr_id_il), !!sym(svr_inpalc), !!sym(svr_V_cumu_l))
   df_rev_il_long_onerho <- ff_panel_cumsum_grouplast(df_rev_il_long_onerho,
                                                      svr_id=svr_id_i, svr_x=svr_inpalc, svr_y=svr_V_cumu_l,
                                                      svr_cumsumtop = svr_V_inner_Q_il,
@@ -88,9 +90,9 @@ ffp_opt_sodis_value <- function(fl_rho, df_queue_il,
 
 
   # Export: function is given rho, so no rho to export
-  svr_return_vars <- c(svr_inpalc, svr_V_star_Q_il)
+  svr_return_vars <- c(svr_id_il, svr_inpalc, svr_V_star_Q_il)
   if (bl_return_inner_V) {
-    svr_return_vars <- c(svr_inpalc, svr_V_cumu_l, svr_V_inner_Q_il, svr_V_star_Q_il)
+    svr_return_vars <- c(svr_id_il, svr_inpalc, svr_V_cumu_l, svr_V_inner_Q_il, svr_V_star_Q_il)
   }
   df_rev_Ail_onerho <- df_rev_Ail_onerho %>% select(one_of(svr_return_vars))
 

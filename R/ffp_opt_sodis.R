@@ -186,15 +186,16 @@ ffp_opt_anlyz_rhgin_dis <- function(ar_rho,
                                      df_queue_il = .,
                                      bl_return_allQ_V = bl_return_allQ_V,
                                      bl_return_inner_V = bl_return_inner_V,
-                                     svr_id_i = svr_id_i,
+                                     svr_id_i = svr_id_i, svr_id_il = svr_id_il,
                                      svr_D_il = svr_D_il, svr_inpalc = svr_inpalc, svr_D_Wbin_il = svr_D_Wbin_il,
                                      svr_A_il = svr_A_il, svr_alpha_il = svr_alpha_il,
                                      svr_beta_i = svr_beta_i, svr_measure_i = svr_measure_i,
                                      svr_V_star_Q_il = svr_V_star_Q_il)) %>%
         unnest()
       # Step 5b, merge values to queue df
-      df_queue_il_long <- df_queue_il_long %>% left_join(mt_util_rev_loop,
-                                     by=setNames(c(svr_rho, svr_inpalc), c(svr_rho, svr_inpalc))) %>%
+      df_queue_il_long <- df_queue_il_long %>% left_join(mt_util_rev_loop %>%
+                                                           select(one_of(svr_rho, svr_id_il, svr_V_star_Q_il)),
+                                     by=setNames(c(svr_rho, svr_id_il), c(svr_rho, svr_id_il))) %>%
                           select(one_of(svr_return_list), starts_with('V_'))
     } else {
       # Step 5c, no value return
