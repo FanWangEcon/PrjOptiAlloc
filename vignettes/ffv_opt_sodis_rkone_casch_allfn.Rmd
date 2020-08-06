@@ -304,63 +304,7 @@ Several things to note:
 2. Allocation queue: sort by allocation queue, and cumulative sum over individual mass, repeatedly over each incremental allocation for each individual
 3. Welfare calculation: the welfare/utility is not by cumulative mass, but by probability mass for each type, this does not vary depending on how much is allocated. Allocation changes alpha and A, not the mass in utility. 
 
-### Generate The mass Variable
-
-The mass variable is not contained in *df_opt_caschool_prep_i*, but is contained in *df_opt_caschool_prep_i*, merge together to get that number of students as mass. This variable does not need to sum to one. Reweighting to sum to one should not change results.
-
-```{r}
-# Summarize
-REconTools::ff_summ_percentiles(df_opt_caschool_input_il, bl_statsasrows=FALSE)
-REconTools::ff_summ_percentiles(df_opt_caschool_input_ib, bl_statsasrows=FALSE)
-
-# Mass of Students for IL file 
-df_opt_caschool_input_mass_il <- df_opt_caschool_input_il %>% 
-  left_join(df_opt_caschool_prep_i %>% 
-              mutate(mass_i = enrltot/sum(enrltot)) %>%
-              select(id_i, mass_i)
-            , by='id_i') %>% ungroup()
-
-# Mass of Students for IL file 
-# IB file done with the Assumption that fl_fa_max% additional teachers per school
-# Since mass per teacher/school same, total mass per school for ib allocation 
-# is determined by 
-df_opt_caschool_input_mass_ib <- df_opt_caschool_input_ib %>%
-  left_join(df_opt_caschool_prep_i %>% 
-              mutate(mass_i = enrltot/sum(enrltot)) %>%
-              mutate(cumu_sum_group_i = mass_i*round(teachers*fl_fa_max)) %>%
-              select(id_i, mass_i, cumu_sum_group_i)
-            , by='id_i') %>% ungroup()
-
-# Total mass
-sum(df_opt_caschool_input_mass_il$mass_i)
-sum(df_opt_caschool_input_mass_ib$cumu_sum_group_i)
-# Alternative Allocation and Mass for Alternative Allocations
-REconTools::ff_summ_percentiles(df_opt_caschool_input_mass_il, bl_statsasrows=FALSE)
-REconTools::ff_summ_percentiles(df_opt_caschool_input_mass_ib, bl_statsasrows=FALSE)
-```
-
-
-Within Group Cumulative Mass Sum with Allocations:
-
-```{r}
-# Within Group Cumulative Sum of Mass
-# For the Value Calculation, the A and alpha are updated to be given allocation up to that point
-# that means the mass calculation is not mass at a particular unit of allocation, but mass
-# for that individual group/type, up to the point. This is a within group cumulative sum, 
-# Note that so for welfare and for allocation queue, in the welfare case, we need cumulative within
-# individual group mass, and in the allocation queue, need point mass
-
-df_opt_caschool_input_mass_il %>%
-  arrange(id_i, D_il) %>% 
-  group_by(id_i) %>% 
-  arrange(D_il) %>% 
-  mutate(cumu_sum_group_i = cumsum(mass_i)) %>%
-  arrange(id_i, D_il) %>%
-  ungroup()
-```
-
-
-### Allocations Given Mass of Available Resources
+### Analyze Previous Level Allocation with Measure Units
 
 Analyze previous allocation not based on measure, do this only for one planner:
 
@@ -386,12 +330,145 @@ df_queue_il_long_mass_cumu %>%
 REconTools::ff_summ_percentiles(df_queue_il_long_mass_cumu, bl_statsasrows=FALSE)
 ```
 
-### Optimal Allocations with Mass
+### Generate The mass Variable
+
+The mass variable is not contained in *df_opt_caschool_prep_i*, but is contained in *df_opt_caschool_prep_i*, merge together to get that number of students as mass. This variable does not need to sum to one. Reweighting to sum to one should not change results.
+
+```{r}
+# Summarize
+REconTools::ff_summ_percentiles(df_opt_caschool_input_il, bl_statsasrows=FALSE)
+REconTools::ff_summ_percentiles(df_opt_caschool_input_ib, bl_statsasrows=FALSE)
+
+# Mass of Students for IL file 
+df_opt_caschool_input_mass_il <- df_opt_caschool_input_il %>% 
+  left_join(df_opt_caschool_prep_i %>% 
+              mutate(mass_i = enrltot/sum(enrltot)) %>%
+              select(id_i, mass_i)
+            , by='id_i') %>% ungroup()
+
+# Mass of Students for IL file 
+# IB file done with the Assumption that fl_fa_max additional teachers per school
+# Since mass per teacher/school same, total mass per school for ib allocation 
+# is determined by mass_i still. Do not nuum to multiply mass by the number of teachers
+# assigned. 
+df_opt_caschool_input_mass_ib <- df_opt_caschool_input_ib %>%
+  left_join(df_opt_caschool_prep_i %>% 
+              mutate(mass_i = enrltot/sum(enrltot)) %>%
+              mutate(cumu_sum_group_i = mass_i*round(teachers*fl_fa_max)) %>%
+              select(id_i, mass_i, cumu_sum_group_i, teachers)
+            , by='id_i') %>% ungroup()
+
+# Total mass
+sum(df_opt_caschool_input_mass_il$mass_i)
+sum(df_opt_caschool_input_mass_ib$cumu_sum_group_i)
+# Alternative Allocation and Mass for Alternative Allocations
+REconTools::ff_summ_percentiles(df_opt_caschool_input_mass_il, bl_statsasrows=FALSE)
+REconTools::ff_summ_percentiles(df_opt_caschool_input_mass_ib, bl_statsasrows=FALSE)
+```
+
+Within Group Cumulative Mass Sum with Allocations:
+
+```{r}
+# Within Group Cumulative Sum of Mass
+# For the Value Calculation, the A and alpha are updated to be given allocation up to that point
+# that means the mass calculation is not mass at a particular unit of allocation, but mass
+# for that individual group/type, up to the point. This is a within group cumulative sum, 
+# Note that so for welfare and for allocation queue, in the welfare case, we need cumulative within
+# individual group mass, and in the allocation queue, need point mass
+
+df_opt_caschool_input_mass_il %>%
+  arrange(id_i, D_il) %>% 
+  group_by(id_i) %>% 
+  arrange(D_il) %>% 
+  mutate(cumu_sum_group_i = cumsum(mass_i)) %>%
+  arrange(id_i, D_il) %>%
+  ungroup()
+```
+
+### Select Subset of Individuals For Allocaitons 
+
+If want to analyze more closely what is happening in a subset of cases, use the subsetting option:
+
+```{r}
+it_O <- 2
+set.seed(1)
+df_cas_prep_sub_i <- df_opt_caschool_prep_i %>% filter(teachers <= 100 & teachers >= 50)
+df_cas_prep_sub_i <- df_cas_prep_sub_i[sample(dim(df_cas_prep_sub_i)[1], it_O, replace=FALSE),]
+ar_cas_id_selected <- df_cas_prep_sub_i %>% pull(id_i)
+
+# Select from il and ib only ids that are randomly selected
+bl_subsetting <- FALSE
+if (bl_subsetting) {
+  df_opt_caschool_input_mass_il <- df_opt_caschool_input_mass_il %>% filter(id_i %in% ar_cas_id_selected)
+  df_opt_caschool_input_mass_ib <- df_opt_caschool_input_mass_ib %>% filter(id_i %in% ar_cas_id_selected)
+}
+
+# Summarize
+REconTools::ff_summ_percentiles(df_opt_caschool_input_mass_il, bl_statsasrows=FALSE)
+REconTools::ff_summ_percentiles(df_opt_caschool_input_mass_ib, bl_statsasrows=FALSE)
+```
+
+### Optimal Allocations 
+
+#### Optimal Allocation with Number of Teachers as before
+
+Copying the code from prior, use *fl_teacher_increase_sub_number* and *df_opt_caschool_input_mass_il* without the mass column *mass_i* specified.
+
+```{r}
+# Measure of Available Teachers
+fl_teacher_increase_sub_number <- sum(df_opt_caschool_input_mass_ib$teachers)*fl_fa_max
+fl_teacher_increase_sub_number <- floor(fl_teacher_increase_sub_number)
+# Allocate Based on the Measure of Available Teachers
+ls_df_queue <- PrjOptiAlloc::ffp_opt_anlyz_rhgin_dis(
+  ar_rho,
+  fl_teacher_increase_sub_number,
+  bl_df_alloc_il = TRUE,
+  df_input_il = df_opt_caschool_input_mass_il,
+  svr_rho = 'rho',
+  svr_id_i = 'id_i', svr_id_il = 'id_il',
+  svr_D_max_i = 'D_max_i', svr_D_il = 'D_il',
+  svr_D_star_i = 'D_star_i', svr_F_star_i = 'F_star_i',
+  svr_inpalc = 'Q_il', svr_D_Wbin_il = 'D_Wbin_il',
+  svr_A_il = 'A_il', svr_alpha_il = 'alpha_il', 
+  svr_beta_i = 'beta_i',
+  svr_expout = 'opti_exp_outcome',
+  st_idcol_prefix = 'sid_')
+df_queue_il_long_count <- ls_df_queue$df_queue_il_long
+df_queue_il_wide_count <- ls_df_queue$df_queue_il_wide
+df_alloc_i_long_count <- ls_df_queue$df_alloc_i_long
+df_rho_gini_count  <- ls_df_queue$df_rho_gini
+df_alloc_il_long_count <- ls_df_queue$df_alloc_il_long
+```
+
+##### Analyze Measure at Count Allocation
+
+Analyze results using the total measure threshold from the measure allocation 
+
+```{r}
+# Cumulative Mass
+df_queue_il_long_mass_cntcumu <- df_queue_il_long_count %>% filter(rho_val == ar_rho[1]) %>%
+  select(-rho, -rho_val) %>%
+  left_join(df_opt_caschool_prep_i %>% 
+            mutate(mass_i = enrltot/sum(enrltot)) %>%
+            select(id_i, mass_i), by='id_i') %>%  
+  arrange(Q_il) %>%
+  mutate(mass_cumu_il = cumsum(mass_i))
+# View Around the Teacher Available Cut-off mass
+df_queue_il_long_mass_cntcumu %>% 
+  filter(Q_il >= fl_teacher_increase_sub_number - 4
+          & Q_il <= fl_teacher_increase_sub_number + 4)
+# Summarize
+REconTools::ff_summ_percentiles(df_queue_il_long_mass_cntcumu, bl_statsasrows=FALSE)
+```
+
+#### Optimal Allocation with Mass
 
 Same as before, but now include the mass column:
 
 ```{r}
+# Measure of Available Teachers
 fl_measure_teacher_increase_number <- sum(df_opt_caschool_input_mass_ib$cumu_sum_group_i)
+# Allocate Based on the Measure of Available Teachers
 ls_df_queue <- PrjOptiAlloc::ffp_opt_anlyz_rhgin_dis(
   ar_rho,
   fl_measure_teacher_increase_number,
@@ -414,29 +491,52 @@ df_rho_gini_mass  <- ls_df_queue$df_rho_gini
 df_alloc_il_long_mass <- ls_df_queue$df_alloc_il_long
 ```
 
+##### Analyze Measure at Mass Allocation
+
 Analyze the Allocation Results based on measure:
 
 ```{r}
-# Cumulative Mass
-df_queue_il_long_mass_cumu <- df_queue_il_long_mass %>% filter(rho_val == ar_rho[1]) %>%
-  select(-rho, -rho_val) %>%
-  left_join(df_opt_caschool_prep_i %>% 
-              mutate(mass = enrltot/sum(enrltot)) %>%
-              select(id_i, mass), by='id_i') %>%
-  arrange(Q_il) %>%
-  mutate(mass_cumu_queue = cumsum(mass))
-# View Around the Teacher Available Cut-off mass
-df_queue_il_long_mass_cumu %>% 
-  filter(mass_cumu_queue >= fl_measure_teacher_increase_number - 0.03
-          & mass_cumu_queue <= fl_measure_teacher_increase_number + 0.03)
+df_queue_il_long_mass %>% filter(rho_val == ar_rho[3]) %>%
+  select(-rho, -rho_val) %>% arrange(Q_il) %>%
+  filter(mass_cumu_il >= fl_measure_teacher_increase_number - 0.01
+          & mass_cumu_il <= fl_measure_teacher_increase_number + 0.01)
 # Summarize
 REconTools::ff_summ_percentiles(df_queue_il_long_mass_cumu, bl_statsasrows=FALSE)
 ```
 
-### REV Compute With Mass
+#### Compare Measure and Count Allocation Results
+
+Under the Utilitarian *filter(rho_val == ar_rho[1])*:
+
+Based on count, there were 30 teacher spots to allocate, and we move up to queue position 30 for allocation. Based on relative measure/weight, because the schools with more teacher spots assigned under alternative allocation also had higher weight, so we end up with a measure such that the 10 + 20 teachers assigned to each type of school, when looked at on the queue, sorted by queue position, and cumulatively summed with the weight of school school type, ends up giving us enough to go to the 38th queue position. So ignoring the weight of the schools, we would have allocated incorrectly, because we thought there were only 30 slots to be allocated, but given weights, there are actually up to the 38th spot on the queue. 
+
+Under *filter(rho_val == ar_rho[2], [3], [4])*:
+
+Under alternative planners, importantly, the queue is different, hence cumulative weight up the queue is different, so the number of "spots" that could be allocated is different. There are 37, 31, 24 spots that are allocated under increasing Rawlsian preferences. This reflects the fact that under more Rawlsian preferences, the districts more more students are ranked higher on the queue, and they take up more mass. At the extreme, given N=2, all the mass from the smaller mass type go to the larger mass type, so the queue goes up to how many spots the larger school districts were assigned uniformly, and additional spot for the larger school if the school smallers' additional teachers are equally assigned to larger schools given relative mass of smaller and larger schools.
+
+### REV Compute 
+
+#### REV Compute with Count
 
 ```{r}
-tb_rho_rev <-
+tb_rho_rev_count <-
+  PrjOptiAlloc::ffp_opt_anlyz_sodis_rev(ar_rho,
+                          fl_teacher_increase_sub_number,
+                          df_input_ib = df_opt_caschool_input_mass_ib,
+                          df_queue_il_long_with_V = df_queue_il_long_count,
+                          svr_beta_i = 'beta_i')
+```
+
+```{r}
+# Display Results
+print(tb_rho_rev_count)
+```
+
+#### REV Compute with Mass
+
+
+```{r}
+tb_rho_rev_mass <-
   PrjOptiAlloc::ffp_opt_anlyz_sodis_rev(ar_rho,
                           fl_measure_teacher_increase_number,
                           df_input_ib = df_opt_caschool_input_mass_ib,
@@ -446,10 +546,11 @@ tb_rho_rev <-
 
 ```{r}
 # Display Results
-print(tb_rho_rev)
+print(tb_rho_rev_mass)
 ```
 
+#### REV results Analysis
 
+Since we are comparing against uniform allocation, the REV difference is the smallest when we consider close to cobb-douglas preferences. The Utilitarian as well as the Rawlsian planner are both interested in allocating in an unequal way. The Utilitarian wants to allocate more to for higher alpha, the Rawlsian wants to allocate more to lower A. The Cobb Douglas planner seeks a balance between the two alternatives. 
 
-
-
+Depending on the Alternative allocation, the REV results might be decreasing, increasing, or have different patterns. 

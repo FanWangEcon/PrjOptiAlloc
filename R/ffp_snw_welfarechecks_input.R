@@ -16,6 +16,7 @@ ffp_snw_process_inputs <-
            svr_checks = 'checks',
            svr_v_value = 'vtilde',
            svr_c_value = 'ctilde',
+           svr_mass = 'mass',
            ar_rho = c(1),
            bl_threshold = FALSE,
            bl_given_firstcheck = FALSE,
@@ -99,8 +100,8 @@ ffp_snw_process_inputs <-
 
 
   ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-  mt_plan_v_tilde <- read.csv(paste0(srt_simu_path, snm_simu_csv), header=FALSE)
-  df_plan_v_tilde <- as_tibble(mt_plan_v_tilde) %>%
+  # mt_plan_v_tilde <- read.csv(paste0(srt_simu_path, snm_simu_csv), header=FALSE)
+  df_plan_v_tilde <- as_tibble(read.csv(paste0(srt_simu_path, snm_simu_csv), header=FALSE)) %>%
     rename_all(~c(ar_svr_csv)) %>%
     filter(vtilde != 0) %>%
     filter(checks <= it_max_checks) %>%
@@ -108,7 +109,7 @@ ffp_snw_process_inputs <-
     filter(age >= it_min_age)
 
   # Remove
-  rm(mt_plan_v_tilde)
+  # rm(mt_plan_v_tilde)
 
   # Column 1: Age (in year before COVID)
   # Column 2: Marital status (0 if not married; 1 if married)
@@ -325,10 +326,16 @@ ffp_snw_process_inputs <-
 
   ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
   # Rescale
+  # df_il_U <- df_il_U %>%
+  #   mutate(v_A_il = v_A_il + 30) %>%
+  #   mutate(v_A_il = case_when(v_A_il >= 0.01 ~ v_A_il,
+  #                             v_A_il <  0.01 ~ 0.01 ))
+  # Minimum A
+  fl_min_v_A_il <- min(df_il_U$v_A_il) + 0.01
+  # Rescale by minimum
   df_il_U <- df_il_U %>%
-    mutate(v_A_il = v_A_il + 30) %>%
-    mutate(v_A_il = case_when(v_A_il >= 0.01 ~ v_A_il,
-                              v_A_il <  0.01 ~ 0.01 ))
+    mutate(v_A_il = v_A_il - fl_min_v_A_il)
+
   # Summarize
   if (bl_print){
     REconTools::ff_summ_percentiles(df_il_U)
@@ -451,7 +458,8 @@ ffp_snw_process_inputs <-
     rename(A_i_l0 = c_A_il) %>%
     mutate(alpha_o_i = case_when(actual_checks == 0 ~ 0,
                                  TRUE ~ c_alpha_il)) %>%
-    select(id_i, A_i_l0, alpha_o_i, beta_i, actual_checks)
+    select(id_i, A_i_l0, alpha_o_i, beta_i, mass, actual_checks) %>%
+    mutate(mass_i = mass, beta_i = 1)
 
   # value
   df_input_ib_v <- df_input_il_covid_actual %>%
@@ -460,7 +468,8 @@ ffp_snw_process_inputs <-
     rename(A_i_l0 = v_A_il) %>%
     mutate(alpha_o_i = case_when(actual_checks == 0 ~ 0,
                                  TRUE ~ v_alpha_il)) %>%
-    select(id_i, A_i_l0, alpha_o_i, beta_i, actual_checks)
+    select(id_i, A_i_l0, alpha_o_i, beta_i, mass, actual_checks) %>%
+    mutate(mass_i = mass, beta_i = 1)
 
   # summarize
   if (bl_print){
@@ -481,6 +490,7 @@ ffp_snw_process_inputs <-
   }
   # And this point, the number is not important
   fl_dis_w <- it_total_checks
+  fl_dis_w_mass <- as.numeric(mass_sum_covid_vox_actual)
   if (bl_print){
     print(paste0('fl_dis_w=',fl_dis_w))
   }
@@ -518,15 +528,24 @@ ffp_snw_process_inputs <-
     rename(alpha_il = c_alpha_il) %>%
     select(-v_A_il, -v_alpha_il)
 
+  # merge with mass, and set beta to 1
+  df_input_il_c <- df_input_il_c %>%
+    mutate(beta_i = 1) %>%
+    left_join(df_id %>% select(id_i, mass), by='id_i') %>%
+    rename(mass_i = mass) %>%
+    select(id_i, id_il, D_max_i, D_il, A_il, alpha_il, beta_i, mass_i) %>%
+    ungroup()
+
   # Solve with Function
   ls_dis_solu_c <- suppressWarnings(suppressMessages(
     ffp_opt_anlyz_rhgin_dis(ar_rho,
-                            fl_dis_w,
+                            fl_dis_w_mass,
                             df_input_il_c,
                             bl_df_alloc_il = FALSE,
                             bl_return_V = TRUE,
                             bl_return_allQ_V = FALSE,
-                            bl_return_inner_V = FALSE)))
+                            bl_return_inner_V = FALSE,
+                            svr_measure_i = 'mass_i')))
   df_queue_il_long_c <-ls_dis_solu_c$df_queue_il_long
   df_alloc_i_long_c <- ls_dis_solu_c$df_alloc_i_long
   df_rho_gini_c <- ls_dis_solu_c$df_rho_gini
@@ -539,16 +558,24 @@ ffp_snw_process_inputs <-
     rename(A_il = v_A_il) %>%
     rename(alpha_il = v_alpha_il) %>%
     select(-c_A_il, -c_alpha_il)
+  # merge with mass, and set beta to 1
+  df_input_il_v <- df_input_il_v %>%
+    mutate(beta_i = 1) %>%
+    left_join(df_id %>% select(id_i, mass), by='id_i') %>%
+    rename(mass_i = mass) %>%
+    select(id_i, id_il, D_max_i, D_il, A_il, alpha_il, beta_i, mass_i) %>%
+    ungroup()
 
   # Solve with Function
   ls_dis_solu_v <- suppressWarnings(suppressMessages(
     ffp_opt_anlyz_rhgin_dis(ar_rho,
-                            fl_dis_w,
+                            fl_dis_w_mass,
                             df_input_il_v,
                             bl_df_alloc_il = FALSE,
                             bl_return_V = TRUE,
                             bl_return_allQ_V = FALSE,
-                            bl_return_inner_V = FALSE)))
+                            bl_return_inner_V = FALSE,
+                            svr_measure_i = 'mass_i')))
   df_queue_il_long_v <-ls_dis_solu_v$df_queue_il_long
   df_alloc_i_long_v <- ls_dis_solu_v$df_alloc_i_long
   df_rho_gini_v <- ls_dis_solu_v$df_rho_gini
@@ -565,9 +592,10 @@ ffp_snw_process_inputs <-
   ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
   tb_rho_rev_c <-
     PrjOptiAlloc::ffp_opt_anlyz_sodis_rev(ar_rho,
-                                          fl_dis_w,
+                                          fl_dis_w_mass,
                                           df_input_ib = df_input_ib_c,
-                                          df_queue_il_long_with_V = df_queue_il_long_c)
+                                          df_queue_il_long_with_V = df_queue_il_long_c,
+                                          svr_measure_i = 'mass_i')
 
 
   ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -579,9 +607,10 @@ ffp_snw_process_inputs <-
   ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
   tb_rho_rev_v <-
     PrjOptiAlloc::ffp_opt_anlyz_sodis_rev(ar_rho,
-                                          fl_dis_w,
+                                          fl_dis_w_mass,
                                           df_input_ib = df_input_ib_v,
-                                          df_queue_il_long_with_V = df_queue_il_long_v)
+                                          df_queue_il_long_with_V = df_queue_il_long_v,
+                                          svr_measure_i = 'mass_i')
 
   ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
   # Display Results
@@ -646,44 +675,48 @@ ffp_snw_process_inputs <-
                  values_to = "checks")
 
   ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-  ls_svr_groups <- c('ymin_group', 'age_group', 'marital', 'kids')
-  for (svr_group in ls_svr_groups) {
+  if (bl_print_verbose){
+    ls_svr_groups <- c('ymin_group', 'age_group', 'marital', 'kids')
+    for (svr_group in ls_svr_groups) {
 
-    # Group by variable
-    print(paste0('current group = ', svr_group))
+      # Group by variable
+      print(paste0('current group = ', svr_group))
 
-    # Summarize
-    df <- df_alloc_i_long_covar_c
-    vars.group <- c('rho_val', svr_group, 'allocate_type')
-    var.numeric <- 'checks'
-    str.stats.group <- 'allperc'
-    ar.perc <- c(0.10, 0.25, 0.50, 0.75, 0.90)
-    ls_summ_by_group <- REconTools::ff_summ_bygroup(
-      df, vars.group, var.numeric, str.stats.group, ar.perc)
-    if (bl_print_verbose){
-      print(ls_summ_by_group$df_table_grp_stats)
+      # Summarize
+      df <- df_alloc_i_long_covar_c
+      vars.group <- c('rho_val', svr_group, 'allocate_type')
+      var.numeric <- 'checks'
+      str.stats.group <- 'allperc'
+      ar.perc <- c(0.10, 0.25, 0.50, 0.75, 0.90)
+      ls_summ_by_group <- REconTools::ff_summ_bygroup(
+        df, vars.group, var.numeric, str.stats.group, ar.perc)
+      if (bl_print_verbose){
+        print(ls_summ_by_group$df_table_grp_stats)
+      }
     }
   }
 
   ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-  ls_svr_groups <- c('ymin_group', 'age_group', 'marital', 'kids')
-  for (svr_group in ls_svr_groups) {
+  if (bl_print_verbose){
+    ls_svr_groups <- c('ymin_group', 'age_group', 'marital', 'kids')
+    for (svr_group in ls_svr_groups) {
 
-    # Group by variable
-    print(paste0('current group = ', svr_group))
+      # Group by variable
+      print(paste0('current group = ', svr_group))
 
-    # Summarize
-    df <- df_alloc_i_long_covar_v
-    vars.group <- c('rho_val', svr_group, 'allocate_type')
-    var.numeric <- 'checks'
-    str.stats.group <- 'allperc'
-    ar.perc <- c(0.10, 0.25, 0.50, 0.75, 0.90)
-    ls_summ_by_group <- REconTools::ff_summ_bygroup(
-      df, vars.group, var.numeric, str.stats.group, ar.perc)
-    if (bl_print_verbose){
-      print(ls_summ_by_group$df_table_grp_stats)
+      # Summarize
+      df <- df_alloc_i_long_covar_v
+      vars.group <- c('rho_val', svr_group, 'allocate_type')
+      var.numeric <- 'checks'
+      str.stats.group <- 'allperc'
+      ar.perc <- c(0.10, 0.25, 0.50, 0.75, 0.90)
+      ls_summ_by_group <- REconTools::ff_summ_bygroup(
+        df, vars.group, var.numeric, str.stats.group, ar.perc)
+      if (bl_print_verbose){
+        print(ls_summ_by_group$df_table_grp_stats)
+      }
+
     }
-
   }
 
   return(list(df_input_il_noninc_covar=df_input_il_noninc_covar,
