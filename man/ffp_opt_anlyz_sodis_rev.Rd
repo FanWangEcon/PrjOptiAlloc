@@ -15,6 +15,8 @@ ffp_opt_anlyz_sodis_rev(
   svr_alpha_o_i = "alpha_o_i",
   svr_inpalc = "Q_il",
   svr_beta_i = "beta_i",
+  svr_measure_i = NA,
+  svr_mass_cumu_il = "mass_cumu_il",
   svr_V_star_Q_il = "V_star_Q_il"
 )
 }

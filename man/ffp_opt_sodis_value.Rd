@@ -2,7 +2,7 @@
 % Please edit documentation in R/ffp_opt_sodis_val.R
 \name{ffp_opt_sodis_value}
 \alias{ffp_opt_sodis_value}
-\title{Value at each W point along Queue, given optimal allocation}
+\title{Value at each W point along Queue, for one planner rho, given optimal allocation}
 \usage{
 ffp_opt_sodis_value(
   fl_rho,
@@ -10,16 +10,27 @@ ffp_opt_sodis_value(
   bl_return_allQ_V = FALSE,
   bl_return_inner_V = FALSE,
   svr_id_i = "id_i",
+  svr_id_il = "id_il",
   svr_D_il = "D_il",
   svr_inpalc = "Q_il",
   svr_D_Wbin_il = "D_Wbin_il",
   svr_A_il = "A_il",
   svr_alpha_il = "alpha_il",
   svr_beta_i = "beta_i",
+  svr_measure_i = NA,
   svr_V_cumu_l = "V_sum_l",
   svr_V_inner_Q_il = "V_inner_Q_il",
   svr_V_star_Q_il = "V_star_Q_il"
 )
+}
+\arguments{
+\item{svr_beta_i}{string variable name for planner bias}
+
+\item{svr_measure_i}{string variable name for mass for this type of recipient, default NA
+mass of recipient is the measure of recipient of this type in the population. This measure
+does not impact relative ranking optimal allocation across types, but determines how much
+to push individual types further along the allocation queue back. this should be 'mass_i',
+representing the measure of individuals in this group}
 }
 \description{
 After solving for optimal allocating queue, at each Q point, which corresponds to

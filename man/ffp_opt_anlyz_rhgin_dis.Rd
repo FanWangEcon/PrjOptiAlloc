@@ -26,10 +26,23 @@ ffp_opt_anlyz_rhgin_dis(
   svr_A_il = "A_il",
   svr_alpha_il = "alpha_il",
   svr_beta_i = "beta_i",
+  svr_measure_i = NA,
+  svr_mass_cumu_il = "mass_cumu_il",
   svr_expout = "opti_exp_outcome",
   svr_V_star_Q_il = "V_star_Q_il",
   st_idcol_prefix = "sid_"
 )
+}
+\arguments{
+\item{fl_teacher_increase_number}{is the amount of resources (in measure if svr_measure_i is not NA)
+available for allocation.}
+
+\item{svr_beta_i}{string variable name for planner bias}
+
+\item{svr_measure_i}{string variable name for mass for this type of recipient, default NA
+mass of recipient is the measure of recipient of this type in the population. This measure
+does not impact relative ranking optimal allocation across types, but determines how much
+to push individual types further along the allocation queue back.}
 }
 \description{
 Optimal ALlocation Queues for Discrete Problems, Allocation Amount, Value

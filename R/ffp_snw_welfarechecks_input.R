@@ -135,7 +135,12 @@ ffp_snw_process_inputs <-
 
   ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
   # Age Groups
-  ar_agecut = seq(it_min_age-1, it_max_age, length.out=it_age_bins+1)
+  # Age Groups
+  if (it_age_bins == 4) {
+    ar_agecut = c(17, 30, 40, 50, 64)
+  } else {
+    ar_agecut = seq(it_min_age-1, it_max_age, length.out=it_age_bins+1)
+  }
   # Dimensions
   if (bl_print){
     print(paste0('dim(df_plan_v_tilde)=',dim(df_plan_v_tilde)))

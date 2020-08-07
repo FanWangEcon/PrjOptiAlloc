@@ -24,6 +24,7 @@ ffp_snw_process_inputs(
   svr_checks = "checks",
   svr_v_value = "vtilde",
   svr_c_value = "ctilde",
+  svr_mass = "mass",
   ar_rho = c(1),
   bl_threshold = FALSE,
   bl_given_firstcheck = FALSE,
