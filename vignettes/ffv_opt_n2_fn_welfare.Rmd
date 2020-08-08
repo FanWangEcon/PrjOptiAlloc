@@ -26,7 +26,7 @@ library(dplyr)
 
 library(PrjOptiAlloc)
 
-source('C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/PrjOptiAlloc/R/ffd_opt_datagen.R')
+# source('C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/PrjOptiAlloc/R/ffd_opt_datagen.R')
 
 bl_save_img = FALSE
 ```

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Value at each W point along Queue, given optimal allocation — ffp_opt_sodis_value • Optimal Allocation</title>
+<title>Value at each W point along Queue, for one planner rho, given optimal allocation — ffp_opt_sodis_value • Optimal Allocation</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Value at each W point along Queue, given optimal allocation — ffp_opt_sodis_value" />
+<meta property="og:title" content="Value at each W point along Queue, for one planner rho, given optimal allocation — ffp_opt_sodis_value" />
 <meta property="og:description" content="After solving for optimal allocating queue, at each Q point, which corresponds to
 different level of aggregate resources available, show the value given optimal choices
 this is an array of values, at each Q point. Potentially output for all Q. Or
@@ -172,7 +172,7 @@ only show this for all queue points up to the actual resource limit, D_Wbin_il =
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Value at each W point along Queue, given optimal allocation</h1>
+    <h1>Value at each W point along Queue, for one planner rho, given optimal allocation</h1>
     <small class="dont-index">Source: <a href='https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/R/ffp_opt_sodis_val.R'><code>R/ffp_opt_sodis_val.R</code></a></small>
     <div class="hidden name"><code>ffp_opt_sodis_value.Rd</code></div>
     </div>
@@ -190,17 +190,35 @@ only show this for all queue points up to the actual resource limit, D_Wbin_il =
   <span class='kw'>bl_return_allQ_V</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>bl_return_inner_V</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>svr_id_i</span> <span class='kw'>=</span> <span class='st'>"id_i"</span>,
+  <span class='kw'>svr_id_il</span> <span class='kw'>=</span> <span class='st'>"id_il"</span>,
   <span class='kw'>svr_D_il</span> <span class='kw'>=</span> <span class='st'>"D_il"</span>,
   <span class='kw'>svr_inpalc</span> <span class='kw'>=</span> <span class='st'>"Q_il"</span>,
   <span class='kw'>svr_D_Wbin_il</span> <span class='kw'>=</span> <span class='st'>"D_Wbin_il"</span>,
   <span class='kw'>svr_A_il</span> <span class='kw'>=</span> <span class='st'>"A_il"</span>,
   <span class='kw'>svr_alpha_il</span> <span class='kw'>=</span> <span class='st'>"alpha_il"</span>,
   <span class='kw'>svr_beta_i</span> <span class='kw'>=</span> <span class='st'>"beta_i"</span>,
+  <span class='kw'>svr_measure_i</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>svr_V_cumu_l</span> <span class='kw'>=</span> <span class='st'>"V_sum_l"</span>,
   <span class='kw'>svr_V_inner_Q_il</span> <span class='kw'>=</span> <span class='st'>"V_inner_Q_il"</span>,
   <span class='kw'>svr_V_star_Q_il</span> <span class='kw'>=</span> <span class='st'>"V_star_Q_il"</span>
 )</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>svr_beta_i</th>
+      <td><p>string variable name for planner bias</p></td>
+    </tr>
+    <tr>
+      <th>svr_measure_i</th>
+      <td><p>string variable name for mass for this type of recipient, default NA
+mass of recipient is the measure of recipient of this type in the population. This measure
+does not impact relative ranking optimal allocation across types, but determines how much
+to push individual types further along the allocation queue back. this should be 'mass_i',
+representing the measure of individuals in this group</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

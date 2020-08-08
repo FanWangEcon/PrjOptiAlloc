@@ -123,7 +123,7 @@ Use the California student test score dataset, same as line by line.
 
       
 
-      </header><div class="row">
+      </header><script src="ffv_opt_sodis_rkone_casch_allfn_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Function Test Discrete Allocation with Linear Regression</h1>
@@ -237,7 +237,7 @@ Use the California student test score dataset, same as line by line.
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_queue_il_long</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 36 x 11
 ##      rho rho_val  id_i id_il D_max_i  D_il  Q_il D_Wbin_il  V_sum_l V_inner_Q_il
-##    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;
+##    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;
 ##  1     1   0.99      1     1       3     1     4         1 1.31e+ 0     2.41e+ 0
 ##  2     2   0.785     1     1       3     1     4         1 9.89e- 1     1.97e+ 0
 ##  3     3  -3.64      1     1       3     1     9         0 2.14e- 3     4.33e- 2
@@ -301,7 +301,7 @@ Use the California student test score dataset, same as line by line.
 <div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_alloc_il_long</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 36 x 5
 ##      rho  Q_il sid_1 sid_2 sid_3
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ##  1     1     1     0     0     1
 ##  2     1     2     1     0     1
 ##  3     1     3     2     0     1
@@ -356,6 +356,10 @@ Use the California student test score dataset, same as line by line.
 ##  $ A_i_l0   : num  691 654 641 641 639 ...
 ##  $ alpha_o_i: num  2.37 2.92 2.76 2.66 2.63 ...
 ##  $ beta_i   : num  0.00238 0.00238 0.00238 0.00238 0.00238 ...</code></pre>
+<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="co"># Modifying Beta Value</span>
+<span class="co"># When individuals have the same weights, beta values do not matter</span>
+<span class="no">df_opt_caschool_input_il</span> <span class="kw">&lt;-</span> <span class="no">df_opt_caschool_input_il</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">beta_i</span> <span class="kw">=</span> <span class="fl">1</span>)
+<span class="no">df_opt_caschool_input_ib</span> <span class="kw">&lt;-</span> <span class="no">df_opt_caschool_input_ib</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">beta_i</span> <span class="kw">=</span> <span class="fl">1</span>)</pre></body></html></div>
 </div>
 <div id="solve-all-districts-discrete-optimal-allocation-across-planner-preferences" class="section level2">
 <h2 class="hasAnchor">
@@ -364,7 +368,7 @@ Use the California student test score dataset, same as line by line.
 <h3 class="hasAnchor">
 <a href="#specify-policy-parameters" class="anchor"></a>Specify Policy Parameters</h3>
 <p>Note that <em>input_il</em> function already is based on <em>fl_fi_max</em>.</p>
-<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="co"># 100 percent teacher at most per school, discretize floor as needed</span>
+<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="co"># 100 percent teacher at most per school, discretize floor as needed</span>
 <span class="co"># This is not a parameter that matters here, already a part of the input_il function</span>
 <span class="no">fl_fi_max</span> <span class="kw">=</span> <span class="fl">1.00</span>
 <span class="co"># 20 percent total additional of all teachers</span>
@@ -382,7 +386,8 @@ Use the California student test score dataset, same as line by line.
 <h2 class="hasAnchor">
 <a href="#optimal-queue-and-allocations" class="anchor"></a>Optimal Queue and Allocations</h2>
 <p>Use the discrete allocation function across preference <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin_dis.html">ffp_opt_anlyz_rhgin_dis.html</a> function. This computes optimal allocation for multiple planner inequality aversion <span class="math inline">\(\lambda\)</span> parameters at the same time. Note that in the function <span class="math inline">\(\lambda=\rho\)</span>.</p>
-<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="no">ls_df_queue</span> <span class="kw">&lt;-</span> <span class="kw pkg">PrjOptiAlloc</span><span class="kw ns">::</span><span class="fu"><a href="../reference/ffp_opt_anlyz_rhgin_dis.html">ffp_opt_anlyz_rhgin_dis</a></span>(<span class="no">ar_rho</span>,
+<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="co"># Optimal Allocation</span>
+<span class="no">ls_df_queue</span> <span class="kw">&lt;-</span> <span class="kw pkg">PrjOptiAlloc</span><span class="kw ns">::</span><span class="fu"><a href="../reference/ffp_opt_anlyz_rhgin_dis.html">ffp_opt_anlyz_rhgin_dis</a></span>(<span class="no">ar_rho</span>,
                                        <span class="no">fl_teacher_increase_number</span>,
                                        <span class="kw">bl_df_alloc_il</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
                                        <span class="kw">df_input_il</span> <span class="kw">=</span> <span class="no">df_opt_caschool_input_il</span>,
@@ -404,44 +409,44 @@ Use the California student test score dataset, same as line by line.
 ## Please use `cols = c(rev)`</code></pre>
 <pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(alloc_i_upto_Q)`</code></pre>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="no">df_queue_il_long</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_queue_il_long</span>
+<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="no">df_queue_il_long</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_queue_il_long</span>
 <span class="no">df_queue_il_wide</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_queue_il_wide</span>
 <span class="no">df_alloc_i_long</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_alloc_i_long</span>
 <span class="no">df_rho_gini</span>  <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_rho_gini</span>
 <span class="no">df_alloc_il_long</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_alloc_il_long</span></pre></body></html></div>
-<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="co"># Display Results</span>
+<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="co"># Display Results</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_queue_il_long</span>, <span class="fl">10</span>))</pre></body></html></div>
 <pre><code>## # A tibble: 10 x 9
 ##      rho rho_val  id_i id_il D_max_i  D_il  Q_il D_Wbin_il V_star_Q_il
-##    &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
-##  1     1   0.99      1     1      11     1   138         1        655.
-##  2     2   0.785     1     1      11     1   140         1        655.
-##  3     3  -3.64      1     1      11     1   244         1        654.
+##    &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+##  1     1   0.99      1     1      11     1   138         1     292290.
+##  2     2   0.785     1     1      11     1   140         1    1444269.
+##  3     3  -3.64      1     1      11     1   244         1        125.
 ##  4     4 -99         1     1      11     1 36657         0         NA 
-##  5     1   0.99      1     2      11     2   209         1        655.
-##  6     2   0.785     1     2      11     2   212         1        655.
-##  7     3  -3.64      1     2      11     2   372         1        654.
+##  5     1   0.99      1     2      11     2   209         1     292379.
+##  6     2   0.785     1     2      11     2   212         1    1444712.
+##  7     3  -3.64      1     2      11     2   372         1        125.
 ##  8     4 -99         1     2      11     2 39093         0         NA 
-##  9     1   0.99      1     3      11     3   297         1        655.
-## 10     2   0.785     1     3      11     3   305         1        655.</code></pre>
-<div class="sourceCode" id="cb40"><html><body><pre class="r"><span class="co"># print(str(df_queue_il_long))</span>
+##  9     1   0.99      1     3      11     3   297         1     292474.
+## 10     2   0.785     1     3      11     3   305         1    1445198.</code></pre>
+<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="co"># print(str(df_queue_il_long))</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_queue_il_wide</span>, <span class="fl">10</span>))</pre></body></html></div>
 <pre><code>## # A tibble: 10 x 14
-##    id_il  A_il alpha_il  beta_i rank_min rank_max avg_rank  id_i D_max_i  D_il
-##    &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;int&gt;    &lt;int&gt;    &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt;
-##  1     1  691.    1.29  0.00238    36657      138    9295.     1      11     1
-##  2     2  692.    1.09  0.00238    39093      209    9972.     1      11     2
-##  3     3  693.    0.932 0.00238    41307      297   10604      1      11     3
-##  4     4  694.    0.808 0.00238    43280      404   11190.     1      11     4
-##  5     5  695.    0.707 0.00238    45090      522   11750.     1      11     5
-##  6     6  696.    0.624 0.00238    46600      658   12248.     1      11     6
-##  7     7  696.    0.554 0.00238    47875      813   12704.     1      11     7
-##  8     8  697.    0.496 0.00238    48958      978   13115      1      11     8
-##  9     9  697.    0.446 0.00238    49841     1165   13495      1      11     9
-## 10    10  698.    0.404 0.00238    50512     1357   13826.     1      11    10
+##    id_il  A_il alpha_il beta_i rank_min rank_max avg_rank  id_i D_max_i  D_il
+##    &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;int&gt;    &lt;int&gt;    &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt;
+##  1     1  691.    1.29       1    36657      138    9295.     1      11     1
+##  2     2  692.    1.09       1    39093      209    9972.     1      11     2
+##  3     3  693.    0.932      1    41307      297   10604      1      11     3
+##  4     4  694.    0.808      1    43280      404   11190.     1      11     4
+##  5     5  695.    0.707      1    45090      522   11750.     1      11     5
+##  6     6  696.    0.624      1    46600      658   12248.     1      11     6
+##  7     7  696.    0.554      1    47875      813   12704.     1      11     7
+##  8     8  697.    0.496      1    48958      978   13115      1      11     8
+##  9     9  697.    0.446      1    49841     1165   13495      1      11     9
+## 10    10  698.    0.404      1    50512     1357   13826.     1      11    10
 ## # ... with 4 more variables: rho_c1_rk &lt;int&gt;, rho_c2_rk &lt;int&gt;, rho_c3_rk &lt;int&gt;,
 ## #   rho_c4_rk &lt;int&gt;</code></pre>
-<div class="sourceCode" id="cb42"><html><body><pre class="r"><span class="co"># print(str(df_queue_il_wide))</span>
+<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="co"># print(str(df_queue_il_wide))</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_alloc_i_long</span>, <span class="fl">10</span>))</pre></body></html></div>
 <pre><code>## # A tibble: 10 x 7
 ## # Groups:   id_i [3]
@@ -457,7 +462,7 @@ Use the California student test score dataset, same as line by line.
 ##  8     4 -99         2      11        6    0.545      661.
 ##  9     1   0.99      3      83       54    0.651      647.
 ## 10     2   0.785     3      83       54    0.651      647.</code></pre>
-<div class="sourceCode" id="cb44"><html><body><pre class="r"><span class="co"># print(str(df_queue_il_wide))</span>
+<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="co"># print(str(df_queue_il_wide))</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_rho_gini</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 1,680 x 9
 ##      rho rho_val gini_D_star gini_EH_star atkinson_EH_star sd_D_star sd_EH_star
@@ -474,11 +479,11 @@ Use the California student test score dataset, same as line by line.
 ## 10    10   0.785       0.445       0.0154       0.00000362      20.2       17.8
 ## # ... with 1,670 more rows, and 2 more variables: mean_EH_star &lt;dbl&gt;,
 ## #   min_EH_star &lt;dbl&gt;</code></pre>
-<div class="sourceCode" id="cb46"><html><body><pre class="r"><span class="co"># print(str(df_alloc_i_long))</span>
+<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="co"># print(str(df_alloc_i_long))</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_alloc_il_long</span>, <span class="fl">10</span>))</pre></body></html></div>
 <pre><code>## # A tibble: 10 x 422
 ##      rho  Q_il sid_1 sid_2 sid_3 sid_4 sid_5 sid_6 sid_7 sid_8 sid_9 sid_10
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
 ##  1     1     1     0     0     0     0     0     0     0     0     0      0
 ##  2     1     2     0     0     0     0     0     0     0     0     0      0
 ##  3     1     3     0     0     0     0     0     0     0     0     0      0
@@ -514,14 +519,14 @@ Use the California student test score dataset, same as line by line.
 <div id="rev-compute" class="section level2">
 <h2 class="hasAnchor">
 <a href="#rev-compute" class="anchor"></a>REV Compute</h2>
-<div class="sourceCode" id="cb48"><html><body><pre class="r"><span class="no">tb_rho_rev</span> <span class="kw">&lt;-</span>
+<div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="no">tb_rho_rev</span> <span class="kw">&lt;-</span>
   <span class="kw pkg">PrjOptiAlloc</span><span class="kw ns">::</span><span class="fu"><a href="../reference/ffp_opt_anlyz_sodis_rev.html">ffp_opt_anlyz_sodis_rev</a></span>(<span class="no">ar_rho</span>,
                           <span class="no">fl_teacher_increase_number</span>,
                           <span class="kw">df_input_ib</span> <span class="kw">=</span> <span class="no">df_opt_caschool_input_ib</span>,
                           <span class="kw">df_queue_il_long_with_V</span> <span class="kw">=</span> <span class="no">df_queue_il_long</span>)</pre></body></html></div>
 <pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(rev)`</code></pre>
-<div class="sourceCode" id="cb50"><html><body><pre class="r"><span class="co"># Display Results</span>
+<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="co"># Display Results</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">tb_rho_rev</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 4 x 3
 ##     rho rho_val   REV
@@ -542,7 +547,7 @@ Use the California student test score dataset, same as line by line.
 <li>Select a random subset of district IDs</li>
 <li>New input df that only includes these IDs.</li>
 </ol>
-<div class="sourceCode" id="cb52"><html><body><pre class="r"><span class="co"># select four school districts</span>
+<div class="sourceCode" id="cb53"><html><body><pre class="r"><span class="co"># select four school districts</span>
 <span class="co"># cas = california schools</span>
 <span class="no">it_O</span> <span class="kw">&lt;-</span> <span class="fl">4</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1</span>)
@@ -566,29 +571,29 @@ Use the California student test score dataset, same as line by line.
 ## 39   68007 San Diego          Cardiff Elementary  KK-06 21.96700  668.65
 ## 1    61549     Butte Thermalito Union Elementary  KK-08  8.97800  643.60
 ## 34   71035    Sonoma           Wright Elementary  KK-06 12.58425  663.85</code></pre>
-<div class="sourceCode" id="cb54"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_cas_input_sub_ib</span>)</pre></body></html></div>
-<pre><code>##   id_i   A_i_l0 alpha_o_i      beta_i
-## 1    3 640.8497  2.761831 0.002380952
-## 2   32 617.7468  3.047727 0.002380952
-## 3  286 654.8866  2.792764 0.002380952
-## 4  327 671.6376  2.516732 0.002380952</code></pre>
-<div class="sourceCode" id="cb56"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_cas_input_sub_il</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_cas_input_sub_ib</span>)</pre></body></html></div>
+<pre><code>##   id_i   A_i_l0 alpha_o_i beta_i
+## 1    3 640.8497  2.761831      1
+## 2   32 617.7468  3.047727      1
+## 3  286 654.8866  2.792764      1
+## 4  327 671.6376  2.516732      1</code></pre>
+<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_cas_input_sub_il</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 299 x 7
-##     id_i id_il D_max_i  D_il  A_il alpha_il  beta_i
-##    &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
-##  1     3    23      83     1  641.    0.193 0.00238
-##  2     3    24      83     2  641.    0.189 0.00238
-##  3     3    25      83     3  641.    0.184 0.00238
-##  4     3    26      83     4  641.    0.180 0.00238
-##  5     3    27      83     5  642.    0.176 0.00238
-##  6     3    28      83     6  642.    0.172 0.00238
-##  7     3    29      83     7  642.    0.168 0.00238
-##  8     3    30      83     8  642.    0.165 0.00238
-##  9     3    31      83     9  642.    0.161 0.00238
-## 10     3    32      83    10  642.    0.158 0.00238
+##     id_i id_il D_max_i  D_il  A_il alpha_il beta_i
+##    &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+##  1     3    23      83     1  641.    0.193      1
+##  2     3    24      83     2  641.    0.189      1
+##  3     3    25      83     3  641.    0.184      1
+##  4     3    26      83     4  641.    0.180      1
+##  5     3    27      83     5  642.    0.176      1
+##  6     3    28      83     6  642.    0.172      1
+##  7     3    29      83     7  642.    0.168      1
+##  8     3    30      83     8  642.    0.165      1
+##  9     3    31      83     9  642.    0.161      1
+## 10     3    32      83    10  642.    0.158      1
 ## # ... with 289 more rows</code></pre>
 <p>Now we also have a new total number of teacher increase, no longer based on all districts. The policy here is to potentially increase each school district by <em>fl_fi_max</em>, already coded into the <em>input_il</em> file, so that can not change. The total number of available new teachers is <em>fl_fa_max</em> times the existing number of teachers in the selected districts overall</p>
-<div class="sourceCode" id="cb58"><html><body><pre class="r"><span class="no">fl_fa_max</span> <span class="kw">=</span> <span class="fl">0.20</span>
+<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="no">fl_fa_max</span> <span class="kw">=</span> <span class="fl">0.20</span>
 <span class="co"># What is the number of teachers we can increase by</span>
 <span class="no">fl_teacher_increase_sub_number</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">df_cas_prep_sub_i</span>$<span class="no">teachers</span>)*<span class="no">fl_fa_max</span>
 <span class="no">fl_teacher_increase_sub_number</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span>(<span class="no">fl_teacher_increase_sub_number</span>)</pre></body></html></div>
@@ -597,7 +602,7 @@ Use the California student test score dataset, same as line by line.
 <h3 class="hasAnchor">
 <a href="#optimal-queue-allocations-and-rev" class="anchor"></a>Optimal Queue, Allocations and REV</h3>
 <p>Use the discrete allocation function across preference <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin_dis.html">ffp_opt_anlyz_rhgin_dis.html</a> function. This computes optimal allocation for multiple planner inequality aversion <span class="math inline">\(\lambda\)</span> parameters at the same time. Note that in the function <span class="math inline">\(\lambda=\rho\)</span>.</p>
-<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="co"># Rho values to consider</span>
+<div class="sourceCode" id="cb60"><html><body><pre class="r"><span class="co"># Rho values to consider</span>
 <span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fl">1</span> - (<span class="fl">10</span>^(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">2</span>,<span class="fl">2</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">4</span>))))
 <span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">ar_rho</span>)
 
@@ -637,7 +642,7 @@ Use the California student test score dataset, same as line by line.
 ## Please use `cols = c(rev)`</code></pre>
 <pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(alloc_i_upto_Q)`</code></pre>
-<div class="sourceCode" id="cb67"><html><body><pre class="r"><span class="no">df_queue_il_sub_long</span> <span class="kw">&lt;-</span> <span class="no">ls_df_sub_queue</span>$<span class="no">df_queue_il_long</span>
+<div class="sourceCode" id="cb68"><html><body><pre class="r"><span class="no">df_queue_il_sub_long</span> <span class="kw">&lt;-</span> <span class="no">ls_df_sub_queue</span>$<span class="no">df_queue_il_long</span>
 <span class="no">df_queue_il_sub_wide</span> <span class="kw">&lt;-</span> <span class="no">ls_df_sub_queue</span>$<span class="no">df_queue_il_wide</span>
 <span class="no">df_alloc_i_long</span> <span class="kw">&lt;-</span> <span class="no">ls_df_sub_queue</span>$<span class="no">df_alloc_i_long</span>
 <span class="no">df_rho_gini</span> <span class="kw">&lt;-</span> <span class="no">ls_df_sub_queue</span>$<span class="no">df_rho_gini</span>
@@ -652,23 +657,23 @@ Use the California student test score dataset, same as line by line.
 <pre><code>## Warning: `cols` is now required when using unnest().
 ## Please use `cols = c(rev)`</code></pre>
 <p>Show Results</p>
-<div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="co"># Display Results</span>
+<div class="sourceCode" id="cb71"><html><body><pre class="r"><span class="co"># Display Results</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_queue_il_sub_long</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 1,196 x 9
 ##      rho rho_val  id_i id_il D_max_i  D_il  Q_il D_Wbin_il V_star_Q_il
-##    &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
-##  1     1   0.99      3    23      83     1    24         1        5.88
-##  2     2   0.785     3    23      83     1    23         1        1.72
-##  3     3  -3.64      3    23      83     1    19         1     2318.  
-##  4     4 -99         3    23      83     1   101         0       NA   
-##  5     1   0.99      3    24      83     2    26         1        5.89
-##  6     2   0.785     3    24      83     2    26         1        1.72
-##  7     3  -3.64      3    24      83     2    22         1     2319.  
-##  8     4 -99         3    24      83     2   102         0       NA   
-##  9     1   0.99      3    25      83     3    29         1        5.89
-## 10     2   0.785     3    25      83     3    29         1        1.72
+##    &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+##  1     1   0.99      3    23      83     1    24         1       2627.
+##  2     2   0.785     3    23      83     1    23         1       3790.
+##  3     3  -3.64      3    23      83     1    19         1        441.
+##  4     4 -99         3    23      83     1   101         0         NA 
+##  5     1   0.99      3    24      83     2    26         1       2628.
+##  6     2   0.785     3    24      83     2    26         1       3791.
+##  7     3  -3.64      3    24      83     2    22         1        441.
+##  8     4 -99         3    24      83     2   102         0         NA 
+##  9     1   0.99      3    25      83     3    29         1       2628.
+## 10     2   0.785     3    25      83     3    29         1       3792.
 ## # ... with 1,186 more rows</code></pre>
-<div class="sourceCode" id="cb72"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_alloc_i_long</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb73"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_alloc_i_long</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 16 x 7
 ## # Groups:   id_i [4]
 ##      rho rho_val  id_i D_max_i D_star_i F_star_i EH_star_i
@@ -689,7 +694,7 @@ Use the California student test score dataset, same as line by line.
 ## 14     2   0.785   327      51       20    0.392      676.
 ## 15     3  -3.64    327      51       13    0.255      675.
 ## 16     4 -99       327      51        0    0          672.</code></pre>
-<div class="sourceCode" id="cb74"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_rho_gini</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb75"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_rho_gini</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 16 x 9
 ##      rho rho_val gini_D_star gini_EH_star atkinson_EH_star sd_D_star sd_EH_star
 ##    &lt;int&gt;   &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
@@ -710,10 +715,10 @@ Use the California student test score dataset, same as line by line.
 ## 15    15  -3.64       0.0780       0.0137       0.0234          3.10       23.0
 ## 16    16 -99          0.6          0.0120       0.0234         29.5        20.1
 ## # ... with 2 more variables: mean_EH_star &lt;dbl&gt;, min_EH_star &lt;dbl&gt;</code></pre>
-<div class="sourceCode" id="cb76"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_alloc_il_long</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb77"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">df_alloc_il_long</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 1,196 x 6
 ##      rho  Q_il sid_3 sid_32 sid_286 sid_327
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
 ##  1     1     1     0      0       0       1
 ##  2     1     2     0      0       0       2
 ##  3     1     3     0      0       0       3
@@ -725,7 +730,7 @@ Use the California student test score dataset, same as line by line.
 ##  9     1     9     0      0       3       6
 ## 10     1    10     0      0       3       7
 ## # ... with 1,186 more rows</code></pre>
-<div class="sourceCode" id="cb78"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ar_util_rev_loop_func</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb79"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ar_util_rev_loop_func</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 4 x 3
 ##     rho rho_val    REV
 ##   &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;
@@ -754,6 +759,485 @@ Core graphical/tabular illustration of results across Many Individuals
     - Climbing chart? x axis is rank, y axis allocation for individual, but not sure why this would be useful. Perhaps useful for tabular outputs. Maybe only very small chart
 
 How should illustrative graph be shown with only 2 individuals? -->
+</div>
+</div>
+<div id="differential-mass-optimal-allocation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#differential-mass-optimal-allocation" class="anchor"></a>Differential Mass Optimal Allocation</h2>
+<p>Consider the population of schools is measure one, there are <span class="math inline">\(N\)</span> distinct types of schools, and the mass of each unique type is different, but they sum up to 1. If each school can have 5 additional teachers, than the mass of teachers is measure 5.</p>
+<p>Use the number of students per school as its mass, and introduce a new vector for the allocation function that is this mass. This is to illustrate ideas. The mass should not be the number of students, but the number of schools of the same type.</p>
+<p>Note that under discrete allocation, there were 10840 available teachers to be allocated. But in the problem below, the idea is:</p>
+<ol style="list-style-type: decimal">
+<li>suppose there is some system that currently allocates teachers by school attributes</li>
+<li>we know the number of teachers allocated to each type of school</li>
+<li>we know the proportion of each type of school in the school population.</li>
+<li>given a population measure of 1 as the sum of all schools, if on average 4 teachers are allocated to each school, the total of teachers allocated is measure 4. In discrete terms, that just means, if there are in total 1000 different schools (not different unique type, just different schools), and on average each school gets 4 teachers, we are allocating 4000 teachers.</li>
+</ol>
+<p>Several things to note:</p>
+<ol style="list-style-type: decimal">
+<li>Get the total measure of resources used by the alternative allocation, this is not summing up just the mass of all individuals, which sums to one, but sums the measure of resources allocated given individual mass, and how much is allocated to each individual</li>
+<li>Allocation queue: sort by allocation queue, and cumulative sum over individual mass, repeatedly over each incremental allocation for each individual</li>
+<li>Welfare calculation: the welfare/utility is not by cumulative mass, but by probability mass for each type, this does not vary depending on how much is allocated. Allocation changes alpha and A, not the mass in utility.</li>
+</ol>
+<div id="analyze-previous-level-allocation-with-measure-units" class="section level3">
+<h3 class="hasAnchor">
+<a href="#analyze-previous-level-allocation-with-measure-units" class="anchor"></a>Analyze Previous Level Allocation with Measure Units</h3>
+<p>Analyze previous allocation not based on measure, do this only for one planner:</p>
+<ol style="list-style-type: decimal">
+<li>sort by queue</li>
+<li>cumulative sum the mass variable: mass_cumu_queue, cumulative mass (resource allocated) by this queue point.</li>
+</ol>
+<p>Note that this is to be done inside the allocation function, after queue has been found, cumulative sum mass along the queue, and set cut-off at the total measure of resources available.</p>
+<div class="sourceCode" id="cb81"><html><body><pre class="r"><span class="co"># Cumulative Mass</span>
+<span class="no">df_queue_il_long_mass_cumu</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">rho_val</span> <span class="kw">==</span> <span class="no">ar_rho</span>[<span class="fl">1</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="no">rho</span>, -<span class="no">rho_val</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_opt_caschool_prep_i</span> <span class="kw">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">mass</span> <span class="kw">=</span> <span class="no">enrltot</span>/<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">enrltot</span>)) <span class="kw">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, <span class="no">mass</span>), <span class="kw">by</span><span class="kw">=</span><span class="st">'id_i'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">Q_il</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">mass_cumu_queue</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="no">mass</span>))
+<span class="co"># View Around the Teacher Available Cut-off mass</span>
+<span class="no">df_queue_il_long_mass_cumu</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">Q_il</span> <span class="kw">&gt;=</span> <span class="no">fl_teacher_increase_number</span> - <span class="fl">5</span>
+          <span class="kw">&amp;</span> <span class="no">Q_il</span> <span class="kw">&lt;=</span> <span class="no">fl_teacher_increase_number</span> + <span class="fl">5</span>)</pre></body></html></div>
+<pre><code>## # A tibble: 11 x 9
+##     id_i id_il D_max_i  D_il  Q_il D_Wbin_il V_star_Q_il    mass mass_cumu_queue
+##    &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;           &lt;dbl&gt;
+##  1    97 16260      95    55 10835         1     294663. 0.00167            14.4
+##  2   339 47438     135    43 10836         1     294663. 0.00235            14.4
+##  3   406 52898     132    37 10837         1     294663. 0.00212            14.4
+##  4   282 40715      89    59 10838         1     294663. 0.00162            14.4
+##  5    72 13654     141    50 10839         1     294663. 0.00271            14.4
+##  6   412 53590      87    40 10840         1     294663. 0.00119            14.4
+##  7    45  5664     221     7 10841         0         NA  0.00386            14.4
+##  8   411 53444     139    33 10842         0         NA  0.00219            14.4
+##  9   351 49277     127    49 10843         0         NA  0.00230            14.4
+## 10   404 52726     112    42 10844         0         NA  0.00176            14.4
+## 11   373 50222      80    59 10845         0         NA  0.00143            14.4</code></pre>
+<div class="sourceCode" id="cb83"><html><body><pre class="r"><span class="co"># Summarize</span>
+<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">df_queue_il_long_mass_cumu</span>, <span class="kw">bl_statsasrows</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>## Warning: `funs()` is deprecated as of dplyr 0.8.0.
+## Please use a list of either functions or lambdas: 
+## 
+##   # Simple named list: 
+##   list(mean = mean, median = median)
+## 
+##   # Auto named with `tibble::lst()`: 
+##   tibble::lst(mean, median)
+## 
+##   # Using lambdas
+##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
+<pre><code>## Warning: `as.tibble()` is deprecated as of tibble 2.0.0.
+## Please use `as_tibble()` instead.
+## The signature and semantics have changed, see `?as_tibble`.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 9 x 19
+##   var       n unique NAobs ZEROobs    mean      sd      cv     min     p01
+##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 D.il  54204   1429     0       0 2.02e+2 2.25e+2 1.11    1.00e+0 2.00e+0
+## 2 D.ma~ 54204    203     0       0 4.02e+2 3.33e+2 0.829   5.00e+0 1.20e+1
+## 3 D.Wb~ 54204      2     0   43364 2.00e-1 4.00e-1 2.00    0.      0.     
+## 4 id.i  54204    420     0       0 1.83e+2 1.16e+2 0.635   1.00e+0 1.60e+1
+## 5 id.il 54204  54204     0       0 2.71e+4 1.56e+4 0.577   1.00e+0 5.43e+2
+## 6 mass  54204    391     0       0 7.51e-3 6.21e-3 0.827   7.34e-5 2.02e-4
+## 7 mass~ 54204  54204     0       0 1.22e+2 1.14e+2 0.931   1.17e-4 1.07e-1
+## 8 Q.il  54204  54204     0       0 2.71e+4 1.56e+4 0.577   1.00e+0 5.43e+2
+## 9 V.st~ 54204  10841 43364      NA 2.94e+5 6.07e+2 0.00206 2.92e+5 2.92e+5
+## # ... with 9 more variables: p05 &lt;dbl&gt;, p10 &lt;dbl&gt;, p25 &lt;dbl&gt;, p50 &lt;dbl&gt;,
+## #   p75 &lt;dbl&gt;, p90 &lt;dbl&gt;, p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+</div>
+<div id="generate-the-mass-variable" class="section level3">
+<h3 class="hasAnchor">
+<a href="#generate-the-mass-variable" class="anchor"></a>Generate The mass Variable</h3>
+<p>The mass variable is not contained in <em>df_opt_caschool_prep_i</em>, but is contained in <em>df_opt_caschool_prep_i</em>, merge together to get that number of students as mass. This variable does not need to sum to one. Reweighting to sum to one should not change results.</p>
+<div class="sourceCode" id="cb88"><html><body><pre class="r"><span class="co"># Summarize</span>
+<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">df_opt_caschool_input_il</span>, <span class="kw">bl_statsasrows</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 7 x 19
+##   var       n unique NAobs ZEROobs    mean      sd     cv     min     p01
+##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 A.il  54204  54204     0       0 6.56e+2 1.69e+1 0.0258 6.13e+2 6.24e+2
+## 2 alph~ 54204  53590     0       0 6.62e-2 1.44e-1 2.17   2.90e-3 4.14e-3
+## 3 beta~ 54204      1     0       0 1.00e+0 0.      0      1.00e+0 1.00e+0
+## 4 D.il  54204   1429     0       0 2.02e+2 2.25e+2 1.11   1.00e+0 2.00e+0
+## 5 D.ma~ 54204    203     0       0 4.02e+2 3.33e+2 0.829  5.00e+0 1.20e+1
+## 6 id.i  54204    420     0       0 1.83e+2 1.16e+2 0.635  1.00e+0 1.60e+1
+## 7 id.il 54204  54204     0       0 2.71e+4 1.56e+4 0.577  1.00e+0 5.43e+2
+## # ... with 9 more variables: p05 &lt;dbl&gt;, p10 &lt;dbl&gt;, p25 &lt;dbl&gt;, p50 &lt;dbl&gt;,
+## #   p75 &lt;dbl&gt;, p90 &lt;dbl&gt;, p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb91"><html><body><pre class="r"><span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">df_opt_caschool_input_ib</span>, <span class="kw">bl_statsasrows</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 4 x 19
+##   var       n unique NAobs ZEROobs   mean      sd     cv    min    p01    p05
+##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 A.i.~   420    420     0       0 654.    17.2   0.0264 613.   618.   624.  
+## 2 alph~   420    410     0       0   2.84   0.327 0.115    1.81   1.95   2.27
+## 3 beta~   420      1     0       0   1      0     0        1      1      1   
+## 4 id.i    420    420     0       0 210.   121.    0.577    1      5.19  22.0 
+## # ... with 8 more variables: p10 &lt;dbl&gt;, p25 &lt;dbl&gt;, p50 &lt;dbl&gt;, p75 &lt;dbl&gt;,
+## #   p90 &lt;dbl&gt;, p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb94"><html><body><pre class="r"><span class="co"># Mass of Students for IL file </span>
+<span class="no">df_opt_caschool_input_mass_il</span> <span class="kw">&lt;-</span> <span class="no">df_opt_caschool_input_il</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_opt_caschool_prep_i</span> <span class="kw">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">mass_i</span> <span class="kw">=</span> <span class="no">enrltot</span>/<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">enrltot</span>)) <span class="kw">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, <span class="no">mass_i</span>)
+            , <span class="kw">by</span><span class="kw">=</span><span class="st">'id_i'</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span>()
+
+<span class="co"># Mass of Students for IL file </span>
+<span class="co"># IB file done with the Assumption that fl_fa_max additional teachers per school</span>
+<span class="co"># Since mass per teacher/school same, total mass per school for ib allocation </span>
+<span class="co"># is determined by mass_i still. Do not nuum to multiply mass by the number of teachers</span>
+<span class="co"># assigned. </span>
+<span class="no">df_opt_caschool_input_mass_ib</span> <span class="kw">&lt;-</span> <span class="no">df_opt_caschool_input_ib</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_opt_caschool_prep_i</span> <span class="kw">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">mass_i</span> <span class="kw">=</span> <span class="no">enrltot</span>/<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">enrltot</span>)) <span class="kw">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">cumu_sum_group_i</span> <span class="kw">=</span> <span class="no">mass_i</span>*<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">teachers</span>*<span class="no">fl_fa_max</span>)) <span class="kw">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, <span class="no">mass_i</span>, <span class="no">cumu_sum_group_i</span>, <span class="no">teachers</span>)
+            , <span class="kw">by</span><span class="kw">=</span><span class="st">'id_i'</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span>()
+
+<span class="co"># Total mass</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">df_opt_caschool_input_mass_il</span>$<span class="no">mass_i</span>)</pre></body></html></div>
+<pre><code>## [1] 407.3127</code></pre>
+<div class="sourceCode" id="cb96"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">df_opt_caschool_input_mass_ib</span>$<span class="no">cumu_sum_group_i</span>)</pre></body></html></div>
+<pre><code>## [1] 81.46857</code></pre>
+<div class="sourceCode" id="cb98"><html><body><pre class="r"><span class="co"># Alternative Allocation and Mass for Alternative Allocations</span>
+<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">df_opt_caschool_input_mass_il</span>, <span class="kw">bl_statsasrows</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 8 x 19
+##   var       n unique NAobs ZEROobs    mean      sd     cv     min     p01
+##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 A.il  54204  54204     0       0 6.56e+2 1.69e+1 0.0258 6.13e+2 6.24e+2
+## 2 alph~ 54204  53590     0       0 6.62e-2 1.44e-1 2.17   2.90e-3 4.14e-3
+## 3 beta~ 54204      1     0       0 1.00e+0 0.      0      1.00e+0 1.00e+0
+## 4 D.il  54204   1429     0       0 2.02e+2 2.25e+2 1.11   1.00e+0 2.00e+0
+## 5 D.ma~ 54204    203     0       0 4.02e+2 3.33e+2 0.829  5.00e+0 1.20e+1
+## 6 id.i  54204    420     0       0 1.83e+2 1.16e+2 0.635  1.00e+0 1.60e+1
+## 7 id.il 54204  54204     0       0 2.71e+4 1.56e+4 0.577  1.00e+0 5.43e+2
+## 8 mass~ 54204    391     0       0 7.51e-3 6.21e-3 0.827  7.34e-5 2.02e-4
+## # ... with 9 more variables: p05 &lt;dbl&gt;, p10 &lt;dbl&gt;, p25 &lt;dbl&gt;, p50 &lt;dbl&gt;,
+## #   p75 &lt;dbl&gt;, p90 &lt;dbl&gt;, p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb101"><html><body><pre class="r"><span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">df_opt_caschool_input_mass_ib</span>, <span class="kw">bl_statsasrows</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 7 x 19
+##   var       n unique NAobs ZEROobs    mean      sd     cv     min     p01
+##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 A.i.~   420    420     0       0 6.54e+2 1.72e+1 0.0264 6.13e+2 6.18e+2
+## 2 alph~   420    410     0       0 2.84e+0 3.27e-1 0.115  1.81e+0 1.95e+0
+## 3 beta~   420      1     0       0 1.00e+0 0.      0      1.00e+0 1.00e+0
+## 4 cumu~   420    398     0       0 1.94e-1 6.28e-1 3.24   7.34e-5 9.33e-5
+## 5 id.i    420    420     0       0 2.10e+2 1.21e+2 0.577  1.00e+0 5.19e+0
+## 6 mass~   420    391     0       0 2.38e-3 3.54e-3 1.49   7.34e-5 9.33e-5
+## 7 teac~   420    203     0       0 1.29e+2 1.88e+2 1.46   5.00e+0 5.00e+0
+## # ... with 9 more variables: p05 &lt;dbl&gt;, p10 &lt;dbl&gt;, p25 &lt;dbl&gt;, p50 &lt;dbl&gt;,
+## #   p75 &lt;dbl&gt;, p90 &lt;dbl&gt;, p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+<p>Within Group Cumulative Mass Sum with Allocations:</p>
+<div class="sourceCode" id="cb104"><html><body><pre class="r"><span class="co"># Within Group Cumulative Sum of Mass</span>
+<span class="co"># For the Value Calculation, the A and alpha are updated to be given allocation up to that point</span>
+<span class="co"># that means the mass calculation is not mass at a particular unit of allocation, but mass</span>
+<span class="co"># for that individual group/type, up to the point. This is a within group cumulative sum, </span>
+<span class="co"># Note that so for welfare and for allocation queue, in the welfare case, we need cumulative within</span>
+<span class="co"># individual group mass, and in the allocation queue, need point mass</span>
+
+<span class="no">df_opt_caschool_input_mass_il</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">id_i</span>, <span class="no">D_il</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">id_i</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">D_il</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">cumu_sum_group_i</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="no">mass_i</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">id_i</span>, <span class="no">D_il</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span>()</pre></body></html></div>
+<pre><code>## # A tibble: 54,204 x 9
+##     id_i id_il D_max_i  D_il  A_il alpha_il beta_i   mass_i cumu_sum_group_i
+##    &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;            &lt;dbl&gt;
+##  1     1     1      11     1  691.    1.29       1 0.000177         0.000177
+##  2     1     2      11     2  692.    1.09       1 0.000177         0.000353
+##  3     1     3      11     3  693.    0.932      1 0.000177         0.000530
+##  4     1     4      11     4  694.    0.808      1 0.000177         0.000706
+##  5     1     5      11     5  695.    0.707      1 0.000177         0.000883
+##  6     1     6      11     6  696.    0.624      1 0.000177         0.00106 
+##  7     1     7      11     7  696.    0.554      1 0.000177         0.00124 
+##  8     1     8      11     8  697.    0.496      1 0.000177         0.00141 
+##  9     1     9      11     9  697.    0.446      1 0.000177         0.00159 
+## 10     1    10      11    10  698.    0.404      1 0.000177         0.00177 
+## # ... with 54,194 more rows</code></pre>
+</div>
+<div id="select-subset-of-individuals-for-allocaitons" class="section level3">
+<h3 class="hasAnchor">
+<a href="#select-subset-of-individuals-for-allocaitons" class="anchor"></a>Select Subset of Individuals For Allocaitons</h3>
+<p>If want to analyze more closely what is happening in a subset of cases, use the subsetting option:</p>
+<div class="sourceCode" id="cb106"><html><body><pre class="r"><span class="no">it_O</span> <span class="kw">&lt;-</span> <span class="fl">2</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1</span>)
+<span class="no">df_cas_prep_sub_i</span> <span class="kw">&lt;-</span> <span class="no">df_opt_caschool_prep_i</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">teachers</span> <span class="kw">&lt;=</span> <span class="fl">100</span> <span class="kw">&amp;</span> <span class="no">teachers</span> <span class="kw">&gt;=</span> <span class="fl">50</span>)
+<span class="no">df_cas_prep_sub_i</span> <span class="kw">&lt;-</span> <span class="no">df_cas_prep_sub_i</span>[<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">df_cas_prep_sub_i</span>)[<span class="fl">1</span>], <span class="no">it_O</span>, <span class="kw">replace</span><span class="kw">=</span><span class="fl">FALSE</span>),]
+<span class="no">ar_cas_id_selected</span> <span class="kw">&lt;-</span> <span class="no">df_cas_prep_sub_i</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">id_i</span>)
+
+<span class="co"># Select from il and ib only ids that are randomly selected</span>
+<span class="no">bl_subsetting</span> <span class="kw">&lt;-</span> <span class="fl">FALSE</span>
+<span class="kw">if</span> (<span class="no">bl_subsetting</span>) {
+  <span class="no">df_opt_caschool_input_mass_il</span> <span class="kw">&lt;-</span> <span class="no">df_opt_caschool_input_mass_il</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">id_i</span> <span class="kw">%in%</span> <span class="no">ar_cas_id_selected</span>)
+  <span class="no">df_opt_caschool_input_mass_ib</span> <span class="kw">&lt;-</span> <span class="no">df_opt_caschool_input_mass_ib</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">id_i</span> <span class="kw">%in%</span> <span class="no">ar_cas_id_selected</span>)
+}
+
+<span class="co"># Summarize</span>
+<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">df_opt_caschool_input_mass_il</span>, <span class="kw">bl_statsasrows</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 8 x 19
+##   var       n unique NAobs ZEROobs    mean      sd     cv     min     p01
+##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 A.il  54204  54204     0       0 6.56e+2 1.69e+1 0.0258 6.13e+2 6.24e+2
+## 2 alph~ 54204  53590     0       0 6.62e-2 1.44e-1 2.17   2.90e-3 4.14e-3
+## 3 beta~ 54204      1     0       0 1.00e+0 0.      0      1.00e+0 1.00e+0
+## 4 D.il  54204   1429     0       0 2.02e+2 2.25e+2 1.11   1.00e+0 2.00e+0
+## 5 D.ma~ 54204    203     0       0 4.02e+2 3.33e+2 0.829  5.00e+0 1.20e+1
+## 6 id.i  54204    420     0       0 1.83e+2 1.16e+2 0.635  1.00e+0 1.60e+1
+## 7 id.il 54204  54204     0       0 2.71e+4 1.56e+4 0.577  1.00e+0 5.43e+2
+## 8 mass~ 54204    391     0       0 7.51e-3 6.21e-3 0.827  7.34e-5 2.02e-4
+## # ... with 9 more variables: p05 &lt;dbl&gt;, p10 &lt;dbl&gt;, p25 &lt;dbl&gt;, p50 &lt;dbl&gt;,
+## #   p75 &lt;dbl&gt;, p90 &lt;dbl&gt;, p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb109"><html><body><pre class="r"><span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">df_opt_caschool_input_mass_ib</span>, <span class="kw">bl_statsasrows</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 7 x 19
+##   var       n unique NAobs ZEROobs    mean      sd     cv     min     p01
+##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 A.i.~   420    420     0       0 6.54e+2 1.72e+1 0.0264 6.13e+2 6.18e+2
+## 2 alph~   420    410     0       0 2.84e+0 3.27e-1 0.115  1.81e+0 1.95e+0
+## 3 beta~   420      1     0       0 1.00e+0 0.      0      1.00e+0 1.00e+0
+## 4 cumu~   420    398     0       0 1.94e-1 6.28e-1 3.24   7.34e-5 9.33e-5
+## 5 id.i    420    420     0       0 2.10e+2 1.21e+2 0.577  1.00e+0 5.19e+0
+## 6 mass~   420    391     0       0 2.38e-3 3.54e-3 1.49   7.34e-5 9.33e-5
+## 7 teac~   420    203     0       0 1.29e+2 1.88e+2 1.46   5.00e+0 5.00e+0
+## # ... with 9 more variables: p05 &lt;dbl&gt;, p10 &lt;dbl&gt;, p25 &lt;dbl&gt;, p50 &lt;dbl&gt;,
+## #   p75 &lt;dbl&gt;, p90 &lt;dbl&gt;, p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+</div>
+<div id="optimal-allocations" class="section level3">
+<h3 class="hasAnchor">
+<a href="#optimal-allocations" class="anchor"></a>Optimal Allocations</h3>
+<div id="optimal-allocation-with-number-of-teachers-as-before" class="section level4">
+<h4 class="hasAnchor">
+<a href="#optimal-allocation-with-number-of-teachers-as-before" class="anchor"></a>Optimal Allocation with Number of Teachers as before</h4>
+<p>Copying the code from prior, use <em>fl_teacher_increase_sub_number</em> and <em>df_opt_caschool_input_mass_il</em> without the mass column <em>mass_i</em> specified.</p>
+<div class="sourceCode" id="cb112"><html><body><pre class="r"><span class="co"># Measure of Available Teachers</span>
+<span class="no">fl_teacher_increase_sub_number</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">df_opt_caschool_input_mass_ib</span>$<span class="no">teachers</span>)*<span class="no">fl_fa_max</span>
+<span class="no">fl_teacher_increase_sub_number</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span>(<span class="no">fl_teacher_increase_sub_number</span>)
+<span class="co"># Allocate Based on the Measure of Available Teachers</span>
+<span class="no">ls_df_queue</span> <span class="kw">&lt;-</span> <span class="kw pkg">PrjOptiAlloc</span><span class="kw ns">::</span><span class="fu"><a href="../reference/ffp_opt_anlyz_rhgin_dis.html">ffp_opt_anlyz_rhgin_dis</a></span>(
+  <span class="no">ar_rho</span>,
+  <span class="no">fl_teacher_increase_sub_number</span>,
+  <span class="kw">bl_df_alloc_il</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
+  <span class="kw">df_input_il</span> <span class="kw">=</span> <span class="no">df_opt_caschool_input_mass_il</span>,
+  <span class="kw">svr_rho</span> <span class="kw">=</span> <span class="st">'rho'</span>,
+  <span class="kw">svr_id_i</span> <span class="kw">=</span> <span class="st">'id_i'</span>, <span class="kw">svr_id_il</span> <span class="kw">=</span> <span class="st">'id_il'</span>,
+  <span class="kw">svr_D_max_i</span> <span class="kw">=</span> <span class="st">'D_max_i'</span>, <span class="kw">svr_D_il</span> <span class="kw">=</span> <span class="st">'D_il'</span>,
+  <span class="kw">svr_D_star_i</span> <span class="kw">=</span> <span class="st">'D_star_i'</span>, <span class="kw">svr_F_star_i</span> <span class="kw">=</span> <span class="st">'F_star_i'</span>,
+  <span class="kw">svr_inpalc</span> <span class="kw">=</span> <span class="st">'Q_il'</span>, <span class="kw">svr_D_Wbin_il</span> <span class="kw">=</span> <span class="st">'D_Wbin_il'</span>,
+  <span class="kw">svr_A_il</span> <span class="kw">=</span> <span class="st">'A_il'</span>, <span class="kw">svr_alpha_il</span> <span class="kw">=</span> <span class="st">'alpha_il'</span>,
+  <span class="kw">svr_beta_i</span> <span class="kw">=</span> <span class="st">'beta_i'</span>,
+  <span class="kw">svr_expout</span> <span class="kw">=</span> <span class="st">'opti_exp_outcome'</span>,
+  <span class="kw">st_idcol_prefix</span> <span class="kw">=</span> <span class="st">'sid_'</span>)</pre></body></html></div>
+<pre><code>## Joining, by = "id_il"</code></pre>
+<pre><code>## Adding missing grouping variables: `id_i`
+## Adding missing grouping variables: `id_i`
+## Adding missing grouping variables: `id_i`
+## Adding missing grouping variables: `id_i`
+## Adding missing grouping variables: `id_i`</code></pre>
+<pre><code>## Warning: `cols` is now required when using unnest().
+## Please use `cols = c(rev)`</code></pre>
+<pre><code>## Warning: `cols` is now required when using unnest().
+## Please use `cols = c(alloc_i_upto_Q)`</code></pre>
+<div class="sourceCode" id="cb117"><html><body><pre class="r"><span class="no">df_queue_il_long_count</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_queue_il_long</span>
+<span class="no">df_queue_il_wide_count</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_queue_il_wide</span>
+<span class="no">df_alloc_i_long_count</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_alloc_i_long</span>
+<span class="no">df_rho_gini_count</span>  <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_rho_gini</span>
+<span class="no">df_alloc_il_long_count</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_alloc_il_long</span></pre></body></html></div>
+<div id="analyze-measure-at-count-allocation" class="section level5">
+<h5 class="hasAnchor">
+<a href="#analyze-measure-at-count-allocation" class="anchor"></a>Analyze Measure at Count Allocation</h5>
+<p>Analyze results using the total measure threshold from the measure allocation</p>
+<div class="sourceCode" id="cb118"><html><body><pre class="r"><span class="co"># Cumulative Mass</span>
+<span class="no">df_queue_il_long_mass_cntcumu</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long_count</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">rho_val</span> <span class="kw">==</span> <span class="no">ar_rho</span>[<span class="fl">1</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="no">rho</span>, -<span class="no">rho_val</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_opt_caschool_prep_i</span> <span class="kw">%&gt;%</span>
+            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">mass_i</span> <span class="kw">=</span> <span class="no">enrltot</span>/<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">enrltot</span>)) <span class="kw">%&gt;%</span>
+            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id_i</span>, <span class="no">mass_i</span>), <span class="kw">by</span><span class="kw">=</span><span class="st">'id_i'</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">Q_il</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">mass_cumu_il</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="no">mass_i</span>))
+<span class="co"># View Around the Teacher Available Cut-off mass</span>
+<span class="no">df_queue_il_long_mass_cntcumu</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">Q_il</span> <span class="kw">&gt;=</span> <span class="no">fl_teacher_increase_sub_number</span> - <span class="fl">4</span>
+          <span class="kw">&amp;</span> <span class="no">Q_il</span> <span class="kw">&lt;=</span> <span class="no">fl_teacher_increase_sub_number</span> + <span class="fl">4</span>)</pre></body></html></div>
+<pre><code>## # A tibble: 9 x 9
+##    id_i id_il D_max_i  D_il  Q_il D_Wbin_il V_star_Q_il  mass_i mass_cumu_il
+##   &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;        &lt;dbl&gt;
+## 1   339 47438     135    43 10836         1     294663. 0.00235         14.4
+## 2   406 52898     132    37 10837         1     294663. 0.00212         14.4
+## 3   282 40715      89    59 10838         1     294663. 0.00162         14.4
+## 4    72 13654     141    50 10839         1     294663. 0.00271         14.4
+## 5   412 53590      87    40 10840         1     294663. 0.00119         14.4
+## 6    45  5664     221     7 10841         0         NA  0.00386         14.4
+## 7   411 53444     139    33 10842         0         NA  0.00219         14.4
+## 8   351 49277     127    49 10843         0         NA  0.00230         14.4
+## 9   404 52726     112    42 10844         0         NA  0.00176         14.4</code></pre>
+<div class="sourceCode" id="cb120"><html><body><pre class="r"><span class="co"># Summarize</span>
+<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">df_queue_il_long_mass_cntcumu</span>, <span class="kw">bl_statsasrows</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 9 x 19
+##   var       n unique NAobs ZEROobs    mean      sd      cv     min     p01
+##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 D.il  54204   1429     0       0 2.02e+2 2.25e+2 1.11    1.00e+0 2.00e+0
+## 2 D.ma~ 54204    203     0       0 4.02e+2 3.33e+2 0.829   5.00e+0 1.20e+1
+## 3 D.Wb~ 54204      2     0   43364 2.00e-1 4.00e-1 2.00    0.      0.     
+## 4 id.i  54204    420     0       0 1.83e+2 1.16e+2 0.635   1.00e+0 1.60e+1
+## 5 id.il 54204  54204     0       0 2.71e+4 1.56e+4 0.577   1.00e+0 5.43e+2
+## 6 mass~ 54204  54204     0       0 1.22e+2 1.14e+2 0.931   1.17e-4 1.07e-1
+## 7 mass~ 54204    391     0       0 7.51e-3 6.21e-3 0.827   7.34e-5 2.02e-4
+## 8 Q.il  54204  54204     0       0 2.71e+4 1.56e+4 0.577   1.00e+0 5.43e+2
+## 9 V.st~ 54204  10841 43364      NA 2.94e+5 6.07e+2 0.00206 2.92e+5 2.92e+5
+## # ... with 9 more variables: p05 &lt;dbl&gt;, p10 &lt;dbl&gt;, p25 &lt;dbl&gt;, p50 &lt;dbl&gt;,
+## #   p75 &lt;dbl&gt;, p90 &lt;dbl&gt;, p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div id="optimal-allocation-with-mass" class="section level4">
+<h4 class="hasAnchor">
+<a href="#optimal-allocation-with-mass" class="anchor"></a>Optimal Allocation with Mass</h4>
+<p>Same as before, but now include the mass column:</p>
+<div class="sourceCode" id="cb123"><html><body><pre class="r"><span class="co"># Measure of Available Teachers</span>
+<span class="no">fl_measure_teacher_increase_number</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">df_opt_caschool_input_mass_ib</span>$<span class="no">cumu_sum_group_i</span>)
+<span class="co"># Allocate Based on the Measure of Available Teachers</span>
+<span class="no">ls_df_queue</span> <span class="kw">&lt;-</span> <span class="kw pkg">PrjOptiAlloc</span><span class="kw ns">::</span><span class="fu"><a href="../reference/ffp_opt_anlyz_rhgin_dis.html">ffp_opt_anlyz_rhgin_dis</a></span>(
+  <span class="no">ar_rho</span>,
+  <span class="no">fl_measure_teacher_increase_number</span>,
+  <span class="kw">bl_df_alloc_il</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
+  <span class="kw">df_input_il</span> <span class="kw">=</span> <span class="no">df_opt_caschool_input_mass_il</span>,
+  <span class="kw">svr_rho</span> <span class="kw">=</span> <span class="st">'rho'</span>,
+  <span class="kw">svr_id_i</span> <span class="kw">=</span> <span class="st">'id_i'</span>, <span class="kw">svr_id_il</span> <span class="kw">=</span> <span class="st">'id_il'</span>,
+  <span class="kw">svr_D_max_i</span> <span class="kw">=</span> <span class="st">'D_max_i'</span>, <span class="kw">svr_D_il</span> <span class="kw">=</span> <span class="st">'D_il'</span>,
+  <span class="kw">svr_D_star_i</span> <span class="kw">=</span> <span class="st">'D_star_i'</span>, <span class="kw">svr_F_star_i</span> <span class="kw">=</span> <span class="st">'F_star_i'</span>,
+  <span class="kw">svr_inpalc</span> <span class="kw">=</span> <span class="st">'Q_il'</span>, <span class="kw">svr_D_Wbin_il</span> <span class="kw">=</span> <span class="st">'D_Wbin_il'</span>,
+  <span class="kw">svr_A_il</span> <span class="kw">=</span> <span class="st">'A_il'</span>, <span class="kw">svr_alpha_il</span> <span class="kw">=</span> <span class="st">'alpha_il'</span>,
+  <span class="kw">svr_beta_i</span> <span class="kw">=</span> <span class="st">'beta_i'</span>,
+  <span class="kw">svr_measure_i</span> <span class="kw">=</span> <span class="st">'mass_i'</span>,
+  <span class="kw">svr_expout</span> <span class="kw">=</span> <span class="st">'opti_exp_outcome'</span>,
+  <span class="kw">st_idcol_prefix</span> <span class="kw">=</span> <span class="st">'sid_'</span>)</pre></body></html></div>
+<pre><code>## Joining, by = "id_il"</code></pre>
+<pre><code>## Adding missing grouping variables: `id_i`
+## Adding missing grouping variables: `id_i`
+## Adding missing grouping variables: `id_i`
+## Adding missing grouping variables: `id_i`
+## Adding missing grouping variables: `id_i`</code></pre>
+<pre><code>## Warning: `cols` is now required when using unnest().
+## Please use `cols = c(rev)`</code></pre>
+<pre><code>## Warning: `cols` is now required when using unnest().
+## Please use `cols = c(alloc_i_upto_Q)`</code></pre>
+<div class="sourceCode" id="cb128"><html><body><pre class="r"><span class="no">df_queue_il_long_mass</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_queue_il_long</span>
+<span class="no">df_queue_il_wide_mass</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_queue_il_wide</span>
+<span class="no">df_alloc_i_long_mass</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_alloc_i_long</span>
+<span class="no">df_rho_gini_mass</span>  <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_rho_gini</span>
+<span class="no">df_alloc_il_long_mass</span> <span class="kw">&lt;-</span> <span class="no">ls_df_queue</span>$<span class="no">df_alloc_il_long</span></pre></body></html></div>
+<div id="analyze-measure-at-mass-allocation" class="section level5">
+<h5 class="hasAnchor">
+<a href="#analyze-measure-at-mass-allocation" class="anchor"></a>Analyze Measure at Mass Allocation</h5>
+<p>Analyze the Allocation Results based on measure:</p>
+<div class="sourceCode" id="cb129"><html><body><pre class="r"><span class="no">df_queue_il_long_mass</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">rho_val</span> <span class="kw">==</span> <span class="no">ar_rho</span>[<span class="fl">3</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="no">rho</span>, -<span class="no">rho_val</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">Q_il</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">mass_cumu_il</span> <span class="kw">&gt;=</span> <span class="no">fl_measure_teacher_increase_number</span> - <span class="fl">0.01</span>
+          <span class="kw">&amp;</span> <span class="no">mass_cumu_il</span> <span class="kw">&lt;=</span> <span class="no">fl_measure_teacher_increase_number</span> + <span class="fl">0.01</span>)</pre></body></html></div>
+<pre><code>## # A tibble: 3 x 8
+##    id_i id_il D_max_i  D_il  Q_il D_Wbin_il mass_cumu_il V_star_Q_il
+##   &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+## 1   264 38122     550    33 25779         1         81.5        654.
+## 2   220 32688     408    79 25780         0         81.5         NA 
+## 3   105 17069     228   154 25781         0         81.5         NA</code></pre>
+<div class="sourceCode" id="cb131"><html><body><pre class="r"><span class="co"># Summarize</span>
+<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">df_queue_il_long_mass_cumu</span>, <span class="kw">bl_statsasrows</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>## Warning: attributes are not identical across measure variables;
+## they will be dropped</code></pre>
+<pre><code>## # A tibble: 9 x 19
+##   var       n unique NAobs ZEROobs    mean      sd      cv     min     p01
+##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 D.il  54204   1429     0       0 2.02e+2 2.25e+2 1.11    1.00e+0 2.00e+0
+## 2 D.ma~ 54204    203     0       0 4.02e+2 3.33e+2 0.829   5.00e+0 1.20e+1
+## 3 D.Wb~ 54204      2     0   43364 2.00e-1 4.00e-1 2.00    0.      0.     
+## 4 id.i  54204    420     0       0 1.83e+2 1.16e+2 0.635   1.00e+0 1.60e+1
+## 5 id.il 54204  54204     0       0 2.71e+4 1.56e+4 0.577   1.00e+0 5.43e+2
+## 6 mass  54204    391     0       0 7.51e-3 6.21e-3 0.827   7.34e-5 2.02e-4
+## 7 mass~ 54204  54204     0       0 1.22e+2 1.14e+2 0.931   1.17e-4 1.07e-1
+## 8 Q.il  54204  54204     0       0 2.71e+4 1.56e+4 0.577   1.00e+0 5.43e+2
+## 9 V.st~ 54204  10841 43364      NA 2.94e+5 6.07e+2 0.00206 2.92e+5 2.92e+5
+## # ... with 9 more variables: p05 &lt;dbl&gt;, p10 &lt;dbl&gt;, p25 &lt;dbl&gt;, p50 &lt;dbl&gt;,
+## #   p75 &lt;dbl&gt;, p90 &lt;dbl&gt;, p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div id="compare-measure-and-count-allocation-results" class="section level4">
+<h4 class="hasAnchor">
+<a href="#compare-measure-and-count-allocation-results" class="anchor"></a>Compare Measure and Count Allocation Results</h4>
+<p>Under the Utilitarian <em>filter(rho_val == ar_rho[1])</em>:</p>
+<p>Based on count, there were 30 teacher spots to allocate, and we move up to queue position 30 for allocation. Based on relative measure/weight, because the schools with more teacher spots assigned under alternative allocation also had higher weight, so we end up with a measure such that the 10 + 20 teachers assigned to each type of school, when looked at on the queue, sorted by queue position, and cumulatively summed with the weight of school school type, ends up giving us enough to go to the 38th queue position. So ignoring the weight of the schools, we would have allocated incorrectly, because we thought there were only 30 slots to be allocated, but given weights, there are actually up to the 38th spot on the queue.</p>
+<p>Under <em>filter(rho_val == ar_rho[2], [3], [4])</em>:</p>
+<p>Under alternative planners, importantly, the queue is different, hence cumulative weight up the queue is different, so the number of “spots” that could be allocated is different. There are 37, 31, 24 spots that are allocated under increasing Rawlsian preferences. This reflects the fact that under more Rawlsian preferences, the districts more more students are ranked higher on the queue, and they take up more mass. At the extreme, given N=2, all the mass from the smaller mass type go to the larger mass type, so the queue goes up to how many spots the larger school districts were assigned uniformly, and additional spot for the larger school if the school smallers’ additional teachers are equally assigned to larger schools given relative mass of smaller and larger schools.</p>
+</div>
+</div>
+<div id="rev-compute-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#rev-compute-1" class="anchor"></a>REV Compute</h3>
+<div id="rev-compute-with-count" class="section level4">
+<h4 class="hasAnchor">
+<a href="#rev-compute-with-count" class="anchor"></a>REV Compute with Count</h4>
+<div class="sourceCode" id="cb134"><html><body><pre class="r"><span class="no">tb_rho_rev_count</span> <span class="kw">&lt;-</span>
+  <span class="kw pkg">PrjOptiAlloc</span><span class="kw ns">::</span><span class="fu"><a href="../reference/ffp_opt_anlyz_sodis_rev.html">ffp_opt_anlyz_sodis_rev</a></span>(<span class="no">ar_rho</span>,
+                          <span class="no">fl_teacher_increase_sub_number</span>,
+                          <span class="kw">df_input_ib</span> <span class="kw">=</span> <span class="no">df_opt_caschool_input_mass_ib</span>,
+                          <span class="kw">df_queue_il_long_with_V</span> <span class="kw">=</span> <span class="no">df_queue_il_long_count</span>,
+                          <span class="kw">svr_beta_i</span> <span class="kw">=</span> <span class="st">'beta_i'</span>)</pre></body></html></div>
+<pre><code>## Warning: `cols` is now required when using unnest().
+## Please use `cols = c(rev)`</code></pre>
+<div class="sourceCode" id="cb136"><html><body><pre class="r"><span class="co"># Display Results</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">tb_rho_rev_count</span>)</pre></body></html></div>
+<pre><code>## # A tibble: 4 x 3
+##     rho rho_val   REV
+##   &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1   0.99  0.836
+## 2     2   0.785 0.836
+## 3     3  -3.64  0.831
+## 4     4 -99     0.949</code></pre>
+</div>
+<div id="rev-compute-with-mass" class="section level4">
+<h4 class="hasAnchor">
+<a href="#rev-compute-with-mass" class="anchor"></a>REV Compute with Mass</h4>
+<div class="sourceCode" id="cb138"><html><body><pre class="r"><span class="no">tb_rho_rev_mass</span> <span class="kw">&lt;-</span>
+  <span class="kw pkg">PrjOptiAlloc</span><span class="kw ns">::</span><span class="fu"><a href="../reference/ffp_opt_anlyz_sodis_rev.html">ffp_opt_anlyz_sodis_rev</a></span>(<span class="no">ar_rho</span>,
+                          <span class="no">fl_measure_teacher_increase_number</span>,
+                          <span class="kw">df_input_ib</span> <span class="kw">=</span> <span class="no">df_opt_caschool_input_mass_ib</span>,
+                          <span class="kw">df_queue_il_long_with_V</span> <span class="kw">=</span> <span class="no">df_queue_il_long_mass</span>,
+                          <span class="kw">svr_beta_i</span> <span class="kw">=</span> <span class="st">'beta_i'</span>, <span class="kw">svr_measure_i</span> <span class="kw">=</span> <span class="st">'mass_i'</span>)</pre></body></html></div>
+<pre><code>## Warning: `cols` is now required when using unnest().
+## Please use `cols = c(rev)`</code></pre>
+<div class="sourceCode" id="cb140"><html><body><pre class="r"><span class="co"># Display Results</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">tb_rho_rev_mass</span>)</pre></body></html></div>
+<pre><code>## # A tibble: 4 x 3
+##     rho rho_val   REV
+##   &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1   0.99  0.607
+## 2     2   0.785 0.606
+## 3     3  -3.64  0.583
+## 4     4 -99     0.911</code></pre>
+</div>
+<div id="rev-results-analysis" class="section level4">
+<h4 class="hasAnchor">
+<a href="#rev-results-analysis" class="anchor"></a>REV results Analysis</h4>
+<p>Since we are comparing against uniform allocation, the REV difference is the smallest when we consider close to cobb-douglas preferences. The Utilitarian as well as the Rawlsian planner are both interested in allocating in an unequal way. The Utilitarian wants to allocate more to for higher alpha, the Rawlsian wants to allocate more to lower A. The Cobb Douglas planner seeks a balance between the two alternatives.</p>
+<p>Depending on the Alternative allocation, the REV results might be decreasing, increasing, or have different patterns.</p>
+</div>
 </div>
 </div>
   </div>

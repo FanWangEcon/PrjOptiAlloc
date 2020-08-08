@@ -194,7 +194,7 @@ ffp_opt_anlyz_rhgin_dis <- function(ar_rho,
         unnest()
       # Step 5b, merge values to queue df
       df_queue_il_long <- df_queue_il_long %>% left_join(mt_util_rev_loop %>%
-                                                           select(one_of(svr_rho, svr_id_il, svr_V_star_Q_il)),
+                                                           select(one_of(svr_rho, svr_id_il), starts_with('V_')),
                                      by=setNames(c(svr_rho, svr_id_il), c(svr_rho, svr_id_il))) %>%
                           select(one_of(svr_return_list), starts_with('V_'))
     } else {

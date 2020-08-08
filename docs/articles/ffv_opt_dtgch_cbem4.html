@@ -124,7 +124,7 @@ Regress height on protein inputs allowing for heterogeneous effects for each of 
 
       
 
-      </header><div class="row">
+      </header><script src="ffv_opt_dtgch_cbem4_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Generate A and alpha Nutrition Height Test Regression Results</h1>
@@ -214,7 +214,7 @@ Regress height on protein inputs allowing for heterogeneous effects for each of 
 ## Residual standard error: 3.473 on 1036 degrees of freedom
 ## Multiple R-squared:  0.9981, Adjusted R-squared:  0.9981 
 ## F-statistic: 7.79e+04 on 7 and 1036 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">rs_hgt_prot_lin_tidy</span> <span class="kw">=</span> <span class="kw pkg">broom</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">tidy</a></span>(<span class="no">rs_hgt_prot_lin</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">rs_hgt_prot_lin_tidy</span> <span class="kw">=</span> <span class="kw pkg">broom</span><span class="kw ns">::</span><span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">tidy</a></span>(<span class="no">rs_hgt_prot_lin</span>)</pre></body></html></div>
 </div>
 <div id="log-linear-regression" class="section level3">
 <h3 class="hasAnchor">
@@ -258,7 +258,7 @@ Regress height on protein inputs allowing for heterogeneous effects for each of 
 ## Residual standard error: 0.04436 on 1036 degrees of freedom
 ## Multiple R-squared:  0.9999, Adjusted R-squared:  0.9999 
 ## F-statistic: 1.448e+06 on 7 and 1036 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">rs_hgt_prot_log_tidy</span> <span class="kw">=</span> <span class="kw pkg">broom</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">tidy</a></span>(<span class="no">rs_hgt_prot_log</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">rs_hgt_prot_log_tidy</span> <span class="kw">=</span> <span class="kw pkg">broom</span><span class="kw ns">::</span><span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">tidy</a></span>(<span class="no">rs_hgt_prot_log</span>)</pre></body></html></div>
 </div>
 <div id="construct-input-arrays-a_i-and-alpha_i" class="section level3">
 <h3 class="hasAnchor">
@@ -280,7 +280,7 @@ Regress height on protein inputs allowing for heterogeneous effects for each of 
 <span class="no">mt_opti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_alphai_lin</span>, <span class="no">ar_alphai_log</span>, <span class="no">ar_Ai_lin</span>, <span class="no">ar_Ai_log</span>, <span class="no">ar_beta</span>)
 <span class="no">ar_st_varnames</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'alpha_lin'</span>, <span class="st">'alpha_log'</span>, <span class="st">'A_lin'</span>, <span class="st">'A_log'</span>, <span class="st">'beta'</span>)
 <span class="no">df_esti_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_opti</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span>(~<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ar_st_varnames</span>))</pre></body></html></div>
-<pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have column names if `.name_repair` is omitted as of tibble 2.0.0.
+<pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
 ## Using compatibility `.name_repair`.
 ## This warning is displayed once every 8 hours.
 ## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>

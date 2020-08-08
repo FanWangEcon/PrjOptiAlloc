@@ -123,7 +123,7 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 
       
 
-      </header><div class="row">
+      </header><script src="ffv_opt_sobin_rkone_allrw_car_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Line by Line Test Binary Allocation with Linear Regression</h1>
@@ -556,7 +556,7 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## Residual standard error: 2.818 on 26 degrees of freedom
 ## Multiple R-squared:  0.9853, Adjusted R-squared:  0.9819 
 ## F-statistic: 290.4 on 6 and 26 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb74"><html><body><pre class="r"><span class="no">rs_mpg_on_auto_tidy</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/broom/man/reexports.html">tidy</a></span>(<span class="no">rs_mpg_on_auto</span>)
+<div class="sourceCode" id="cb74"><html><body><pre class="r"><span class="no">rs_mpg_on_auto_tidy</span> <span class="kw">=</span> <span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">tidy</a></span>(<span class="no">rs_mpg_on_auto</span>)
 <span class="no">rs_mpg_on_auto_tidy</span></pre></body></html></div>
 <pre><code>## # A tibble: 6 x 5
 ##   term                            estimate std.error statistic p.value
@@ -649,7 +649,7 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 <span class="no">mt_opti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_alpha_m</span>, <span class="no">ar_A_m</span>, <span class="no">ar_beta_m</span>)
 <span class="no">ar_st_varnames</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span>)
 <span class="no">df_esti_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_opti</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span>(~<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ar_st_varnames</span>))</pre></body></html></div>
-<pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have column names if `.name_repair` is omitted as of tibble 2.0.0.
+<pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
 ## Using compatibility `.name_repair`.
 ## This warning is displayed once every 8 hours.
 ## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
