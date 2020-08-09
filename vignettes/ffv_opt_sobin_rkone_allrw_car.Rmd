@@ -1,8 +1,8 @@
 ---
 title: Line by Line Test Binary Allocation with Linear Regression
 description: |
-  Test binary optimal allocation solution line by line without function. 
-  Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift. 
+  Test binary optimal allocation solution line by line without function.
+  Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Line by Line Test Binary Allocation with Linear Regression}
@@ -105,12 +105,12 @@ REconTools::ff_summ_percentiles(tb_mtcars, bl_statsasrows = FALSE)
 # summarize auto transition
 REconTools::ff_summ_percentiles(tb_mtcars %>% filter(am == 0), bl_statsasrows = FALSE)
 # summarize manual transition
-REconTools::ff_summ_percentiles(tb_mtcars %>% filter(am == 1), bl_statsasrows = FALSE) 
+REconTools::ff_summ_percentiles(tb_mtcars %>% filter(am == 1), bl_statsasrows = FALSE)
 ```
 
 ### Exploration Regressions
 
-```{r Linear Regression Testing}
+```{r Linear Regression Exploration}
 # A. Regree MPG on horse power and binary if Manual or not (manual = 1)
 # 1. more horse power less MPG
 # 2. manual larger MPG
@@ -248,13 +248,13 @@ ffi_binary_dplyrdo_func <- function(ls_row, fl_rho,
              )
   ar_right <- ((ar_beta)/(fl_beta))
   ar_rank_val <- ar_left*ar_right
-  
+
   ar_bl_rank_val <- (ar_rank_val >= 1)
-  
+
   # Note need the negative multiple in front of array
   ar_rank <- rank((-1)*ar_rank_val, ties.method='min')
   it_rank <- sum(ar_bl_rank_val)
-  
+
   return(list(it_rank=it_rank,
               ar_rank=ar_rank,
               ar_rank_val=ar_rank_val))
@@ -273,9 +273,9 @@ tb_opti_alloc_all_rho <- tb_key_alpha_A_beta
 # Generate Rank Order
 for (it_rho_ctr in seq(1,length(ar_rho))) {
   rho = ar_rho[it_rho_ctr]
-  
-  tb_with_rank <- tb_key_alpha_A_beta %>% 
-    mutate(queue_rank = ffi_binary_dplyrdo_func(tb_key_alpha_A_beta[1,], rho)$ar_rank) 
+
+  tb_with_rank <- tb_key_alpha_A_beta %>%
+    mutate(queue_rank = ffi_binary_dplyrdo_func(tb_key_alpha_A_beta[1,], rho)$ar_rank)
 
   # m. Keep for df collection individual key + optimal allocation
   # _on stands for optimal nutritional choices
@@ -331,12 +331,11 @@ tb_opti_alloc_all_rho_long %>%
     scale_y_reverse(breaks = 1:nrow(tb_opti_alloc_all_rho_long))+
     theme(legend.position = "none") +
     labs(x = st_x_lab,
-         y = st_y_lab, 
-         title = st_title, 
+         y = st_y_lab,
+         title = st_title,
          subtitle = st_subtitle,
          caption = st_caption) +
     ffy_opt_ghthm_dk() +
     geom_text(data = tb_opti_alloc_all_rho, aes(y=rho_c1_rk, x=0.6, label=carname),hjust="right")
 
 ```
-

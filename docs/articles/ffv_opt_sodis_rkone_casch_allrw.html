@@ -32022,7 +32022,7 @@ n.distinct
 }
 <span class="no">end_time_loop</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>()
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'LOOP loop time:'</span>, <span class="no">end_time_loop</span> - <span class="no">start_time_loop</span>))</pre></body></html></div>
-<pre><code>## [1] "LOOP loop time:11.5241820812225"</code></pre>
+<pre><code>## [1] "LOOP loop time:7.58721709251404"</code></pre>
 <div class="sourceCode" id="cb171"><html><body><pre class="r"><span class="co"># Sapply Results</span>
 <span class="no">df_queue_il_long_onerho</span> <span class="kw">&lt;-</span> <span class="no">df_queue_il_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho</span>) <span class="kw">==</span> <span class="fl">4</span>)
 <span class="no">ar_util_rev_sapply</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(<span class="no">ar_rho</span>, <span class="no">ffi_disc_rev_onerho_test</span>,
@@ -32127,7 +32127,7 @@ n.distinct
 <div class="sourceCode" id="cb183"><html><body><pre class="r"><span class="no">ar_util_rev_loop_func</span> <span class="kw">&lt;-</span> <span class="no">tb_rho_rev</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">REV</span>)
 <span class="no">end_time_nest</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>()
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'DPLYR nested loop time:'</span>, <span class="no">end_time_nest</span> - <span class="no">start_time_nest</span>))</pre></body></html></div>
-<pre><code>## [1] "DPLYR nested loop time:0.217417001724243"</code></pre>
+<pre><code>## [1] "DPLYR nested loop time:0.116984844207764"</code></pre>
 <div class="sourceCode" id="cb185"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'ar_util_rev_loop_func'</span>)</pre></body></html></div>
 <pre><code>## [1] "ar_util_rev_loop_func"</code></pre>
 <div class="sourceCode" id="cb187"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ar_util_rev_loop_func</span>)</pre></body></html></div>

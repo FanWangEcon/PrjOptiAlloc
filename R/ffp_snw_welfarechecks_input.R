@@ -360,8 +360,9 @@ ffp_snw_process_inputs <-
   if (bl_non_inc_adjust){
     # Update c_alpha_il
     df_input_il_noninc <- df_input_il %>%
+      arrange((D_il)) %>%
       group_by(id_i) %>%
-      do(c_alpha_il_noninc = ffi_alpha_non_increasing_adj(.$c_alpha_il)) %>%
+      do(c_alpha_il_noninc = ffi_alpha_non_increasing_adj_flatten(.$c_alpha_il)) %>%
       unnest(c(c_alpha_il_noninc)) %>%
       group_by(id_i) %>%
       mutate(D_il = row_number()) %>%
@@ -369,8 +370,9 @@ ffp_snw_process_inputs <-
 
     # Update v_alpha_il
     df_input_il_noninc <- df_input_il_noninc %>%
+      arrange((D_il)) %>%
       group_by(id_i) %>%
-      do(v_alpha_il_noninc = ffi_alpha_non_increasing_adj(.$v_alpha_il)) %>%
+      do(v_alpha_il_noninc = ffi_alpha_non_increasing_adj_flatten(.$v_alpha_il)) %>%
       unnest(c(v_alpha_il_noninc)) %>%
       group_by(id_i) %>%
       mutate(D_il = row_number()) %>%
@@ -725,6 +727,7 @@ ffp_snw_process_inputs <-
   }
 
   return(list(df_input_il_noninc_covar=df_input_il_noninc_covar,
+              df_queue_il_long_v=df_queue_il_long_v,
               df_alloc_i_long_covar_c=df_alloc_i_long_covar_c,
               df_alloc_i_long_covar_v=df_alloc_i_long_covar_v,
               stg_subtitle=subtitle,
@@ -733,9 +736,39 @@ ffp_snw_process_inputs <-
               tb_rho_rev_v=tb_rho_rev_v))
 }
 
-ffi_alpha_non_increasing_adj <- function(ar_alpha, fl_min_inc_bd = 1e-20) {
+
+ffi_alpha_non_increasing_adj_flatten <- function(ar_alpha, fl_min_inc_bd = 1e-20) {
+  # Flattening, flatten so that the marginal value of the next check must be
+  # lower than the marginal value of the check prior
+
+  ar_cur <- ar_alpha
+  ar_cur_adj <- rep(NA, length(ar_cur))
+  ar_cur_adj[1] <- ar_cur[1]
+
+  for (it_ctr in 2:length(ar_cur)) {
+
+    fl_cur_val <- ar_cur[it_ctr]
+    fl_last_val <- ar_cur_adj[it_ctr-1]
+
+    if (fl_cur_val > fl_last_val) {
+      ar_cur_adj[it_ctr] = fl_last_val
+    } else {
+      ar_cur_adj[it_ctr] = fl_cur_val
+    }
+
+  }
+
+  # return
+  return(ar_cur_adj)
+
+}
+
+ffi_alpha_non_increasing_adj_cumusum <- function(ar_alpha, fl_min_inc_bd = 1e-20) {
   # alpha has tiny upticks sometimes due to approximation errors, need to be adjusted
   # Following theorem 1, alpha must be non-increasing.
+  # This adjustment, when there are X number of checks, must be made for all Checks
+  # at once. This corrects starting from the highest check count.
+  # https://www.evernote.com/l/AAq8vDtH5v1B_4Al4Kidhd9Ni1DfLL2PRkc/
 
   ar_cur <- ar_alpha
   ar_cur_diff <- diff(ar_cur)

@@ -141,7 +141,7 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
                 mutate(c_A_il_log = log(c_A_il)),
               df_input_il_noninc_covar %>%
                 mutate(c_A_il_log = log(c_A_il + c_alpha_il))) %>%
-        arrange(id_i, svr_checks) %>%
+        arrange(id_i, checks) %>%
         group_by(id_i) %>%
         mutate(c_A_il_log_diff = c_A_il_log - lag(c_A_il_log))
       # 2. Graph Results
