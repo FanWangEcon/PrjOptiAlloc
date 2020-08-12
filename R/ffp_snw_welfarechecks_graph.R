@@ -233,7 +233,7 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
 
       # Main plot
       plt_cur <- plt_cur +
-        facet_wrap( ~ marital + kids, ncol=5, labeller = label_wrap_gen(multi_line=FALSE))
+        facet_wrap( ~ marital + kids, nrow=2, labeller = label_wrap_gen(multi_line=FALSE))
 
       # Add geom_point differing sizes
       ls_st_geompoint_size1 = c('mc', 'mv', 'mlogc')

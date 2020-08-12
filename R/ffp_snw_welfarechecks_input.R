@@ -135,12 +135,26 @@ ffp_snw_process_inputs <-
 
   ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
   # Age Groups
-  # Age Groups
-  if (it_age_bins == 4) {
-    ar_agecut = c(17, 30, 40, 50, 64)
-  } else {
+  if (it_max_age < 64) {
+
     ar_agecut = seq(it_min_age-1, it_max_age, length.out=it_age_bins+1)
+
+  } else {
+
+    if (it_age_bins == 4) {
+      # G4 grouping
+      if (it_max_age == 64) {
+        # four groups
+        ar_agecut = c(17, 30, 40, 50, 64)
+      } else {
+        ar_agecut = c(17, 30, 40, 50, 64, it_max_age)
+      }
+    } else {
+      ar_agecut = seq(it_min_age-1, it_max_age, length.out=it_age_bins+1)
+    }
+
   }
+
   # Dimensions
   if (bl_print){
     print(paste0('dim(df_plan_v_tilde)=',dim(df_plan_v_tilde)))
@@ -736,6 +750,327 @@ ffp_snw_process_inputs <-
               tb_rho_rev_v=tb_rho_rev_v))
 }
 
+
+ffp_snw_process_inputs_core <-
+  function(srt_simu_path = 'C:/Users/fan/Documents/Dropbox (UH-ECON)/PrjNygaardSorensenWang/Output/',
+           snm_simu_csv = 'snwx_v_planner_moredense_a100zh266_e2m2.csv',
+           df_plan_v_tilde_full = df_plan_v_tilde_full,
+           fl_max_phaseout = 238000,
+           it_bin_dollar_before_phaseout = 2500,
+           it_bin_dollar_after_phaseout = 10000,
+           fl_percheck_dollar = 100,
+           fl_multiple = 58056,
+           it_max_checks = 44,
+           fl_tax_hh = 128580000,
+           it_max_age = 64,
+           it_min_age = 18,
+           ar_ycut = NULL,
+           ar_agecut = c(17,29,39,49,64),
+           ar_svr_csv = c('age', 'marital', 'kids', 'checks',	'ymin', 'mass', 'survive', 'vtilde', 'ctilde'),
+           ar_svr_groups = c('marital', 'kids', 'age_group', 'ymin_group'),
+           ar_svr_groups_stats = c('mass', 'survive'),
+           svr_checks = 'checks',
+           svr_v_value = 'vtilde',
+           svr_c_value = 'ctilde',
+           svr_mass = 'mass',
+           ar_rho = c(1),
+           bl_threshold = FALSE,
+           bl_given_firstcheck = FALSE,
+           bl_non_inc_adjust = FALSE,
+           bl_print = TRUE,
+           bl_print_verbose = FALSE) {
+  #' Processing Matlab Simulation results for allocation for Nygaard, Sorernsen and Wang (2020) Core.
+  #'
+  #' @description
+  #' Matlab Simulation Process for Allocation
+  #'
+  #' @author Fan Wang, \url{http://fanwangecon.github.io}
+  #' @export
+  #'
+
+  # mt_plan_v_tilde <- read.csv(paste0(srt_simu_path, snm_simu_csv), header=FALSE)
+  df_plan_v_tilde <- df_plan_v_tilde_full %>%
+    filter(vtilde != 0) %>%
+    filter(checks <= it_max_checks) %>%
+    filter(age <= it_max_age) %>%
+    filter(age >= it_min_age)
+
+  # Age Groups
+  # if (it_max_age < 64) {
+  #   ar_agecut = seq(it_min_age-1, it_max_age, length.out=it_age_bins+1)
+  # } else {
+  #   if (it_age_bins == 4) {
+  #     # G4 grouping
+  #     if (it_max_age == 64) {
+  #       # four groups
+  #       ar_agecut = c(17, 30, 40, 50, 64)
+  #     } else {
+  #       ar_agecut = c(17, 30, 40, 50, 64, it_max_age)
+  #     }
+  #   } else {
+  #     ar_agecut = seq(it_min_age-1, it_max_age, length.out=it_age_bins+1)
+  #   }
+  # }
+
+  # df_plan_v_tilde_yjm <- df_plan_v_tilde
+  df_plan_v_tilde_yjm <- df_plan_v_tilde %>%
+    mutate(age_group = (cut(age, ar_agecut))) %>%
+    group_by(marital, kids, checks, ymin, age_group) %>%
+    summarize(vtilde = sum(vtilde*mass)/sum(mass),
+              ctilde = sum(ctilde*mass)/sum(mass),
+              mass = sum(mass),
+              survive = mean(survive)) %>%
+    ungroup()
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # Number of Cuts Before th Mas Phase Out Point.
+  fl_thres = fl_max_phaseout/fl_multiple
+  # Solution Grid Precision prior to max_phaseout point.
+  inc_grid1 = seq(0, fl_thres, length.out=(fl_max_phaseout)/it_bin_dollar_before_phaseout)
+  inc_grid2 = seq(fl_thres, 7, length.out=(fl_max_phaseout)/it_bin_dollar_after_phaseout)
+  inc_grid1 = unique(c(inc_grid1, inc_grid2))
+  fl_grid_gap = inc_grid1[2] - inc_grid1[1]
+  # Not all inc_grid1 points are valid, there are some elements that have no mass
+  fl_min_ymin_posmass = min(df_plan_v_tilde_yjm %>% pull(ymin))
+  # First group is min
+
+  # use externally provided ar_ycut or use ar_ycut calculations here.
+  if (is.null (ar_ycut)) {
+    ar_ycut = c(0, inc_grid1[inc_grid1>fl_min_ymin_posmass+fl_grid_gap])
+  }
+
+  it_inc_groups = length(ar_ycut)
+  fl_inc_gap = (ar_ycut[3]-ar_ycut[2])*fl_multiple
+  fl_inc_min = min(df_plan_v_tilde_yjm %>% pull(ymin))*fl_multiple
+  subtitle = paste0('1 unit along x-axis = $', round(fl_inc_gap),
+                    ', x-axis min = $', round(fl_inc_min),
+                    ', x-axis final group >= $', round(ar_ycut[length(ar_ycut)-1]*fl_multiple))
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  df_plan_v_tilde_ygrpjm <- df_plan_v_tilde_yjm %>%
+    mutate(ymin_group = (cut(ymin, ar_ycut))) %>%
+    group_by(marital, kids, checks, age_group, ymin_group) %>%
+    summarize(vtilde = sum(vtilde*mass)/sum(mass),
+              ctilde = sum(ctilde*mass)/sum(mass),
+              mass = sum(mass),
+              survive = mean(survive)) %>%
+    ungroup()
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # group id
+  svr_group_id <- 'group_id'
+  # Define
+  ls_svr_group_vars <- ar_svr_groups
+  # panel dataframe following
+  df_plan_v_tilde_id <- df_plan_v_tilde_ygrpjm %>%
+    arrange(!!!syms(ls_svr_group_vars)) %>%
+    group_by(!!!syms(ls_svr_group_vars)) %>%
+    mutate(!!sym(svr_group_id) := (row_number()==1)*1) %>%
+    ungroup() %>%
+    rowid_to_column(var = "id") %>%
+    mutate(!!sym(svr_group_id) := cumsum(!!sym(svr_group_id))) %>%
+    select(one_of(svr_group_id, ls_svr_group_vars), everything())
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # Select Grouping by Variables
+  df_id <- df_plan_v_tilde_id %>%
+    select(one_of(svr_group_id, ls_svr_group_vars, ar_svr_groups_stats)) %>%
+    group_by(!!!syms(svr_group_id)) %>%
+    slice_head() %>% ungroup() %>%
+    select(one_of(svr_group_id, ls_svr_group_vars, ar_svr_groups_stats)) %>%
+    rename(id_i = !!sym(svr_group_id))
+  ar_group_ids <- unique(df_id %>% pull(id_i))
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # Select 4 variables
+  df_value <- df_plan_v_tilde_id %>%
+    select(one_of(svr_group_id, svr_checks, svr_v_value, svr_c_value))
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # 1. id column and id_il
+  df_il <- df_value %>% rename(id_i = !!sym(svr_group_id)) %>%
+    mutate(id_il = row_number()) %>%
+    select(id_i, id_il, everything())
+  # 2. D_max_i and D_il
+  df_il <- df_il %>%
+    arrange(id_i, svr_checks) %>% group_by(id_i) %>%
+    mutate(D_max_i = max(!!sym(svr_checks))) %>%
+    rename(D_il = !!sym(svr_checks)) %>%
+    mutate(beta_i = 1/n()) %>%
+    select(id_i, id_il, D_max_i, D_il, everything())
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # 3. A_il and alpha_il
+  df_il_U <- df_il %>%
+    mutate(c_alpha_il = lead(!!sym(svr_c_value)) - (!!sym(svr_c_value)),
+           v_alpha_il = lead(!!sym(svr_v_value)) - (!!sym(svr_v_value))) %>%
+    rename(c_A_il = !!sym(svr_c_value),
+           v_A_il = !!sym(svr_v_value)) %>%
+    ungroup()
+
+  # 4. drop max check
+  df_il_U <- df_il_U %>%
+    filter(D_il != max(df_il$D_il)) %>%
+    mutate(D_il = D_il + 1)
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # Rescale
+  # df_il_U <- df_il_U %>%
+  #   mutate(v_A_il = v_A_il + 30) %>%
+  #   mutate(v_A_il = case_when(v_A_il >= 0.01 ~ v_A_il,
+  #                             v_A_il <  0.01 ~ 0.01 ))
+  # Minimum A
+  fl_min_v_A_il <- min(df_il_U$v_A_il) + 0.01
+  # Rescale by minimum
+  df_il_U <- df_il_U %>%
+    mutate(v_A_il = v_A_il - fl_min_v_A_il)
+
+  ## ---- fig.width=5, fig.height=5------------------------------------------------------------------------------------------------------------------------------
+  # subset select
+  set.seed(123)
+  it_draw <- length(ar_group_ids)
+  # it_draw <- 30
+  ar_group_rand <- ar_group_ids[sample(length(ar_group_ids), it_draw, replace=FALSE)]
+  df_input_il <- df_il_U %>%
+    filter(id_i %in% ar_group_rand) %>%
+    mutate(id_il = row_number())
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  if (bl_non_inc_adjust){
+    # Update c_alpha_il
+    df_input_il_noninc <- df_input_il %>%
+      arrange((D_il)) %>%
+      group_by(id_i) %>%
+      do(c_alpha_il_noninc = ffi_alpha_non_increasing_adj_flatten(.$c_alpha_il)) %>%
+      unnest(c(c_alpha_il_noninc)) %>%
+      group_by(id_i) %>%
+      mutate(D_il = row_number()) %>%
+      left_join(df_input_il, by=(c('id_i'='id_i', 'D_il'='D_il')))
+
+    # Update v_alpha_il
+    df_input_il_noninc <- df_input_il_noninc %>%
+      arrange((D_il)) %>%
+      group_by(id_i) %>%
+      do(v_alpha_il_noninc = ffi_alpha_non_increasing_adj_flatten(.$v_alpha_il)) %>%
+      unnest(c(v_alpha_il_noninc)) %>%
+      group_by(id_i) %>%
+      mutate(D_il = row_number()) %>%
+      left_join(df_input_il_noninc, by=(c('id_i'='id_i', 'D_il'='D_il')))
+
+    # replace
+    df_input_il_noninc <- df_input_il_noninc %>%
+      select(-c_alpha_il, -v_alpha_il) %>%
+      rename(c_alpha_il = c_alpha_il_noninc) %>%
+      rename(v_alpha_il = v_alpha_il_noninc)
+  } else {
+    df_input_il_noninc <- df_input_il
+  }
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  df_input_il_covid_actual <- df_input_il_noninc %>%
+    left_join(df_id, by = "id_i") %>%
+    mutate(ymin_group = as.numeric(ymin_group)) %>%
+    ungroup() %>% rowwise() %>%
+    mutate(actual_checks =
+             ffi_vox_checks_ykm(ymin_group, marital, kids,
+                                ar_ycut, fl_multiple, fl_percheck_dollar)) %>%
+    ungroup()
+
+  ## ----- Reset Based on First Check amounts, Reset df_input_il_noninc
+  if (bl_given_firstcheck) {
+    # If allocation is positive, that means: *D_il = actual_checks*,
+    # keep those rows, the *A* And *alpha* in those rows are correct. If *actual_checks = 0*, that means we need to use row were *D_il=1*, but replace the alpha value there by zero.
+
+    # 2020 consumption
+    df_input_il_covid_actual <- df_input_il_covid_actual %>%
+      filter(case_when(actual_checks == 0 ~ D_il <= 44,
+                       TRUE ~ D_il >= actual_checks & D_il <= actual_checks + 43)) %>%
+      filter() %>% arrange(id_i, D_il) %>% group_by(id_i) %>%
+      mutate(D_il = row_number()) %>%
+      mutate(D_max_i = 44) %>% ungroup() %>%
+      arrange(id_i, D_il) %>% mutate(id_il = row_number())
+
+    # reset df_input_il_noninc
+    df_input_il_noninc <- df_input_il_covid_actual %>%
+      select(id_i, id_il, D_max_i, D_il, v_A_il, c_A_il, beta_i, c_alpha_il, v_alpha_il)
+    # summarize
+    if (bl_print_verbose){
+      REconTools::ff_summ_percentiles(df_input_il_covid_actual)
+    }
+  }
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  mass_sum <- df_input_il_covid_actual %>% summarize(mass_sum = sum(mass))
+  fl_cost_max_checks_all <- mass_sum*fl_percheck_dollar*fl_tax_hh
+  st_covid_check_cost <- paste0('Cost All Max Checks=$', round(fl_cost_max_checks_all/1000000000,2),
+                                ' bil (assume ',round(fl_tax_hh/1000000,2),' mil tax households)')
+  if (bl_print){
+    print(st_covid_check_cost)
+  }
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  mass_sum_covid_vox_actual <- df_input_il_covid_actual %>%
+    filter(actual_checks >= D_il) %>%
+    summarize(mass_cumsum = sum(mass))
+  fl_cost_actual <- mass_sum_covid_vox_actual*fl_percheck_dollar*fl_tax_hh
+  st_covid_check_cost <- paste0('VOX Policy Cost=$', round(fl_cost_actual/1000000000,2),
+                                ' bil (assume ',round(fl_tax_hh/1000000,2),
+                                ' mil tax households, use SNW 2020 simulated P(Kids, Marry, INcome))')
+  if (bl_print){
+    print(st_covid_check_cost)
+  }
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # 2020 consumption
+  df_input_ib_c <- df_input_il_covid_actual %>%
+    filter(case_when(actual_checks == 0 ~ D_il == 1, # if check = 0, filter D_il = 1
+                     TRUE ~ D_il == actual_checks)) %>%
+    rename(A_i_l0 = c_A_il) %>%
+    mutate(alpha_o_i = case_when(actual_checks == 0 ~ 0,
+                                 TRUE ~ c_alpha_il)) %>%
+    select(id_i, A_i_l0, alpha_o_i, beta_i, mass, actual_checks) %>%
+    mutate(mass_i = mass, beta_i = 1)
+
+  # value
+  df_input_ib_v <- df_input_il_covid_actual %>%
+    filter(case_when(actual_checks == 0 ~ D_il == 1, # if check = 0, filter D_il = 1
+                     TRUE ~ D_il == actual_checks)) %>%
+    rename(A_i_l0 = v_A_il) %>%
+    mutate(alpha_o_i = case_when(actual_checks == 0 ~ 0,
+                                 TRUE ~ v_alpha_il)) %>%
+    select(id_i, A_i_l0, alpha_o_i, beta_i, mass, actual_checks) %>%
+    mutate(mass_i = mass, beta_i = 1)
+
+  ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # Total checks
+  it_total_checks <- df_input_il_covid_actual %>%
+    filter(D_il == 1) %>%
+    summarize(total_checks = sum(actual_checks))
+  it_total_checks <- as.numeric(it_total_checks)
+
+  # And this point, the number is not important
+  fl_dis_w <- it_total_checks
+  fl_dis_w_mass <- as.numeric(mass_sum_covid_vox_actual)
+
+  ## ---- Modify Maximum Allocation Point for Each Individual
+  # The modification below means that
+  if (bl_threshold) {
+    # Threshold frame
+    df_input_il_noninc <- df_input_il_noninc %>%
+      left_join(df_id, by = "id_i") %>%
+      mutate(D_max_i = kids*5 + marital*12 + 12) %>%
+      filter(D_max_i >= D_il) %>%
+      select(id_i, v_alpha_il, D_il, c_alpha_il, id_il, D_max_i, v_A_il, c_A_il, beta_i) %>%
+      ungroup() %>%
+      arrange(id_i, D_il) %>%
+      mutate(id_il = row_number())
+  }
+
+  return(list(mass_sum = mass_sum ,
+              mass_sum_covid_vox_actual = mass_sum_covid_vox_actual,
+              df_input_il_noninc = df_input_il_noninc,
+              df_id = df_id))
+}
 
 ffi_alpha_non_increasing_adj_flatten <- function(ar_alpha, fl_min_inc_bd = 1e-20) {
   # Flattening, flatten so that the marginal value of the next check must be
