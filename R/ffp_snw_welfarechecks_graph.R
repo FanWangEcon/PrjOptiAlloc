@@ -66,6 +66,9 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
                 round((100000 - 6514)/2505),
                 round((150000 - 6514)/2505),
                 round((200000 - 6514)/2505))
+  ## ----- Log Y scale
+  yloglabels <- c('0', '100', '1200', '2400', '4400', '10k', '20k')
+  ylogbreaks <- c(1, 100, 1200, 2400, 4400, 10000, 20000)
 
   ## ---- Image Return List
   ls_img <- vector(mode = "list", length = 0)
@@ -78,6 +81,10 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
     stg_conditions <- "Conditional on Age-Groups/Kids/Marry/income,"
   }
 
+  for (it_img_gen_ctr in seq(1, length(ls_st_gen_imgs))) {
+    print(it_img_gen_ctr)
+    1
+  }
   ## Loop over images to graph
   for (it_img_gen_ctr in seq(1, length(ls_st_gen_imgs))) {
 
@@ -158,11 +165,18 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
     }
 
     ## ------ G5: Checks_c
-    if (st_img_name == 'checks_c') {
+    if (st_img_name == 'checks_c' | st_img_name == 'checks_c_log') {
       stg_title <- paste0(slb_add_title, 'Optimize Expected 2020 Consumption, ', stg_conditions , st_file_type)
+
+      if (st_img_name == 'checks_c_log') {
+        df_alloc_i_long_covar_c_use <- df_alloc_i_long_covar_c %>%
+          mutate(checks = case_when(checks == 0 ~ 0.01, TRUE ~ checks))
+      } else {
+        df_alloc_i_long_covar_c_use <- df_alloc_i_long_covar_c
+      }
       # graph mean check amount by income, marital status and kids counts
       if (bl_optimal_with_age_groups) {
-        plt_cur <- df_alloc_i_long_covar_c %>%
+        plt_cur <- df_alloc_i_long_covar_c_use %>%
           filter(rho_val == ar_rho[1]) %>% ungroup() %>%
           mutate(ymin_group = as.numeric(ymin_group),
                  kids = as.factor(kids),
@@ -171,7 +185,7 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
                      colour=age_group,
                      shape=age_group))
       } else {
-        plt_cur <- df_alloc_i_long_covar_c %>%
+        plt_cur <- df_alloc_i_long_covar_c_use %>%
           filter(rho_val == ar_rho[1]) %>% ungroup() %>%
           mutate(ymin_group = as.numeric(ymin_group),
                  kids = as.factor(kids),
@@ -183,11 +197,19 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
     }
 
     ## ------ G6: Checks_v
-    if (st_img_name == 'checks_v') {
+    if (st_img_name == 'checks_v' | st_img_name == 'checks_v_log') {
       stg_title <- paste0(slb_add_title, 'Optimize Expected 2020 Value, ', stg_conditions, st_file_type)
+
+      if (st_img_name == 'checks_v_log') {
+        df_alloc_i_long_covar_v_use <- df_alloc_i_long_covar_v %>%
+          mutate(checks = case_when(checks == 0 ~ 0.01, TRUE ~ checks))
+      } else {
+        df_alloc_i_long_covar_v_use <- df_alloc_i_long_covar_v
+      }
+
       # graph mean check amount by income, marital status and kids counts
       if (bl_optimal_with_age_groups) {
-        plt_cur <- df_alloc_i_long_covar_v %>%
+        plt_cur <- df_alloc_i_long_covar_v_use %>%
           filter(rho_val == ar_rho[1]) %>% ungroup() %>%
           mutate(ymin_group = as.numeric(ymin_group),
                  kids = as.factor(kids),
@@ -196,7 +218,7 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
                      colour=age_group,
                      shape=age_group))
       } else {
-        plt_cur <- df_alloc_i_long_covar_v %>%
+        plt_cur <- df_alloc_i_long_covar_v_use %>%
           filter(rho_val == ar_rho[1]) %>% ungroup() %>%
           mutate(ymin_group = as.numeric(ymin_group),
                  kids = as.factor(kids),
@@ -208,18 +230,27 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
     }
 
     ## ------ G7: Checks_v vs c
-    if (st_img_name == 'checks_cjv') {
+    if (st_img_name == 'checks_cjv' | st_img_name == 'checks_cjv_log') {
       stg_title <- paste0(slb_add_title, '2020 Value and 2020 Consumption, ', stg_conditions, st_file_type)
+
       # Combine frames
       df_alloc_i_long_covar_cjv <- rbind(
-          df_alloc_i_long_covar_v %>%
+        df_alloc_i_long_covar_v %>%
           filter(rho_val == ar_rho[1] & allocate_type == 'Optimal') %>%
           mutate(allocate_type = "1. V-allocation"),
-          df_alloc_i_long_covar_c %>%
+        df_alloc_i_long_covar_c %>%
           filter(rho_val == ar_rho[1] & allocate_type == 'Optimal') %>%
           mutate(allocate_type = "2. C-allocation"))
+
+      if (st_img_name == 'checks_cjv_log') {
+        df_alloc_i_long_covar_cjv_use <- df_alloc_i_long_covar_cjv %>%
+          mutate(checks = case_when(checks == 0 ~ 0.01, TRUE ~ checks))
+      } else {
+        df_alloc_i_long_covar_cjv_use <- df_alloc_i_long_covar_cjv
+      }
+
       # graph mean check amount by income, marital status and kids counts
-      plt_cur <- df_alloc_i_long_covar_cjv %>% ungroup() %>%
+      plt_cur <- df_alloc_i_long_covar_cjv_use %>% ungroup() %>%
         mutate(ymin_group = as.numeric(ymin_group),
                kids = as.factor(kids),
                marital = as.factor(marital)) %>%
@@ -244,7 +275,7 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
       }
 
       # Add geom_line
-      ls_st_geomline = c('mass', 'checks_c', 'checks_v', 'checks_cjv')
+      ls_st_geomline = c('mass', 'checks_c', 'checks_v', 'checks_cjv', 'checks_c_log', 'checks_v_log', 'checks_cjv_log')
       # ls_st_geomline = c('mass', 'checks_c', 'checks_v', 'mc', 'mv', 'mlogc')
       if (st_img_name %in% ls_st_geomline) {
         plt_cur <- plt_cur + geom_line()
@@ -252,6 +283,7 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
 
       # Add check legend
       ls_st_checks = c('mc', 'mv', 'mlogc')
+      ls_st_logy = c('checks_c_log', 'checks_v_log', 'checks_cjv_log')
       # Add to PLo
       if (st_img_name %in% ls_st_checks) {
         plt_cur <- plt_cur +
@@ -265,6 +297,16 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
             legend.position = c(0.14, 0.9),
             legend.background = element_rect(fill = "white", colour = "black", linetype='solid')) +
           scale_x_continuous(labels = x.labels, breaks = x.breaks)
+      }
+
+      if (st_img_name %in% ls_st_logy) {
+        plt_cur <- plt_cur +
+          theme(
+            legend.title = element_blank(),
+            legend.position = c(0.14, 0.9),
+            legend.background = element_rect(fill = "white", colour = "black", linetype='solid')) +
+          scale_x_continuous(labels = x.labels, breaks = x.breaks) +
+          scale_y_continuous(trans = 'log', breaks = ylogbreaks, labels = yloglabels)
       } else {
         plt_cur <- plt_cur +
           theme(
@@ -273,6 +315,7 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
             legend.background = element_rect(fill = "white", colour = "black", linetype='solid')) +
           scale_x_continuous(labels = x.labels, breaks = x.breaks)
       }
+
       # legend.text = element_text(margin = margin(t = 10))) +
 
       # title and notes
@@ -288,12 +331,12 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
     }
 
     ls_img[[st_img_name]] <- plt_cur
-
+    print(names(ls_img))
   }
-
 
   ## ---- Image Return List
   ar_st_img_names <- names(ls_img)
+  print(paste0('ls_img:', ar_st_img_names))
   if (bl_save_img) {
     for (it_img_ctr in seq(1,length(ar_st_img_names))) {
 
