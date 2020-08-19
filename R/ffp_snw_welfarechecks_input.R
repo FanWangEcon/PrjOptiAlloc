@@ -8,8 +8,8 @@ ffp_snw_process_inputs <-
            fl_multiple = 58056,
            it_max_checks = 44,
            fl_tax_hh = 128580000,
-           it_max_age = 64,
-           it_min_age = 18,
+           it_max_age = 64,           
+           it_min_age = 18,           
            it_age_bins = 2,
            ar_svr_csv = c('age', 'marital', 'kids', 'checks',	'ymin', 'mass', 'survive', 'vtilde', 'ctilde'),
            ar_svr_groups = c('marital', 'kids', 'age_group', 'ymin_group'),
@@ -20,6 +20,8 @@ ffp_snw_process_inputs <-
            svr_mass = 'mass',
            ar_rho = c(1),
            bl_threshold = FALSE,
+           it_check_headorspouse = 12,
+           it_check_perkids = 5,
            bl_given_firstcheck = FALSE,
            bl_non_inc_adjust = FALSE,
            bl_print = TRUE,
@@ -549,7 +551,7 @@ ffp_snw_process_inputs <-
       # Threshold frame
       df_input_il_noninc <- df_input_il_noninc %>%
         left_join(df_id, by = "id_i") %>%
-        mutate(D_max_i = kids*5 + marital*12 + 12) %>%
+        mutate(D_max_i = kids*it_check_perkids + marital*it_check_headorspouse + it_check_headorspouse) %>%
         filter(D_max_i >= D_il) %>%
         select(id_i, v_alpha_il, D_il, c_alpha_il, id_il, D_max_i, v_A_il, c_A_il, beta_i) %>%
         ungroup() %>%
@@ -799,6 +801,8 @@ ffp_snw_process_inputs_core <-
            svr_mass = 'mass',
            ar_rho = c(1),
            bl_threshold = FALSE,
+           it_check_headorspouse = 12,
+           it_check_perkids = 5,           
            bl_given_firstcheck = FALSE,
            bl_non_inc_adjust = FALSE,
            bl_print = TRUE,
@@ -1082,7 +1086,7 @@ ffp_snw_process_inputs_core <-
       # Threshold frame
       df_input_il_noninc <- df_input_il_noninc %>%
         left_join(df_id, by = "id_i") %>%
-        mutate(D_max_i = kids*5 + marital*12 + 12) %>%
+        mutate(D_max_i = kids*it_check_perkids + marital*it_check_headorspouse + it_check_headorspouse) %>%
         filter(D_max_i >= D_il) %>%
         select(id_i, v_alpha_il, D_il, c_alpha_il, id_il, D_max_i, v_A_il, c_A_il, beta_i) %>%
         ungroup() %>%
