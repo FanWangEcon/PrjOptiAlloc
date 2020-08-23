@@ -8,8 +8,8 @@ ffp_snw_process_inputs <-
            fl_multiple = 58056,
            it_max_checks = 44,
            fl_tax_hh = 128580000,
-           it_max_age = 64,           
-           it_min_age = 18,           
+           it_max_age = 64,
+           it_min_age = 18,
            it_age_bins = 2,
            ar_svr_csv = c('age', 'marital', 'kids', 'checks',	'ymin', 'mass', 'survive', 'vtilde', 'ctilde'),
            ar_svr_groups = c('marital', 'kids', 'age_group', 'ymin_group'),
@@ -644,11 +644,19 @@ ffp_snw_process_inputs <-
                                             df_queue_il_long_with_V = df_queue_il_long_c,
                                             svr_measure_i = 'mass_i')
 
+    # this is assuming: bl_return_allQ_V = FALSE
+    tb_rho_vstar_c <- df_queue_il_long_c %>%
+        filter(!is.na(V_star_Q_il)) %>%
+        arrange(rho_val, Q_il) %>%
+        group_by(rho_val) %>%
+        summarise(V_star_resource = max(V_star_Q_il)) %>%
+        ungroup()
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Display Results
     if (bl_print){
       print(tb_rho_rev_c)
+      print(tb_rho_vstar_c)
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -658,6 +666,14 @@ ffp_snw_process_inputs <-
                                             df_input_ib = df_input_ib_v,
                                             df_queue_il_long_with_V = df_queue_il_long_v,
                                             svr_measure_i = 'mass_i')
+
+    # this is assuming: bl_return_allQ_V = FALSE
+    tb_rho_vstar_v <- df_queue_il_long_v %>%
+        filter(!is.na(V_star_Q_il)) %>%
+        arrange(rho_val, Q_il) %>%
+        group_by(rho_val) %>%
+        summarise(V_star_resource = max(V_star_Q_il)) %>%
+        ungroup()
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Display Results
@@ -773,7 +789,9 @@ ffp_snw_process_inputs <-
                 stg_subtitle=subtitle,
                 stg_caption=stg_caption,
                 tb_rho_rev_c=tb_rho_rev_c,
-                tb_rho_rev_v=tb_rho_rev_v))
+                tb_rho_vstar_c=tb_rho_vstar_c,
+                tb_rho_rev_v=tb_rho_rev_v,
+                tb_rho_vstar_v=tb_rho_vstar_v))
   }
 
 
@@ -802,7 +820,7 @@ ffp_snw_process_inputs_core <-
            ar_rho = c(1),
            bl_threshold = FALSE,
            it_check_headorspouse = 12,
-           it_check_perkids = 5,           
+           it_check_perkids = 5,
            bl_given_firstcheck = FALSE,
            bl_non_inc_adjust = FALSE,
            bl_print = TRUE,
