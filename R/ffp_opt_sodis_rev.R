@@ -68,9 +68,22 @@ ffp_opt_anlyz_sodis_rev <- function(ar_rho,
                                svr_V_star_Q_il = svr_V_star_Q_il)$fl_REV) %>%
     unnest() %>% pull()
 
+  # Report Effects on Aggregate  outcome of alternative policies
+  ar_util_alter_alloc_loop <- df_queue_il_long_with_V %>%
+    group_by(!!sym(svr_rho)) %>%
+    do(fl_util_alter_alloc = ffp_opt_sodis_rev(fl_rho = .[[svr_rho_val]],
+                               it_w_agg = it_w_agg,
+                               df_input_ib = df_input_ib, df_queue_il_with_V = .,
+                               svr_A_i_l0 = svr_A_i_l0, svr_alpha_o_i = svr_alpha_o_i,
+                               svr_inpalc = svr_inpalc,
+                               svr_beta_i = svr_beta_i,
+                               svr_measure_i = svr_measure_i, svr_mass_cumu_il = svr_mass_cumu_il,
+                               svr_V_star_Q_il = svr_V_star_Q_il)$fl_util_alter_alloc) %>%
+    unnest() %>% pull()
+
   # Return Matrix
-  mt_rho_rev <- cbind(ar_rho, ar_util_rev_loop)
-  colnames(mt_rho_rev) <- c(svr_rho_val,'REV')
+  mt_rho_rev <- cbind(ar_rho, ar_util_rev_loop, ar_util_alter_alloc_loop)
+  colnames(mt_rho_rev) <- c(svr_rho_val, 'REV', 'AlterOutcome')
   tb_rho_rev <- as_tibble(mt_rho_rev) %>% rowid_to_column(var = svr_rho)
 
   # Retrun
@@ -151,5 +164,6 @@ ffp_opt_sodis_rev <- function(fl_rho,
 
   # Return
   return(list(it_w_exp_min=it_w_exp_min,
+              fl_util_alter_alloc=fl_util_alter_alloc,
               fl_REV=fl_REV))
 }
