@@ -461,7 +461,7 @@ ffp_snw_process_inputs <-
       # 2020 consumption
       df_input_il_covid_actual <- df_input_il_covid_actual %>%
         filter(case_when(actual_checks == 0 ~ D_il <= it_max_checks,
-                         TRUE ~ D_il >= actual_checks & D_il <= (actual_checks + it_max_checks - 1))) %>%
+                         TRUE ~ D_il >= (actual_checks + 1) & D_il <= (actual_checks + 1 + it_max_checks - 1))) %>%
         filter() %>% arrange(id_i, D_il) %>% group_by(id_i) %>%
         mutate(D_il = row_number()) %>%
         mutate(D_max_i = it_max_checks) %>% ungroup() %>%
@@ -1030,7 +1030,7 @@ ffp_snw_process_inputs_core <-
       # 2020 consumption
       df_input_il_covid_actual <- df_input_il_covid_actual %>%
         filter(case_when(actual_checks == 0 ~ D_il <= it_max_checks,
-                         TRUE ~ D_il >= actual_checks & D_il <= (actual_checks + it_max_checks - 1))) %>%
+                         TRUE ~ D_il >= (actual_checks + 1) & D_il <= (actual_checks + 1 + it_max_checks - 1))) %>%
         filter() %>% arrange(id_i, D_il) %>% group_by(id_i) %>%
         mutate(D_il = row_number()) %>%
         mutate(D_max_i = it_max_checks) %>% ungroup() %>%
