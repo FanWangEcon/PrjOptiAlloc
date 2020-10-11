@@ -2,7 +2,7 @@
 
 ## 0.1.2
 
-* Added Input and Graph processing functions for Nygaard, Sorensen and Wang (2020) to support processing matlab output to solve for the optimal allocations of welfare checks.
+* Added Input and Graph processing functions for [Nygaard, Sorensen and Wang (2020)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3691091) to support processing matlab output to solve for the optimal allocations of welfare checks.
 * Tested with R 4.0.2
 
 ## 0.1.1

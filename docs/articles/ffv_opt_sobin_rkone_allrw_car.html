@@ -58,9 +58,6 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
   <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
 </li>
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
-</li>
-<li>
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
@@ -123,7 +120,7 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 
       
 
-      </header><script src="ffv_opt_sobin_rkone_allrw_car_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="ffv_opt_sobin_rkone_allrw_car_files/header-attrs-2.4/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Line by Line Test Binary Allocation with Linear Regression</h1>
@@ -168,34 +165,38 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 <div id="load-dependencies" class="section level3">
 <h3 class="hasAnchor">
 <a href="#load-dependencies" class="anchor"></a>Load Dependencies</h3>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(<span class="kw">list</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span>(<span class="kw">all.names</span> <span class="kw">=</span> <span class="fl">TRUE</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">knitr.duplicate.label</span> <span class="kw">=</span> <span class="st">'allow'</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tibble</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stringr</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span>all.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>knitr.duplicate.label <span class="op">=</span> <span class="st">'allow'</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">REconTools</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/">broom</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fanwangecon.github.io/REconTools/">REconTools</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">PrjOptiAlloc</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fanwangecon.github.io/PrjOptiAlloc/">PrjOptiAlloc</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">knitr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">kableExtra</span>)</pre></body></html></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span></pre></div>
 </div>
 <div id="load-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#load-data" class="anchor"></a>Load Data</h3>
 <p>Generate four categories by initial height and mother’s education levels combinations.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># Load Data</span>
-<span class="no">tb_mtcars</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames_to_column</a></span>(<span class="no">mtcars</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="st">"carname"</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rowid_to_column</a></span>()
-<span class="fu"><a href="https://rdrr.io/r/base/attach.html">attach</a></span>(<span class="no">tb_mtcars</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># Load Data</span>
+<span class="va">tb_mtcars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames_to_column</a></span><span class="op">(</span><span class="va">mtcars</span>, var <span class="op">=</span> <span class="st">"carname"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rowid_to_column</a></span><span class="op">(</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/attach.html">attach</a></span><span class="op">(</span><span class="va">tb_mtcars</span><span class="op">)</span></pre></div>
 <pre><code>## The following object is masked from package:ggplot2:
 ## 
 ##     mpg</code></pre>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># Summarize</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">tb_mtcars</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="co"># Summarize</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">tb_mtcars</span><span class="op">)</span></pre></div>
 <pre><code>## tibble [32 x 13] (S3: tbl_df/tbl/data.frame)
 ##  $ rowid  : int [1:32] 1 2 3 4 5 6 7 8 9 10 ...
 ##  $ carname: chr [1:32] "Mazda RX4" "Mazda RX4 Wag" "Datsun 710" "Hornet 4 Drive" ...
@@ -210,7 +211,8 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ##  $ am     : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...
 ##  $ gear   : num [1:32] 4 4 4 3 3 3 3 4 4 4 ...
 ##  $ carb   : num [1:32] 4 4 1 1 2 1 4 2 2 4 ...</code></pre>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_mtcars</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">tb_mtcars</span><span class="op">)</span></pre></div>
 <pre><code>##      rowid         carname               mpg             cyl       
 ##  Min.   : 1.00   Length:32          Min.   :10.40   Min.   :4.000  
 ##  1st Qu.: 8.75   Class :character   1st Qu.:15.43   1st Qu.:4.000  
@@ -239,22 +241,23 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ##  Mean   :2.812  
 ##  3rd Qu.:4.000  
 ##  Max.   :8.000</code></pre>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># Generate Discrete Version of continuous variables</span>
-<span class="no">tb_mtcars</span> <span class="kw">&lt;-</span> <span class="no">tb_mtcars</span> <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">wgtLowHigh</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span>(<span class="no">wt</span>,
-                             <span class="kw">breaks</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">Inf</span>, <span class="fl">3.1</span>, <span class="fl">Inf</span>),
-                             <span class="kw">labels</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"LowWgt"</span>,<span class="st">"HighWgt"</span>))) <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">dratLowHigh</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span>(<span class="no">drat</span>,
-                             <span class="kw">breaks</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">Inf</span>, <span class="fl">3.59</span>, <span class="fl">Inf</span>),
-                             <span class="kw">labels</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"lowRearAxleRatio"</span>,<span class="st">"highRearAxleRatio"</span>)))
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="co"># Generate Discrete Version of continuous variables</span>
+<span class="va">tb_mtcars</span> <span class="op">&lt;-</span> <span class="va">tb_mtcars</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>wgtLowHigh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">wt</span>,
+                             breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="cn">Inf</span>, <span class="fl">3.1</span>, <span class="cn">Inf</span><span class="op">)</span>,
+                             labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LowWgt"</span>,<span class="st">"HighWgt"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>dratLowHigh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">drat</span>,
+                             breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="cn">Inf</span>, <span class="fl">3.59</span>, <span class="cn">Inf</span><span class="op">)</span>,
+                             labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lowRearAxleRatio"</span>,<span class="st">"highRearAxleRatio"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Relabel some factors</span>
-<span class="no">tb_mtcars</span>$<span class="no">vs</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">tb_mtcars</span>$<span class="no">vs</span>,
-                        <span class="kw">levels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">1</span>),
-                        <span class="kw">labels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"engineVShaped"</span>, <span class="st">"engineStraight"</span>))
-<span class="no">tb_mtcars</span>$<span class="no">am</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">tb_mtcars</span>$<span class="no">am</span>,
-                        <span class="kw">levels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">1</span>),
-                        <span class="kw">labels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"automatic"</span>, <span class="st">"manual"</span>))</pre></body></html></div>
+<span class="va">tb_mtcars</span><span class="op">$</span><span class="va">vs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">tb_mtcars</span><span class="op">$</span><span class="va">vs</span>,
+                        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>,
+                        labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"engineVShaped"</span>, <span class="st">"engineStraight"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">tb_mtcars</span><span class="op">$</span><span class="va">am</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">tb_mtcars</span><span class="op">$</span><span class="va">am</span>,
+                        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>,
+                        labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"automatic"</span>, <span class="st">"manual"</span><span class="op">)</span><span class="op">)</span></pre></div>
 </div>
 </div>
 <div id="exploration" class="section level2">
@@ -263,11 +266,12 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 <div id="tabulation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#tabulation" class="anchor"></a>Tabulation</h3>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># tabulate</span>
-<span class="no">tb_mtcars</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">am</span>, <span class="no">vs</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">freq</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>()) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span>(<span class="kw">names_from</span> <span class="kw">=</span> <span class="no">vs</span>, <span class="kw">values_from</span> <span class="kw">=</span> <span class="no">freq</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb10"><pre class="downlit">
+<span class="co"># tabulate</span>
+<span class="va">tb_mtcars</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">am</span>, <span class="va">vs</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>freq <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">vs</span>, values_from <span class="op">=</span> <span class="va">freq</span><span class="op">)</span></pre></div>
 <pre><code>## `summarise()` regrouping output by 'am' (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 2 x 3
 ## # Groups:   am [2]
@@ -276,8 +280,9 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## 1 automatic            12              7
 ## 2 manual                6              7</code></pre>
 <p>Summarize all, conditional on shift status. <em>am</em> variable is Transmission (0 = automatic, 1 = manual):</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="co"># summarize all</span>
-<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">tb_mtcars</span>, <span class="kw">bl_statsasrows</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb13"><pre class="downlit">
+<span class="co"># summarize all</span>
+<span class="fu">REconTools</span><span class="fu">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span><span class="op">(</span><span class="va">tb_mtcars</span>, bl_statsasrows <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></pre></div>
 <pre><code>## Warning: `funs()` is deprecated as of dplyr 0.8.0.
 ## Please use a list of either functions or lambdas: 
 ## 
@@ -313,8 +318,9 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## 10 wt       32     29     0       0   3.22   0.978 0.304  1.51  1.54  1.74  1.96
 ## # ... with 7 more variables: p25 &lt;dbl&gt;, p50 &lt;dbl&gt;, p75 &lt;dbl&gt;, p90 &lt;dbl&gt;,
 ## #   p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="co"># summarize auto transition</span>
-<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">tb_mtcars</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">am</span> <span class="kw">==</span> <span class="fl">0</span>), <span class="kw">bl_statsasrows</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb18"><pre class="downlit">
+<span class="co"># summarize auto transition</span>
+<span class="fu">REconTools</span><span class="fu">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span><span class="op">(</span><span class="va">tb_mtcars</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">am</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span>, bl_statsasrows <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></pre></div>
 <pre><code>## Warning in min(rowid, na.rm = TRUE): no non-missing arguments to min; returning
 ## Inf</code></pre>
 <pre><code>## Warning in min(mpg, na.rm = TRUE): no non-missing arguments to min; returning
@@ -370,8 +376,9 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## 10 wt        0      0     0       0   NaN    NA    NA   Inf    NA    NA    NA
 ## # ... with 7 more variables: p25 &lt;dbl&gt;, p50 &lt;dbl&gt;, p75 &lt;dbl&gt;, p90 &lt;dbl&gt;,
 ## #   p95 &lt;dbl&gt;, p99 &lt;dbl&gt;, max &lt;dbl&gt;</code></pre>
-<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="co"># summarize manual transition</span>
-<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">tb_mtcars</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">am</span> <span class="kw">==</span> <span class="fl">1</span>), <span class="kw">bl_statsasrows</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb41"><pre class="downlit">
+<span class="co"># summarize manual transition</span>
+<span class="fu">REconTools</span><span class="fu">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span><span class="op">(</span><span class="va">tb_mtcars</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">am</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>, bl_statsasrows <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></pre></div>
 <pre><code>## Warning in min(rowid, na.rm = TRUE): no non-missing arguments to min; returning
 ## Inf</code></pre>
 <pre><code>## Warning in min(mpg, na.rm = TRUE): no non-missing arguments to min; returning
@@ -431,10 +438,11 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 <div id="exploration-regressions" class="section level3">
 <h3 class="hasAnchor">
 <a href="#exploration-regressions" class="anchor"></a>Exploration Regressions</h3>
-<div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="co"># A. Regree MPG on horse power and binary if Manual or not (manual = 1)</span>
+<div class="sourceCode" id="cb64"><pre class="downlit">
+<span class="co"># A. Regree MPG on horse power and binary if Manual or not (manual = 1)</span>
 <span class="co"># 1. more horse power less MPG</span>
 <span class="co"># 2. manual larger MPG</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">mpg</span> ~ <span class="no">hp</span> + <span class="no">wt</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">am</span>) - <span class="fl">1</span>)))</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">wt</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">am</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = mpg ~ hp + wt + factor(am) - 1)
@@ -455,8 +463,9 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## Residual standard error: 2.538 on 28 degrees of freedom
 ## Multiple R-squared:  0.9872, Adjusted R-squared:  0.9853 
 ## F-statistic: 538.2 on 4 and 28 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb66"><html><body><pre class="r"><span class="co"># B. Also incorporate now engine shape, vs = 0 if v-shaped</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">mpg</span> ~ <span class="no">hp</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">am</span>) - <span class="fl">1</span>)))</pre></body></html></div>
+<div class="sourceCode" id="cb66"><pre class="downlit">
+<span class="co"># B. Also incorporate now engine shape, vs = 0 if v-shaped</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">am</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = mpg ~ hp + factor(am) - 1)
@@ -476,7 +485,8 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## Residual standard error: 2.909 on 29 degrees of freedom
 ## Multiple R-squared:  0.9825, Adjusted R-squared:  0.9807 
 ## F-statistic: 543.4 on 3 and 29 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb68"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">mpg</span> ~ <span class="no">hp</span> + <span class="no">carb</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">am</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">vs</span>) - <span class="fl">1</span>)))</pre></body></html></div>
+<div class="sourceCode" id="cb68"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">am</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">vs</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = mpg ~ hp + carb + factor(am):factor(vs) - 1)
@@ -499,7 +509,8 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## Residual standard error: 2.786 on 26 degrees of freedom
 ## Multiple R-squared:  0.9856, Adjusted R-squared:  0.9823 
 ## F-statistic: 297.2 on 6 and 26 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">mpg</span> ~ <span class="no">hp</span> + <span class="no">carb</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">vs</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">am</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">vs</span>))))</pre></body></html></div>
+<div class="sourceCode" id="cb70"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">vs</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">am</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">vs</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = mpg ~ hp + carb + factor(vs) + factor(am):factor(vs))
@@ -530,10 +541,11 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 <div id="regress-mpg-on-manual-transmission" class="section level3">
 <h3 class="hasAnchor">
 <a href="#regress-mpg-on-manual-transmission" class="anchor"></a>Regress MPG on Manual Transmission</h3>
-<div class="sourceCode" id="cb72"><html><body><pre class="r"><span class="co"># regress and store results</span>
-<span class="no">mt_model</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>(~ <span class="no">hp</span> + <span class="no">qsec</span> + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">vs</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">am</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">vs</span>))
-<span class="no">rs_mpg_on_auto</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">mpg</span> ~ <span class="no">mt_model</span> - <span class="fl">1</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">rs_mpg_on_auto</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb72"><pre class="downlit">
+<span class="co"># regress and store results</span>
+<span class="va">mt_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">qsec</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">vs</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">am</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">vs</span><span class="op">)</span><span class="op">)</span>
+<span class="va">rs_mpg_on_auto</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">mt_model</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">rs_mpg_on_auto</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = mpg ~ mt_model - 1)
@@ -556,8 +568,9 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## Residual standard error: 2.818 on 26 degrees of freedom
 ## Multiple R-squared:  0.9853, Adjusted R-squared:  0.9819 
 ## F-statistic: 290.4 on 6 and 26 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb74"><html><body><pre class="r"><span class="no">rs_mpg_on_auto_tidy</span> <span class="kw">=</span> <span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">tidy</a></span>(<span class="no">rs_mpg_on_auto</span>)
-<span class="no">rs_mpg_on_auto_tidy</span></pre></body></html></div>
+<div class="sourceCode" id="cb74"><pre class="downlit">
+<span class="va">rs_mpg_on_auto_tidy</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy</a></span><span class="op">(</span><span class="va">rs_mpg_on_auto</span><span class="op">)</span>
+<span class="va">rs_mpg_on_auto_tidy</span></pre></div>
 <pre><code>## # A tibble: 6 x 5
 ##   term                            estimate std.error statistic p.value
 ##   &lt;chr&gt;                              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
@@ -573,8 +586,9 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 <a href="#construct-input-arrays-a_i-and-alpha_i" class="anchor"></a>Construct Input Arrays <span class="math inline">\(A_i\)</span> and <span class="math inline">\(\alpha_i\)</span>
 </h3>
 <p>Multiply coefficient vector by covariate matrix to generate <em>A</em> vector that is child/individual specific.</p>
-<div class="sourceCode" id="cb76"><html><body><pre class="r"><span class="co"># Estimates Table</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">rs_mpg_on_auto_tidy</span>, <span class="fl">6</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb76"><pre class="downlit">
+<span class="co"># Estimates Table</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">rs_mpg_on_auto_tidy</span>, <span class="fl">6</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 6 x 5
 ##   term                            estimate std.error statistic p.value
 ##   &lt;chr&gt;                              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
@@ -584,8 +598,9 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## 4 mt_modelfactor(vs)1               1.79      1.97       0.909 0.372  
 ## 5 mt_modelfactor(vs)0:factor(am)1   3.97      1.69       2.35  0.0265 
 ## 6 mt_modelfactor(vs)1:factor(am)1   6.53      1.79       3.66  0.00113</code></pre>
-<div class="sourceCode" id="cb78"><html><body><pre class="r"><span class="co"># Covariates</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">mt_model</span>, <span class="fl">5</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb78"><pre class="downlit">
+<span class="co"># Covariates</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mt_model</span>, <span class="fl">5</span><span class="op">)</span></pre></div>
 <pre><code>##   (Intercept)  hp  qsec factor(vs)1 factor(vs)0:factor(am)1
 ## 1           1 110 16.46           0                       1
 ## 2           1 110 17.02           0                       1
@@ -598,35 +613,39 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ## 3                       1
 ## 4                       0
 ## 5                       0</code></pre>
-<div class="sourceCode" id="cb80"><html><body><pre class="r"><span class="co"># Covariates coefficients from regression (including constant)</span>
-<span class="no">ar_fl_cova_esti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="no">rs_mpg_on_auto_tidy</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(<span class="no">term</span>, <span class="st">'am'</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">estimate</span>))
-<span class="no">ar_fl_main_esti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="no">rs_mpg_on_auto_tidy</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(<span class="no">term</span>, <span class="st">'am'</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">estimate</span>))
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_fl_cova_esti</span>, <span class="fl">5</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb80"><pre class="downlit">
+<span class="co"># Covariates coefficients from regression (including constant)</span>
+<span class="va">ar_fl_cova_esti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">rs_mpg_on_auto_tidy</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">term</span>, <span class="st">'am'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_fl_main_esti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">rs_mpg_on_auto_tidy</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">term</span>, <span class="st">'am'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ar_fl_cova_esti</span>, <span class="fl">5</span><span class="op">)</span></pre></div>
 <pre><code>##         estimate
 ## [1,] 25.44102224
 ## [2,] -0.04526124
 ## [3,] -0.09349849
 ## [4,]  1.79184516</code></pre>
-<div class="sourceCode" id="cb82"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_fl_main_esti</span>, <span class="fl">5</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb82"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ar_fl_main_esti</span>, <span class="fl">5</span><span class="op">)</span></pre></div>
 <pre><code>##      estimate
 ## [1,] 3.970683
 ## [2,] 6.533746</code></pre>
-<div class="sourceCode" id="cb84"><html><body><pre class="r"><span class="co"># Select Matrix subcomponents</span>
-<span class="no">mt_cova</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_model</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">"am"</span>)))
-<span class="no">mt_intr</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>(~ <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">vs</span>) - <span class="fl">1</span>)
+<div class="sourceCode" id="cb84"><pre class="downlit">
+<span class="co"># Select Matrix subcomponents</span>
+<span class="va">mt_cova</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">mt_model</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"am"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">mt_intr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">vs</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
 
 <span class="co"># Generate A_i, use mt_cova_wth_const</span>
-<span class="no">ar_A_m</span> <span class="kw">&lt;-</span> <span class="no">mt_cova</span> <span class="kw">%*%</span> <span class="no">ar_fl_cova_esti</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_A_m</span>, <span class="fl">5</span>)</pre></body></html></div>
+<span class="va">ar_A_m</span> <span class="op">&lt;-</span> <span class="va">mt_cova</span> <span class="op">%*%</span> <span class="va">ar_fl_cova_esti</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ar_A_m</span>, <span class="fl">5</span><span class="op">)</span></pre></div>
 <pre><code>##      estimate
 ## [1,] 18.92330
 ## [2,] 18.87094
 ## [3,] 21.28357
 ## [4,] 20.43652
 ## [5,] 15.92896</code></pre>
-<div class="sourceCode" id="cb86"><html><body><pre class="r"><span class="co"># Generate alpha_i</span>
-<span class="no">ar_alpha_m</span> <span class="kw">&lt;-</span> <span class="no">mt_intr</span> <span class="kw">%*%</span> <span class="no">ar_fl_main_esti</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_alpha_m</span>, <span class="fl">5</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb86"><pre class="downlit">
+<span class="co"># Generate alpha_i</span>
+<span class="va">ar_alpha_m</span> <span class="op">&lt;-</span> <span class="va">mt_intr</span> <span class="op">%*%</span> <span class="va">ar_fl_main_esti</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ar_alpha_m</span>, <span class="fl">5</span><span class="op">)</span></pre></div>
 <pre><code>##   estimate
 ## 1 3.970683
 ## 2 3.970683
@@ -637,35 +656,39 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 <div id="individual-weight" class="section level3">
 <h3 class="hasAnchor">
 <a href="#individual-weight" class="anchor"></a>Individual Weight</h3>
-<div class="sourceCode" id="cb88"><html><body><pre class="r"><span class="co"># Child Weight</span>
-<span class="no">ar_beta_m</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>/<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_A_m</span>), <span class="kw">times</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_A_m</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb88"><pre class="downlit">
+<span class="co"># Child Weight</span>
+<span class="va">ar_beta_m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_A_m</span><span class="op">)</span>, times<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_A_m</span><span class="op">)</span><span class="op">)</span></pre></div>
 </div>
 <div id="matrix-with-required-inputs-for-allocation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#matrix-with-required-inputs-for-allocation" class="anchor"></a>Matrix with Required Inputs for Allocation</h3>
-<div class="sourceCode" id="cb89"><html><body><pre class="r"><span class="co"># Initate Dataframe that will store all estimates and optimal allocation relevant information</span>
+<div class="sourceCode" id="cb89"><pre class="downlit">
+<span class="co"># Initate Dataframe that will store all estimates and optimal allocation relevant information</span>
 <span class="co"># combine identifying key information along with estimation A, alpha results</span>
 <span class="co"># note that we only need indi.id as key</span>
-<span class="no">mt_opti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_alpha_m</span>, <span class="no">ar_A_m</span>, <span class="no">ar_beta_m</span>)
-<span class="no">ar_st_varnames</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span>)
-<span class="no">df_esti_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_opti</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span>(~<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ar_st_varnames</span>))</pre></body></html></div>
+<span class="va">mt_opti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">ar_alpha_m</span>, <span class="va">ar_A_m</span>, <span class="va">ar_beta_m</span><span class="op">)</span>
+<span class="va">ar_st_varnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span><span class="op">)</span>
+<span class="va">df_esti_alpha_A_beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">mt_opti</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
 ## Using compatibility `.name_repair`.
 ## This warning is displayed once every 8 hours.
 ## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
-<div class="sourceCode" id="cb91"><html><body><pre class="r"><span class="no">tb_key_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="no">tb_mtcars</span>, <span class="no">df_esti_alpha_A_beta</span>) <span class="kw">%&gt;%</span>
-              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'rowid'</span>, <span class="st">'carname'</span>, <span class="st">'mpg'</span>, <span class="st">'hp'</span>, <span class="st">'qsec'</span>, <span class="st">'vs'</span>, <span class="st">'am'</span>, <span class="no">ar_st_varnames</span>)))
+<div class="sourceCode" id="cb91"><pre class="downlit">
+<span class="va">tb_key_alpha_A_beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span><span class="op">(</span><span class="va">tb_mtcars</span>, <span class="va">df_esti_alpha_A_beta</span><span class="op">)</span> <span class="op">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html">one_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'rowid'</span>, <span class="st">'carname'</span>, <span class="st">'mpg'</span>, <span class="st">'hp'</span>, <span class="st">'qsec'</span>, <span class="st">'vs'</span>, <span class="st">'am'</span>, <span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Unique beta, A, and alpha check</span>
-<span class="no">tb_opti_unique</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">n_obs_group</span><span class="kw">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>())</pre></body></html></div>
+<span class="va">tb_opti_unique</span> <span class="op">&lt;-</span> <span class="va">tb_key_alpha_A_beta</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>n_obs_group<span class="op">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## `summarise()` regrouping output by 'alpha', 'A' (override with `.groups` argument)</code></pre>
-<div class="sourceCode" id="cb93"><html><body><pre class="r"><span class="co"># Only include currently automatic cars</span>
-<span class="no">tb_key_alpha_A_beta</span> <span class="kw">&lt;-</span><span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">am</span> <span class="kw">==</span> <span class="st">'automatic'</span>)
+<div class="sourceCode" id="cb93"><pre class="downlit">
+<span class="co"># Only include currently automatic cars</span>
+<span class="va">tb_key_alpha_A_beta</span> <span class="op">&lt;-</span><span class="va">tb_key_alpha_A_beta</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">am</span> <span class="op">==</span> <span class="st">'automatic'</span><span class="op">)</span>
 
 <span class="co"># Show cars</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">tb_key_alpha_A_beta</span>, <span class="fl">32</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tb_key_alpha_A_beta</span>, <span class="fl">32</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 19 x 10
 ##    rowid carname           mpg    hp  qsec vs         am      alpha     A   beta
 ##    &lt;int&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;      &lt;fct&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
@@ -696,13 +719,14 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 <div id="parameters-for-optimal-allocation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#parameters-for-optimal-allocation" class="anchor"></a>Parameters for Optimal Allocation</h3>
-<div class="sourceCode" id="cb95"><html><body><pre class="r"><span class="co"># Child Count</span>
-<span class="no">it_obs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">tb_opti_unique</span>)[<span class="fl">1</span>]
+<div class="sourceCode" id="cb95"><pre class="downlit">
+<span class="co"># Child Count</span>
+<span class="va">it_obs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">tb_opti_unique</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
 
 <span class="co"># Vector of Planner Preference</span>
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fl">1</span> - (<span class="fl">10</span>^(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">18</span>))))
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">ar_rho</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">ar_rho</span>)</pre></body></html></div>
+<span class="va">ar_rho</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="op">(</span><span class="fl">10</span><span class="op">^</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, length.out<span class="op">=</span><span class="fl">18</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span></pre></div>
 <pre><code>##  [1]  0.68377223  0.63790416  0.58538304  0.52524386  0.45638164  0.37753112
 ##  [7]  0.28724352  0.18385992  0.06548079 -0.07006896 -0.22527986 -0.40300372
 ## [13] -0.60650600 -0.83952580 -1.10634454 -1.41186470 -1.76169981 -2.16227766</code></pre>
@@ -711,17 +735,18 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 <h3 class="hasAnchor">
 <a href="#optimal-binary-allocation-crs" class="anchor"></a>Optimal binary Allocation (CRS)</h3>
 <p>This also works with any CRS CES.</p>
-<div class="sourceCode" id="cb97"><html><body><pre class="r"><span class="co"># Optimal Linear Equation</span>
+<div class="sourceCode" id="cb97"><pre class="downlit">
+<span class="co"># Optimal Linear Equation</span>
 
 <span class="co"># Pull arrays out</span>
-<span class="no">ar_A</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">A</span>)
-<span class="no">ar_alpha</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">alpha</span>)
-<span class="no">ar_beta</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">beta</span>)
+<span class="va">ar_A</span> <span class="op">&lt;-</span> <span class="va">tb_key_alpha_A_beta</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">A</span><span class="op">)</span>
+<span class="va">ar_alpha</span> <span class="op">&lt;-</span> <span class="va">tb_key_alpha_A_beta</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">alpha</span><span class="op">)</span>
+<span class="va">ar_beta</span> <span class="op">&lt;-</span> <span class="va">tb_key_alpha_A_beta</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">beta</span><span class="op">)</span>
 
 <span class="co"># Define Function for each individual m, with hard coded arrays</span>
 <span class="co"># This function is a function in the R folder's ffp_opt_sobin.R file as well</span>
-<span class="no">ffi_binary_dplyrdo_func</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">ls_row</span>, <span class="no">fl_rho</span>,
-                                    <span class="no">bl_old</span><span class="kw">=</span><span class="fl">FALSE</span>){
+<span class="va">ffi_binary_dplyrdo_func</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ls_row</span>, <span class="va">fl_rho</span>,
+                                    <span class="va">bl_old</span><span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">{</span>
   <span class="co"># @param bl_old, weather to use old incorrect solution</span>
   <span class="co"># hard coded inputs are:</span>
   <span class="co"># 1, ar_A</span>
@@ -729,62 +754,62 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
   <span class="co"># 3, ar_beta</span>
   <span class="co"># note follow https://fanwangecon.github.io/R4Econ/support/function/fs_applysapplymutate.html</span>
 
-  <span class="no">svr_A_i</span> <span class="kw">=</span> <span class="st">'A'</span>
-  <span class="no">svr_alpha_i</span> <span class="kw">=</span> <span class="st">'alpha'</span>
-  <span class="no">svr_beta_i</span> <span class="kw">=</span> <span class="st">'beta'</span>
+  <span class="va">svr_A_i</span> <span class="op">=</span> <span class="st">'A'</span>
+  <span class="va">svr_alpha_i</span> <span class="op">=</span> <span class="st">'alpha'</span>
+  <span class="va">svr_beta_i</span> <span class="op">=</span> <span class="st">'beta'</span>
 
-  <span class="no">fl_alpha</span> <span class="kw">&lt;-</span> <span class="no">ls_row</span><span class="kw">[[</span><span class="no">svr_alpha_i</span>]]
-  <span class="no">fl_A</span> <span class="kw">&lt;-</span> <span class="no">ls_row</span><span class="kw">[[</span><span class="no">svr_A_i</span>]]
-  <span class="no">fl_beta</span> <span class="kw">&lt;-</span> <span class="no">ls_row</span><span class="kw">[[</span><span class="no">svr_beta_i</span>]]
+  <span class="va">fl_alpha</span> <span class="op">&lt;-</span> <span class="va">ls_row</span><span class="op">[[</span><span class="va">svr_alpha_i</span><span class="op">]</span><span class="op">]</span>
+  <span class="va">fl_A</span> <span class="op">&lt;-</span> <span class="va">ls_row</span><span class="op">[[</span><span class="va">svr_A_i</span><span class="op">]</span><span class="op">]</span>
+  <span class="va">fl_beta</span> <span class="op">&lt;-</span> <span class="va">ls_row</span><span class="op">[[</span><span class="va">svr_beta_i</span><span class="op">]</span><span class="op">]</span>
 
-  <span class="no">ar_left</span> <span class="kw">&lt;-</span> (
-              ((<span class="no">ar_A</span> + <span class="no">ar_alpha</span>)^<span class="no">fl_rho</span> - (<span class="no">ar_A</span>)^<span class="no">fl_rho</span>)
-              /
-              ((<span class="no">fl_A</span> + <span class="no">fl_alpha</span>)^<span class="no">fl_rho</span> - (<span class="no">fl_A</span>)^<span class="no">fl_rho</span>)
-             )
-  <span class="no">ar_right</span> <span class="kw">&lt;-</span> ((<span class="no">ar_beta</span>)/(<span class="no">fl_beta</span>))
-  <span class="no">ar_rank_val</span> <span class="kw">&lt;-</span> <span class="no">ar_left</span>*<span class="no">ar_right</span>
+  <span class="va">ar_left</span> <span class="op">&lt;-</span> <span class="op">(</span>
+              <span class="op">(</span><span class="op">(</span><span class="va">ar_A</span> <span class="op">+</span> <span class="va">ar_alpha</span><span class="op">)</span><span class="op">^</span><span class="va">fl_rho</span> <span class="op">-</span> <span class="op">(</span><span class="va">ar_A</span><span class="op">)</span><span class="op">^</span><span class="va">fl_rho</span><span class="op">)</span>
+              <span class="op">/</span>
+              <span class="op">(</span><span class="op">(</span><span class="va">fl_A</span> <span class="op">+</span> <span class="va">fl_alpha</span><span class="op">)</span><span class="op">^</span><span class="va">fl_rho</span> <span class="op">-</span> <span class="op">(</span><span class="va">fl_A</span><span class="op">)</span><span class="op">^</span><span class="va">fl_rho</span><span class="op">)</span>
+             <span class="op">)</span>
+  <span class="va">ar_right</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="op">(</span><span class="va">ar_beta</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">fl_beta</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">ar_rank_val</span> <span class="op">&lt;-</span> <span class="va">ar_left</span><span class="op">*</span><span class="va">ar_right</span>
 
-  <span class="no">ar_bl_rank_val</span> <span class="kw">&lt;-</span> (<span class="no">ar_rank_val</span> <span class="kw">&gt;=</span> <span class="fl">1</span>)
+  <span class="va">ar_bl_rank_val</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">ar_rank_val</span> <span class="op">&gt;=</span> <span class="fl">1</span><span class="op">)</span>
 
   <span class="co"># Note need the negative multiple in front of array</span>
-  <span class="no">ar_rank</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rank.html">rank</a></span>((-<span class="fl">1</span>)*<span class="no">ar_rank_val</span>, <span class="kw">ties.method</span><span class="kw">=</span><span class="st">'min'</span>)
-  <span class="no">it_rank</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">ar_bl_rank_val</span>)
+  <span class="va">ar_rank</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rank.html">rank</a></span><span class="op">(</span><span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">*</span><span class="va">ar_rank_val</span>, ties.method<span class="op">=</span><span class="st">'min'</span><span class="op">)</span>
+  <span class="va">it_rank</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ar_bl_rank_val</span><span class="op">)</span>
 
-  <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">it_rank</span><span class="kw">=</span><span class="no">it_rank</span>,
-              <span class="kw">ar_rank</span><span class="kw">=</span><span class="no">ar_rank</span>,
-              <span class="kw">ar_rank_val</span><span class="kw">=</span><span class="no">ar_rank_val</span>))
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>it_rank<span class="op">=</span><span class="va">it_rank</span>,
+              ar_rank<span class="op">=</span><span class="va">ar_rank</span>,
+              ar_rank_val<span class="op">=</span><span class="va">ar_rank_val</span><span class="op">)</span><span class="op">)</span>
   <span class="co"># return(it_rank)</span>
-}
+<span class="op">}</span>
 
-<span class="no">ls_ranks</span> <span class="kw">&lt;-</span> <span class="fu">ffi_binary_dplyrdo_func</span>(<span class="no">tb_key_alpha_A_beta</span>[<span class="fl">2</span>,], <span class="fl">0.1</span>)
-<span class="no">it_rank</span> <span class="kw">&lt;-</span> <span class="no">ls_ranks</span>$<span class="no">it_rank</span>
-<span class="no">ar_rank</span> <span class="kw">&lt;-</span> <span class="no">ls_ranks</span>$<span class="no">ar_rank</span>
-<span class="no">ar_rank_val</span> <span class="kw">&lt;-</span> <span class="no">ls_ranks</span>$<span class="no">ar_rank_val</span>
+<span class="va">ls_ranks</span> <span class="op">&lt;-</span> <span class="fu">ffi_binary_dplyrdo_func</span><span class="op">(</span><span class="va">tb_key_alpha_A_beta</span><span class="op">[</span><span class="fl">2</span>,<span class="op">]</span>, <span class="fl">0.1</span><span class="op">)</span>
+<span class="va">it_rank</span> <span class="op">&lt;-</span> <span class="va">ls_ranks</span><span class="op">$</span><span class="va">it_rank</span>
+<span class="va">ar_rank</span> <span class="op">&lt;-</span> <span class="va">ls_ranks</span><span class="op">$</span><span class="va">ar_rank</span>
+<span class="va">ar_rank_val</span> <span class="op">&lt;-</span> <span class="va">ls_ranks</span><span class="op">$</span><span class="va">ar_rank_val</span>
 
 <span class="co"># accumulate allocation results</span>
-<span class="no">tb_opti_alloc_all_rho</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span>
+<span class="va">tb_opti_alloc_all_rho</span> <span class="op">&lt;-</span> <span class="va">tb_key_alpha_A_beta</span>
 
 <span class="co"># A. First Loop over Planner Preference</span>
 <span class="co"># Generate Rank Order</span>
-<span class="kw">for</span> (<span class="no">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))) {
-  <span class="no">rho</span> <span class="kw">=</span> <span class="no">ar_rho</span>[<span class="no">it_rho_ctr</span>]
+<span class="kw">for</span> <span class="op">(</span><span class="va">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">rho</span> <span class="op">=</span> <span class="va">ar_rho</span><span class="op">[</span><span class="va">it_rho_ctr</span><span class="op">]</span>
 
-  <span class="no">tb_with_rank</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">queue_rank</span> <span class="kw">=</span> <span class="fu">ffi_binary_dplyrdo_func</span>(<span class="no">tb_key_alpha_A_beta</span>[<span class="fl">1</span>,], <span class="no">rho</span>)$<span class="no">ar_rank</span>)
+  <span class="va">tb_with_rank</span> <span class="op">&lt;-</span> <span class="va">tb_key_alpha_A_beta</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>queue_rank <span class="op">=</span> <span class="fu">ffi_binary_dplyrdo_func</span><span class="op">(</span><span class="va">tb_key_alpha_A_beta</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span>, <span class="va">rho</span><span class="op">)</span><span class="op">$</span><span class="va">ar_rank</span><span class="op">)</span>
 
   <span class="co"># m. Keep for df collection individual key + optimal allocation</span>
   <span class="co"># _on stands for optimal nutritional choices</span>
   <span class="co"># _eh stands for expected height</span>
-  <span class="no">tb_opti_allocate_wth_key</span> <span class="kw">&lt;-</span> <span class="no">tb_with_rank</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="st">'rowid'</span>,<span class="st">'queue_rank'</span>)) <span class="kw">%&gt;%</span>
-                                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(!!<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, <span class="no">it_rho_ctr</span>, <span class="st">'_rk'</span>) <span class="kw">:=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="st">'queue_rank'</span>))
+  <span class="va">tb_opti_allocate_wth_key</span> <span class="op">&lt;-</span> <span class="va">tb_with_rank</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html">one_of</a></span><span class="op">(</span><span class="st">'rowid'</span>,<span class="st">'queue_rank'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'rho_c'</span>, <span class="va">it_rho_ctr</span>, <span class="st">'_rk'</span><span class="op">)</span> <span class="op">:=</span> <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="st">'queue_rank'</span><span class="op">)</span><span class="op">)</span>
 
   <span class="co"># n. merge optimal allocaiton results from different planner preference</span>
-  <span class="no">tb_opti_alloc_all_rho</span> <span class="kw">&lt;-</span> <span class="no">tb_opti_alloc_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">tb_opti_allocate_wth_key</span>, <span class="kw">by</span><span class="kw">=</span><span class="st">'rowid'</span>)
-}
+  <span class="va">tb_opti_alloc_all_rho</span> <span class="op">&lt;-</span> <span class="va">tb_opti_alloc_all_rho</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">tb_opti_allocate_wth_key</span>, by<span class="op">=</span><span class="st">'rowid'</span><span class="op">)</span>
+<span class="op">}</span>
 
 <span class="co"># o. print results</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_opti_alloc_all_rho</span>))</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">tb_opti_alloc_all_rho</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>##      rowid         carname               mpg              hp       
 ##  Min.   : 4.00   Length:19          Min.   :10.40   Min.   : 62.0  
 ##  1st Qu.: 8.50   Class :character   1st Qu.:14.95   1st Qu.:116.5  
@@ -827,7 +852,8 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ##  Mean   :10.0   Mean   :10.0   Mean   :10.0   Mean   :10.0   Mean   :10.0  
 ##  3rd Qu.:14.5   3rd Qu.:14.5   3rd Qu.:14.5   3rd Qu.:14.5   3rd Qu.:14.5  
 ##  Max.   :19.0   Max.   :19.0   Max.   :19.0   Max.   :19.0   Max.   :19.0</code></pre>
-<div class="sourceCode" id="cb99"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">tb_opti_alloc_all_rho</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb99"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">tb_opti_alloc_all_rho</span><span class="op">)</span></pre></div>
 <pre><code>## tibble [19 x 28] (S3: tbl_df/tbl/data.frame)
 ##  $ rowid     : int [1:19] 4 5 6 7 8 9 10 11 12 13 ...
 ##  $ carname   : chr [1:19] "Hornet 4 Drive" "Hornet Sportabout" "Valiant" "Duster 360" ...
@@ -857,22 +883,23 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ##  $ rho_c16_rk: int [1:19] 15 10 16 1 19 17 12 11 8 7 ...
 ##  $ rho_c17_rk: int [1:19] 15 10 16 1 19 17 14 13 8 7 ...
 ##  $ rho_c18_rk: int [1:19] 15 10 16 1 19 17 14 13 8 7 ...</code></pre>
-<div class="sourceCode" id="cb101"><html><body><pre class="r"><span class="co"># Make Longer</span>
-<span class="no">st_bisec_prefix</span> <span class="kw">&lt;-</span> <span class="st">'rho_c'</span>
-<span class="no">svr_abfafb_long_name</span> <span class="kw">&lt;-</span> <span class="st">'rho'</span>
-<span class="no">svr_bisect_iter</span> <span class="kw">&lt;-</span> <span class="st">'nothing'</span>
-<span class="no">svr_number_col</span> <span class="kw">&lt;-</span> <span class="st">'rank'</span>
-  <span class="no">tb_opti_alloc_all_rho_long</span> <span class="kw">&lt;-</span> <span class="no">tb_opti_alloc_all_rho</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(
-    <span class="kw">cols</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="no">st_bisec_prefix</span>),
-    <span class="kw">names_to</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">svr_abfafb_long_name</span>, <span class="no">svr_bisect_iter</span>),
-    <span class="kw">names_pattern</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">st_bisec_prefix</span>, <span class="st">"(.*)_(.*)"</span>),
-    <span class="kw">values_to</span> <span class="kw">=</span> <span class="no">svr_number_col</span>
-  )
+<div class="sourceCode" id="cb101"><pre class="downlit">
+<span class="co"># Make Longer</span>
+<span class="va">st_bisec_prefix</span> <span class="op">&lt;-</span> <span class="st">'rho_c'</span>
+<span class="va">svr_abfafb_long_name</span> <span class="op">&lt;-</span> <span class="st">'rho'</span>
+<span class="va">svr_bisect_iter</span> <span class="op">&lt;-</span> <span class="st">'nothing'</span>
+<span class="va">svr_number_col</span> <span class="op">&lt;-</span> <span class="st">'rank'</span>
+  <span class="va">tb_opti_alloc_all_rho_long</span> <span class="op">&lt;-</span> <span class="va">tb_opti_alloc_all_rho</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>
+    cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="va">st_bisec_prefix</span><span class="op">)</span>,
+    names_to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">svr_abfafb_long_name</span>, <span class="va">svr_bisect_iter</span><span class="op">)</span>,
+    names_pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">st_bisec_prefix</span>, <span class="st">"(.*)_(.*)"</span><span class="op">)</span>,
+    values_to <span class="op">=</span> <span class="va">svr_number_col</span>
+  <span class="op">)</span>
 
 <span class="co"># rho as numeric</span>
-<span class="no">tb_opti_alloc_all_rho_long</span> <span class="kw">&lt;-</span> <span class="no">tb_opti_alloc_all_rho_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho_num</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(<span class="no">rho</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_opti_alloc_all_rho_long</span>))</pre></body></html></div>
+<span class="va">tb_opti_alloc_all_rho_long</span> <span class="op">&lt;-</span> <span class="va">tb_opti_alloc_all_rho_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rho_num <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">rho</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">tb_opti_alloc_all_rho_long</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>##      rowid         carname               mpg              hp       
 ##  Min.   : 4.00   Length:342         Min.   :10.40   Min.   : 62.0  
 ##  1st Qu.: 8.00   Class :character   1st Qu.:14.70   1st Qu.:110.0  
@@ -901,7 +928,8 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 ##  Mean   :10   Mean   : 9.5  
 ##  3rd Qu.:15   3rd Qu.:14.0  
 ##  Max.   :19   Max.   :18.0</code></pre>
-<div class="sourceCode" id="cb103"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">tb_opti_alloc_all_rho_long</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb103"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">tb_opti_alloc_all_rho_long</span><span class="op">)</span></pre></div>
 <pre><code>## tibble [342 x 14] (S3: tbl_df/tbl/data.frame)
 ##  $ rowid  : int [1:342] 4 4 4 4 4 4 4 4 4 4 ...
 ##  $ carname: chr [1:342] "Hornet 4 Drive" "Hornet 4 Drive" "Hornet 4 Drive" "Hornet 4 Drive" ...
@@ -921,29 +949,30 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 <div id="bump-plot-for-optimal-binary-allocations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#bump-plot-for-optimal-binary-allocations" class="anchor"></a>Bump Plot for Optimal Binary Allocations</h3>
-<div class="sourceCode" id="cb105"><html><body><pre class="r"><span class="no">st_title</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Binary Allocation Rank, Miles Per Gallon and Manual Shift"</span>)
-<span class="no">st_subtitle</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Which automatic car to convert to manual shift first?\n"</span>,
+<div class="sourceCode" id="cb105"><pre class="downlit">
+<span class="va">st_title</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Binary Allocation Rank, Miles Per Gallon and Manual Shift"</span><span class="op">)</span>
+<span class="va">st_subtitle</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Which automatic car to convert to manual shift first?\n"</span>,
                      <span class="st">"The expected outcome of interest is miles per gallon\n"</span>,
                      <span class="st">"Switch from Auto to Manual shift to improve mpg\n"</span>,
-                     <span class="st">"Rank = 1, conver this car first from auto to manual shift"</span>)
-<span class="no">st_caption</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Linear regression of mpg on shift-type. mtcars dataset (R Core Team 2019)."</span>)
-<span class="no">st_x_lab</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"More Efficient --&gt; Cobb-Douglas --&gt; More Equal"</span>)
-<span class="no">st_y_lab</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Rank Along Binary Allocation Queue ( 1 = highest ranked)"</span>)
+                     <span class="st">"Rank = 1, conver this car first from auto to manual shift"</span><span class="op">)</span>
+<span class="va">st_caption</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Linear regression of mpg on shift-type. mtcars dataset (R Core Team 2019)."</span><span class="op">)</span>
+<span class="va">st_x_lab</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"More Efficient --&gt; Cobb-Douglas --&gt; More Equal"</span><span class="op">)</span>
+<span class="va">st_y_lab</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Rank Along Binary Allocation Queue ( 1 = highest ranked)"</span><span class="op">)</span>
 
-<span class="no">tb_opti_alloc_all_rho_long</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">rho_num</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">rank</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">carname</span>)) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">color</span> <span class="kw">=</span> <span class="no">carname</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>), <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">color</span> <span class="kw">=</span> <span class="no">carname</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>), <span class="kw">size</span> <span class="kw">=</span> <span class="fl">4</span>) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_x_discrete</a></span>(<span class="kw">expand</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.85</span>,<span class="fl">0</span>))+
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_reverse</a></span>(<span class="kw">breaks</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">tb_opti_alloc_all_rho_long</span>))+
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">"none"</span>) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">st_x_lab</span>,
-         <span class="kw">y</span> <span class="kw">=</span> <span class="no">st_y_lab</span>,
-         <span class="kw">title</span> <span class="kw">=</span> <span class="no">st_title</span>,
-         <span class="kw">subtitle</span> <span class="kw">=</span> <span class="no">st_subtitle</span>,
-         <span class="kw">caption</span> <span class="kw">=</span> <span class="no">st_caption</span>) +
-    <span class="fu"><a href="../reference/ffy_opt_ghthm_dk.html">ffy_opt_ghthm_dk</a></span>() +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_text</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">tb_opti_alloc_all_rho</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span><span class="kw">=</span><span class="no">rho_c1_rk</span>, <span class="kw">x</span><span class="kw">=</span><span class="fl">0.6</span>, <span class="kw">label</span><span class="kw">=</span><span class="no">carname</span>),<span class="kw">hjust</span><span class="kw">=</span><span class="st">"right"</span>)</pre></body></html></div>
+<span class="va">tb_opti_alloc_all_rho_long</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">rho_num</span>, y <span class="op">=</span> <span class="va">rank</span>, group <span class="op">=</span> <span class="va">carname</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">carname</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">carname</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_x_discrete</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.85</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_reverse</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">tb_opti_alloc_all_rho_long</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">st_x_lab</span>,
+         y <span class="op">=</span> <span class="va">st_y_lab</span>,
+         title <span class="op">=</span> <span class="va">st_title</span>,
+         subtitle <span class="op">=</span> <span class="va">st_subtitle</span>,
+         caption <span class="op">=</span> <span class="va">st_caption</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="../reference/ffy_opt_ghthm_dk.html">ffy_opt_ghthm_dk</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_text</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tb_opti_alloc_all_rho</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">rho_c1_rk</span>, x<span class="op">=</span><span class="fl">0.6</span>, label<span class="op">=</span><span class="va">carname</span><span class="op">)</span>,hjust<span class="op">=</span><span class="st">"right"</span><span class="op">)</span></pre></div>
 <p><img src="ffv_opt_sobin_rkone_allrw_car_files/figure-html/binary%20allocation%20bump%20plot-1.png" width="1152" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -964,7 +993,7 @@ Use the mtcars cars testing dataset. Regress MPG on manual vs auto shift.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

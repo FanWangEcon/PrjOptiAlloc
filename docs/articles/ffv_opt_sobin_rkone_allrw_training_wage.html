@@ -58,9 +58,6 @@ Solve for optimal binary allocation queues.
   <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
 </li>
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
-</li>
-<li>
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
@@ -123,7 +120,7 @@ Solve for optimal binary allocation queues.
 
       
 
-      </header><script src="ffv_opt_sobin_rkone_allrw_training_wage_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="ffv_opt_sobin_rkone_allrw_training_wage_files/header-attrs-2.4/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Linear Wage Binary Allocation Lalonde Training Example</h1>
@@ -140,40 +137,43 @@ Solve for optimal binary allocation queues.
 <div id="load-dependencies" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-dependencies" class="anchor"></a>Load Dependencies</h2>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(<span class="kw">list</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span>(<span class="kw">all.names</span> <span class="kw">=</span> <span class="fl">TRUE</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">knitr.duplicate.label</span> <span class="kw">=</span> <span class="st">'allow'</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tibble</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">forcats</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stringr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">REconTools</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span>all.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>knitr.duplicate.label <span class="op">=</span> <span class="st">'allow'</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://forcats.tidyverse.org">forcats</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/">broom</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fanwangecon.github.io/REconTools/">REconTools</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">PrjOptiAlloc</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fanwangecon.github.io/PrjOptiAlloc/">PrjOptiAlloc</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">knitr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">kableExtra</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span>
 
-<span class="no">bl_save_rda</span> <span class="kw">=</span> <span class="fl">FALSE</span>
-<span class="no">bl_save_img</span> <span class="kw">=</span> <span class="fl">FALSE</span></pre></body></html></div>
+<span class="va">bl_save_rda</span> <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="va">bl_save_img</span> <span class="op">=</span> <span class="cn">FALSE</span></pre></div>
 </div>
 <div id="load-data-and-generate-new-variables" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-data-and-generate-new-variables" class="anchor"></a>Load Data and Generate New Variables</h2>
 <p>Generate four categories by initial height and mother’s education levels combinations.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># Dataset</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">df_opt_lalonde_training</span>)
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># Dataset</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">df_opt_lalonde_training</span><span class="op">)</span>
 
 <span class="co"># Add a binary variable for if there are wage in year 1975</span>
-<span class="no">dft</span> <span class="kw">&lt;-</span> <span class="no">df_opt_lalonde_training</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">re75_zero</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">re75</span> <span class="kw">&lt;=</span> <span class="fl">1</span> ~ <span class="fl">1</span>,
-                               <span class="fl">TRUE</span> ~ <span class="fl">0</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">trt</span>, <span class="no">re75_zero</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">everything</a></span>())
+<span class="va">dft</span> <span class="op">&lt;-</span> <span class="va">df_opt_lalonde_training</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>re75_zero <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">re75</span> <span class="op">&lt;=</span> <span class="fl">1</span> <span class="op">~</span> <span class="fl">1</span>, 
+                               <span class="cn">TRUE</span> <span class="op">~</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">re75_zero</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># summary</span>
-<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">dft</span>)</pre></body></html></div>
+<span class="fu">REconTools</span><span class="fu">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span><span class="op">(</span><span class="va">dft</span><span class="op">)</span></pre></div>
 <pre><code>## Warning: `funs()` is deprecated as of dplyr 0.8.0.
 ## Please use a list of either functions or lambdas: 
 ## 
@@ -220,8 +220,9 @@ Solve for optimal binary allocation queues.
 ## 17 p99   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "270~ "242~ "    1.0~ "260~ "   ~
 ## 18 max   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "395~ "374~ "    1.0~ "603~ "   ~
 ## # ... with 1 more variable: X &lt;chr&gt;</code></pre>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># summary treated only</span>
-<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">trt</span> <span class="kw">==</span> <span class="fl">1</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="co"># summary treated only</span>
+<span class="fu">REconTools</span><span class="fu">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span><span class="op">(</span><span class="va">dft</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">trt</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## Warning: attributes are not identical across measure variables;
 ## they will be dropped</code></pre>
 <pre><code>## # A tibble: 18 x 13
@@ -246,7 +247,8 @@ Solve for optimal binary allocation queues.
 ## 17 p99   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "211~ "231~ "    1.0~ "271~ "   ~
 ## 18 max   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "350~ "374~ "    1.0~ "603~ "   ~
 ## # ... with 1 more variable: X &lt;chr&gt;</code></pre>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">trt</span> <span class="kw">==</span> <span class="fl">0</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="fu">REconTools</span><span class="fu">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span><span class="op">(</span><span class="va">dft</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">trt</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## Warning: attributes are not identical across measure variables;
 ## they will be dropped</code></pre>
 <pre><code>## # A tibble: 18 x 13
@@ -271,14 +273,16 @@ Solve for optimal binary allocation queues.
 ## 17 p99   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "295~ "242~ "    1.0~ "209~ "   ~
 ## 18 max   "   ~ "   ~ "   ~ "   ~ "   ~ "   ~ "395~ "369~ "    1.0~ "394~ "   ~
 ## # ... with 1 more variable: X &lt;chr&gt;</code></pre>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"># within 297 treated, 111 (37%) had zero wage in 1975
-# within 425 untreated, 178 (42%) had zero wage in 1975</pre></body></html></div>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="co"># Load Data</span>
-<span class="no">dft</span> <span class="kw">&lt;-</span> <span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="no">X</span>) <span class="kw">%&gt;%</span>
-           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="no">X</span>) <span class="kw">%&gt;%</span>
-           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">everything</a></span>())
+<div class="sourceCode" id="cb15"><pre class="downlit">
+<span class="co"># within 297 treated, 111 (37%) had zero wage in 1975</span>
+<span class="co"># within 425 untreated, 178 (42%) had zero wage in 1975</span></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit">
+<span class="co"># Load Data</span>
+<span class="va">dft</span> <span class="op">&lt;-</span> <span class="va">dft</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="va">X</span><span class="op">)</span> <span class="op">%&gt;%</span>
+           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">X</span><span class="op">)</span> <span class="op">%&gt;%</span>
+           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># Summarize</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">dft</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">dft</span><span class="op">)</span></pre></div>
 <pre><code>## 'data.frame':    722 obs. of  12 variables:
 ##  $ id       : int  1 2 3 4 5 6 7 8 9 10 ...
 ##  $ trt      : int  0 0 0 0 0 0 0 0 0 0 ...
@@ -292,7 +296,8 @@ Solve for optimal binary allocation queues.
 ##  $ re74     : num  0 0 0 NA 0 0 0 NA 0 0 ...
 ##  $ re75     : num  0 0 0 4368 0 ...
 ##  $ re78     : num  0 12384 0 14051 10740 ...</code></pre>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">dft</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb18"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">dft</span><span class="op">)</span></pre></div>
 <pre><code>##        id              trt           re75_zero           age       
 ##  Min.   :   1.0   Min.   :0.0000   Min.   :0.0000   Min.   :17.00  
 ##  1st Qu.: 181.2   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:19.00  
@@ -317,33 +322,34 @@ Solve for optimal binary allocation queues.
 ##  3rd Qu.:1.0000   3rd Qu.:  824.4   3rd Qu.: 3993.2   3rd Qu.: 8772  
 ##  Max.   :1.0000   Max.   :39570.7   Max.   :37431.7   Max.   :60308  
 ##                   NA's   :277</code></pre>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="co"># Generate Employment 0 or 1 status Variable, and non-zero wages variable</span>
-<span class="no">dft</span> <span class="kw">&lt;-</span> <span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">emp78</span> <span class="kw">=</span>
-                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">re78</span> <span class="kw">&lt;=</span> <span class="fl">0</span> ~ <span class="fl">0</span>,
-                                <span class="fl">TRUE</span> ~ <span class="fl">1</span>)) <span class="kw">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">emp75</span> <span class="kw">=</span>
-                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">re75</span> <span class="kw">&lt;=</span> <span class="fl">0</span> ~ <span class="fl">0</span>,
-                                <span class="fl">TRUE</span> ~ <span class="fl">1</span>)) <span class="kw">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">emp74</span> <span class="kw">=</span>
-                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">re74</span> <span class="kw">&lt;=</span> <span class="fl">0</span> ~ <span class="fl">0</span>,
-                                <span class="fl">TRUE</span> ~ <span class="fl">1</span>))
+<div class="sourceCode" id="cb20"><pre class="downlit">
+<span class="co"># Generate Employment 0 or 1 status Variable, and non-zero wages variable</span>
+<span class="va">dft</span> <span class="op">&lt;-</span> <span class="va">dft</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>emp78 <span class="op">=</span>
+                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">re78</span> <span class="op">&lt;=</span> <span class="fl">0</span> <span class="op">~</span> <span class="fl">0</span>,
+                                <span class="cn">TRUE</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>emp75 <span class="op">=</span>
+                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">re75</span> <span class="op">&lt;=</span> <span class="fl">0</span> <span class="op">~</span> <span class="fl">0</span>,
+                                <span class="cn">TRUE</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>emp74 <span class="op">=</span>
+                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">re74</span> <span class="op">&lt;=</span> <span class="fl">0</span> <span class="op">~</span> <span class="fl">0</span>,
+                                <span class="cn">TRUE</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Generate combine black + hispanic status</span>
 <span class="co"># 0 = white, 1 = black, 2 = hispanics</span>
-<span class="no">dft</span> <span class="kw">&lt;-</span> <span class="no">dft</span> <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">race</span> <span class="kw">=</span>
-             <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">black</span> <span class="kw">==</span> <span class="fl">1</span> ~ <span class="fl">1</span>,
-                       <span class="no">hisp</span> <span class="kw">==</span> <span class="fl">1</span> ~ <span class="fl">2</span>,
-                       <span class="fl">TRUE</span> ~ <span class="fl">0</span>))
+<span class="va">dft</span> <span class="op">&lt;-</span> <span class="va">dft</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>race <span class="op">=</span>
+             <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">black</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="fl">1</span>,
+                       <span class="va">hisp</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="fl">2</span>,
+                       <span class="cn">TRUE</span> <span class="op">~</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>
 
-<span class="no">dft</span> <span class="kw">&lt;-</span> <span class="no">dft</span> <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">age_m2</span> <span class="kw">=</span>
-             <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">age</span> <span class="kw">&lt;=</span> <span class="fl">23</span> ~ <span class="fl">1</span>,
-                       <span class="no">age</span> <span class="kw">&gt;</span>  <span class="fl">23</span>~ <span class="fl">2</span>)) <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">age_m3</span> <span class="kw">=</span>
-             <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">age</span> <span class="kw">&lt;=</span> <span class="fl">20</span> ~ <span class="fl">1</span>,
-                       <span class="no">age</span> <span class="kw">&gt;</span> <span class="fl">20</span> <span class="kw">&amp;</span> <span class="no">age</span> <span class="kw">&lt;=</span> <span class="fl">26</span> ~ <span class="fl">2</span>,
-                       <span class="no">age</span> <span class="kw">&gt;</span> <span class="fl">26</span> ~ <span class="fl">3</span>))
+<span class="va">dft</span> <span class="op">&lt;-</span> <span class="va">dft</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>age_m2 <span class="op">=</span>
+             <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">age</span> <span class="op">&lt;=</span> <span class="fl">23</span> <span class="op">~</span> <span class="fl">1</span>,
+                       <span class="va">age</span> <span class="op">&gt;</span>  <span class="fl">23</span><span class="op">~</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>age_m3 <span class="op">=</span>
+             <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">age</span> <span class="op">&lt;=</span> <span class="fl">20</span> <span class="op">~</span> <span class="fl">1</span>,
+                       <span class="va">age</span> <span class="op">&gt;</span> <span class="fl">20</span> <span class="op">&amp;</span> <span class="va">age</span> <span class="op">&lt;=</span> <span class="fl">26</span> <span class="op">~</span> <span class="fl">2</span>,
+                       <span class="va">age</span> <span class="op">&gt;</span> <span class="fl">26</span> <span class="op">~</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span>
 
 
 
@@ -362,7 +368,7 @@ Solve for optimal binary allocation queues.
 <span class="co">#                                labels=c("LW","HW"))) %&gt;%</span>
 <span class="co">#     mutate(mombirthage = cut(age,</span>
 <span class="co">#                                breaks=c(-Inf, 24, Inf),</span>
-<span class="co">#                                labels=c("young","older")))</span></pre></body></html></div>
+<span class="co">#                                labels=c("young","older")))</span></pre></div>
 </div>
 <div id="regression-with-data-and-construct-input-arrays" class="section level2">
 <h2 class="hasAnchor">
@@ -371,10 +377,11 @@ Solve for optimal binary allocation queues.
 <h3 class="hasAnchor">
 <a href="#tabulate-and-summarize-averages" class="anchor"></a>Tabulate and Summarize Averages</h3>
 <p>What is the average difference in wage between treatment and control, do they match what is reported in Lalonde (1986)?</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="co"># Summarize average for all variables grouping by treatment status</span>
+<div class="sourceCode" id="cb21"><pre class="downlit">
+<span class="co"># Summarize average for all variables grouping by treatment status</span>
 <span class="co"># re78 is significantly different</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>) <span class="kw">%&gt;%</span>
-        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">dft</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">trt</span><span class="op">)</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span><span class="op">(</span><span class="va">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="va">mean</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></pre></div>
 <pre><code>##                    [,1]     [,2]
 ## trt               0.000    1.000
 ## id_mean         213.000 1772.316
@@ -394,8 +401,9 @@ Solve for optimal binary allocation queues.
 ## race_mean         1.026    0.990
 ## age_m2_mean       1.489    1.481
 ## age_m3_mean       1.948    1.990</code></pre>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">marr</span>, <span class="no">age_m2</span>) <span class="kw">%&gt;%</span>
-        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb23"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">dft</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">marr</span>, <span class="va">age_m2</span><span class="op">)</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span><span class="op">(</span><span class="va">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="va">mean</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></pre></div>
 <pre><code>##                    [,1]     [,2]     [,3]     [,4]
 ## marr              0.000    0.000    1.000    1.000
 ## age_m2            1.000    2.000    1.000    2.000
@@ -415,10 +423,11 @@ Solve for optimal binary allocation queues.
 ## emp74_mean        0.615    0.447    0.714    0.539
 ## race_mean         1.047    0.962    1.107    0.989
 ## age_m3_mean       1.309    2.630    1.607    2.652</code></pre>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="co"># Summarize by finer sub groups: RACE</span>
+<div class="sourceCode" id="cb25"><pre class="downlit">
+<span class="co"># Summarize by finer sub groups: RACE</span>
 <span class="co"># big increase for black, but not for other group</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">race</span>) <span class="kw">%&gt;%</span>
-        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">dft</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">race</span><span class="op">)</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span><span class="op">(</span><span class="va">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="va">mean</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></pre></div>
 <pre><code>##                    [,1]     [,2]     [,3]     [,4]     [,5]     [,6]
 ## trt               0.000    0.000    0.000    1.000    1.000    1.000
 ## race              0.000    1.000    2.000    0.000    1.000    2.000
@@ -438,10 +447,11 @@ Solve for optimal binary allocation queues.
 ## emp74_mean        0.676    0.521    0.583    0.548    0.534    0.786
 ## age_m2_mean       1.514    1.506    1.354    1.484    1.513    1.214
 ## age_m3_mean       1.946    1.988    1.667    2.065    2.021    1.643</code></pre>
-<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="co"># Summarize by finer sub groups: MARRIAGE</span>
+<div class="sourceCode" id="cb27"><pre class="downlit">
+<span class="co"># Summarize by finer sub groups: MARRIAGE</span>
 <span class="co"># big increase for black, but not for other group</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">marr</span>) <span class="kw">%&gt;%</span>
-        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">dft</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">marr</span><span class="op">)</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span><span class="op">(</span><span class="va">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="va">mean</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></pre></div>
 <pre><code>##                    [,1]     [,2]     [,3]     [,4]
 ## trt               0.000    0.000    1.000    1.000
 ## marr              0.000    1.000    0.000    1.000
@@ -461,9 +471,10 @@ Solve for optimal binary allocation queues.
 ## race_mean         1.025    1.030    0.988    1.000
 ## age_m2_mean       1.436    1.776    1.429    1.740
 ## age_m3_mean       1.866    2.388    1.903    2.420</code></pre>
-<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="co"># Summarize by finer sub groups: AGE GROUPS</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">age_m2</span>) <span class="kw">%&gt;%</span>
-        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb29"><pre class="downlit">
+<span class="co"># Summarize by finer sub groups: AGE GROUPS</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">dft</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">age_m2</span><span class="op">)</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span><span class="op">(</span><span class="va">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="va">mean</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></pre></div>
 <pre><code>##                    [,1]     [,2]     [,3]     [,4]
 ## trt               0.000    0.000    1.000    1.000
 ## age_m2            1.000    2.000    1.000    2.000
@@ -483,8 +494,9 @@ Solve for optimal binary allocation queues.
 ## emp74_mean        0.590    0.490    0.669    0.441
 ## race_mean         1.060    0.990    1.039    0.937
 ## age_m3_mean       1.290    2.635    1.390    2.636</code></pre>
-<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">age_m3</span>) <span class="kw">%&gt;%</span>
-        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb31"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">dft</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">age_m3</span><span class="op">)</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span><span class="op">(</span><span class="va">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="va">mean</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></pre></div>
 <pre><code>##                    [,1]     [,2]     [,3]     [,4]     [,5]     [,6]
 ## trt               0.000    0.000    0.000    1.000    1.000    1.000
 ## age_m3            1.000    2.000    3.000    1.000    2.000    3.000
@@ -504,8 +516,9 @@ Solve for optimal binary allocation queues.
 ## emp74_mean        0.584    0.532    0.500    0.670    0.598    0.396
 ## race_mean         1.091    0.978    1.000    1.096    0.920    0.967
 ## age_m2_mean       1.000    1.547    2.000    1.000    1.464    2.000</code></pre>
-<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="no">dft</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">marr</span>, <span class="no">age_m2</span>) <span class="kw">%&gt;%</span>
-        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span>(<span class="no">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="kw">mean</span> <span class="kw">=</span> <span class="no">mean</span>), <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)), <span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb33"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">dft</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">marr</span>, <span class="va">age_m2</span><span class="op">)</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarise_if</a></span><span class="op">(</span><span class="va">is.numeric</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="va">mean</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></pre></div>
 <pre><code>##                    [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
 ## trt               0.000    0.000    0.000    0.000    1.000    1.000    1.000
 ## marr              0.000    0.000    1.000    1.000    0.000    0.000    1.000
@@ -548,22 +561,24 @@ Solve for optimal binary allocation queues.
 <div id="tabulate" class="section level3">
 <h3 class="hasAnchor">
 <a href="#tabulate" class="anchor"></a>Tabulate</h3>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="co"># Tabulate groups, how many in each group, enough for group heterogeneity in effects?</span>
-<span class="no">dft</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">marr</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">freq</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>()) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span>(<span class="kw">names_from</span> <span class="kw">=</span> <span class="no">trt</span>, <span class="kw">values_from</span> <span class="kw">=</span> <span class="no">freq</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb35"><pre class="downlit">
+<span class="co"># Tabulate groups, how many in each group, enough for group heterogeneity in effects?</span>
+<span class="va">dft</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">marr</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>freq <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">trt</span>, values_from <span class="op">=</span> <span class="va">freq</span><span class="op">)</span></pre></div>
 <pre><code>## `summarise()` regrouping output by 'trt' (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 2 x 3
 ##    marr   `0`   `1`
 ##   &lt;int&gt; &lt;int&gt; &lt;int&gt;
 ## 1     0   358   247
 ## 2     1    67    50</code></pre>
-<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="co"># Tabulate groups, how many in each group, enough for group heterogeneity in effects?</span>
-<span class="no">dft</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>, <span class="no">age_m2</span>, <span class="no">marr</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">freq</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>()) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span>(<span class="kw">names_from</span> <span class="kw">=</span> <span class="no">trt</span>, <span class="kw">values_from</span> <span class="kw">=</span> <span class="no">freq</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb38"><pre class="downlit">
+<span class="co"># Tabulate groups, how many in each group, enough for group heterogeneity in effects?</span>
+<span class="va">dft</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">age_m2</span>, <span class="va">marr</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>freq <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">trt</span>, values_from <span class="op">=</span> <span class="va">freq</span><span class="op">)</span></pre></div>
 <pre><code>## `summarise()` regrouping output by 'trt', 'age_m2' (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 4 x 4
 ## # Groups:   age_m2 [2]
@@ -577,15 +592,16 @@ Solve for optimal binary allocation queues.
 <div id="regression-testing" class="section level3">
 <h3 class="hasAnchor">
 <a href="#regression-testing" class="anchor"></a>Regression Testing</h3>
-<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="co"># As noted in Lalonde (1986), functional form assumptions do not matter much</span>
+<div class="sourceCode" id="cb41"><pre class="downlit">
+<span class="co"># As noted in Lalonde (1986), functional form assumptions do not matter much</span>
 <span class="co"># Dummies, treatment effect average about 801 dollars</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">re78</span> ~ <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">age</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">educ</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">marr</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">nodeg</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">trt</span>) - <span class="fl">1</span>,
-                  <span class="kw">data</span> <span class="kw">=</span> <span class="no">dft</span>))</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">re78</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">educ</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">race</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">marr</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">nodeg</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">trt</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>,
+                  data <span class="op">=</span> <span class="va">dft</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = re78 ~ factor(age) + factor(educ) + factor(race) + 
@@ -656,14 +672,15 @@ Solve for optimal binary allocation queues.
 ## Residual standard error: 6189 on 671 degrees of freedom
 ## Multiple R-squared:  0.4826, Adjusted R-squared:  0.4433 
 ## F-statistic: 12.27 on 51 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="co"># cts Controls and treatment effects about 761 dollars</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">re78</span> ~  <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">age</span>^<span class="fl">2</span>) +
-                   <span class="no">educ</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">educ</span>^<span class="fl">2</span>) +
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">marr</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">nodeg</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">trt</span>) - <span class="fl">1</span>,
-                  <span class="kw">data</span> <span class="kw">=</span> <span class="no">dft</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb43"><pre class="downlit">
+<span class="co"># cts Controls and treatment effects about 761 dollars</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">re78</span> <span class="op">~</span>  <span class="va">age</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">age</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+                   <span class="va">educ</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">educ</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">race</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">marr</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">nodeg</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">trt</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>,
+                  data <span class="op">=</span> <span class="va">dft</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = re78 ~ age + I(age^2) + educ + I(educ^2) + +factor(race) + 
@@ -691,14 +708,15 @@ Solve for optimal binary allocation queues.
 ## Residual standard error: 6206 on 712 degrees of freedom
 ## Multiple R-squared:  0.448,  Adjusted R-squared:  0.4402 
 ## F-statistic: 57.78 on 10 and 712 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="co"># Treatment interactions by marriage status, 476 unmarried, vs 2216 for married</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">re78</span> ~  <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">age</span>^<span class="fl">2</span>) +
-                   <span class="no">educ</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">educ</span>^<span class="fl">2</span>) +
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">marr</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">nodeg</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">marr</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">trt</span>) - <span class="fl">1</span>,
-                  <span class="kw">data</span> <span class="kw">=</span> <span class="no">dft</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb45"><pre class="downlit">
+<span class="co"># Treatment interactions by marriage status, 476 unmarried, vs 2216 for married</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">re78</span> <span class="op">~</span>  <span class="va">age</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">age</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+                   <span class="va">educ</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">educ</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">race</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">marr</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">nodeg</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">marr</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">trt</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>,
+                  data <span class="op">=</span> <span class="va">dft</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = re78 ~ age + I(age^2) + educ + I(educ^2) + +factor(race) + 
@@ -728,14 +746,15 @@ Solve for optimal binary allocation queues.
 ## Residual standard error: 6202 on 711 degrees of freedom
 ## Multiple R-squared:  0.4494, Adjusted R-squared:  0.4409 
 ## F-statistic: 52.76 on 11 and 711 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="co"># Treatment interactions by marriage status, 453 vs 1070 each age group</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">re78</span> ~  <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">age</span>^<span class="fl">2</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">age_m2</span>) +
-                   <span class="no">educ</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">educ</span>^<span class="fl">2</span>) +
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">marr</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">nodeg</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">age_m2</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">trt</span>) - <span class="fl">1</span>,
-                  <span class="kw">data</span> <span class="kw">=</span> <span class="no">dft</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb47"><pre class="downlit">
+<span class="co"># Treatment interactions by marriage status, 453 vs 1070 each age group</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">re78</span> <span class="op">~</span>  <span class="va">age</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">age</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">age_m2</span><span class="op">)</span> <span class="op">+</span>
+                   <span class="va">educ</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">educ</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">race</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">marr</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">nodeg</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">age_m2</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">trt</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>,
+                  data <span class="op">=</span> <span class="va">dft</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = re78 ~ age + I(age^2) + factor(age_m2) + educ + 
@@ -766,14 +785,15 @@ Solve for optimal binary allocation queues.
 ## Residual standard error: 6212 on 710 degrees of freedom
 ## Multiple R-squared:  0.4484, Adjusted R-squared:  0.4391 
 ## F-statistic:  48.1 on 12 and 710 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="co"># Treatment interactions by marriage status, greater effect for older married + younger married</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">re78</span> ~  <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">age</span>^<span class="fl">2</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">age_m2</span>) +
-                   <span class="no">educ</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">educ</span>^<span class="fl">2</span>) +
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">marr</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">nodeg</span>)
-                  + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">marr</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">age_m2</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">trt</span>) - <span class="fl">1</span>,
-                  <span class="kw">data</span> <span class="kw">=</span> <span class="no">dft</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb49"><pre class="downlit">
+<span class="co"># Treatment interactions by marriage status, greater effect for older married + younger married</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">re78</span> <span class="op">~</span>  <span class="va">age</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">age</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">age_m2</span><span class="op">)</span> <span class="op">+</span>
+                   <span class="va">educ</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">educ</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">race</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">marr</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">nodeg</span><span class="op">)</span>
+                  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">marr</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">age_m2</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">trt</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>,
+                  data <span class="op">=</span> <span class="va">dft</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = re78 ~ age + I(age^2) + factor(age_m2) + educ + 
@@ -836,17 +856,18 @@ Solve for optimal binary allocation queues.
 <div id="linear-binary-problem" class="section level4">
 <h4 class="hasAnchor">
 <a href="#linear-binary-problem" class="anchor"></a>Linear Binary Problem</h4>
-<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="co"># Store Regression Results</span>
-<span class="no">mt_model</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>( ~ <span class="no">age</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">age</span>^<span class="fl">2</span>) + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">age_m2</span>) +
-                            <span class="no">educ</span> + <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="no">educ</span>^<span class="fl">2</span>) +
-                          + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">race</span>)
-                          + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">marr</span>)
-                          + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">nodeg</span>)
-                          + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">re75_zero</span>)
-                          + <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">age_m2</span>):<span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">trt</span>),
-                          <span class="kw">data</span> <span class="kw">=</span> <span class="no">dft</span>)
-<span class="no">rs_wage_on_trt</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="no">re78</span> ~ <span class="no">mt_model</span> - <span class="fl">1</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">dft</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">rs_wage_on_trt</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb51"><pre class="downlit">
+<span class="co"># Store Regression Results</span>
+<span class="va">mt_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">age</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">age_m2</span><span class="op">)</span> <span class="op">+</span>
+                            <span class="va">educ</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">educ</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+                          <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">race</span><span class="op">)</span>
+                          <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">marr</span><span class="op">)</span>
+                          <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">nodeg</span><span class="op">)</span>
+                          <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">re75_zero</span><span class="op">)</span>
+                          <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">age_m2</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">trt</span><span class="op">)</span>,
+                          data <span class="op">=</span> <span class="va">dft</span><span class="op">)</span>
+<span class="va">rs_wage_on_trt</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">re78</span> <span class="op">~</span> <span class="va">mt_model</span> <span class="op">-</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">dft</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">rs_wage_on_trt</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = re78 ~ mt_model - 1, data = dft)
@@ -876,8 +897,9 @@ Solve for optimal binary allocation queues.
 ## Residual standard error: 6204 on 709 degrees of freedom
 ## Multiple R-squared:  0.4506, Adjusted R-squared:  0.4406 
 ## F-statistic: 44.74 on 13 and 709 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb53"><html><body><pre class="r"><span class="no">rs_wage_on_trt_tidy</span> <span class="kw">=</span> <span class="fu"><a href="https://broom.tidymodels.org/reference/reexports.html">tidy</a></span>(<span class="no">rs_wage_on_trt</span>)
-<span class="no">rs_wage_on_trt_tidy</span></pre></body></html></div>
+<div class="sourceCode" id="cb53"><pre class="downlit">
+<span class="va">rs_wage_on_trt_tidy</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy</a></span><span class="op">(</span><span class="va">rs_wage_on_trt</span><span class="op">)</span>
+<span class="va">rs_wage_on_trt_tidy</span></pre></div>
 <pre><code>## # A tibble: 13 x 5
 ##    term                                  estimate std.error statistic p.value
 ##    &lt;chr&gt;                                    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
@@ -904,8 +926,9 @@ Solve for optimal binary allocation queues.
 <h4 class="hasAnchor">
 <a href="#linear-binary-regression" class="anchor"></a>Linear Binary Regression</h4>
 <p>Multiply coefficient vector by covariate matrix to generate <em>A</em> vector that is child/individual specific.</p>
-<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="co"># Estimates Table</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">rs_wage_on_trt_tidy</span>, <span class="fl">6</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb55"><pre class="downlit">
+<span class="co"># Estimates Table</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">rs_wage_on_trt_tidy</span>, <span class="fl">6</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 6 x 5
 ##   term                     estimate std.error statistic p.value
 ##   &lt;chr&gt;                       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
@@ -915,8 +938,9 @@ Solve for optimal binary allocation queues.
 ## 4 mt_modelfactor(age_m2)2  -588.      1032.     -0.570    0.569
 ## 5 mt_modeleduc            -1263.      1027.     -1.23     0.219
 ## 6 mt_modelI(educ^2)          80.5       56.3     1.43     0.153</code></pre>
-<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="co"># Covariates</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">mt_model</span>, <span class="fl">5</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb57"><pre class="downlit">
+<span class="co"># Covariates</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mt_model</span>, <span class="fl">5</span><span class="op">)</span></pre></div>
 <pre><code>##   (Intercept) age I(age^2) factor(age_m2)2 educ I(educ^2) factor(race)1
 ## 1           1  23      529               0   10       100             1
 ## 2           1  26      676               1   12       144             0
@@ -935,36 +959,40 @@ Solve for optimal binary allocation queues.
 ## 3                            0                            0
 ## 4                            0                            0
 ## 5                            0                            0</code></pre>
-<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="co"># Covariates coefficients from regression (including constant)</span>
-<span class="no">ar_fl_cova_esti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="no">rs_wage_on_trt_tidy</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(<span class="no">term</span>, <span class="st">'trt'</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">estimate</span>))
-<span class="no">ar_fl_main_esti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="no">rs_wage_on_trt_tidy</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(<span class="no">term</span>, <span class="st">'trt'</span>)) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">estimate</span>))
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_fl_cova_esti</span>, <span class="fl">5</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb59"><pre class="downlit">
+<span class="co"># Covariates coefficients from regression (including constant)</span>
+<span class="va">ar_fl_cova_esti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">rs_wage_on_trt_tidy</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">term</span>, <span class="st">'trt'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_fl_main_esti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">rs_wage_on_trt_tidy</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">term</span>, <span class="st">'trt'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ar_fl_cova_esti</span>, <span class="fl">5</span><span class="op">)</span></pre></div>
 <pre><code>##           estimate
 ## [1,] 10052.3178902
 ## [2,]    52.9923510
 ## [3,]    -0.2876203
 ## [4,]  -588.1948533
 ## [5,] -1263.1724715</code></pre>
-<div class="sourceCode" id="cb61"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_fl_main_esti</span>, <span class="fl">5</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb61"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ar_fl_main_esti</span>, <span class="fl">5</span><span class="op">)</span></pre></div>
 <pre><code>##       estimate
 ## [1,]  379.3939
 ## [2,] 1079.5020</code></pre>
-<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="co"># Select Matrix subcomponents</span>
-<span class="no">mt_cova</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_model</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">"trt"</span>)))
-<span class="no">mt_intr</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>(~ <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">marr</span>) - <span class="fl">1</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">dft</span>)
+<div class="sourceCode" id="cb63"><pre class="downlit">
+<span class="co"># Select Matrix subcomponents</span>
+<span class="va">mt_cova</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">mt_model</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"trt"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">mt_intr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">marr</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>, data <span class="op">=</span> <span class="va">dft</span><span class="op">)</span>
 
 <span class="co"># Generate A_i, use mt_cova_wth_const</span>
-<span class="no">ar_A_m</span> <span class="kw">&lt;-</span> <span class="no">mt_cova</span> <span class="kw">%*%</span> <span class="no">ar_fl_cova_esti</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_A_m</span>, <span class="fl">5</span>)</pre></body></html></div>
+<span class="va">ar_A_m</span> <span class="op">&lt;-</span> <span class="va">mt_cova</span> <span class="op">%*%</span> <span class="va">ar_fl_cova_esti</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ar_A_m</span>, <span class="fl">5</span><span class="op">)</span></pre></div>
 <pre><code>##      estimate
 ## [1,] 4201.030
 ## [2,] 6259.851
 ## [3,] 3894.398
 ## [4,] 4572.335
 ## [5,] 3728.447</code></pre>
-<div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="co"># Generate alpha_i</span>
-<span class="no">ar_alpha_m</span> <span class="kw">&lt;-</span> <span class="no">mt_intr</span> <span class="kw">%*%</span> <span class="no">ar_fl_main_esti</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ar_alpha_m</span>, <span class="fl">5</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb65"><pre class="downlit">
+<span class="co"># Generate alpha_i</span>
+<span class="va">ar_alpha_m</span> <span class="op">&lt;-</span> <span class="va">mt_intr</span> <span class="op">%*%</span> <span class="va">ar_fl_main_esti</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ar_alpha_m</span>, <span class="fl">5</span><span class="op">)</span></pre></div>
 <pre><code>##   estimate
 ## 1 379.3939
 ## 2 379.3939
@@ -976,8 +1004,9 @@ Solve for optimal binary allocation queues.
 <div id="individual-weight" class="section level3">
 <h3 class="hasAnchor">
 <a href="#individual-weight" class="anchor"></a>Individual Weight</h3>
-<div class="sourceCode" id="cb67"><html><body><pre class="r"><span class="co"># Child Weight</span>
-<span class="no">ar_beta_m</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>/<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_A_m</span>), <span class="kw">times</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_A_m</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb67"><pre class="downlit">
+<span class="co"># Child Weight</span>
+<span class="va">ar_beta_m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_A_m</span><span class="op">)</span>, times<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_A_m</span><span class="op">)</span><span class="op">)</span></pre></div>
 </div>
 <div id="matrix-with-required-inputs-for-allocation" class="section level3">
 <h3 class="hasAnchor">
@@ -985,30 +1014,32 @@ Solve for optimal binary allocation queues.
 <div id="linear-binary-matrix" class="section level4">
 <h4 class="hasAnchor">
 <a href="#linear-binary-matrix" class="anchor"></a>Linear Binary Matrix</h4>
-<div class="sourceCode" id="cb68"><html><body><pre class="r"><span class="co"># Initate Dataframe that will store all estimates and optimal allocation relevant information</span>
+<div class="sourceCode" id="cb68"><pre class="downlit">
+<span class="co"># Initate Dataframe that will store all estimates and optimal allocation relevant information</span>
 <span class="co"># combine identifying key information along with estimation A, alpha results</span>
 <span class="co"># note that we only need indi.id as key</span>
-<span class="no">mt_opti</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_alpha_m</span>, <span class="no">ar_A_m</span>, <span class="no">ar_beta_m</span>)
-<span class="no">ar_st_varnames</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span>)
-<span class="no">df_esti_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_opti</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span>(~<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ar_st_varnames</span>))
-<span class="no">tb_key_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="no">dft</span>, <span class="no">df_esti_alpha_A_beta</span>) <span class="kw">%&gt;%</span>
-              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'id'</span>, <span class="st">'trt'</span>, <span class="st">'age'</span>, <span class="st">'educ'</span>, <span class="st">'race'</span>, <span class="st">'marr'</span>, <span class="st">'nodeg'</span>, <span class="st">'re78'</span>,
-                              <span class="no">ar_st_varnames</span>)))
+<span class="va">mt_opti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">ar_alpha_m</span>, <span class="va">ar_A_m</span>, <span class="va">ar_beta_m</span><span class="op">)</span>
+<span class="va">ar_st_varnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span><span class="op">)</span>
+<span class="va">df_esti_alpha_A_beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">mt_opti</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span>
+<span class="va">tb_key_alpha_A_beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span><span class="op">(</span><span class="va">dft</span>, <span class="va">df_esti_alpha_A_beta</span><span class="op">)</span> <span class="op">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html">one_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'id'</span>, <span class="st">'trt'</span>, <span class="st">'age'</span>, <span class="st">'educ'</span>, <span class="st">'race'</span>, <span class="st">'marr'</span>, <span class="st">'nodeg'</span>, <span class="st">'re78'</span>,
+                              <span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Rescale A and alpha to deal more easily with large powers</span>
-<span class="no">tb_key_alpha_A_beta</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span>
-                          <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">alpha</span> <span class="kw">=</span> <span class="no">alpha</span>/<span class="fl">1000</span>, <span class="kw">A</span> <span class="kw">=</span> <span class="no">A</span>/<span class="fl">1000</span>)
+<span class="va">tb_key_alpha_A_beta</span> <span class="op">&lt;-</span> <span class="va">tb_key_alpha_A_beta</span> <span class="op">%&gt;%</span>
+                          <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="va">alpha</span><span class="op">/</span><span class="fl">1000</span>, A <span class="op">=</span> <span class="va">A</span><span class="op">/</span><span class="fl">1000</span><span class="op">)</span>
 
 <span class="co"># Need to only include the smokers here</span>
 <span class="co"># tb_key_alpha_A_beta &lt;- tb_key_alpha_A_beta %&gt;% filter(trt == 0)</span>
 
 <span class="co"># Unique beta, A, and alpha check</span>
-<span class="no">tb_opti_unique</span> <span class="kw">&lt;-</span> <span class="no">tb_key_alpha_A_beta</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(!!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">n_obs_group</span><span class="kw">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>())</pre></body></html></div>
+<span class="va">tb_opti_unique</span> <span class="op">&lt;-</span> <span class="va">tb_key_alpha_A_beta</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>n_obs_group<span class="op">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## `summarise()` regrouping output by 'alpha', 'A' (override with `.groups` argument)</code></pre>
-<div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="co"># Show cars</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">tb_key_alpha_A_beta</span>, <span class="fl">32</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb70"><pre class="downlit">
+<span class="co"># Show cars</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tb_key_alpha_A_beta</span>, <span class="fl">32</span><span class="op">)</span></pre></div>
 <pre><code>##    id trt age educ race marr nodeg      re78     alpha        A        beta
 ## 1   1   0  23   10    1    0     1     0.000 0.3793939 4.201030 0.001385042
 ## 2   2   0  26   12    0    0     0 12383.680 0.3793939 6.259851 0.001385042
@@ -1048,82 +1079,86 @@ Solve for optimal binary allocation queues.
 <div id="optimal-linear-allocations" class="section level2">
 <h2 class="hasAnchor">
 <a href="#optimal-linear-allocations" class="anchor"></a>Optimal Linear Allocations</h2>
-<div class="sourceCode" id="cb72"><html><body><pre class="r"><span class="no">svr_inpalc</span> <span class="kw">&lt;-</span> <span class="st">'opti_alloc_queue'</span>
+<div class="sourceCode" id="cb72"><pre class="downlit">
+<span class="va">svr_inpalc</span> <span class="op">&lt;-</span> <span class="st">'opti_alloc_queue'</span>
 
 <span class="co"># Child Count</span>
-<span class="no">it_obs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">tb_opti_unique</span>)[<span class="fl">1</span>]
+<span class="va">it_obs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">tb_opti_unique</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
 
 <span class="co"># Vector of Planner Preference</span>
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">100</span>, <span class="fl">0.8</span>)
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">50</span>, -<span class="fl">25</span>, -<span class="fl">10</span>)
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">100</span>, -<span class="fl">5</span>, -<span class="fl">1</span>, <span class="fl">0.1</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>)
+<span class="va">ar_rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">100</span>, <span class="fl">0.8</span><span class="op">)</span>
+<span class="va">ar_rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">50</span>, <span class="op">-</span><span class="fl">25</span>, <span class="op">-</span><span class="fl">10</span><span class="op">)</span>
+<span class="va">ar_rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">100</span>, <span class="op">-</span><span class="fl">5</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">0.1</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span><span class="op">)</span>
 <span class="co"># ar_rho &lt;- c(seq(-200, -100, length.out=5), seq(-100, -25, length.out=5), seq(-25, -5, length.out=5), seq(-5, -1, length.out=5), seq(-1, -0.01, length.out=5), seq(0.01, 0.25, length.out=5), seq(0.25, 0.90, length.out=5))</span>
 <span class="co"># ar_rho &lt;- c(-100, -5, -1, 0.1, 0.6, 0.99)</span>
 <span class="co"># ar_rho &lt;- c(-20, -1, 0.05, 0.9)</span>
 <span class="co"># ar_rho &lt;- c(-50, -40, -30, -20, -15, -10, -7.5, -5,-3,-2,-1)</span>
 <span class="co"># ar_rho = c(-100, -0.001,  0.95)</span>
-<span class="no">ar_rho</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">100</span>, -<span class="fl">0.001</span>,  <span class="fl">0.95</span>)
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">200</span>, -<span class="fl">100</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">100</span>, -<span class="fl">25</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">25</span>, -<span class="fl">5</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">5</span>, -<span class="fl">1</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">1</span>, -<span class="fl">0.01</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.01</span>, <span class="fl">0.25</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.25</span>, <span class="fl">0.90</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>))
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fl">1</span> - (<span class="fl">10</span>^(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">2</span>,<span class="fl">2</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">30</span>))))
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">ar_rho</span>)
+<span class="va">ar_rho</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">100</span>, <span class="op">-</span><span class="fl">0.001</span>,  <span class="fl">0.95</span><span class="op">)</span>
+<span class="va">ar_rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">200</span>, <span class="op">-</span><span class="fl">100</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">100</span>, <span class="op">-</span><span class="fl">25</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">25</span>, <span class="op">-</span><span class="fl">5</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="op">-</span><span class="fl">1</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">0.01</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.25</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="fl">0.90</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_rho</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="op">(</span><span class="fl">10</span><span class="op">^</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>,<span class="fl">2</span>, length.out<span class="op">=</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span>
 
-<span class="no">svr_rho_val</span> <span class="kw">&lt;-</span> <span class="st">'rho_val'</span>
-<span class="no">ls_bin_solu_all_rhos</span> <span class="kw">&lt;-</span>
-  <span class="fu"><a href="../reference/ffp_opt_anlyz_rhgin_bin.html">ffp_opt_anlyz_rhgin_bin</a></span>(<span class="no">tb_key_alpha_A_beta</span>,
-                          <span class="kw">svr_id_i</span> <span class="kw">=</span> <span class="st">'id'</span>,
-                          <span class="kw">svr_A_i</span> <span class="kw">=</span> <span class="st">'A'</span>, <span class="kw">svr_alpha_i</span> <span class="kw">=</span> <span class="st">'alpha'</span>, <span class="kw">svr_beta_i</span> <span class="kw">=</span> <span class="st">'beta'</span>,
-                          <span class="kw">ar_rho</span> <span class="kw">=</span> <span class="no">ar_rho</span>,
-                          <span class="kw">svr_rho</span> <span class="kw">=</span> <span class="st">'rho'</span>, <span class="kw">svr_rho_val</span> <span class="kw">=</span> <span class="no">svr_rho_val</span>,
-                          <span class="kw">svr_inpalc</span> <span class="kw">=</span> <span class="no">svr_inpalc</span>,
-                          <span class="kw">svr_expout</span> <span class="kw">=</span> <span class="st">'opti_exp_outcome'</span>)</pre></body></html></div>
+<span class="va">svr_rho_val</span> <span class="op">&lt;-</span> <span class="st">'rho_val'</span>
+<span class="va">ls_bin_solu_all_rhos</span> <span class="op">&lt;-</span>
+  <span class="fu"><a href="../reference/ffp_opt_anlyz_rhgin_bin.html">ffp_opt_anlyz_rhgin_bin</a></span><span class="op">(</span><span class="va">tb_key_alpha_A_beta</span>,
+                          svr_id_i <span class="op">=</span> <span class="st">'id'</span>,
+                          svr_A_i <span class="op">=</span> <span class="st">'A'</span>, svr_alpha_i <span class="op">=</span> <span class="st">'alpha'</span>, svr_beta_i <span class="op">=</span> <span class="st">'beta'</span>,
+                          ar_rho <span class="op">=</span> <span class="va">ar_rho</span>, 
+                          svr_rho <span class="op">=</span> <span class="st">'rho'</span>, svr_rho_val <span class="op">=</span> <span class="va">svr_rho_val</span>,
+                          svr_inpalc <span class="op">=</span> <span class="va">svr_inpalc</span>,
+                          svr_expout <span class="op">=</span> <span class="st">'opti_exp_outcome'</span><span class="op">)</span></pre></div>
 <pre><code>## Joining, by = "id"</code></pre>
-<div class="sourceCode" id="cb74"><html><body><pre class="r"><span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">ls_bin_solu_all_rhos</span>$<span class="no">df_all_rho</span>
-<span class="no">df_all_rho_long</span> <span class="kw">&lt;-</span> <span class="no">ls_bin_solu_all_rhos</span>$<span class="no">df_all_rho_long</span>
+<div class="sourceCode" id="cb74"><pre class="downlit">
+<span class="va">df_all_rho</span> <span class="op">&lt;-</span> <span class="va">ls_bin_solu_all_rhos</span><span class="op">$</span><span class="va">df_all_rho</span>
+<span class="va">df_all_rho_long</span> <span class="op">&lt;-</span> <span class="va">ls_bin_solu_all_rhos</span><span class="op">$</span><span class="va">df_all_rho_long</span>
 
 <span class="co"># How many people have different ranks across rhos</span>
-<span class="no">it_how_many_vary_rank</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">df_all_rho</span>$<span class="no">rank_max</span> - <span class="no">df_all_rho</span>$<span class="no">rank_min</span>)
-<span class="no">it_how_many_vary_rank</span></pre></body></html></div>
+<span class="va">it_how_many_vary_rank</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">df_all_rho</span><span class="op">$</span><span class="va">rank_max</span> <span class="op">-</span> <span class="va">df_all_rho</span><span class="op">$</span><span class="va">rank_min</span><span class="op">)</span>
+<span class="va">it_how_many_vary_rank</span></pre></div>
 <pre><code>## [1] -94434</code></pre>
 <div id="save-results" class="section level3">
 <h3 class="hasAnchor">
 <a href="#save-results" class="anchor"></a>Save Results</h3>
-<div class="sourceCode" id="cb76"><html><body><pre class="r"><span class="co"># Change Variable names so that this can becombined with logit file later</span>
-<span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_at</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="st">"rho_"</span>)), <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html">str_replace</a></span>(<span class="no">.</span>, <span class="st">"rk"</span>, <span class="st">"rk_wage"</span>)))
-<span class="no">df_all_rho</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">A_i_wage</span> <span class="kw">=</span> <span class="no">A</span>, <span class="kw">alpha_i_wage</span> <span class="kw">=</span> <span class="no">alpha</span>, <span class="kw">beta_i_wage</span> <span class="kw">=</span> <span class="no">beta</span>,
-                                    <span class="kw">rank_min_wage</span> <span class="kw">=</span> <span class="no">rank_min</span>, <span class="kw">rank_max_wage</span> <span class="kw">=</span> <span class="no">rank_max</span>, <span class="kw">avg_rank_wage</span> <span class="kw">=</span> <span class="no">avg_rank</span>)
+<div class="sourceCode" id="cb76"><pre class="downlit">
+<span class="co"># Change Variable names so that this can becombined with logit file later</span>
+<span class="va">df_all_rho</span> <span class="op">&lt;-</span> <span class="va">df_all_rho</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_at</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"rho_"</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/funs.html">funs</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html">str_replace</a></span><span class="op">(</span><span class="va">.</span>, <span class="st">"rk"</span>, <span class="st">"rk_wage"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">df_all_rho</span> <span class="op">&lt;-</span> <span class="va">df_all_rho</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>A_i_wage <span class="op">=</span> <span class="va">A</span>, alpha_i_wage <span class="op">=</span> <span class="va">alpha</span>, beta_i_wage <span class="op">=</span> <span class="va">beta</span>,
+                                    rank_min_wage <span class="op">=</span> <span class="va">rank_min</span>, rank_max_wage <span class="op">=</span> <span class="va">rank_max</span>, avg_rank_wage <span class="op">=</span> <span class="va">avg_rank</span><span class="op">)</span>
 
 <span class="co"># Save File</span>
-<span class="kw">if</span> (<span class="no">bl_save_rda</span>) {
-  <span class="no">df_opt_lalonde_training_wage</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho</span>
-  <span class="kw pkg">usethis</span><span class="kw ns">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_data.html">use_data</a></span>(<span class="no">df_opt_lalonde_training_wage</span>, <span class="no">df_opt_lalonde_training_wage</span>, <span class="kw">overwrite</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-}</pre></body></html></div>
+<span class="kw">if</span> <span class="op">(</span><span class="va">bl_save_rda</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">df_opt_lalonde_training_wage</span> <span class="op">&lt;-</span> <span class="va">df_all_rho</span>
+  <span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_data.html">use_data</a></span><span class="op">(</span><span class="va">df_opt_lalonde_training_wage</span>, <span class="va">df_opt_lalonde_training_wage</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="op">}</span></pre></div>
 </div>
 <div id="change-in-rank-along-rho" class="section level3">
 <h3 class="hasAnchor">
 <a href="#change-in-rank-along-rho" class="anchor"></a>Change in Rank along rho</h3>
-<div class="sourceCode" id="cb77"><html><body><pre class="r"><span class="co"># get rank when wage rho = 1</span>
-<span class="no">df_all_rho_rho_c1</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">rho_c1_rk_wage</span>)
+<div class="sourceCode" id="cb77"><pre class="downlit">
+<span class="co"># get rank when wage rho = 1</span>
+<span class="va">df_all_rho_rho_c1</span> <span class="op">&lt;-</span> <span class="va">df_all_rho</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">rho_c1_rk_wage</span><span class="op">)</span>
 
 <span class="co"># Merge</span>
-<span class="no">df_all_rho_long_more</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(<span class="no">rho</span>)) <span class="kw">%&gt;%</span>
-                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_all_rho_rho_c1</span>, <span class="kw">by</span><span class="kw">=</span><span class="st">'id'</span>)
+<span class="va">df_all_rho_long_more</span> <span class="op">&lt;-</span> <span class="va">df_all_rho_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rho <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">rho</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">df_all_rho_rho_c1</span>, by<span class="op">=</span><span class="st">'id'</span><span class="op">)</span>
 
 <span class="co"># Select subset to graph</span>
-<span class="no">df_rank_graph</span> <span class="kw">&lt;-</span> <span class="no">df_all_rho_long_more</span> <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">id</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>((<span class="no">id</span> <span class="kw">==</span> <span class="fl">167</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 1</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">175</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 101</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">3710</span>)  <span class="kw">|</span>  <span class="co"># utilitarian rank = 202</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">2151</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 306</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">27</span>)<span class="kw">|</span>  <span class="co"># utilitarian rank = 405</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">58</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 503</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">184</span>) <span class="kw">|</span>  <span class="co"># utilitarian rank = 603</span>
-                           (<span class="no">id</span> <span class="kw">==</span> <span class="fl">1481</span>)   <span class="co"># utilitarian rank = 701</span>
-                             ) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">one_minus_rho</span> <span class="kw">=</span> <span class="fl">1</span> - !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_rho_val</span>)) <span class="kw">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rho_c1_rk_wage</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">rho_c1_rk_wage</span>))
+<span class="va">df_rank_graph</span> <span class="op">&lt;-</span> <span class="va">df_all_rho_long_more</span> <span class="op">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="fl">167</span><span class="op">)</span> <span class="op">|</span>  <span class="co"># utilitarian rank = 1</span>
+                           <span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="fl">175</span><span class="op">)</span> <span class="op">|</span>  <span class="co"># utilitarian rank = 101</span>
+                           <span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="fl">3710</span><span class="op">)</span>  <span class="op">|</span>  <span class="co"># utilitarian rank = 202</span>
+                           <span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="fl">2151</span><span class="op">)</span> <span class="op">|</span>  <span class="co"># utilitarian rank = 306</span>
+                           <span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="fl">27</span><span class="op">)</span><span class="op">|</span>  <span class="co"># utilitarian rank = 405</span>
+                           <span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="fl">58</span><span class="op">)</span> <span class="op">|</span>  <span class="co"># utilitarian rank = 503</span>
+                           <span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="fl">184</span><span class="op">)</span> <span class="op">|</span>  <span class="co"># utilitarian rank = 603</span>
+                           <span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="fl">1481</span><span class="op">)</span>   <span class="co"># utilitarian rank = 701</span>
+                             <span class="op">)</span> <span class="op">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>one_minus_rho <span class="op">=</span> <span class="fl">1</span> <span class="op">-</span> <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_rho_val</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rho_c1_rk_wage <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">rho_c1_rk_wage</span><span class="op">)</span><span class="op">)</span>
 
-<span class="no">df_rank_graph</span>$<span class="no">rho_c1_rk_wage</span></pre></body></html></div>
+<span class="va">df_rank_graph</span><span class="op">$</span><span class="va">rho_c1_rk_wage</span></pre></div>
 <pre><code>##   [1] 405 405 405 405 405 405 405 405 405 405 405 405 405 405 405 405 405 405
 ##  [19] 405 405 405 405 405 405 405 405 405 405 405 405 503 503 503 503 503 503
 ##  [37] 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503 503
@@ -1139,59 +1174,61 @@ Solve for optimal binary allocation queues.
 ## [217] 306 306 306 306 306 306 306 306 306 306 306 306 306 306 306 306 306 306
 ## [235] 306 306 306 306 306 306
 ## Levels: 1 101 202 306 405 503 603 701</code></pre>
-<div class="sourceCode" id="cb79"><html><body><pre class="r"><span class="no">df_rank_graph</span>$<span class="no">id</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">df_rank_graph</span>$<span class="no">rho_c1_rk_wage</span>,
-                           <span class="kw">labels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Rank= 1 when &lt;U+03BB&gt;=0.99'</span>, <span class="co">#200</span>
-                                      <span class="st">'Rank= 101 when &lt;U+03BB&gt;=0.99'</span>, <span class="co">#110</span>
-                                      <span class="st">'Rank= 201 when &lt;U+03BB&gt;=0.99'</span>, <span class="co">#95</span>
-                                      <span class="st">'Rank= 301 when &lt;U+03BB&gt;=0.99'</span>, <span class="co">#217</span>
-                                      <span class="st">'Rank= 401 when &lt;U+03BB&gt;=0.99'</span>, <span class="co">#274</span>
-                                      <span class="st">'Rank= 501 when &lt;U+03BB&gt;=0.99'</span>, <span class="co">#101</span>
-                                      <span class="st">'Rank= 601 when &lt;U+03BB&gt;=0.99'</span>, <span class="co">#131</span>
-                                      <span class="st">'Rank= 701 when &lt;U+03BB&gt;=0.99'</span> <span class="co">#3610</span>
-                                       ))
+<div class="sourceCode" id="cb79"><pre class="downlit">
+<span class="va">df_rank_graph</span><span class="op">$</span><span class="va">id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">df_rank_graph</span><span class="op">$</span><span class="va">rho_c1_rk_wage</span>,
+                           labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Rank= 1 when λ=0.99'</span>, <span class="co">#200</span>
+                                      <span class="st">'Rank= 101 when λ=0.99'</span>, <span class="co">#110</span>
+                                      <span class="st">'Rank= 201 when λ=0.99'</span>, <span class="co">#95</span>
+                                      <span class="st">'Rank= 301 when λ=0.99'</span>, <span class="co">#217</span>
+                                      <span class="st">'Rank= 401 when λ=0.99'</span>, <span class="co">#274</span>
+                                      <span class="st">'Rank= 501 when λ=0.99'</span>, <span class="co">#101</span>
+                                      <span class="st">'Rank= 601 when λ=0.99'</span>, <span class="co">#131</span>
+                                      <span class="st">'Rank= 701 when λ=0.99'</span> <span class="co">#3610</span>
+                                       <span class="op">)</span><span class="op">)</span>
 
 <span class="co"># x-labels</span>
-<span class="no">x.labels</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'&lt;U+03BB&gt;=0.99'</span>, <span class="st">'&lt;U+03BB&gt;=0.90'</span>, <span class="st">'&lt;U+03BB&gt;=0'</span>, <span class="st">'&lt;U+03BB&gt;=-10'</span>, <span class="st">'&lt;U+03BB&gt;=-100'</span>)
-<span class="no">x.breaks</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.01</span>, <span class="fl">0.10</span>, <span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">100</span>)
+<span class="va">x.labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'λ=0.99'</span>, <span class="st">'λ=0.90'</span>, <span class="st">'λ=0'</span>, <span class="st">'λ=-10'</span>, <span class="st">'λ=-100'</span><span class="op">)</span>
+<span class="va">x.breaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.10</span>, <span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">100</span><span class="op">)</span>
 
 <span class="co"># title line 2</span>
-<span class="no">title_line1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"LINEAR WAGE: Optimal Tageting Queue, NSW Lalonde (AER, 1986)"</span>)
-<span class="no">title_line2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"How Do Allocation Rankings (Targeting Queue) Shift with &lt;U+03BB&gt;?"</span>)
+<span class="va">title_line1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"LINEAR WAGE: Optimal Tageting Queue, NSW Lalonde (AER, 1986)"</span><span class="op">)</span>
+<span class="va">title_line2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"How Do Allocation Rankings (Targeting Queue) Shift with λ?"</span><span class="op">)</span>
 
 <span class="co"># Graph Results--Draw</span>
-<span class="no">line.plot</span> <span class="kw">&lt;-</span> <span class="no">df_rank_graph</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span><span class="no">one_minus_rho</span>, <span class="kw">y</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>),
-             <span class="kw">group</span><span class="kw">=</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_rev.html">fct_rev</a></span>(<span class="no">id</span>),
-             <span class="kw">colour</span><span class="kw">=</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_rev.html">fct_rev</a></span>(<span class="no">id</span>),
-             <span class="kw">size</span><span class="kw">=</span><span class="fl">2</span>)) +
+<span class="va">line.plot</span> <span class="op">&lt;-</span> <span class="va">df_rank_graph</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">one_minus_rho</span>, y<span class="op">=</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_inpalc</span><span class="op">)</span>,
+             group<span class="op">=</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_rev.html">fct_rev</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span>,
+             colour<span class="op">=</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_rev.html">fct_rev</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span>,
+             size<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="co"># geom_line(aes(linetype =fct_rev(id)), size=0.75) +</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="kw">size</span><span class="kw">=</span><span class="fl">0.75</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span>(<span class="kw">xintercept</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>), <span class="kw">linetype</span><span class="kw">=</span><span class="st">"dotted"</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">title_line1</span>, <span class="st">'\n'</span>, <span class="no">title_line2</span>),
-       <span class="kw">x</span> <span class="kw">=</span> <span class="st">'log10 Rescale of &lt;U+03BB&gt;, Log10(&lt;U+03BB&gt;)\n&lt;U+03BB&gt;=1 Utilitarian, &lt;U+03BB&gt;=-infty Rawlsian'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="st">'Optimal Targeting Queue Rank (1=highest)'</span>,
-       <span class="kw">caption</span> <span class="kw">=</span> <span class="st">'Training RCT with 297 treated, 425 untreated. Optimal Binary Targeting Queue.'</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span>(<span class="kw">trans</span><span class="kw">=</span><span class="st">'log10'</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="no">x.labels</span>, <span class="kw">breaks</span> <span class="kw">=</span> <span class="no">x.breaks</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>()
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">0.75</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>xintercept<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, linetype<span class="op">=</span><span class="st">"dotted"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">title_line1</span>, <span class="st">'\n'</span>, <span class="va">title_line2</span><span class="op">)</span>,
+       x <span class="op">=</span> <span class="st">'log10 Rescale of λ, Log10(λ)\nλ=1 Utilitarian, λ=-infty Rawlsian'</span>,
+       y <span class="op">=</span> <span class="st">'Optimal Targeting Queue Rank (1=highest)'</span>,
+       caption <span class="op">=</span> <span class="st">'Training RCT with 297 treated, 425 untreated. Optimal Binary Targeting Queue.'</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>trans<span class="op">=</span><span class="st">'log10'</span>, labels <span class="op">=</span> <span class="va">x.labels</span>, breaks <span class="op">=</span> <span class="va">x.breaks</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">line.plot</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">line.plot</span><span class="op">)</span></pre></div>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_wage_files/figure-html/graph%20of%20rank%20change-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div id="bump-plot-for-optimal-binary-allocations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#bump-plot-for-optimal-binary-allocations" class="anchor"></a>Bump Plot for Optimal Binary Allocations</h3>
-<div class="sourceCode" id="cb80"><html><body><pre class="r"># tb_opti_alloc_all_rho_long %&gt;%
-#   ggplot(aes(x = rho, y = rank, group = id)) +
-#     geom_line(aes(color = race, alpha = 1), size = 2) +
-#     geom_point(aes(color = race, alpha = 1), size = 4) +
-#     scale_x_discrete(expand = c(0.85,0))+
-#     scale_y_reverse(breaks = 1:nrow(tb_opti_alloc_all_rho_long))+
-#     theme(legend.position = "none") +
-#     labs(x = "Equality vs Efficiency",
-#          y = "Rank",
-#          title = "Binary Allocation Rank, which untrained to receive training first") +
-#     ffy_opt_ghthm_dk() +
-#     geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=id),hjust="right")</pre></body></html></div>
+<div class="sourceCode" id="cb80"><pre class="downlit">
+<span class="co"># tb_opti_alloc_all_rho_long %&gt;%</span>
+<span class="co">#   ggplot(aes(x = rho, y = rank, group = id)) +</span>
+<span class="co">#     geom_line(aes(color = race, alpha = 1), size = 2) +</span>
+<span class="co">#     geom_point(aes(color = race, alpha = 1), size = 4) +</span>
+<span class="co">#     scale_x_discrete(expand = c(0.85,0))+</span>
+<span class="co">#     scale_y_reverse(breaks = 1:nrow(tb_opti_alloc_all_rho_long))+</span>
+<span class="co">#     theme(legend.position = "none") +</span>
+<span class="co">#     labs(x = "Equality vs Efficiency",</span>
+<span class="co">#          y = "Rank",</span>
+<span class="co">#          title = "Binary Allocation Rank, which untrained to receive training first") +</span>
+<span class="co">#     ffy_opt_ghthm_dk() +</span>
+<span class="co">#     geom_text(data =tb_opti_alloc_all_rho,aes(y=rho_c1_rk,x=0.6,label=id),hjust="right")</span></pre></div>
 </div>
 </div>
   </div>
@@ -1211,7 +1248,7 @@ Solve for optimal binary allocation queues.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

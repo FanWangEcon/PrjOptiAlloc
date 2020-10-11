@@ -59,9 +59,6 @@ The root search is very fast when initial condition is zero.
   <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
 </li>
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
-</li>
-<li>
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
@@ -124,7 +121,8 @@ The root search is very fast when initial condition is zero.
 
       
 
-      </header><script src="ffv_opt_solog_bisec_allrw_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="ffv_opt_solog_bisec_allrw_files/kePrint-0.0.1/kePrint.js"></script><div class="row">
+      </header><script src="ffv_opt_solog_bisec_allrw_files/header-attrs-2.4/header-attrs.js"></script><script src="ffv_opt_solog_bisec_allrw_files/kePrint-0.0.1/kePrint.js"></script><link href="ffv_opt_solog_bisec_allrw_files/lightable-0.0.1/lightable.css" rel="stylesheet">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Line by Line Test Log Linear Allocation Test</h1>
@@ -185,82 +183,86 @@ The root search is very fast when initial condition is zero.
 <div id="load-dependencies" class="section level3">
 <h3 class="hasAnchor">
 <a href="#load-dependencies" class="anchor"></a>Load Dependencies</h3>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(<span class="kw">list</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span>(<span class="kw">all.names</span> <span class="kw">=</span> <span class="fl">TRUE</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">knitr.duplicate.label</span> <span class="kw">=</span> <span class="st">'allow'</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tibble</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stringr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span>all.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>knitr.duplicate.label <span class="op">=</span> <span class="st">'allow'</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/">broom</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">PrjOptiAlloc</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fanwangecon.github.io/PrjOptiAlloc/">PrjOptiAlloc</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">knitr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">kableExtra</span>)</pre></body></html></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span></pre></div>
 </div>
 <div id="common-parameters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#common-parameters" class="anchor"></a>common parameters</h3>
 <p>some important shared, common fixed parameters specify them here:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># which params to test</span>
-<span class="no">it_test</span> <span class="kw">=</span> <span class="fl">6</span>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># which params to test</span>
+<span class="va">it_test</span> <span class="op">=</span> <span class="fl">6</span>
 
 <span class="co"># parameters</span>
-<span class="no">fl_rho</span> <span class="kw">=</span> <span class="fl">0.20</span>
-<span class="no">svr_id_var</span> <span class="kw">=</span> <span class="st">'indi_id'</span>
+<span class="va">fl_rho</span> <span class="op">=</span> <span class="fl">0.20</span>
+<span class="va">svr_id_var</span> <span class="op">=</span> <span class="st">'indi_id'</span>
 
 <span class="co"># it_child_count = n, the number of children</span>
-<span class="no">it_n_child_cnt</span> <span class="kw">=</span> <span class="fl">2</span>
+<span class="va">it_n_child_cnt</span> <span class="op">=</span> <span class="fl">2</span>
 <span class="co"># it_heter_param = q, number of parameters that are heterogeneous across children</span>
-<span class="no">it_q_hetpa_cnt</span> <span class="kw">=</span> <span class="fl">2</span>
+<span class="va">it_q_hetpa_cnt</span> <span class="op">=</span> <span class="fl">2</span>
 
 <span class="co"># choice grid for nutritional feasible choices for each</span>
-<span class="no">fl_n_agg</span> <span class="kw">=</span> <span class="fl">100</span>
-<span class="no">fl_n_min</span> <span class="kw">=</span> <span class="fl">0</span>
-<span class="no">it_n_choice_cnt_ttest</span> <span class="kw">=</span> <span class="fl">3</span>
-<span class="no">it_n_choice_cnt_dense</span> <span class="kw">=</span> <span class="fl">100</span></pre></body></html></div>
+<span class="va">fl_n_agg</span> <span class="op">=</span> <span class="fl">100</span>
+<span class="va">fl_n_min</span> <span class="op">=</span> <span class="fl">0</span>
+<span class="va">it_n_choice_cnt_ttest</span> <span class="op">=</span> <span class="fl">3</span>
+<span class="va">it_n_choice_cnt_dense</span> <span class="op">=</span> <span class="fl">100</span></pre></div>
 </div>
 <div id="a-and-alpha-input-matrix" class="section level3">
 <h3 class="hasAnchor">
 <a href="#a-and-alpha-input-matrix" class="anchor"></a>a and alpha input matrix</h3>
 <p>different types of <em>alpha</em> and <em>a</em> combinations. the algorithm, solutions should work for any alpha and a.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="kw">if</span> (<span class="no">it_test</span> <span class="kw">==</span> <span class="fl">1</span>) {
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="kw">if</span> <span class="op">(</span><span class="va">it_test</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
   <span class="co"># A. test params 1</span>
   <span class="co"># these are initially what i tested with, positively correlated a and alpha, some have both higher tfp as well as elasticity.</span>
-  <span class="no">ar_nn_a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">2</span>, <span class="fl">2</span>, <span class="kw">length.out</span> <span class="kw">=</span> <span class="no">it_n_child_cnt</span>)
-  <span class="no">ar_nn_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>, <span class="kw">length.out</span> <span class="kw">=</span> <span class="no">it_n_child_cnt</span>)
-  <span class="no">mt_nn_by_nq_a_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>)
-} <span class="kw">else</span> <span class="kw">if</span> (<span class="no">it_test</span> <span class="kw">==</span> <span class="fl">2</span>) {
+  <span class="va">ar_nn_a</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span>, length.out <span class="op">=</span> <span class="va">it_n_child_cnt</span><span class="op">)</span>
+  <span class="va">ar_nn_alpha</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.9</span>, length.out <span class="op">=</span> <span class="va">it_n_child_cnt</span><span class="op">)</span>
+  <span class="va">mt_nn_by_nq_a_alpha</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">ar_nn_a</span>, <span class="va">ar_nn_alpha</span><span class="op">)</span>
+<span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">it_test</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span> <span class="op">{</span>
   <span class="co"># B. test params 2</span>
-  <span class="no">ar_nn_a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">0</span>)
-  <span class="no">ar_nn_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.1</span>,<span class="fl">0.2</span>)
-  <span class="no">mt_nn_by_nq_a_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>)
-} <span class="kw">else</span> <span class="kw">if</span> (<span class="no">it_test</span> <span class="kw">==</span> <span class="fl">3</span>) {
+  <span class="va">ar_nn_a</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>
+  <span class="va">ar_nn_alpha</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.2</span><span class="op">)</span>
+  <span class="va">mt_nn_by_nq_a_alpha</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">ar_nn_a</span>, <span class="va">ar_nn_alpha</span><span class="op">)</span>
+<span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">it_test</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span> <span class="op">{</span>
   <span class="co"># C. test params 3</span>
-  <span class="no">ar_nn_a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">0</span>)
-  <span class="no">ar_nn_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.1</span>,<span class="fl">0.1</span>)
-  <span class="no">mt_nn_by_nq_a_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>)
-} <span class="kw">else</span> <span class="kw">if</span> (<span class="no">it_test</span> <span class="kw">==</span> <span class="fl">4</span>) {
+  <span class="va">ar_nn_a</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>
+  <span class="va">ar_nn_alpha</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.1</span><span class="op">)</span>
+  <span class="va">mt_nn_by_nq_a_alpha</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">ar_nn_a</span>, <span class="va">ar_nn_alpha</span><span class="op">)</span>
+<span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">it_test</span> <span class="op">==</span> <span class="fl">4</span><span class="op">)</span> <span class="op">{</span>
   <span class="co"># D. test params 4</span>
-  <span class="no">ar_nn_a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">0</span>)
-  <span class="no">ar_nn_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.006686704</span>,<span class="fl">0.009251407</span>)
-  <span class="no">mt_nn_by_nq_a_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>)
-} <span class="kw">else</span> <span class="kw">if</span> (<span class="no">it_test</span> <span class="kw">==</span> <span class="fl">5</span>) {
+  <span class="va">ar_nn_a</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>
+  <span class="va">ar_nn_alpha</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.006686704</span>,<span class="fl">0.009251407</span><span class="op">)</span>
+  <span class="va">mt_nn_by_nq_a_alpha</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">ar_nn_a</span>, <span class="va">ar_nn_alpha</span><span class="op">)</span>
+<span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">it_test</span> <span class="op">==</span> <span class="fl">5</span><span class="op">)</span> <span class="op">{</span>
   <span class="co"># E. test params 5</span>
-  <span class="no">ar_nn_a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4.342501</span>, <span class="fl">4.359987</span>)
-  <span class="no">ar_nn_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.006686704</span>,<span class="fl">0.009251407</span>)
-  <span class="no">mt_nn_by_nq_a_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>)
-} <span class="kw">else</span> <span class="kw">if</span> (<span class="no">it_test</span> <span class="kw">==</span> <span class="fl">6</span>) {
+  <span class="va">ar_nn_a</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4.342501</span>, <span class="fl">4.359987</span><span class="op">)</span>
+  <span class="va">ar_nn_alpha</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.006686704</span>,<span class="fl">0.009251407</span><span class="op">)</span>
+  <span class="va">mt_nn_by_nq_a_alpha</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">ar_nn_a</span>, <span class="va">ar_nn_alpha</span><span class="op">)</span>
+<span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">it_test</span> <span class="op">==</span> <span class="fl">6</span><span class="op">)</span> <span class="op">{</span>
   <span class="co"># graph b</span>
   <span class="co"># input group two, from the project</span>
-  <span class="no">ls_opti_alpha_a</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/ffy_opt_dtgch_cbem4.html">ffy_opt_dtgch_cbem4</a></span>()
-  <span class="no">df_esti</span> <span class="kw">&lt;-</span> <span class="no">ls_opti_alpha_a</span>$<span class="no">df_esti</span>
-  <span class="no">df_dtgch_cbem4_bisec</span> <span class="kw">&lt;-</span> <span class="no">df_esti</span>[, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'A_log'</span>, <span class="st">'alpha_log'</span>)]
-  <span class="no">ar_nn_a</span> <span class="kw">&lt;-</span> <span class="no">df_dtgch_cbem4_bisec</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">A_log</span>)
-  <span class="no">ar_nn_alpha</span> <span class="kw">&lt;-</span> <span class="no">df_dtgch_cbem4_bisec</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">alpha_log</span>)
-  <span class="no">mt_nn_by_nq_a_alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>)
-}</pre></body></html></div>
+  <span class="va">ls_opti_alpha_a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ffy_opt_dtgch_cbem4.html">ffy_opt_dtgch_cbem4</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="va">df_esti</span> <span class="op">&lt;-</span> <span class="va">ls_opti_alpha_a</span><span class="op">$</span><span class="va">df_esti</span>
+  <span class="va">df_dtgch_cbem4_bisec</span> <span class="op">&lt;-</span> <span class="va">df_esti</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'A_log'</span>, <span class="st">'alpha_log'</span><span class="op">)</span><span class="op">]</span>
+  <span class="va">ar_nn_a</span> <span class="op">&lt;-</span> <span class="va">df_dtgch_cbem4_bisec</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">A_log</span><span class="op">)</span>
+  <span class="va">ar_nn_alpha</span> <span class="op">&lt;-</span> <span class="va">df_dtgch_cbem4_bisec</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">alpha_log</span><span class="op">)</span>
+  <span class="va">mt_nn_by_nq_a_alpha</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">ar_nn_a</span>, <span class="va">ar_nn_alpha</span><span class="op">)</span>
+<span class="op">}</span></pre></div>
 <pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
 ## Using compatibility `.name_repair`.
 ## This warning is displayed once every 8 hours.
@@ -269,30 +271,32 @@ The root search is very fast when initial condition is zero.
 <div id="expand-matrix" class="section level3">
 <h3 class="hasAnchor">
 <a href="#expand-matrix" class="anchor"></a>expand matrix</h3>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># choice grid for nutritional feasible choices for each</span>
-<span class="no">it_n_choice_cnt_ttest</span> <span class="kw">=</span> <span class="fl">3</span>
-<span class="no">it_n_choice_cnt_dense</span> <span class="kw">=</span> <span class="fl">100</span>
-<span class="no">ar_n_choices_ttest</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="no">fl_n_min</span>, <span class="no">fl_n_agg</span>, <span class="kw">length.out</span> <span class="kw">=</span> <span class="no">it_n_choice_cnt_ttest</span>)
-<span class="no">ar_n_choices_dense</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="no">fl_n_min</span>, <span class="no">fl_n_agg</span>, <span class="kw">length.out</span> <span class="kw">=</span> <span class="no">it_n_choice_cnt_dense</span>)
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="co"># choice grid for nutritional feasible choices for each</span>
+<span class="va">it_n_choice_cnt_ttest</span> <span class="op">=</span> <span class="fl">3</span>
+<span class="va">it_n_choice_cnt_dense</span> <span class="op">=</span> <span class="fl">100</span>
+<span class="va">ar_n_choices_ttest</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">fl_n_min</span>, <span class="va">fl_n_agg</span>, length.out <span class="op">=</span> <span class="va">it_n_choice_cnt_ttest</span><span class="op">)</span>
+<span class="va">ar_n_choices_dense</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">fl_n_min</span>, <span class="va">fl_n_agg</span>, length.out <span class="op">=</span> <span class="va">it_n_choice_cnt_dense</span><span class="op">)</span>
 
 <span class="co"># mesh expand</span>
-<span class="no">tb_states_choices</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span>(<span class="no">mt_nn_by_nq_a_alpha</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rowid_to_column</a></span>(<span class="kw">var</span><span class="kw">=</span><span class="no">svr_id_var</span>)
-<span class="no">tb_states_choices_ttest</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html">sample_n</a></span>(<span class="fl">9</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="fl">FALSE</span>) <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://tidyr.tidyverse.org/reference/expand_grid.html">expand_grid</a></span>(<span class="kw">choices</span> <span class="kw">=</span> <span class="no">ar_n_choices_ttest</span>)
-<span class="no">tb_states_choices_dense</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html">sample_n</a></span>(<span class="fl">9</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="fl">FALSE</span>) <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://tidyr.tidyverse.org/reference/expand_grid.html">expand_grid</a></span>(<span class="kw">choices</span> <span class="kw">=</span> <span class="no">ar_n_choices_dense</span>)
+<span class="va">tb_states_choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">mt_nn_by_nq_a_alpha</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rowid_to_column</a></span><span class="op">(</span>var<span class="op">=</span><span class="va">svr_id_var</span><span class="op">)</span>
+<span class="va">tb_states_choices_ttest</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html">sample_n</a></span><span class="op">(</span><span class="fl">9</span>, replace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                              <span class="fu"><a href="https://tidyr.tidyverse.org/reference/expand_grid.html">expand_grid</a></span><span class="op">(</span>choices <span class="op">=</span> <span class="va">ar_n_choices_ttest</span><span class="op">)</span>
+<span class="va">tb_states_choices_dense</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html">sample_n</a></span><span class="op">(</span><span class="fl">9</span>, replace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                              <span class="fu"><a href="https://tidyr.tidyverse.org/reference/expand_grid.html">expand_grid</a></span><span class="op">(</span>choices <span class="op">=</span> <span class="va">ar_n_choices_dense</span><span class="op">)</span>
 
 <span class="co"># display</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_states_choices_dense</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">tb_states_choices_dense</span><span class="op">)</span></pre></div>
 <pre><code>##     indi_id         ar_nn_a       ar_nn_alpha          choices   
-##  Min.   : 36.0   Min.   :4.322   Min.   :0.006687   Min.   :  0  
-##  1st Qu.:430.0   1st Qu.:4.326   1st Qu.:0.006687   1st Qu.: 25  
-##  Median :646.0   Median :4.339   Median :0.006687   Median : 50  
-##  Mean   :626.6   Mean   :4.337   Mean   :0.009499   Mean   : 50  
-##  3rd Qu.:891.0   3rd Qu.:4.347   3rd Qu.:0.012090   3rd Qu.: 75  
-##  Max.   :971.0   Max.   :4.350   Max.   :0.013940   Max.   :100</code></pre>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">tb_states_choices_ttest</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span>(<span class="kw">bootstrap_options</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</pre></body></html></div>
+##  Min.   : 40.0   Min.   :4.326   Min.   :0.006687   Min.   :  0  
+##  1st Qu.:139.0   1st Qu.:4.333   1st Qu.:0.006687   1st Qu.: 25  
+##  Median :557.0   Median :4.339   Median :0.012090   Median : 50  
+##  Mean   :431.8   Mean   :4.340   Mean   :0.010511   Mean   : 50  
+##  3rd Qu.:675.0   3rd Qu.:4.351   3rd Qu.:0.013940   3rd Qu.: 75  
+##  Max.   :890.0   Max.   :4.353   Max.   :0.013940   Max.   :100</code></pre>
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">tb_states_choices_ttest</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <table class="table table table-striped table-hover table-condensed table-responsive">
 <thead><tr>
 <th style="text-align:right;">
@@ -311,178 +315,10 @@ choices
 <tbody>
 <tr>
 <td style="text-align:right;">
-569
+472
 </td>
 <td style="text-align:right;">
-4.353875
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-569
-</td>
-<td style="text-align:right;">
-4.353875
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-569
-</td>
-<td style="text-align:right;">
-4.353875
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-760
-</td>
-<td style="text-align:right;">
-4.347554
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-760
-</td>
-<td style="text-align:right;">
-4.347554
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-760
-</td>
-<td style="text-align:right;">
-4.347554
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-444
-</td>
-<td style="text-align:right;">
-4.350878
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-444
-</td>
-<td style="text-align:right;">
-4.350878
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-444
-</td>
-<td style="text-align:right;">
-4.350878
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-200
-</td>
-<td style="text-align:right;">
-4.343393
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-200
-</td>
-<td style="text-align:right;">
-4.343393
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-200
-</td>
-<td style="text-align:right;">
-4.343393
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-554
-</td>
-<td style="text-align:right;">
-4.351171
+4.354600
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -493,136 +329,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-554
+472
 </td>
 <td style="text-align:right;">
-4.351171
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-554
-</td>
-<td style="text-align:right;">
-4.351171
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-457
-</td>
-<td style="text-align:right;">
-4.324023
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-457
-</td>
-<td style="text-align:right;">
-4.324023
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-457
-</td>
-<td style="text-align:right;">
-4.324023
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-146
-</td>
-<td style="text-align:right;">
-4.348395
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-146
-</td>
-<td style="text-align:right;">
-4.348395
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-146
-</td>
-<td style="text-align:right;">
-4.348395
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-79
-</td>
-<td style="text-align:right;">
-4.349776
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-79
-</td>
-<td style="text-align:right;">
-4.349776
+4.354600
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -633,10 +343,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-79
+472
 </td>
 <td style="text-align:right;">
-4.349776
+4.354600
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -647,10 +357,220 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-212
+838
 </td>
 <td style="text-align:right;">
-4.345944
+4.329996
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+838
+</td>
+<td style="text-align:right;">
+4.329996
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+838
+</td>
+<td style="text-align:right;">
+4.329996
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+656
+</td>
+<td style="text-align:right;">
+4.333083
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+656
+</td>
+<td style="text-align:right;">
+4.333083
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+656
+</td>
+<td style="text-align:right;">
+4.333083
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+230
+</td>
+<td style="text-align:right;">
+4.359442
+</td>
+<td style="text-align:right;">
+0.0092514
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+230
+</td>
+<td style="text-align:right;">
+4.359442
+</td>
+<td style="text-align:right;">
+0.0092514
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+230
+</td>
+<td style="text-align:right;">
+4.359442
+</td>
+<td style="text-align:right;">
+0.0092514
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+367
+</td>
+<td style="text-align:right;">
+4.286567
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+367
+</td>
+<td style="text-align:right;">
+4.286567
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+367
+</td>
+<td style="text-align:right;">
+4.286567
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+72
+</td>
+<td style="text-align:right;">
+4.349961
+</td>
+<td style="text-align:right;">
+0.0139396
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+72
+</td>
+<td style="text-align:right;">
+4.349961
+</td>
+<td style="text-align:right;">
+0.0139396
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+72
+</td>
+<td style="text-align:right;">
+4.349961
+</td>
+<td style="text-align:right;">
+0.0139396
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+637
+</td>
+<td style="text-align:right;">
+4.325891
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -661,10 +581,10 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-212
+637
 </td>
 <td style="text-align:right;">
-4.345944
+4.325891
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -675,10 +595,94 @@ choices
 </tr>
 <tr>
 <td style="text-align:right;">
-212
+637
 </td>
 <td style="text-align:right;">
-4.345944
+4.325891
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+256
+</td>
+<td style="text-align:right;">
+4.347588
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+256
+</td>
+<td style="text-align:right;">
+4.347588
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+256
+</td>
+<td style="text-align:right;">
+4.347588
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+781
+</td>
+<td style="text-align:right;">
+4.349422
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+781
+</td>
+<td style="text-align:right;">
+4.349422
+</td>
+<td style="text-align:right;">
+0.0066867
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+781
+</td>
+<td style="text-align:right;">
+4.349422
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -697,15 +701,16 @@ choices
 <div id="points-and-denser-dataframs-and-define-function" class="section level3">
 <h3 class="hasAnchor">
 <a href="#points-and-denser-dataframs-and-define-function" class="anchor"></a>3 points and denser dataframs and define function</h3>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># convert matrix to tibble</span>
-<span class="no">ar_st_col_names</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">svr_id_var</span>,<span class="st">'fl_a'</span>, <span class="st">'fl_alpha'</span>)
-<span class="no">tb_states_choices</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span>(~<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ar_st_col_names</span>))
-<span class="no">ar_st_col_names</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">svr_id_var</span>,<span class="st">'fl_a'</span>, <span class="st">'fl_alpha'</span>, <span class="st">'fl_n'</span>)
-<span class="no">tb_states_choices_ttest</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_ttest</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span>(~<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ar_st_col_names</span>))
-<span class="no">tb_states_choices_dense</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_dense</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span>(~<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ar_st_col_names</span>))
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="co"># convert matrix to tibble</span>
+<span class="va">ar_st_col_names</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">svr_id_var</span>,<span class="st">'fl_a'</span>, <span class="st">'fl_alpha'</span><span class="op">)</span>
+<span class="va">tb_states_choices</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">ar_st_col_names</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_st_col_names</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">svr_id_var</span>,<span class="st">'fl_a'</span>, <span class="st">'fl_alpha'</span>, <span class="st">'fl_n'</span><span class="op">)</span>
+<span class="va">tb_states_choices_ttest</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices_ttest</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">ar_st_col_names</span><span class="op">)</span><span class="op">)</span>
+<span class="va">tb_states_choices_dense</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices_dense</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">ar_st_col_names</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># define implicit function</span>
-<span class="no">ffi_nonlin_dplyrdo</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">fl_a</span>, <span class="no">fl_alpha</span>, <span class="no">fl_n</span>, <span class="no">ar_a</span>, <span class="no">ar_alpha</span>, <span class="no">fl_n_agg</span>, <span class="no">fl_rho</span>){
+<span class="va">ffi_nonlin_dplyrdo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fl_a</span>, <span class="va">fl_alpha</span>, <span class="va">fl_n</span>, <span class="va">ar_a</span>, <span class="va">ar_alpha</span>, <span class="va">fl_n_agg</span>, <span class="va">fl_rho</span><span class="op">)</span><span class="op">{</span>
   <span class="co"># scalar value that are row-specific, in dataframe already: *fl_a*, *fl_alpha*, *fl_n*</span>
   <span class="co"># array and scalars not in dataframe, common all rows: *ar_a*, *ar_alpha*, *fl_n_agg*, *fl_rho*</span>
 
@@ -717,29 +722,30 @@ choices
   <span class="co"># fl_n_q = 10</span>
 
   <span class="co"># apply function</span>
-  <span class="no">ar_p1_s1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span>((<span class="no">fl_a</span> - <span class="no">ar_a</span>)*<span class="no">fl_rho</span>)
-  <span class="no">ar_p1_s2</span> <span class="kw">=</span> (<span class="no">fl_alpha</span>/<span class="no">ar_alpha</span>)
-  <span class="no">ar_p1_s3</span> <span class="kw">=</span> (<span class="fl">1</span>/(<span class="no">ar_alpha</span>*<span class="no">fl_rho</span> - <span class="fl">1</span>))
-  <span class="no">ar_p1</span> <span class="kw">=</span> (<span class="no">ar_p1_s1</span>*<span class="no">ar_p1_s2</span>)^<span class="no">ar_p1_s3</span>
-  <span class="no">ar_p2</span> <span class="kw">=</span> <span class="no">fl_n</span>^((<span class="no">fl_alpha</span>*<span class="no">fl_rho</span>-<span class="fl">1</span>)/(<span class="no">ar_alpha</span>*<span class="no">fl_rho</span>-<span class="fl">1</span>))
-  <span class="no">ar_overall</span> <span class="kw">=</span> <span class="no">ar_p1</span>*<span class="no">ar_p2</span>
-  <span class="no">fl_overall</span> <span class="kw">=</span> <span class="no">fl_n_agg</span> - <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">ar_overall</span>)
+  <span class="va">ar_p1_s1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="op">(</span><span class="va">fl_a</span> <span class="op">-</span> <span class="va">ar_a</span><span class="op">)</span><span class="op">*</span><span class="va">fl_rho</span><span class="op">)</span>
+  <span class="va">ar_p1_s2</span> <span class="op">=</span> <span class="op">(</span><span class="va">fl_alpha</span><span class="op">/</span><span class="va">ar_alpha</span><span class="op">)</span>
+  <span class="va">ar_p1_s3</span> <span class="op">=</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="va">ar_alpha</span><span class="op">*</span><span class="va">fl_rho</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">ar_p1</span> <span class="op">=</span> <span class="op">(</span><span class="va">ar_p1_s1</span><span class="op">*</span><span class="va">ar_p1_s2</span><span class="op">)</span><span class="op">^</span><span class="va">ar_p1_s3</span>
+  <span class="va">ar_p2</span> <span class="op">=</span> <span class="va">fl_n</span><span class="op">^</span><span class="op">(</span><span class="op">(</span><span class="va">fl_alpha</span><span class="op">*</span><span class="va">fl_rho</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">ar_alpha</span><span class="op">*</span><span class="va">fl_rho</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">ar_overall</span> <span class="op">=</span> <span class="va">ar_p1</span><span class="op">*</span><span class="va">ar_p2</span>
+  <span class="va">fl_overall</span> <span class="op">=</span> <span class="va">fl_n_agg</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ar_overall</span><span class="op">)</span>
 
-  <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">fl_overall</span>)
-}</pre></body></html></div>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">fl_overall</span><span class="op">)</span>
+<span class="op">}</span></pre></div>
 </div>
 <div id="evaluate-at-three-choice-points-and-show-table" class="section level3">
 <h3 class="hasAnchor">
 <a href="#evaluate-at-three-choice-points-and-show-table" class="anchor"></a>evaluate at three choice points and show table</h3>
 <p>in the example below, just show results evaluating over three choice points and show table.</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># fl_a, fl_alpha are from columns of tb_nn_by_nq_a_alpha</span>
-<span class="no">tb_states_choices_ttest_eval</span> <span class="kw">=</span> <span class="no">tb_states_choices_ttest</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html">rowwise</a></span>() <span class="kw">%&gt;%</span>
-                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">dplyr_eval</span> <span class="kw">=</span> <span class="fu">ffi_nonlin_dplyrdo</span>(<span class="no">fl_a</span>, <span class="no">fl_alpha</span>, <span class="no">fl_n</span>,
-                                                               <span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>,
-                                                               <span class="no">fl_n_agg</span>, <span class="no">fl_rho</span>))
+<div class="sourceCode" id="cb10"><pre class="downlit">
+<span class="co"># fl_a, fl_alpha are from columns of tb_nn_by_nq_a_alpha</span>
+<span class="va">tb_states_choices_ttest_eval</span> <span class="op">=</span> <span class="va">tb_states_choices_ttest</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>dplyr_eval <span class="op">=</span> <span class="fu">ffi_nonlin_dplyrdo</span><span class="op">(</span><span class="va">fl_a</span>, <span class="va">fl_alpha</span>, <span class="va">fl_n</span>,
+                                                               <span class="va">ar_nn_a</span>, <span class="va">ar_nn_alpha</span>,
+                                                               <span class="va">fl_n_agg</span>, <span class="va">fl_rho</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># show</span>
-<span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">tb_states_choices_ttest_eval</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span>(<span class="kw">bootstrap_options</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">tb_states_choices_ttest_eval</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <table class="table table table-striped table-hover table-condensed table-responsive">
 <thead><tr>
 <th style="text-align:right;">
@@ -761,214 +767,10 @@ dplyr_eval
 <tbody>
 <tr>
 <td style="text-align:right;">
-569
+472
 </td>
 <td style="text-align:right;">
-4.353875
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-569
-</td>
-<td style="text-align:right;">
-4.353875
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--58088.01
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-569
-</td>
-<td style="text-align:right;">
-4.353875
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--116306.75
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-760
-</td>
-<td style="text-align:right;">
-4.347554
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-760
-</td>
-<td style="text-align:right;">
-4.347554
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--80729.15
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-760
-</td>
-<td style="text-align:right;">
-4.347554
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--161658.62
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-444
-</td>
-<td style="text-align:right;">
-4.350878
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-444
-</td>
-<td style="text-align:right;">
-4.350878
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--58122.97
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-444
-</td>
-<td style="text-align:right;">
-4.350878
-</td>
-<td style="text-align:right;">
-0.0092514
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--116376.68
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-200
-</td>
-<td style="text-align:right;">
-4.343393
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-200
-</td>
-<td style="text-align:right;">
-4.343393
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--80796.59
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-200
-</td>
-<td style="text-align:right;">
-4.343393
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--161793.59
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-554
-</td>
-<td style="text-align:right;">
-4.351171
+4.354600
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -982,10 +784,10 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-554
+472
 </td>
 <td style="text-align:right;">
-4.351171
+4.354600
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -994,15 +796,15 @@ dplyr_eval
 50
 </td>
 <td style="text-align:right;">
--38362.11
+-38335.68
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-554
+472
 </td>
 <td style="text-align:right;">
-4.351171
+4.354600
 </td>
 <td style="text-align:right;">
 0.0139396
@@ -1011,15 +813,270 @@ dplyr_eval
 100
 </td>
 <td style="text-align:right;">
--76794.42
+-76741.59
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-457
+838
 </td>
 <td style="text-align:right;">
-4.324023
+4.329996
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+838
+</td>
+<td style="text-align:right;">
+4.329996
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-44512.95
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+838
+</td>
+<td style="text-align:right;">
+4.329996
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-89114.26
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+656
+</td>
+<td style="text-align:right;">
+4.333083
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+656
+</td>
+<td style="text-align:right;">
+4.333083
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-44485.35
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+656
+</td>
+<td style="text-align:right;">
+4.333083
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-89059.07
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+230
+</td>
+<td style="text-align:right;">
+4.359442
+</td>
+<td style="text-align:right;">
+0.0092514
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+230
+</td>
+<td style="text-align:right;">
+4.359442
+</td>
+<td style="text-align:right;">
+0.0092514
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-58023.11
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+230
+</td>
+<td style="text-align:right;">
+4.359442
+</td>
+<td style="text-align:right;">
+0.0092514
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-116176.91
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+367
+</td>
+<td style="text-align:right;">
+4.286567
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+367
+</td>
+<td style="text-align:right;">
+4.286567
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-44903.01
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+367
+</td>
+<td style="text-align:right;">
+4.286567
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-89894.29
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+72
+</td>
+<td style="text-align:right;">
+4.349961
+</td>
+<td style="text-align:right;">
+0.0139396
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+72
+</td>
+<td style="text-align:right;">
+4.349961
+</td>
+<td style="text-align:right;">
+0.0139396
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-38371.44
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+72
+</td>
+<td style="text-align:right;">
+4.349961
+</td>
+<td style="text-align:right;">
+0.0139396
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-76813.08
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+637
+</td>
+<td style="text-align:right;">
+4.325891
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -1033,10 +1090,10 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-457
+637
 </td>
 <td style="text-align:right;">
-4.324023
+4.325891
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -1045,15 +1102,15 @@ dplyr_eval
 50
 </td>
 <td style="text-align:right;">
--81111.29
+-81080.90
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-457
+637
 </td>
 <td style="text-align:right;">
-4.324023
+4.325891
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -1062,15 +1119,66 @@ dplyr_eval
 100
 </td>
 <td style="text-align:right;">
--162423.38
+-162362.56
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-146
+256
 </td>
 <td style="text-align:right;">
-4.348395
+4.347588
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+100.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+256
+</td>
+<td style="text-align:right;">
+4.347588
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-44355.91
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+256
+</td>
+<td style="text-align:right;">
+4.347588
+</td>
+<td style="text-align:right;">
+0.0120902
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-88800.22
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+781
+</td>
+<td style="text-align:right;">
+4.349422
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -1084,112 +1192,10 @@ dplyr_eval
 </tr>
 <tr>
 <td style="text-align:right;">
-146
+781
 </td>
 <td style="text-align:right;">
-4.348395
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--80715.52
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-146
-</td>
-<td style="text-align:right;">
-4.348395
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--161631.35
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-79
-</td>
-<td style="text-align:right;">
-4.349776
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-79
-</td>
-<td style="text-align:right;">
-4.349776
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
--38372.86
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-79
-</td>
-<td style="text-align:right;">
-4.349776
-</td>
-<td style="text-align:right;">
-0.0139396
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--76815.92
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-212
-</td>
-<td style="text-align:right;">
-4.345944
-</td>
-<td style="text-align:right;">
-0.0066867
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-100.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-212
-</td>
-<td style="text-align:right;">
-4.345944
+4.349422
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -1198,15 +1204,15 @@ dplyr_eval
 50
 </td>
 <td style="text-align:right;">
--80755.23
+-80698.89
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-212
+781
 </td>
 <td style="text-align:right;">
-4.345944
+4.349422
 </td>
 <td style="text-align:right;">
 0.0066867
@@ -1215,7 +1221,7 @@ dplyr_eval
 100
 </td>
 <td style="text-align:right;">
--161710.82
+-161598.06
 </td>
 </tr>
 </tbody>
@@ -1225,39 +1231,43 @@ dplyr_eval
 <h3 class="hasAnchor">
 <a href="#evaluate-at-many-choice-points-and-show-graphically" class="anchor"></a>evaluate at many choice points and show graphically</h3>
 <p>same as above, but now we evaluate the function over the individuals at many choice points so that we can graph things out.</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co"># fl_a, fl_alpha are from columns of tb_nn_by_nq_a_alpha</span>
-<span class="no">tb_states_choices_dense_eval</span> <span class="kw">=</span> <span class="no">tb_states_choices_dense</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html">rowwise</a></span>() <span class="kw">%&gt;%</span>
-                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">dplyr_eval</span> <span class="kw">=</span> <span class="fu">ffi_nonlin_dplyrdo</span>(<span class="no">fl_a</span>, <span class="no">fl_alpha</span>, <span class="no">fl_n</span>,
-                                                               <span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>,
-                                                               <span class="no">fl_n_agg</span>, <span class="no">fl_rho</span>))</pre></body></html></div>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># show</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">tb_states_choices_dense_eval</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb11"><pre class="downlit">
+<span class="co"># fl_a, fl_alpha are from columns of tb_nn_by_nq_a_alpha</span>
+<span class="va">tb_states_choices_dense_eval</span> <span class="op">=</span> <span class="va">tb_states_choices_dense</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>dplyr_eval <span class="op">=</span> <span class="fu">ffi_nonlin_dplyrdo</span><span class="op">(</span><span class="va">fl_a</span>, <span class="va">fl_alpha</span>, <span class="va">fl_n</span>,
+                                                               <span class="va">ar_nn_a</span>, <span class="va">ar_nn_alpha</span>,
+                                                               <span class="va">fl_n_agg</span>, <span class="va">fl_rho</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="co"># show</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">tb_states_choices_dense_eval</span><span class="op">)</span></pre></div>
 <pre><code>## [1] 900   5</code></pre>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_states_choices_dense_eval</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb14"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">tb_states_choices_dense_eval</span><span class="op">)</span></pre></div>
 <pre><code>##     indi_id           fl_a          fl_alpha             fl_n    
-##  Min.   : 36.0   Min.   :4.322   Min.   :0.006687   Min.   :  0  
-##  1st Qu.:430.0   1st Qu.:4.326   1st Qu.:0.006687   1st Qu.: 25  
-##  Median :646.0   Median :4.339   Median :0.006687   Median : 50  
-##  Mean   :626.6   Mean   :4.337   Mean   :0.009499   Mean   : 50  
-##  3rd Qu.:891.0   3rd Qu.:4.347   3rd Qu.:0.012090   3rd Qu.: 75  
-##  Max.   :971.0   Max.   :4.350   Max.   :0.013940   Max.   :100  
+##  Min.   : 40.0   Min.   :4.326   Min.   :0.006687   Min.   :  0  
+##  1st Qu.:139.0   1st Qu.:4.333   1st Qu.:0.006687   1st Qu.: 25  
+##  Median :557.0   Median :4.339   Median :0.012090   Median : 50  
+##  Mean   :431.8   Mean   :4.340   Mean   :0.010511   Mean   : 50  
+##  3rd Qu.:675.0   3rd Qu.:4.351   3rd Qu.:0.013940   3rd Qu.: 75  
+##  Max.   :890.0   Max.   :4.353   Max.   :0.013940   Max.   :100  
 ##    dplyr_eval     
-##  Min.   :-162506  
-##  1st Qu.: -89384  
-##  Median : -56698  
-##  Mean   : -63391  
-##  3rd Qu.: -27857  
+##  Min.   :-162352  
+##  1st Qu.: -76877  
+##  Median : -51159  
+##  Mean   : -57996  
+##  3rd Qu.: -25427  
 ##  Max.   :    100</code></pre>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">lineplot</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_dense_eval</span> <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span><span class="no">fl_n</span>, <span class="kw">y</span><span class="kw">=</span><span class="no">dplyr_eval</span>)) +
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>() +
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>( <span class="no">.</span> ~ <span class="no">indi_id</span>, <span class="kw">scales</span> <span class="kw">=</span> <span class="st">"free"</span>) +
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="kw">yintercept</span><span class="kw">=</span><span class="fl">0</span>, <span class="kw">linetype</span><span class="kw">=</span><span class="st">"dashed"</span>,
-                <span class="kw">color</span> <span class="kw">=</span> <span class="st">"red"</span>, <span class="kw">size</span><span class="kw">=</span><span class="fl">1</span>)
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">'evaluate non-linear functions to search for roots'</span>,
-             <span class="kw">x</span> <span class="kw">=</span> <span class="st">'x values'</span>,
-             <span class="kw">y</span> <span class="kw">=</span> <span class="st">'f(x)'</span>,
-             <span class="kw">caption</span> <span class="kw">=</span> <span class="st">'evaluating the function'</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb16"><pre class="downlit">
+<span class="va">lineplot</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices_dense_eval</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">fl_n</span>, y<span class="op">=</span><span class="va">dplyr_eval</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span> <span class="va">.</span> <span class="op">~</span> <span class="va">indi_id</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span><span class="op">(</span>yintercept<span class="op">=</span><span class="fl">0</span>, linetype<span class="op">=</span><span class="st">"dashed"</span>,
+                color <span class="op">=</span> <span class="st">"red"</span>, size<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'evaluate non-linear functions to search for roots'</span>,
+             x <span class="op">=</span> <span class="st">'x values'</span>,
+             y <span class="op">=</span> <span class="st">'f(x)'</span>,
+             caption <span class="op">=</span> <span class="st">'evaluating the function'</span><span class="op">)</span></pre></div>
 <pre><code>## $x
 ## [1] "x values"
 ## 
@@ -1272,7 +1282,8 @@ dplyr_eval
 ## 
 ## attr(,"class")
 ## [1] "labels"</code></pre>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">lineplot</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb18"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">lineplot</span><span class="op">)</span></pre></div>
 <p><img src="ffv_opt_solog_bisec_allrw_files/figure-html/graph%20many%20evaluations-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -1283,29 +1294,31 @@ dplyr_eval
 <h3 class="hasAnchor">
 <a href="#initialize-matrix" class="anchor"></a>initialize matrix</h3>
 <p>first, initialize the matrix with <span class="math inline">\(a_0\)</span> and <span class="math inline">\(b_0\)</span>, the initial min and max points:</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="co"># common prefix to make reshaping easier</span>
-<span class="no">st_bisec_prefix</span> <span class="kw">&lt;-</span> <span class="st">'bisec_'</span>
-<span class="no">svr_a_lst</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">st_bisec_prefix</span>, <span class="st">'a_0'</span>)
-<span class="no">svr_b_lst</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">st_bisec_prefix</span>, <span class="st">'b_0'</span>)
-<span class="no">svr_fa_lst</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">st_bisec_prefix</span>, <span class="st">'fa_0'</span>)
-<span class="no">svr_fb_lst</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">st_bisec_prefix</span>, <span class="st">'fb_0'</span>)
+<div class="sourceCode" id="cb19"><pre class="downlit">
+<span class="co"># common prefix to make reshaping easier</span>
+<span class="va">st_bisec_prefix</span> <span class="op">&lt;-</span> <span class="st">'bisec_'</span>
+<span class="va">svr_a_lst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">st_bisec_prefix</span>, <span class="st">'a_0'</span><span class="op">)</span>
+<span class="va">svr_b_lst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">st_bisec_prefix</span>, <span class="st">'b_0'</span><span class="op">)</span>
+<span class="va">svr_fa_lst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">st_bisec_prefix</span>, <span class="st">'fa_0'</span><span class="op">)</span>
+<span class="va">svr_fb_lst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">st_bisec_prefix</span>, <span class="st">'fb_0'</span><span class="op">)</span>
 
 <span class="co"># add initial a and b</span>
-<span class="no">tb_states_choices_bisec</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices</span> <span class="kw">%&gt;%</span>
-                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_a_lst</span>) <span class="kw">:=</span> <span class="no">fl_n_min</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_b_lst</span>) <span class="kw">:=</span> <span class="no">fl_n_agg</span>)
+<span class="va">tb_states_choices_bisec</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices</span> <span class="op">%&gt;%</span>
+                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_a_lst</span><span class="op">)</span> <span class="op">:=</span> <span class="va">fl_n_min</span>, <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_b_lst</span><span class="op">)</span> <span class="op">:=</span> <span class="va">fl_n_agg</span><span class="op">)</span>
 
 <span class="co"># evaluate function f(a_0) and f(b_0)</span>
-<span class="no">tb_states_choices_bisec</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html">rowwise</a></span>() <span class="kw">%&gt;%</span>
-                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fa_lst</span>) <span class="kw">:=</span> <span class="fu">ffi_nonlin_dplyrdo</span>(<span class="no">fl_a</span>, <span class="no">fl_alpha</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_a_lst</span>),
-                                                                          <span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>,
-                                                                          <span class="no">fl_n_agg</span>, <span class="no">fl_rho</span>),
-                                   !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fb_lst</span>) <span class="kw">:=</span> <span class="fu">ffi_nonlin_dplyrdo</span>(<span class="no">fl_a</span>, <span class="no">fl_alpha</span>, !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_b_lst</span>),
-                                                                          <span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>,
-                                                                          <span class="no">fl_n_agg</span>, <span class="no">fl_rho</span>))
+<span class="va">tb_states_choices_bisec</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices_bisec</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_fa_lst</span><span class="op">)</span> <span class="op">:=</span> <span class="fu">ffi_nonlin_dplyrdo</span><span class="op">(</span><span class="va">fl_a</span>, <span class="va">fl_alpha</span>, <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_a_lst</span><span class="op">)</span>,
+                                                                          <span class="va">ar_nn_a</span>, <span class="va">ar_nn_alpha</span>,
+                                                                          <span class="va">fl_n_agg</span>, <span class="va">fl_rho</span><span class="op">)</span>,
+                                   <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_fb_lst</span><span class="op">)</span> <span class="op">:=</span> <span class="fu">ffi_nonlin_dplyrdo</span><span class="op">(</span><span class="va">fl_a</span>, <span class="va">fl_alpha</span>, <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_b_lst</span><span class="op">)</span>,
+                                                                          <span class="va">ar_nn_a</span>, <span class="va">ar_nn_alpha</span>,
+                                                                          <span class="va">fl_n_agg</span>, <span class="va">fl_rho</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># summarize</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">tb_states_choices_bisec</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec</span><span class="op">)</span></pre></div>
 <pre><code>## [1] 1043    7</code></pre>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_states_choices_bisec</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb21"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec</span><span class="op">)</span></pre></div>
 <pre><code>##     indi_id            fl_a          fl_alpha          bisec_a_0   bisec_b_0  
 ##  Min.   :   1.0   Min.   :4.287   Min.   :0.006687   Min.   :0   Min.   :100  
 ##  1st Qu.: 261.5   1st Qu.:4.334   1st Qu.:0.006687   1st Qu.:0   1st Qu.:100  
@@ -1325,62 +1338,63 @@ dplyr_eval
 <h3 class="hasAnchor">
 <a href="#iterate-and-solve-for-fp-update-fa-and-fb" class="anchor"></a>iterate and solve for f(p), update f(a) and f(b)</h3>
 <p>implement the dplyr based concurrent bisection algorithm.</p>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="co"># fl_tol = float tolerance criteria</span>
+<div class="sourceCode" id="cb23"><pre class="downlit">
+<span class="co"># fl_tol = float tolerance criteria</span>
 <span class="co"># it_tol = number of interations to allow at most</span>
-<span class="no">fl_tol</span> <span class="kw">&lt;-</span> <span class="fl">10</span>^-<span class="fl">6</span>
-<span class="no">it_tol</span> <span class="kw">&lt;-</span> <span class="fl">100</span>
+<span class="va">fl_tol</span> <span class="op">&lt;-</span> <span class="fl">10</span><span class="op">^</span><span class="op">-</span><span class="fl">6</span>
+<span class="va">it_tol</span> <span class="op">&lt;-</span> <span class="fl">100</span>
 <span class="co"># fl_p_dist2zr = distance to zero to initalize</span>
-<span class="no">fl_p_dist2zr</span> <span class="kw">&lt;-</span> <span class="fl">1000</span>
-<span class="no">it_cur</span> <span class="kw">&lt;-</span> <span class="fl">0</span>
-<span class="kw">while</span> (<span class="no">it_cur</span> <span class="kw">&lt;=</span> <span class="no">it_tol</span> <span class="kw">&amp;&amp;</span> <span class="no">fl_p_dist2zr</span> <span class="kw">&gt;=</span> <span class="no">fl_tol</span> ) {
+<span class="va">fl_p_dist2zr</span> <span class="op">&lt;-</span> <span class="fl">1000</span>
+<span class="va">it_cur</span> <span class="op">&lt;-</span> <span class="fl">0</span>
+<span class="kw">while</span> <span class="op">(</span><span class="va">it_cur</span> <span class="op">&lt;=</span> <span class="va">it_tol</span> <span class="op">&amp;&amp;</span> <span class="va">fl_p_dist2zr</span> <span class="op">&gt;=</span> <span class="va">fl_tol</span> <span class="op">)</span> <span class="op">{</span>
 
-  <span class="no">it_cur</span> <span class="kw">&lt;-</span> <span class="no">it_cur</span> + <span class="fl">1</span>
+  <span class="va">it_cur</span> <span class="op">&lt;-</span> <span class="va">it_cur</span> <span class="op">+</span> <span class="fl">1</span>
 
   <span class="co"># new variables</span>
-  <span class="no">svr_a_cur</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">st_bisec_prefix</span>, <span class="st">'a_'</span>, <span class="no">it_cur</span>)
-  <span class="no">svr_b_cur</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">st_bisec_prefix</span>, <span class="st">'b_'</span>, <span class="no">it_cur</span>)
-  <span class="no">svr_fa_cur</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">st_bisec_prefix</span>, <span class="st">'fa_'</span>, <span class="no">it_cur</span>)
-  <span class="no">svr_fb_cur</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">st_bisec_prefix</span>, <span class="st">'fb_'</span>, <span class="no">it_cur</span>)
+  <span class="va">svr_a_cur</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">st_bisec_prefix</span>, <span class="st">'a_'</span>, <span class="va">it_cur</span><span class="op">)</span>
+  <span class="va">svr_b_cur</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">st_bisec_prefix</span>, <span class="st">'b_'</span>, <span class="va">it_cur</span><span class="op">)</span>
+  <span class="va">svr_fa_cur</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">st_bisec_prefix</span>, <span class="st">'fa_'</span>, <span class="va">it_cur</span><span class="op">)</span>
+  <span class="va">svr_fb_cur</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">st_bisec_prefix</span>, <span class="st">'fb_'</span>, <span class="va">it_cur</span><span class="op">)</span>
 
   <span class="co"># evaluate function f(a_0) and f(b_0)</span>
   <span class="co"># 1. generate p</span>
   <span class="co"># 2. generate f_p</span>
   <span class="co"># 3. generate f_p*f_a</span>
-  <span class="no">tb_states_choices_bisec</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html">rowwise</a></span>() <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">p</span> <span class="kw">=</span> ((!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_a_lst</span>) + !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_b_lst</span>))/<span class="fl">2</span>)) <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">f_p</span> <span class="kw">=</span> <span class="fu">ffi_nonlin_dplyrdo</span>(<span class="no">fl_a</span>, <span class="no">fl_alpha</span>, <span class="no">p</span>,
-                                                              <span class="no">ar_nn_a</span>, <span class="no">ar_nn_alpha</span>,
-                                                              <span class="no">fl_n_agg</span>, <span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">f_p_t_f_a</span> <span class="kw">=</span> <span class="no">f_p</span>*!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fa_lst</span>))
+  <span class="va">tb_states_choices_bisec</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices_bisec</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>p <span class="op">=</span> <span class="op">(</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_a_lst</span><span class="op">)</span> <span class="op">+</span> <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_b_lst</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>f_p <span class="op">=</span> <span class="fu">ffi_nonlin_dplyrdo</span><span class="op">(</span><span class="va">fl_a</span>, <span class="va">fl_alpha</span>, <span class="va">p</span>,
+                                                              <span class="va">ar_nn_a</span>, <span class="va">ar_nn_alpha</span>,
+                                                              <span class="va">fl_n_agg</span>, <span class="va">fl_rho</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>f_p_t_f_a <span class="op">=</span> <span class="va">f_p</span><span class="op">*</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_fa_lst</span><span class="op">)</span><span class="op">)</span>
   <span class="co"># fl_p_dist2zr = sum(abs(p))</span>
-  <span class="no">fl_p_dist2zr</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">f_p</span>)))
+  <span class="va">fl_p_dist2zr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">f_p</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
   <span class="co"># update a and b</span>
-  <span class="no">tb_states_choices_bisec</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_a_cur</span>) <span class="kw">:=</span>
-                                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">f_p_t_f_a</span> <span class="kw">&lt;</span> <span class="fl">0</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_a_lst</span>),
-                                                 <span class="fl">TRUE</span> ~ <span class="no">p</span>)) <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_b_cur</span>) <span class="kw">:=</span>
-                                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">f_p_t_f_a</span> <span class="kw">&lt;</span> <span class="fl">0</span> ~ <span class="no">p</span>,
-                                                 <span class="fl">TRUE</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_b_lst</span>)))
+  <span class="va">tb_states_choices_bisec</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices_bisec</span> <span class="op">%&gt;%</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_a_cur</span><span class="op">)</span> <span class="op">:=</span>
+                                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">f_p_t_f_a</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">~</span> <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_a_lst</span><span class="op">)</span>,
+                                                 <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">p</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_b_cur</span><span class="op">)</span> <span class="op">:=</span>
+                                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">f_p_t_f_a</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">~</span> <span class="va">p</span>,
+                                                 <span class="cn">TRUE</span> <span class="op">~</span> <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_b_lst</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
   <span class="co"># update f(a) and f(b)</span>
-  <span class="no">tb_states_choices_bisec</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fa_cur</span>) <span class="kw">:=</span>
-                                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">f_p_t_f_a</span> <span class="kw">&lt;</span> <span class="fl">0</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fa_lst</span>),
-                                                 <span class="fl">TRUE</span> ~ <span class="no">f_p</span>)) <span class="kw">%&gt;%</span>
-                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fb_cur</span>) <span class="kw">:=</span>
-                                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">f_p_t_f_a</span> <span class="kw">&lt;</span> <span class="fl">0</span> ~ <span class="no">f_p</span>,
-                                                 <span class="fl">TRUE</span> ~ !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_fb_lst</span>)))
+  <span class="va">tb_states_choices_bisec</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices_bisec</span> <span class="op">%&gt;%</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_fa_cur</span><span class="op">)</span> <span class="op">:=</span>
+                                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">f_p_t_f_a</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">~</span> <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_fa_lst</span><span class="op">)</span>,
+                                                 <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">f_p</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_fb_cur</span><span class="op">)</span> <span class="op">:=</span>
+                                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">f_p_t_f_a</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">~</span> <span class="va">f_p</span>,
+                                                 <span class="cn">TRUE</span> <span class="op">~</span> <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_fb_lst</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
   <span class="co"># save from last</span>
-  <span class="no">svr_a_lst</span> <span class="kw">&lt;-</span> <span class="no">svr_a_cur</span>
-  <span class="no">svr_b_lst</span> <span class="kw">&lt;-</span> <span class="no">svr_b_cur</span>
-  <span class="no">svr_fa_lst</span> <span class="kw">&lt;-</span> <span class="no">svr_fa_cur</span>
-  <span class="no">svr_fb_lst</span> <span class="kw">&lt;-</span> <span class="no">svr_fb_cur</span>
+  <span class="va">svr_a_lst</span> <span class="op">&lt;-</span> <span class="va">svr_a_cur</span>
+  <span class="va">svr_b_lst</span> <span class="op">&lt;-</span> <span class="va">svr_b_cur</span>
+  <span class="va">svr_fa_lst</span> <span class="op">&lt;-</span> <span class="va">svr_fa_cur</span>
+  <span class="va">svr_fb_lst</span> <span class="op">&lt;-</span> <span class="va">svr_fb_cur</span>
 
   <span class="co"># summar current round</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'it_cur:'</span>, <span class="no">it_cur</span>, <span class="st">', fl_p_dist2zr:'</span>, <span class="no">fl_p_dist2zr</span>))
-  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="no">svr_a_cur</span>, <span class="no">svr_b_cur</span>, <span class="no">svr_fa_cur</span>, <span class="no">svr_fb_cur</span>)))
-}</pre></body></html></div>
+  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'it_cur:'</span>, <span class="va">it_cur</span>, <span class="st">', fl_p_dist2zr:'</span>, <span class="va">fl_p_dist2zr</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html">one_of</a></span><span class="op">(</span><span class="va">svr_a_cur</span>, <span class="va">svr_b_cur</span>, <span class="va">svr_fa_cur</span>, <span class="va">svr_fb_cur</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span></pre></div>
 <pre><code>## [1] "it_cur:1, fl_p_dist2zr:57065.8515924507"
 ## [1] "it_cur:2, fl_p_dist2zr:28476.0859665553"
 ## [1] "it_cur:3, fl_p_dist2zr:14184.6282193769"
@@ -1424,7 +1438,8 @@ dplyr_eval
 <div id="table-onevery-wide" class="section level4">
 <h4 class="hasAnchor">
 <a href="#table-onevery-wide" class="anchor"></a>Table One–very wide</h4>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">tb_states_choices_bisec</span>, <span class="fl">10</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb25"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec</span>, <span class="fl">10</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 10 x 154
 ## # Rowwise: 
 ##    indi_id  fl_a fl_alpha bisec_a_0 bisec_b_0 bisec_fa_0 bisec_fb_0      p
@@ -1465,7 +1480,8 @@ dplyr_eval
 ## #   bisec_b_23 &lt;dbl&gt;, bisec_fa_23 &lt;dbl&gt;, bisec_fb_23 &lt;dbl&gt;, bisec_a_24 &lt;dbl&gt;,
 ## #   bisec_b_24 &lt;dbl&gt;, bisec_fa_24 &lt;dbl&gt;, bisec_fb_24 &lt;dbl&gt;, bisec_a_25 &lt;dbl&gt;,
 ## #   bisec_b_25 &lt;dbl&gt;, ...</code></pre>
-<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'input allocated total sum: '</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">tb_states_choices_bisec</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">p</span>))))</pre></body></html></div>
+<div class="sourceCode" id="cb27"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'input allocated total sum: '</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## [1] "input allocated total sum: 100.000000033469"</code></pre>
 </div>
 <div id="table-twovery-wide-to-very-long" class="section level4">
@@ -1473,25 +1489,26 @@ dplyr_eval
 <a href="#table-twovery-wide-to-very-long" class="anchor"></a>Table Two–very wide to very long</h4>
 <p>we want to treat the iteration count information that is the suffix of variable names as a variable by itself. additionally, we want to treat the a,b,fa,fb as a variable. structuring the data very long like this allows for easy graphing and other types of analysis. rather than dealing with many many variables, we have only 3 core variables that store bisection iteration information.</p>
 <p>here we use the very nice <em>pivot_longer</em> function. note that to achieve this, we put a common prefix in front of the variables we wanted to convert to long. this is helpful, because we can easily identify which variables need to be reshaped.</p>
-<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="co"># new variables</span>
-<span class="no">svr_bisect_iter</span> <span class="kw">&lt;-</span> <span class="st">'biseciter'</span>
-<span class="no">svr_abfafb_long_name</span> <span class="kw">&lt;-</span> <span class="st">'varname'</span>
-<span class="no">svr_number_col</span> <span class="kw">&lt;-</span> <span class="st">'value'</span>
-<span class="no">svr_id_bisect_iter</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">svr_id_var</span>, <span class="st">'_bisect_ier'</span>)
+<div class="sourceCode" id="cb29"><pre class="downlit">
+<span class="co"># new variables</span>
+<span class="va">svr_bisect_iter</span> <span class="op">&lt;-</span> <span class="st">'biseciter'</span>
+<span class="va">svr_abfafb_long_name</span> <span class="op">&lt;-</span> <span class="st">'varname'</span>
+<span class="va">svr_number_col</span> <span class="op">&lt;-</span> <span class="st">'value'</span>
+<span class="va">svr_id_bisect_iter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">svr_id_var</span>, <span class="st">'_bisect_ier'</span><span class="op">)</span>
 
 <span class="co"># pivot wide to very long</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">123</span>)
-<span class="no">tb_states_choices_bisec_long</span> <span class="kw">&lt;-</span>
-  <span class="no">tb_states_choices_bisec</span>[<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">tb_states_choices_bisec</span>)[<span class="fl">1</span>], <span class="fl">9</span>, <span class="kw">replace</span><span class="kw">=</span><span class="fl">FALSE</span>),] <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(
-    <span class="kw">cols</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="no">st_bisec_prefix</span>),
-    <span class="kw">names_to</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">svr_abfafb_long_name</span>, <span class="no">svr_bisect_iter</span>),
-    <span class="kw">names_pattern</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">st_bisec_prefix</span>, <span class="st">"(.*)_(.*)"</span>),
-    <span class="kw">values_to</span> <span class="kw">=</span> <span class="no">svr_number_col</span>
-  )
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
+<span class="va">tb_states_choices_bisec_long</span> <span class="op">&lt;-</span> 
+  <span class="va">tb_states_choices_bisec</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">9</span>, replace<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>,<span class="op">]</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>
+    cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="va">st_bisec_prefix</span><span class="op">)</span>,
+    names_to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">svr_abfafb_long_name</span>, <span class="va">svr_bisect_iter</span><span class="op">)</span>,
+    names_pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">st_bisec_prefix</span>, <span class="st">"(.*)_(.*)"</span><span class="op">)</span>,
+    values_to <span class="op">=</span> <span class="va">svr_number_col</span>
+  <span class="op">)</span>
 
 <span class="co"># print</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_states_choices_bisec_long</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec_long</span><span class="op">)</span></pre></div>
 <pre><code>##     indi_id           fl_a          fl_alpha              p          
 ##  Min.   :179.0   Min.   :4.330   Min.   :0.006687   Min.   :0.06205  
 ##  1st Qu.:415.0   1st Qu.:4.333   1st Qu.:0.009251   1st Qu.:0.08607  
@@ -1513,7 +1530,8 @@ dplyr_eval
 ##                     Mean   :  -1374.64  
 ##                     3rd Qu.:      0.13  
 ##                     Max.   :    100.00</code></pre>
-<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">tb_states_choices_bisec_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span>)), <span class="fl">30</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb31"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html">one_of</a></span><span class="op">(</span><span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span><span class="op">)</span><span class="op">)</span>, <span class="fl">30</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 30 x 6
 ##    indi_id  fl_a fl_alpha varname biseciter    value
 ##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;        &lt;dbl&gt;
@@ -1528,7 +1546,8 @@ dplyr_eval
 ##  9     415  4.33  0.00669 a       2               0 
 ## 10     415  4.33  0.00669 b       2              25 
 ## # ... with 20 more rows</code></pre>
-<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span>(<span class="no">tb_states_choices_bisec_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span>)), <span class="fl">30</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb33"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html">one_of</a></span><span class="op">(</span><span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span><span class="op">)</span><span class="op">)</span>, <span class="fl">30</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 30 x 6
 ##    indi_id  fl_a fl_alpha varname biseciter      value
 ##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
@@ -1548,18 +1567,20 @@ dplyr_eval
 <h4 class="hasAnchor">
 <a href="#table-twovery-very-long-to-wider-again" class="anchor"></a>Table Two–very very long to wider again</h4>
 <p>but the previous results are too long, with the a, b, fa, and fb all in one column as different categories, they are really not different categories, they are in fact different types of variables. so we want to spread those four categories of this variable into four columns, each one representing the a, b, fa, and fb values. the rows would then be uniquly identified by the iteration counter and individual id.</p>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="co"># pivot wide to very long to a little wide</span>
-<span class="no">tb_states_choices_bisec_wider</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec_long</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span>(
-    <span class="kw">names_from</span> <span class="kw">=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>),
-    <span class="kw">values_from</span> <span class="kw">=</span> <span class="no">svr_number_col</span>
-  )</pre></body></html></div>
+<div class="sourceCode" id="cb35"><pre class="downlit">
+<span class="co"># pivot wide to very long to a little wide</span>
+<span class="va">tb_states_choices_bisec_wider</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices_bisec_long</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>
+    names_from <span class="op">=</span> <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_abfafb_long_name</span><span class="op">)</span>,
+    values_from <span class="op">=</span> <span class="va">svr_number_col</span>
+  <span class="op">)</span></pre></div>
 <pre><code>## Note: Using an external vector in selections is ambiguous.
 ## i Use `all_of(svr_number_col)` instead of `svr_number_col` to silence this message.
 ## i See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.
 ## This message is displayed once per session.</code></pre>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="co"># print</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_states_choices_bisec_wider</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb37"><pre class="downlit">
+<span class="co"># print</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec_wider</span><span class="op">)</span></pre></div>
 <pre><code>##     indi_id           fl_a          fl_alpha              p          
 ##  Min.   :179.0   Min.   :4.330   Min.   :0.006687   Min.   :0.06205  
 ##  1st Qu.:415.0   1st Qu.:4.333   1st Qu.:0.009251   1st Qu.:0.08607  
@@ -1581,7 +1602,8 @@ dplyr_eval
 ##  Mean   :  5.48039   Mean   : 29.47787   Mean   :  -5533.61  
 ##  3rd Qu.:  0.19531   3rd Qu.:100.00000   3rd Qu.:      0.00  
 ##  Max.   :100.00000   Max.   :100.00000   Max.   :      0.00</code></pre>
-<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">tb_states_choices_bisec_wider</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span>)), <span class="fl">30</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb39"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec_wider</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html">one_of</a></span><span class="op">(</span><span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span><span class="op">)</span><span class="op">)</span>, <span class="fl">30</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 30 x 8
 ##    indi_id  fl_a fl_alpha biseciter     a       b    fa       fb
 ##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
@@ -1596,7 +1618,8 @@ dplyr_eval
 ##  9     415  4.33  0.00669 8             0   0.391   100    -531.
 ## 10     415  4.33  0.00669 9             0   0.195   100    -215.
 ## # ... with 20 more rows</code></pre>
-<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span>(<span class="no">tb_states_choices_bisec_wider</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span>)), <span class="fl">30</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb41"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">tb_states_choices_bisec_wider</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html">one_of</a></span><span class="op">(</span><span class="st">'p'</span>,<span class="st">'f_p'</span>,<span class="st">'f_p_t_f_a'</span><span class="op">)</span><span class="op">)</span>, <span class="fl">30</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 30 x 8
 ##    indi_id  fl_a fl_alpha biseciter      a     b      fa       fb
 ##      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
@@ -1617,23 +1640,24 @@ dplyr_eval
 <h3 class="hasAnchor">
 <a href="#graph-bisection-iteration-results" class="anchor"></a>Graph Bisection Iteration results</h3>
 <p>actually we want to graph based on the long results, not the wider. wider easier to view in table.</p>
-<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="co"># graph results</span>
-<span class="no">lineplot</span> <span class="kw">&lt;-</span> <span class="no">tb_states_choices_bisec_long</span> <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_bisect_iter</span>) <span class="kw">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_bisect_iter</span>))) <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>) <span class="kw">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'a'</span>, <span class="st">'b'</span>)) <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_bisect_iter</span>), <span class="kw">y</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_number_col</span>),
-               <span class="kw">colour</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>),
-               <span class="kw">linetype</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>),
-               <span class="kw">shape</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_abfafb_long_name</span>))) +
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>( ~ <span class="no">indi_id</span>) +
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>() +
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() +
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">'bisection iteration over individuals until convergence'</span>,
-             <span class="kw">x</span> <span class="kw">=</span> <span class="st">'bisection iteration'</span>,
-             <span class="kw">y</span> <span class="kw">=</span> <span class="st">'a (left side point) and b (right side point) values'</span>,
-             <span class="kw">caption</span> <span class="kw">=</span> <span class="st">'dplyr concurrent bisection nonlinear multple individuals'</span>) +
-      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="kw">axis.text.x</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">angle</span> <span class="kw">=</span> <span class="fl">90</span>, <span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">1</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">lineplot</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb43"><pre class="downlit">
+<span class="co"># graph results</span>
+<span class="va">lineplot</span> <span class="op">&lt;-</span> <span class="va">tb_states_choices_bisec_long</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_bisect_iter</span><span class="op">)</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_bisect_iter</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_abfafb_long_name</span><span class="op">)</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'a'</span>, <span class="st">'b'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_bisect_iter</span><span class="op">)</span>, y<span class="op">=</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_number_col</span><span class="op">)</span>,
+               colour<span class="op">=</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_abfafb_long_name</span><span class="op">)</span>,
+               linetype<span class="op">=</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_abfafb_long_name</span><span class="op">)</span>,
+               shape<span class="op">=</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_abfafb_long_name</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span> <span class="op">~</span> <span class="va">indi_id</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'bisection iteration over individuals until convergence'</span>,
+             x <span class="op">=</span> <span class="st">'bisection iteration'</span>,
+             y <span class="op">=</span> <span class="st">'a (left side point) and b (right side point) values'</span>,
+             caption <span class="op">=</span> <span class="st">'dplyr concurrent bisection nonlinear multple individuals'</span><span class="op">)</span> <span class="op">+</span>
+      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">lineplot</span><span class="op">)</span></pre></div>
 <p><img src="ffv_opt_solog_bisec_allrw_files/figure-html/reshape%20solution%20for%20graphing-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -1654,7 +1678,7 @@ dplyr_eval
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

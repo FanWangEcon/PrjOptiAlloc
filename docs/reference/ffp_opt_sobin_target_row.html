@@ -101,9 +101,6 @@
   <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
 </li>
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
-</li>
-<li>
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
@@ -178,16 +175,16 @@
     <p>This does not solve for the full solution, just the targeting queue, individual position on queue.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ffp_opt_sobin_target_row</span>(
-  <span class='no'>ls_row</span>,
-  <span class='no'>fl_rho</span>,
-  <span class='no'>ar_A</span>,
-  <span class='no'>ar_alpha</span>,
-  <span class='no'>ar_beta</span>,
-  <span class='kw'>svr_A_i</span> <span class='kw'>=</span> <span class='st'>"A"</span>,
-  <span class='kw'>svr_alpha_i</span> <span class='kw'>=</span> <span class='st'>"alpha"</span>,
-  <span class='kw'>svr_beta_i</span> <span class='kw'>=</span> <span class='st'>"beta"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>ffp_opt_sobin_target_row</span><span class='op'>(</span>
+  <span class='va'>ls_row</span>,
+  <span class='va'>fl_rho</span>,
+  <span class='va'>ar_A</span>,
+  <span class='va'>ar_alpha</span>,
+  <span class='va'>ar_beta</span>,
+  svr_A_i <span class='op'>=</span> <span class='st'>"A"</span>,
+  svr_alpha_i <span class='op'>=</span> <span class='st'>"alpha"</span>,
+  svr_beta_i <span class='op'>=</span> <span class='st'>"beta"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -238,35 +235,40 @@
 
     <p><a href='https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sobin_target_row.html'>https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sobin_target_row.html</a>
 <a href='https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_car.html'>https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_car.html</a></p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Fan Wang, <a href='http://fanwangecon.github.io'>http://fanwangecon.github.io</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tibble</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyr</span>)
-<span class='no'>ar_alpha</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.1</span>,<span class='fl'>1.5</span>,<span class='fl'>2.5</span>,<span class='fl'>4</span>)
-<span class='no'>ar_A</span> <span class='kw'>&lt;-</span>     <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.5</span>,<span class='fl'>1.5</span>,<span class='fl'>3.5</span>,<span class='fl'>6.5</span>)
-<span class='no'>ar_beta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.25</span>,<span class='fl'>0.25</span>,<span class='fl'>0.25</span>,<span class='fl'>0.25</span>)
-<span class='no'>mt_alpha_A</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='no'>ar_alpha</span>, <span class='no'>ar_A</span>, <span class='no'>ar_beta</span>)
-<span class='no'>ar_st_varnames</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'alpha'</span>, <span class='st'>'A'</span>, <span class='st'>'beta'</span>)
-<span class='no'>tb_alpha_A</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/as_tibble.html'>as_tibble</a></span>(<span class='no'>mt_alpha_A</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select_all.html'>rename_all</a></span>(~<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>ar_st_varnames</span>))
-<span class='no'>tb_alpha_A</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 4 x 3</span><span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tibble.tidyverse.org/'>tibble</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyr.tidyverse.org'>tidyr</a></span><span class='op'>)</span>
+<span class='va'>ar_alpha</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.1</span>,<span class='fl'>1.5</span>,<span class='fl'>2.5</span>,<span class='fl'>4</span><span class='op'>)</span>
+<span class='va'>ar_A</span> <span class='op'>&lt;-</span>     <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.5</span>,<span class='fl'>1.5</span>,<span class='fl'>3.5</span>,<span class='fl'>6.5</span><span class='op'>)</span>
+<span class='va'>ar_beta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.25</span>,<span class='fl'>0.25</span>,<span class='fl'>0.25</span>,<span class='fl'>0.25</span><span class='op'>)</span>
+<span class='va'>mt_alpha_A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>ar_alpha</span>, <span class='va'>ar_A</span>, <span class='va'>ar_beta</span><span class='op'>)</span>
+<span class='va'>ar_st_varnames</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'alpha'</span>, <span class='st'>'A'</span>, <span class='st'>'beta'</span><span class='op'>)</span>
+<span class='va'>tb_alpha_A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/as_tibble.html'>as_tibble</a></span><span class='op'>(</span><span class='va'>mt_alpha_A</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select_all.html'>rename_all</a></span><span class='op'>(</span><span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>ar_st_varnames</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>tb_alpha_A</span>
+</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 4 x 3</span><span>
 #&gt;   alpha     A  beta
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #555555;'>1</span><span>   0.1   0.5  0.25
 #&gt; </span><span style='color: #555555;'>2</span><span>   1.5   1.5  0.25
 #&gt; </span><span style='color: #555555;'>3</span><span>   2.5   3.5  0.25
 #&gt; </span><span style='color: #555555;'>4</span><span>   4     6.5  0.25</div><div class='input'>
-<span class='no'>ar_rho</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>100</span>, -<span class='fl'>1.1</span>, <span class='fl'>0.01</span>, <span class='fl'>0.10</span>, <span class='fl'>0.9</span>)
-<span class='kw'>for</span> (<span class='no'>it_rho_ctr</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>1</span>,<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>ar_rho</span>))) {
-  <span class='no'>fl_rho</span> <span class='kw'>&lt;-</span> <span class='no'>ar_rho</span>[<span class='no'>it_rho_ctr</span>]
-  <span class='no'>ls_ranks</span> <span class='kw'>&lt;-</span> <span class='fu'>ffp_opt_sobin_target_row</span>(<span class='no'>tb_alpha_A</span>[<span class='fl'>1</span>,], <span class='fl'>0.1</span>, <span class='no'>ar_A</span>, <span class='no'>ar_alpha</span>, <span class='no'>ar_beta</span>)
-  <span class='no'>it_rank</span> <span class='kw'>&lt;-</span> <span class='no'>ls_ranks</span>$<span class='no'>it_rank</span>
-  <span class='no'>ar_it_rank</span> <span class='kw'>&lt;-</span> <span class='no'>ls_ranks</span>$<span class='no'>ar_it_rank</span>
-  <span class='no'>ar_fl_rank_val</span> <span class='kw'>&lt;-</span> <span class='no'>ls_ranks</span>$<span class='no'>ar_fl_rank_val</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span>(<span class='st'>'fl_rho:'</span>, <span class='no'>fl_rho</span>, <span class='st'>'it_rank:'</span>, <span class='no'>it_rank</span>, <span class='st'>'\n'</span>)
-  <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span>(<span class='st'>'ar_it_rank:'</span>, <span class='no'>ar_it_rank</span>, <span class='st'>'\n'</span>)
-  <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span>(<span class='st'>'ar_fl_rank_val:'</span>, <span class='no'>ar_fl_rank_val</span>, <span class='st'>'\n'</span>)
-}</div><div class='output co'>#&gt; fl_rho: -100 it_rank: 4 
+<span class='va'>ar_rho</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>100</span>, <span class='op'>-</span><span class='fl'>1.1</span>, <span class='fl'>0.01</span>, <span class='fl'>0.10</span>, <span class='fl'>0.9</span><span class='op'>)</span>
+<span class='kw'>for</span> <span class='op'>(</span><span class='va'>it_rho_ctr</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>ar_rho</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='va'>fl_rho</span> <span class='op'>&lt;-</span> <span class='va'>ar_rho</span><span class='op'>[</span><span class='va'>it_rho_ctr</span><span class='op'>]</span>
+  <span class='va'>ls_ranks</span> <span class='op'>&lt;-</span> <span class='fu'>ffp_opt_sobin_target_row</span><span class='op'>(</span><span class='va'>tb_alpha_A</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, <span class='fl'>0.1</span>, <span class='va'>ar_A</span>, <span class='va'>ar_alpha</span>, <span class='va'>ar_beta</span><span class='op'>)</span>
+  <span class='va'>it_rank</span> <span class='op'>&lt;-</span> <span class='va'>ls_ranks</span><span class='op'>$</span><span class='va'>it_rank</span>
+  <span class='va'>ar_it_rank</span> <span class='op'>&lt;-</span> <span class='va'>ls_ranks</span><span class='op'>$</span><span class='va'>ar_it_rank</span>
+  <span class='va'>ar_fl_rank_val</span> <span class='op'>&lt;-</span> <span class='va'>ls_ranks</span><span class='op'>$</span><span class='va'>ar_fl_rank_val</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='st'>'fl_rho:'</span>, <span class='va'>fl_rho</span>, <span class='st'>'it_rank:'</span>, <span class='va'>it_rank</span>, <span class='st'>'\n'</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='st'>'ar_it_rank:'</span>, <span class='va'>ar_it_rank</span>, <span class='st'>'\n'</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='st'>'ar_fl_rank_val:'</span>, <span class='va'>ar_fl_rank_val</span>, <span class='st'>'\n'</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt; fl_rho: -100 it_rank: 4 
 #&gt; ar_it_rank: 4 1 2 3 
 #&gt; ar_fl_rank_val: 1 4.353845 3.656364 3.450654 
 #&gt; fl_rho: -1.1 it_rank: 4 
@@ -297,7 +299,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -101,9 +101,6 @@
   <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
 </li>
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
-</li>
-<li>
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
@@ -178,36 +175,44 @@
     <p>Matlab Simulation Process for Allocation</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ffp_snw_process_inputs</span>(
+    <pre class="usage"><span class='fu'>ffp_snw_process_inputs</span><span class='op'>(</span>
+ 
+    srt_simu_path <span class='op'>=</span> <span class='st'>"C:/Users/fan/Documents/Dropbox (UH-ECON)/PrjNygaardSorensenWang/Output/"</span>,
+  snm_simu_csv <span class='op'>=</span> <span class='st'>"snwx_v_planner_moredense_a100zh266_e2m2.csv"</span>,
+  df_plan_v_tilde_full <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fl_max_phaseout <span class='op'>=</span> <span class='fl'>238000</span>,
+  it_bin_dollar_before_phaseout <span class='op'>=</span> <span class='fl'>2500</span>,
+  fl_percheck_dollar <span class='op'>=</span> <span class='fl'>100</span>,
+  fl_multiple <span class='op'>=</span> <span class='fl'>58056</span>,
+  it_max_checks <span class='op'>=</span> <span class='fl'>44</span>,
+  fl_tax_hh <span class='op'>=</span> <span class='fl'>128580000</span>,
+  it_max_age <span class='op'>=</span> <span class='fl'>64</span>,
+  it_min_age <span class='op'>=</span> <span class='fl'>18</span>,
+  it_age_bins <span class='op'>=</span> <span class='fl'>2</span>,
+  ar_svr_csv <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"age"</span>, <span class='st'>"marital"</span>, <span class='st'>"kids"</span>, <span class='st'>"checks"</span>, <span class='st'>"ymin"</span>, <span class='st'>"mass"</span>, <span class='st'>"survive"</span>,
+    <span class='st'>"vtilde"</span>, <span class='st'>"ctilde"</span><span class='op'>)</span>,
+  ar_svr_groups <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"marital"</span>, <span class='st'>"kids"</span>, <span class='st'>"age_group"</span>, <span class='st'>"ymin_group"</span><span class='op'>)</span>,
+  ar_svr_groups_stats <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mass"</span>, <span class='st'>"survive"</span><span class='op'>)</span>,
+  svr_checks <span class='op'>=</span> <span class='st'>"checks"</span>,
+  svr_v_value <span class='op'>=</span> <span class='st'>"vtilde"</span>,
+  svr_c_value <span class='op'>=</span> <span class='st'>"ctilde"</span>,
+  svr_mass <span class='op'>=</span> <span class='st'>"mass"</span>,
+  ar_rho <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>,
+  bl_df_alloc_il <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  bl_return_allQ_V <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  bl_threshold <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  it_check_headorspouse <span class='op'>=</span> <span class='fl'>12</span>,
+  it_check_perkids <span class='op'>=</span> <span class='fl'>5</span>,
+  bl_given_firstcheck <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  bl_non_inc_adjust <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  bl_print <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  bl_print_verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
-    <span class='kw'>srt_simu_path</span> <span class='kw'>=</span> <span class='st'>"C:/Users/fan/Documents/Dropbox (UH-ECON)/PrjNygaardSorensenWang/Output/"</span>,
-  <span class='kw'>snm_simu_csv</span> <span class='kw'>=</span> <span class='st'>"snwx_v_planner_moredense_a100zh266_e2m2.csv"</span>,
-  <span class='kw'>fl_max_phaseout</span> <span class='kw'>=</span> <span class='fl'>238000</span>,
-  <span class='kw'>it_bin_dollar_before_phaseout</span> <span class='kw'>=</span> <span class='fl'>2500</span>,
-  <span class='kw'>fl_percheck_dollar</span> <span class='kw'>=</span> <span class='fl'>100</span>,
-  <span class='kw'>fl_multiple</span> <span class='kw'>=</span> <span class='fl'>58056</span>,
-  <span class='kw'>it_max_checks</span> <span class='kw'>=</span> <span class='fl'>44</span>,
-  <span class='kw'>fl_tax_hh</span> <span class='kw'>=</span> <span class='fl'>128580000</span>,
-  <span class='kw'>it_max_age</span> <span class='kw'>=</span> <span class='fl'>64</span>,
-  <span class='kw'>it_min_age</span> <span class='kw'>=</span> <span class='fl'>18</span>,
-  <span class='kw'>it_age_bins</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>ar_svr_csv</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"age"</span>, <span class='st'>"marital"</span>, <span class='st'>"kids"</span>, <span class='st'>"checks"</span>, <span class='st'>"ymin"</span>, <span class='st'>"mass"</span>, <span class='st'>"survive"</span>,
-    <span class='st'>"vtilde"</span>, <span class='st'>"ctilde"</span>),
-  <span class='kw'>ar_svr_groups</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"marital"</span>, <span class='st'>"kids"</span>, <span class='st'>"age_group"</span>, <span class='st'>"ymin_group"</span>),
-  <span class='kw'>ar_svr_groups_stats</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mass"</span>, <span class='st'>"survive"</span>),
-  <span class='kw'>svr_checks</span> <span class='kw'>=</span> <span class='st'>"checks"</span>,
-  <span class='kw'>svr_v_value</span> <span class='kw'>=</span> <span class='st'>"vtilde"</span>,
-  <span class='kw'>svr_c_value</span> <span class='kw'>=</span> <span class='st'>"ctilde"</span>,
-  <span class='kw'>svr_mass</span> <span class='kw'>=</span> <span class='st'>"mass"</span>,
-  <span class='kw'>ar_rho</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>),
-  <span class='kw'>bl_threshold</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>bl_given_firstcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>bl_non_inc_adjust</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>bl_print</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>bl_print_verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
 
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
+    <p>Fan Wang, <a href='http://fanwangecon.github.io'>http://fanwangecon.github.io</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -224,7 +229,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

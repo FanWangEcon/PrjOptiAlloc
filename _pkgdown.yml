@@ -17,8 +17,8 @@ navbar:
       href: articles/index.html
     - text: "Paper"
       href: https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf
-    - text: "Slides"
-      href: https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf
+    # - text: "Slides"
+    #   href: https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf
     - text: "News"
       href: news/index.html
     - text: "Other Sites"

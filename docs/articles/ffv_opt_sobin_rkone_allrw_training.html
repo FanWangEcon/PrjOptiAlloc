@@ -58,9 +58,6 @@ Wage and Employment allocation space parameters comparison.
   <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
 </li>
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
-</li>
-<li>
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
@@ -123,7 +120,7 @@ Wage and Employment allocation space parameters comparison.
 
       
 
-      </header><script src="ffv_opt_sobin_rkone_allrw_training_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="ffv_opt_sobin_rkone_allrw_training_files/header-attrs-2.4/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Wage and Employment Comparison Binary Allocation Lalonde Training Example</h1>
@@ -147,62 +144,67 @@ Wage and Employment allocation space parameters comparison.
 <div id="load-dependencies" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-dependencies" class="anchor"></a>Load Dependencies</h2>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(<span class="kw">list</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span>(<span class="kw">all.names</span> <span class="kw">=</span> <span class="fl">TRUE</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">knitr.duplicate.label</span> <span class="kw">=</span> <span class="st">'allow'</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tibble</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">purrr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stringr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">haven</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">forcats</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span>all.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>knitr.duplicate.label <span class="op">=</span> <span class="st">'allow'</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org">purrr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/">broom</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haven.tidyverse.org">haven</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://forcats.tidyverse.org">forcats</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">REconTools</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">PrjOptiAlloc</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fanwangecon.github.io/REconTools/">REconTools</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fanwangecon.github.io/PrjOptiAlloc/">PrjOptiAlloc</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">knitr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">kableExtra</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span>
 
-<span class="no">bl_save_img</span> <span class="kw">=</span> <span class="fl">FALSE</span></pre></body></html></div>
+<span class="va">bl_save_img</span> <span class="op">=</span> <span class="cn">FALSE</span></pre></div>
 </div>
 <div id="merge-the-wage-and-employmennt-rsults" class="section level2">
 <h2 class="hasAnchor">
 <a href="#merge-the-wage-and-employmennt-rsults" class="anchor"></a>Merge the Wage and Employmennt Rsults</h2>
 <p>Generate four categories by initial height and mother’s education levels combinations.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">spt_img_save</span> <span class="kw">&lt;-</span> <span class="st">'../_img/'</span>
-<span class="no">spt_img_save_draft</span> <span class="kw">&lt;-</span> <span class="st">'C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/HgtOptiAlloDraft/_img/'</span></pre></body></html></div>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># Load Data</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">df_opt_lalonde_training</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">df_opt_lalonde_training_wage</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">df_opt_lalonde_training_employ</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">df_opt_lalonde_training_empage</span>)
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="va">spt_img_save</span> <span class="op">&lt;-</span> <span class="st">'../_img/'</span>
+<span class="va">spt_img_save_draft</span> <span class="op">&lt;-</span> <span class="st">'C:/Users/fan/Documents/Dropbox (UH-ECON)/repos/HgtOptiAlloDraft/_img/'</span></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="co"># Load Data</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">df_opt_lalonde_training</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">df_opt_lalonde_training_wage</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">df_opt_lalonde_training_employ</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">df_opt_lalonde_training_empage</span><span class="op">)</span>
 
 <span class="co"># dfj, dataframe joint</span>
-<span class="no">dfj</span> <span class="kw">&lt;-</span> <span class="no">df_opt_lalonde_training_employ</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_opt_lalonde_training_wage</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">'id'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_opt_lalonde_training_empage</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">'id'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">df_opt_lalonde_training</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">id</span><span class="kw">=</span><span class="no">X</span>) <span class="kw">%&gt;%</span>
-              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">re74</span>, <span class="no">re75</span>))</pre></body></html></div>
+<span class="va">dfj</span> <span class="op">&lt;-</span> <span class="va">df_opt_lalonde_training_employ</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">df_opt_lalonde_training_wage</span>, by <span class="op">=</span> <span class="st">'id'</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">df_opt_lalonde_training_empage</span>, by <span class="op">=</span> <span class="st">'id'</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">df_opt_lalonde_training</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>id<span class="op">=</span><span class="va">X</span><span class="op">)</span> <span class="op">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">re74</span>, <span class="va">re75</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## Joining, by = "id"</code></pre>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># drop the .y variables, clean the .x out</span>
-<span class="no">dfj</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">".y"</span>), -<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">".x"</span>))
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="co"># drop the .y variables, clean the .x out</span>
+<span class="va">dfj</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">".y"</span><span class="op">)</span>, <span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">".x"</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># %&gt;%</span>
 <span class="co">#           rename_at(vars(ends_with(".x")), funs(str_replace(., ".x", "")))</span>
 
 <span class="co"># order and organize variables</span>
-<span class="no">dfj</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>,
-                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="st">"A_"</span>), <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="st">"alpha_"</span>), <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="st">"beta_"</span>),
-                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">"rank"</span>), <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">"rho"</span>),
-                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">everything</a></span>())
+<span class="va">dfj</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>,
+                      <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"A_"</span><span class="op">)</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"alpha_"</span><span class="op">)</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"beta_"</span><span class="op">)</span>,
+                      <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"rank"</span><span class="op">)</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"rho"</span><span class="op">)</span>,
+                      <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># treatment column to numeric</span>
-<span class="no">dfj</span>$<span class="no">trt</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(<span class="no">dfj</span>$<span class="no">trt</span>) - <span class="fl">1</span>
+<span class="va">dfj</span><span class="op">$</span><span class="va">trt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">dfj</span><span class="op">$</span><span class="va">trt</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>
 
 <span class="co"># Summarize</span>
 <span class="co"># str(dfj)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">dfj</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">dfj</span><span class="op">)</span></pre></div>
 <pre><code>##        id           A_i_employ        A_i_wage       A_i_empage    
 ##  Min.   :   1.0   Min.   :0.5186   Min.   :3.319   Min.   :0.6514  
 ##  1st Qu.: 181.2   1st Qu.:0.6271   1st Qu.:4.466   1st Qu.:0.6604  
@@ -451,25 +453,28 @@ Wage and Employment allocation space parameters comparison.
 <h3 class="hasAnchor">
 <a href="#alternative-allocations" class="anchor"></a>Alternative Allocations</h3>
 <p>The observed random allocation, number of spots available.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">ar_bin_observed</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">trt</span>)
-<span class="no">it_total_spots</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">ar_bin_observed</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">it_total_spots</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="va">ar_bin_observed</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">trt</span><span class="op">)</span>
+<span class="va">it_total_spots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ar_bin_observed</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">it_total_spots</span><span class="op">)</span></pre></div>
 <pre><code>## [1] 297</code></pre>
 <p>There are 297 training spots.</p>
 <p>A simple allocation rule is to just give training spots to those who had the lowest levels of wage in the initial year. This kind of simple initial condition based allocation rule is often used in practice.</p>
 <p>There happen to be 289 individuals with zero wages in 1975. So the Naive allocation could provision to these individuals plus 8 additional individuals with the lowest non-zero wages in 1975.</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># 1975 mean wage</span>
-<span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">trt</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarize_at</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">'re'</span>)),
-               <span class="kw">.funs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">mean</span> <span class="kw">=</span> ~<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">.</span>)))</pre></body></html></div>
+<div class="sourceCode" id="cb10"><pre class="downlit">
+<span class="co"># 1975 mean wage</span>
+<span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">trt</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html">summarize_at</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">'re'</span><span class="op">)</span><span class="op">)</span>,
+               .funs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 2 x 4
 ##     trt re78_mean re74_mean re75_mean
 ##   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
 ## 1     0     5090.        NA     3027.
 ## 2     1     5976.        NA     3066.</code></pre>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># 1974 Wage the number of zeros:</span>
-<span class="no">re75_n297</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">re75</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>() <span class="kw">&lt;=</span> <span class="no">it_total_spots</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">re75</span>)
-<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">re75_n297</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="co"># 1974 Wage the number of zeros:</span>
+<span class="va">re75_n297</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">re75</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="va">it_total_spots</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">re75</span><span class="op">)</span>
+<span class="fu">REconTools</span><span class="fu">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span><span class="op">(</span><span class="va">re75_n297</span><span class="op">)</span></pre></div>
 <pre><code>## Warning: `funs()` is deprecated as of dplyr 0.8.0.
 ## Please use a list of either functions or lambdas: 
 ## 
@@ -515,14 +520,15 @@ Wage and Employment allocation space parameters comparison.
 ## 16 p95     "2730"       "   0"      
 ## 17 p99     "3814.0000"  " 160.0976" 
 ## 18 max     "4110.0000"  " 192.7995"</code></pre>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="co"># The 297 lowest wages in 1975</span>
-<span class="no">dfj</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">re75</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">re75_zero</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">re75</span> <span class="kw">==</span> <span class="fl">0</span> ~ <span class="fl">1</span>, <span class="no">re75</span> <span class="kw">!=</span> <span class="fl">0</span> ~ <span class="fl">0</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">re75_rank</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>()) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">alloc_naive</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">re75_rank</span> <span class="kw">&lt;=</span> <span class="no">it_total_spots</span> ~ <span class="fl">1</span>,
-                                 <span class="fl">TRUE</span> ~ <span class="fl">0</span>))
+<div class="sourceCode" id="cb18"><pre class="downlit">
+<span class="co"># The 297 lowest wages in 1975</span>
+<span class="va">dfj</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">re75</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>re75_zero <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">re75</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">re75</span> <span class="op">!=</span> <span class="fl">0</span> <span class="op">~</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>re75_rank <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>alloc_naive <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">re75_rank</span> <span class="op">&lt;=</span> <span class="va">it_total_spots</span> <span class="op">~</span> <span class="fl">1</span>,
+                                 <span class="cn">TRUE</span> <span class="op">~</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>
 
-<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span>(<span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">re75_zero</span>, <span class="no">re75_rank</span>))</pre></body></html></div>
+<span class="fu">REconTools</span><span class="fu">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html">ff_summ_percentiles</a></span><span class="op">(</span><span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">re75_zero</span>, <span class="va">re75_rank</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## Warning: attributes are not identical across measure variables;
 ## they will be dropped</code></pre>
 <pre><code>## # A tibble: 18 x 3
@@ -553,112 +559,118 @@ Wage and Employment allocation space parameters comparison.
 <p>Compute Resource Equivalent Variations. Assume here that i use here the same ar_rho vector as used in <a href="C:%5CUsers%5Cfan%5CPrjOptiAlloc%5Cvignettes%5Cffv_opt_sobin_rkone_allfc_training_logit.Rmd">emloyment</a> and <a href="C:%5CUsers%5Cfan%5CPrjOptiAlloc%5Cvignettes%5Cffv_opt_sobin_rkone_allrw_training_wage.Rmd">wage</a> regressions.</p>
 <p>Note that for each rho, the optimal ranking is different, and there are different optimal rankings for wage and employment outcomes.</p>
 <p>Prepare for Various Inputs.</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="co"># Plann Preference Array</span>
-<span class="no">ar_rho</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">100</span>, -<span class="fl">0.001</span>,  <span class="fl">0.95</span>)
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fl">1</span> - (<span class="fl">10</span>^(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">2</span>,<span class="fl">2</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">30</span>))))
-<span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">ar_rho</span>)
+<div class="sourceCode" id="cb21"><pre class="downlit">
+<span class="co"># Plann Preference Array</span>
+<span class="va">ar_rho</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">100</span>, <span class="op">-</span><span class="fl">0.001</span>,  <span class="fl">0.95</span><span class="op">)</span>
+<span class="va">ar_rho</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="op">(</span><span class="fl">10</span><span class="op">^</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>,<span class="fl">2</span>, length.out<span class="op">=</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span>
 
 <span class="co"># Sort all Individuals</span>
-<span class="no">dfj</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">id</span>)
+<span class="va">dfj</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span>
 
 <span class="co"># Alternative Allocationc</span>
-<span class="no">ar_bin_observed</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">trt</span>)
-<span class="no">ar_bin_alloc_naive</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">alloc_naive</span>)
+<span class="va">ar_bin_observed</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">trt</span><span class="op">)</span>
+<span class="va">ar_bin_alloc_naive</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">alloc_naive</span><span class="op">)</span>
 
 <span class="co"># A and alpha Parameter</span>
-<span class="no">ar_A_wage</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">A_i_wage</span>)
-<span class="no">ar_A_employ</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">A_i_employ</span>)
-<span class="no">ar_A_empage</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">A_i_empage</span>)
+<span class="va">ar_A_wage</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">A_i_wage</span><span class="op">)</span>
+<span class="va">ar_A_employ</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">A_i_employ</span><span class="op">)</span>
+<span class="va">ar_A_empage</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">A_i_empage</span><span class="op">)</span>
 
-<span class="no">ar_alpha_wage</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">alpha_i_wage</span>)
-<span class="no">ar_alpha_employ</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">alpha_i_employ</span>)
-<span class="no">ar_alpha_empage</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">alpha_i_empage</span>)
+<span class="va">ar_alpha_wage</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">alpha_i_wage</span><span class="op">)</span>
+<span class="va">ar_alpha_employ</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">alpha_i_employ</span><span class="op">)</span>
+<span class="va">ar_alpha_empage</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">alpha_i_empage</span><span class="op">)</span>
 
 <span class="co"># Relative Preference Weights</span>
-<span class="no">ar_beta_wage</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">beta_i_wage</span>)
-<span class="no">ar_beta_employ</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">beta_i_employ</span>)
-<span class="no">ar_beta_empage</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">beta_i_empage</span>)</pre></body></html></div>
+<span class="va">ar_beta_wage</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">beta_i_wage</span><span class="op">)</span>
+<span class="va">ar_beta_employ</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">beta_i_employ</span><span class="op">)</span>
+<span class="va">ar_beta_empage</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">beta_i_empage</span><span class="op">)</span></pre></div>
 <p>Solve for Resource Equivalent Variations:</p>
-<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="co"># REV Results Storage</span>
-<span class="no">ar_rev_wage_v_rand</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))
-<span class="no">ar_rev_employ_v_rand</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))
-<span class="no">ar_rev_empage</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))
-<span class="no">ar_rev_employ_v_re75rank</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))
+<div class="sourceCode" id="cb22"><pre class="downlit">
+<span class="co"># REV Results Storage</span>
+<span class="va">ar_rev_wage_v_rand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_rev_employ_v_rand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_rev_empage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_rev_employ_v_re75rank</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Loop Over</span>
-<span class="kw">for</span> (<span class="no">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))) {
+<span class="kw">for</span> <span class="op">(</span><span class="va">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
 
-  <span class="no">fl_rho</span> <span class="kw">&lt;-</span> <span class="no">ar_rho</span>[<span class="no">it_rho_ctr</span>]
+  <span class="va">fl_rho</span> <span class="op">&lt;-</span> <span class="va">ar_rho</span><span class="op">[</span><span class="va">it_rho_ctr</span><span class="op">]</span>
 
-  <span class="no">svr_rho_employ</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, <span class="no">it_rho_ctr</span>, <span class="st">'_rk_employ'</span>)
-  <span class="no">svr_rho_wage</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, <span class="no">it_rho_ctr</span>, <span class="st">'_rk_wage'</span>)
-  <span class="no">svr_rho_empage</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, <span class="no">it_rho_ctr</span>, <span class="st">'_rk_empage'</span>)
+  <span class="va">svr_rho_employ</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'rho_c'</span>, <span class="va">it_rho_ctr</span>, <span class="st">'_rk_employ'</span><span class="op">)</span>
+  <span class="va">svr_rho_wage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'rho_c'</span>, <span class="va">it_rho_ctr</span>, <span class="st">'_rk_wage'</span><span class="op">)</span>
+  <span class="va">svr_rho_empage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'rho_c'</span>, <span class="va">it_rho_ctr</span>, <span class="st">'_rk_empage'</span><span class="op">)</span>
 
-  <span class="no">ar_queue_optimal_wage</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">svr_rho_wage</span>)
-  <span class="no">ar_queue_optimal_employ</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">svr_rho_employ</span>)
-  <span class="no">ar_queue_optimal_empage</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">svr_rho_empage</span>)
+  <span class="va">ar_queue_optimal_wage</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">svr_rho_wage</span><span class="op">)</span>
+  <span class="va">ar_queue_optimal_employ</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">svr_rho_employ</span><span class="op">)</span>
+  <span class="va">ar_queue_optimal_empage</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">svr_rho_empage</span><span class="op">)</span>
 
   <span class="co"># 1. REV of Optimal All X Wage Regression relative to random observed</span>
-  <span class="no">ar_rev_wage_v_rand</span>[<span class="no">it_rho_ctr</span>] <span class="kw">&lt;-</span>
-    <span class="fu"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span>(<span class="no">ar_queue_optimal_wage</span>, <span class="no">ar_bin_observed</span>,
-                      <span class="no">ar_A_wage</span>, <span class="no">ar_alpha_wage</span>, <span class="no">ar_beta_wage</span>,
-                      <span class="no">fl_rho</span>)
+  <span class="va">ar_rev_wage_v_rand</span><span class="op">[</span><span class="va">it_rho_ctr</span><span class="op">]</span> <span class="op">&lt;-</span>
+    <span class="fu"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span><span class="op">(</span><span class="va">ar_queue_optimal_wage</span>, <span class="va">ar_bin_observed</span>,
+                      <span class="va">ar_A_wage</span>, <span class="va">ar_alpha_wage</span>, <span class="va">ar_beta_wage</span>,
+                      <span class="va">fl_rho</span><span class="op">)</span>
 
   <span class="co"># 2. REV of Optimal Age X only Employment Regression relative to random observed</span>
-  <span class="no">ar_rev_empage</span>[<span class="no">it_rho_ctr</span>] <span class="kw">&lt;-</span>
-    <span class="fu"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span>(<span class="no">ar_queue_optimal_empage</span>, <span class="no">ar_bin_observed</span>,
-                      <span class="no">ar_A_empage</span>, <span class="no">ar_alpha_empage</span>, <span class="no">ar_beta_empage</span>,
-                      <span class="no">fl_rho</span>)
+  <span class="va">ar_rev_empage</span><span class="op">[</span><span class="va">it_rho_ctr</span><span class="op">]</span> <span class="op">&lt;-</span>
+    <span class="fu"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span><span class="op">(</span><span class="va">ar_queue_optimal_empage</span>, <span class="va">ar_bin_observed</span>,
+                      <span class="va">ar_A_empage</span>, <span class="va">ar_alpha_empage</span>, <span class="va">ar_beta_empage</span>,
+                      <span class="va">fl_rho</span><span class="op">)</span>
 
   <span class="co"># 3. REV of Optimal All X Employment Regression relative to random observed</span>
-  <span class="no">ar_rev_employ_v_rand</span>[<span class="no">it_rho_ctr</span>] <span class="kw">&lt;-</span>
-    <span class="fu"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span>(<span class="no">ar_queue_optimal_employ</span>, <span class="no">ar_bin_observed</span>,
-                      <span class="no">ar_A_employ</span>, <span class="no">ar_alpha_employ</span>, <span class="no">ar_beta_employ</span>,
-                      <span class="no">fl_rho</span>)
+  <span class="va">ar_rev_employ_v_rand</span><span class="op">[</span><span class="va">it_rho_ctr</span><span class="op">]</span> <span class="op">&lt;-</span>
+    <span class="fu"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span><span class="op">(</span><span class="va">ar_queue_optimal_employ</span>, <span class="va">ar_bin_observed</span>,
+                      <span class="va">ar_A_employ</span>, <span class="va">ar_alpha_employ</span>, <span class="va">ar_beta_employ</span>,
+                      <span class="va">fl_rho</span><span class="op">)</span>
 
   <span class="co"># 4. REV of Optimal All X Employment Regression relative to NAIVE ALLOCATION by Initial</span>
-  <span class="no">ar_rev_employ_v_re75rank</span>[<span class="no">it_rho_ctr</span>] <span class="kw">&lt;-</span>
-    <span class="fu"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span>(<span class="no">ar_queue_optimal_employ</span>, <span class="no">ar_bin_alloc_naive</span>,
-                      <span class="no">ar_A_employ</span>, <span class="no">ar_alpha_employ</span>, <span class="no">ar_beta_employ</span>,
-                      <span class="no">fl_rho</span>)
-}
+  <span class="va">ar_rev_employ_v_re75rank</span><span class="op">[</span><span class="va">it_rho_ctr</span><span class="op">]</span> <span class="op">&lt;-</span>
+    <span class="fu"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span><span class="op">(</span><span class="va">ar_queue_optimal_employ</span>, <span class="va">ar_bin_alloc_naive</span>,
+                      <span class="va">ar_A_employ</span>, <span class="va">ar_alpha_employ</span>, <span class="va">ar_beta_employ</span>,
+                      <span class="va">fl_rho</span><span class="op">)</span>
+<span class="op">}</span>
 
 <span class="co"># Print results</span>
-<span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_sup_lst2str.html">ff_sup_lst2str</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">ar_rev_wage_v_rand</span>,<span class="fl">2</span>))</pre></body></html></div>
+<span class="fu">REconTools</span><span class="fu">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_sup_lst2str.html">ff_sup_lst2str</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">ar_rev_wage_v_rand</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## [1] "round(ar_rev_wage_v_rand, 2):=0.42;=0.42;=0.42;=0.42;=0.42;=0.42;=0.42;=0.42;=0.41;=0.41;=0.41;=0.41;=0.41;=0.4;=0.4;=0.4;=0.41;=0.45;=0.49;=0.6;=0.72;=0.82;=0.9;=0.95;=0.97;=0.98;=0.99;=1;=1;=1"</code></pre>
-<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_sup_lst2str.html">ff_sup_lst2str</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">ar_rev_employ_v_rand</span>,<span class="fl">2</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb24"><pre class="downlit">
+<span class="fu">REconTools</span><span class="fu">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_sup_lst2str.html">ff_sup_lst2str</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">ar_rev_employ_v_rand</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## [1] "round(ar_rev_employ_v_rand, 2):=0.19;=0.19;=0.19;=0.19;=0.19;=0.2;=0.19;=0.2;=0.2;=0.22;=0.21;=0.22;=0.23;=0.25;=0.26;=0.29;=0.33;=0.38;=0.45;=0.55;=0.67;=0.78;=0.85;=0.9;=0.93;=0.95;=0.97;=0.98;=0.99;=1"</code></pre>
-<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_sup_lst2str.html">ff_sup_lst2str</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">ar_rev_empage</span>,<span class="fl">2</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb26"><pre class="downlit">
+<span class="fu">REconTools</span><span class="fu">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_sup_lst2str.html">ff_sup_lst2str</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">ar_rev_empage</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## [1] "round(ar_rev_empage, 2):=0.18;=0.18;=0.18;=0.18;=0.18;=0.18;=0.18;=0.18;=0.18;=0.18;=0.18;=0.18;=0.18;=0.18;=0.18;=0.15;=0.07;=0.14;=0.11;=0.25;=0.25;=0.39;=0.39;=0.56;=0.56;=0.68;=0.71;=0.79;=0.79;=0.82"</code></pre>
-<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="kw pkg">REconTools</span><span class="kw ns">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_sup_lst2str.html">ff_sup_lst2str</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">ar_rev_employ_v_re75rank</span>,<span class="fl">2</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb28"><pre class="downlit">
+<span class="fu">REconTools</span><span class="fu">::</span><span class="fu"><a href="https://fanwangecon.github.io/REconTools/reference/ff_sup_lst2str.html">ff_sup_lst2str</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">ar_rev_employ_v_re75rank</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## [1] "round(ar_rev_employ_v_re75rank, 2):=0.08;=0.08;=0.07;=0.07;=0.07;=0.07;=0.08;=0.08;=0.08;=0.08;=0.08;=0.09;=0.09;=0.09;=0.09;=0.11;=0.13;=0.13;=0.16;=0.19;=0.22;=0.25;=0.29;=0.33;=0.36;=0.41;=0.45;=0.49;=0.5;=0.52"</code></pre>
 <p>Combine REV results to one dataframe:</p>
-<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="co"># combine results</span>
-<span class="no">mt_combine</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_rho</span>,
-                    <span class="no">ar_rev_wage_v_rand</span>*<span class="fl">100</span>,
-                    <span class="no">ar_rev_employ_v_rand</span>*<span class="fl">100</span>,
-                    <span class="no">ar_rev_empage</span>*<span class="fl">100</span>,
-                    <span class="no">ar_rev_employ_v_re75rank</span>*<span class="fl">100</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="no">mt_combine</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'rho'</span>,
+<div class="sourceCode" id="cb30"><pre class="downlit">
+<span class="co"># combine results</span>
+<span class="va">mt_combine</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">ar_rho</span>,
+                    <span class="va">ar_rev_wage_v_rand</span><span class="op">*</span><span class="fl">100</span>,
+                    <span class="va">ar_rev_employ_v_rand</span><span class="op">*</span><span class="fl">100</span>,
+                    <span class="va">ar_rev_empage</span><span class="op">*</span><span class="fl">100</span>,
+                    <span class="va">ar_rev_employ_v_re75rank</span><span class="op">*</span><span class="fl">100</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">mt_combine</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'rho'</span>,
                           <span class="st">'rev_expected_wage'</span>,
                           <span class="st">'rev_employment_prob'</span>,
                           <span class="st">'rev_employage_prob'</span>,
-                          <span class="st">'rev_employ_v_re75rank'</span>)
-<span class="no">tb_rev_wage_employ</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_combine</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rowid_to_column</a></span>(<span class="kw">var</span> <span class="kw">=</span> <span class="st">"eval"</span>)
+                          <span class="st">'rev_employ_v_re75rank'</span><span class="op">)</span>
+<span class="va">tb_rev_wage_employ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">mt_combine</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rowid_to_column</a></span><span class="op">(</span>var <span class="op">=</span> <span class="st">"eval"</span><span class="op">)</span>
 <span class="co"># Transform x-scale to 1-rho</span>
-<span class="no">tb_rev_wage_employ</span> <span class="kw">&lt;-</span> <span class="no">tb_rev_wage_employ</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">one_minus_rho</span> <span class="kw">=</span> <span class="fl">1</span> - <span class="no">rho</span>)
+<span class="va">tb_rev_wage_employ</span> <span class="op">&lt;-</span> <span class="va">tb_rev_wage_employ</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>one_minus_rho <span class="op">=</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">rho</span><span class="op">)</span>
 
 <span class="co"># Reshape to long</span>
-<span class="no">tb_rev_wage_employ_long</span> <span class="kw">&lt;-</span> <span class="no">tb_rev_wage_employ</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(
-    <span class="kw">cols</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="st">'rev'</span>),
-    <span class="kw">names_to</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Outcome'</span>),
-    <span class="kw">names_pattern</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rev'</span>, <span class="st">"_(.*)"</span>),
-    <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'rev'</span>
-  )
+<span class="va">tb_rev_wage_employ_long</span> <span class="op">&lt;-</span> <span class="va">tb_rev_wage_employ</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>
+    cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">'rev'</span><span class="op">)</span>,
+    names_to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Outcome'</span><span class="op">)</span>,
+    names_pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'rev'</span>, <span class="st">"_(.*)"</span><span class="op">)</span>,
+    values_to <span class="op">=</span> <span class="st">'rev'</span>
+  <span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">tb_rev_wage_employ</span> <span class="kw">%&gt;%</span>
-              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rand_v_init</span> <span class="kw">=</span> <span class="no">rev_employment_prob</span>/<span class="no">rev_employ_v_re75rank</span>),<span class="fl">2</span>))</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">tb_rev_wage_employ</span> <span class="op">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rand_v_init <span class="op">=</span> <span class="va">rev_employment_prob</span><span class="op">/</span><span class="va">rev_employ_v_re75rank</span><span class="op">)</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 30 x 8
 ##     eval   rho rev_expected_wa~ rev_employment_~ rev_employage_p~
 ##    &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
@@ -675,68 +687,70 @@ Wage and Employment allocation space parameters comparison.
 ## # ... with 20 more rows, and 3 more variables: rev_employ_v_re75rank &lt;dbl&gt;,
 ## #   one_minus_rho &lt;dbl&gt;, rand_v_init &lt;dbl&gt;</code></pre>
 <p>Draw the REV graph. Following this <a href="https://fanwangecon.github.io/Stat4Econ/probability/samplespacedice.html">graph code</a>.</p>
-<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="co"># x-labels</span>
-<span class="no">x.labels</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'&lt;U+03BB&gt;=0.99'</span>, <span class="st">'&lt;U+03BB&gt;=0.90'</span>, <span class="st">'&lt;U+03BB&gt;=0'</span>, <span class="st">'&lt;U+03BB&gt;=-10'</span>, <span class="st">'&lt;U+03BB&gt;=-100'</span>)
-<span class="no">x.breaks</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.01</span>, <span class="fl">0.10</span>, <span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">100</span>)
+<div class="sourceCode" id="cb32"><pre class="downlit">
+<span class="co"># x-labels</span>
+<span class="va">x.labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'λ=0.99'</span>, <span class="st">'λ=0.90'</span>, <span class="st">'λ=0'</span>, <span class="st">'λ=-10'</span>, <span class="st">'λ=-100'</span><span class="op">)</span>
+<span class="va">x.breaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.10</span>, <span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">100</span><span class="op">)</span>
 
 <span class="co"># title line 2</span>
 <span class="co"># title_line1 &lt;- sprintf("Percentage of Training Spots Misallocated, NSW Lalonde (AER, 1986)")</span>
 <span class="co"># title_line2 &lt;- sprintf("REV (Resource Equivalent Variation) Along Planner Spectrum")</span>
 
-<span class="no">st_title</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'How much Fewer Resources are Needed (Shares) to Achieve the Same Welfare'</span>))
-<span class="no">title_line1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"Compare alternative allocations to optimal allocations given observables and estimates"</span>)
-<span class="no">title_line2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"Solid Red Line: train 297 random NSW treatment individuals vs. optimally allocating 297 spots"</span>)
-<span class="no">title_line3</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"Dashed Blue Line: train 297 lowest baseline wage individuals vs. optimally allocating 297 spots"</span>)
+<span class="va">st_title</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'How much Fewer Resources are Needed (Shares) to Achieve the Same Welfare'</span><span class="op">)</span><span class="op">)</span>
+<span class="va">title_line1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"Compare alternative allocations to optimal allocations given observables and estimates"</span><span class="op">)</span>
+<span class="va">title_line2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"Solid Red Line: train 297 random NSW treatment individuals vs. optimally allocating 297 spots"</span><span class="op">)</span>
+<span class="va">title_line3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"Dashed Blue Line: train 297 lowest baseline wage individuals vs. optimally allocating 297 spots"</span><span class="op">)</span>
 
 <span class="co"># Relabel Variable</span>
-<span class="no">Outcome_levels</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"random (RCT)"</span> <span class="kw">=</span> <span class="st">"employment_prob"</span>, <span class="st">"baseline wage"</span> <span class="kw">=</span> <span class="st">"employ_v_re75rank"</span>)
-<span class="no">tb_rev_wage_employ_long_fig</span> <span class="kw">&lt;-</span> <span class="no">tb_rev_wage_employ_long</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">Outcome</span> <span class="kw">==</span> <span class="st">'employment_prob'</span> <span class="kw">|</span> <span class="no">Outcome</span> <span class="kw">==</span> <span class="st">'employ_v_re75rank'</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">Outcome</span> <span class="kw">=</span> <span class="fu"><a href="https://haven.tidyverse.org/reference/as_factor.html">as_factor</a></span>(<span class="no">Outcome</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">Outcome</span> <span class="kw">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_recode.html">fct_recode</a></span>(<span class="no">Outcome</span>, !!!<span class="no">Outcome_levels</span>))
+<span class="va">Outcome_levels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"random (RCT)"</span> <span class="op">=</span> <span class="st">"employment_prob"</span>, <span class="st">"baseline wage"</span> <span class="op">=</span> <span class="st">"employ_v_re75rank"</span><span class="op">)</span>
+<span class="va">tb_rev_wage_employ_long_fig</span> <span class="op">&lt;-</span> <span class="va">tb_rev_wage_employ_long</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Outcome</span> <span class="op">==</span> <span class="st">'employment_prob'</span> <span class="op">|</span> <span class="va">Outcome</span> <span class="op">==</span> <span class="st">'employ_v_re75rank'</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Outcome <span class="op">=</span> <span class="fu"><a href="https://haven.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="op">(</span><span class="va">Outcome</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Outcome <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_recode.html">fct_recode</a></span><span class="op">(</span><span class="va">Outcome</span>, <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">Outcome_levels</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Graph Results--Draw</span>
-<span class="no">line.plot</span> <span class="kw">&lt;-</span> <span class="no">tb_rev_wage_employ_long_fig</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span><span class="no">one_minus_rho</span>, <span class="kw">y</span><span class="kw">=</span><span class="no">rev</span>,
-             <span class="kw">group</span><span class="kw">=</span><span class="no">Outcome</span>,
-             <span class="kw">colour</span><span class="kw">=</span><span class="no">Outcome</span>,
-             <span class="kw">linetype</span><span class="kw">=</span><span class="no">Outcome</span>,
-             <span class="kw">shape</span><span class="kw">=</span><span class="no">Outcome</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() +
+<span class="va">line.plot</span> <span class="op">&lt;-</span> <span class="va">tb_rev_wage_employ_long_fig</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">one_minus_rho</span>, y<span class="op">=</span><span class="va">rev</span>,
+             group<span class="op">=</span><span class="va">Outcome</span>,
+             colour<span class="op">=</span><span class="va">Outcome</span>,
+             linetype<span class="op">=</span><span class="va">Outcome</span>,
+             shape<span class="op">=</span><span class="va">Outcome</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="co"># geom_vline(xintercept=c(1), linetype="dotted") +</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="no">st_title</span>,
-       <span class="kw">subtitle</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">title_line1</span>, <span class="st">'\n'</span>, <span class="no">title_line2</span>, <span class="st">'\n'</span>, <span class="no">title_line3</span>),
-       <span class="kw">x</span> <span class="kw">=</span> <span class="st">'log10 Rescale of &lt;U+03BB&gt;, Log10(1-&lt;U+03BB&gt;)\n&lt;U+03BB&gt;=1 Utilitarian (Maximize Average), &lt;U+03BB&gt;=-infty Rawlsian (Maximize Minimum)'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'100 x REV (Resource Equivalent Variations)'</span>),
-       <span class="kw">caption</span> <span class="kw">=</span> <span class="st">'Based on a logistic regression of the employment effects of a training RCT. Data: Lalonde (AER, 1986).'</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span>(<span class="kw">trans</span><span class="kw">=</span><span class="st">'log10'</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="no">x.labels</span>, <span class="kw">breaks</span> <span class="kw">=</span> <span class="no">x.breaks</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="kw">base_size</span><span class="kw">=</span><span class="fl">8</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span>(<span class="fl">0</span>, <span class="fl">100</span>)
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="va">st_title</span>,
+       subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">title_line1</span>, <span class="st">'\n'</span>, <span class="va">title_line2</span>, <span class="st">'\n'</span>, <span class="va">title_line3</span><span class="op">)</span>,
+       x <span class="op">=</span> <span class="st">'log10 Rescale of λ, Log10(1-λ)\nλ=1 Utilitarian (Maximize Average), λ=-infty Rawlsian (Maximize Minimum)'</span>,
+       y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'100 x REV (Resource Equivalent Variations)'</span><span class="op">)</span>,
+       caption <span class="op">=</span> <span class="st">'Based on a logistic regression of the employment effects of a training RCT. Data: Lalonde (AER, 1986).'</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>trans<span class="op">=</span><span class="st">'log10'</span>, labels <span class="op">=</span> <span class="va">x.labels</span>, breaks <span class="op">=</span> <span class="va">x.breaks</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span>base_size<span class="op">=</span><span class="fl">8</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>
 <span class="co"># +</span>
 <span class="co">#   guides(colour=FALSE)</span>
 
 
 <span class="co"># Labeling</span>
-<span class="no">line.plot</span>$<span class="no">labels</span>$<span class="no">linetype</span> <span class="kw">&lt;-</span> <span class="st">"REV\nOptimal\nvs.\nAlternatives"</span>
-<span class="no">line.plot</span>$<span class="no">labels</span>$<span class="no">colour</span> <span class="kw">&lt;-</span> <span class="st">"REV\nOptimal\nvs.\nAlternatives"</span>
-<span class="no">line.plot</span>$<span class="no">labels</span>$<span class="no">shape</span> <span class="kw">&lt;-</span> <span class="st">"REV\nOptimal\nvs.\nAlternatives"</span>
+<span class="va">line.plot</span><span class="op">$</span><span class="va">labels</span><span class="op">$</span><span class="va">linetype</span> <span class="op">&lt;-</span> <span class="st">"REV\nOptimal\nvs.\nAlternatives"</span>
+<span class="va">line.plot</span><span class="op">$</span><span class="va">labels</span><span class="op">$</span><span class="va">colour</span> <span class="op">&lt;-</span> <span class="st">"REV\nOptimal\nvs.\nAlternatives"</span>
+<span class="va">line.plot</span><span class="op">$</span><span class="va">labels</span><span class="op">$</span><span class="va">shape</span> <span class="op">&lt;-</span> <span class="st">"REV\nOptimal\nvs.\nAlternatives"</span>
 
 <span class="co"># Print</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">line.plot</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">line.plot</span><span class="op">)</span></pre></div>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/graph%20REV-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="kw">if</span> (<span class="no">bl_save_img</span>) {
-  <span class="no">snm_cnts</span> <span class="kw">&lt;-</span> <span class="st">'Lalonde_employ_rev.png'</span>
-  <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">spt_img_save</span>, <span class="no">snm_cnts</span>),
-      <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>, <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">7</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">line.plot</span>)
-  <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
-  <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">spt_img_save_draft</span>, <span class="no">snm_cnts</span>),
-      <span class="kw">width</span> <span class="kw">=</span> <span class="fl">135</span>, <span class="kw">height</span> <span class="kw">=</span> <span class="fl">96</span>, <span class="kw">units</span><span class="kw">=</span><span class="st">'mm'</span>, <span class="kw">res</span> <span class="kw">=</span> <span class="fl">300</span>,
-      <span class="kw">pointsize</span><span class="kw">=</span><span class="fl">5</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">line.plot</span>)
-  <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()
-}</pre></body></html></div>
+<div class="sourceCode" id="cb33"><pre class="downlit">
+<span class="kw">if</span> <span class="op">(</span><span class="va">bl_save_img</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">snm_cnts</span> <span class="op">&lt;-</span> <span class="st">'Lalonde_employ_rev.png'</span>
+  <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">spt_img_save</span>, <span class="va">snm_cnts</span><span class="op">)</span>,
+      width <span class="op">=</span> <span class="fl">135</span>, height <span class="op">=</span> <span class="fl">96</span>, units<span class="op">=</span><span class="st">'mm'</span>, res <span class="op">=</span> <span class="fl">300</span>, pointsize<span class="op">=</span><span class="fl">7</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">line.plot</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">png</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">spt_img_save_draft</span>, <span class="va">snm_cnts</span><span class="op">)</span>,
+      width <span class="op">=</span> <span class="fl">135</span>, height <span class="op">=</span> <span class="fl">96</span>, units<span class="op">=</span><span class="st">'mm'</span>, res <span class="op">=</span> <span class="fl">300</span>,
+      pointsize<span class="op">=</span><span class="fl">5</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">line.plot</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span><span class="op">(</span><span class="op">)</span>
+<span class="op">}</span></pre></div>
 </div>
 </div>
 <div id="analysis-of-a-and-alpha" class="section level2">
@@ -746,51 +760,54 @@ Wage and Employment allocation space parameters comparison.
 <div id="scatter-plots" class="section level3">
 <h3 class="hasAnchor">
 <a href="#scatter-plots" class="anchor"></a>Scatter Plots</h3>
-<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="co"># Binary Marginal Effects and Prediction without Binary</span>
-<span class="no">ggplot.A.alpha</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">df</span>, <span class="no">svr_alpha</span> <span class="kw">=</span> <span class="st">'alpha_i'</span>, <span class="no">svr_A</span> <span class="kw">=</span> <span class="st">"A_i"</span>,
-                           <span class="no">slb_title</span> <span class="kw">=</span> <span class="st">'A_i and alpha_i (red)'</span>){
-  <span class="no">scatter</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="no">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_A</span>))) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span><span class="kw">=</span>!!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_alpha</span>)), <span class="kw">size</span><span class="kw">=</span><span class="fl">4</span>, <span class="kw">shape</span><span class="kw">=</span><span class="fl">4</span>, <span class="kw">color</span><span class="kw">=</span><span class="st">"red"</span>) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">slb_title</span>),
-         <span class="kw">x</span> <span class="kw">=</span> <span class="st">'A_i = Prob Employ no Training'</span>,
-         <span class="kw">y</span> <span class="kw">=</span> <span class="st">'alpha_i = Effect of Training of Prob Employ'</span>,
-         <span class="kw">caption</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Logit Regression on training. Control for age, educ, race. Age &lt;= 23 or &gt; 23 interaction.'</span>)) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>()
-  <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">scatter</span>)
-}
+<div class="sourceCode" id="cb34"><pre class="downlit">
+<span class="co"># Binary Marginal Effects and Prediction without Binary</span>
+<span class="va">ggplot.A.alpha</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">svr_alpha</span> <span class="op">=</span> <span class="st">'alpha_i'</span>, <span class="va">svr_A</span> <span class="op">=</span> <span class="st">"A_i"</span>,
+                           <span class="va">slb_title</span> <span class="op">=</span> <span class="st">'A_i and alpha_i (red)'</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">scatter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_A</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_alpha</span><span class="op">)</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">4</span>, shape<span class="op">=</span><span class="fl">4</span>, color<span class="op">=</span><span class="st">"red"</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">slb_title</span><span class="op">)</span>,
+         x <span class="op">=</span> <span class="st">'A_i = Prob Employ no Training'</span>,
+         y <span class="op">=</span> <span class="st">'alpha_i = Effect of Training of Prob Employ'</span>,
+         caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'Logit Regression on training. Control for age, educ, race. Age &lt;= 23 or &gt; 23 interaction.'</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">scatter</span><span class="op">)</span>
+<span class="op">}</span>
 
 <span class="co"># Plot over multiple</span>
-<span class="fu">ggplot.A.alpha</span>(<span class="kw">df</span> <span class="kw">=</span> <span class="no">dfj</span>,
-               <span class="kw">svr_alpha</span> <span class="kw">=</span> <span class="st">'alpha_i_wage'</span>, <span class="kw">svr_A</span> <span class="kw">=</span> <span class="st">"A_i_wage"</span>,
-               <span class="kw">slb_title</span> <span class="kw">=</span> <span class="st">'A_i and alpha_i, wage'</span>)</pre></body></html></div>
+<span class="fu">ggplot.A.alpha</span><span class="op">(</span>df <span class="op">=</span> <span class="va">dfj</span>,
+               svr_alpha <span class="op">=</span> <span class="st">'alpha_i_wage'</span>, svr_A <span class="op">=</span> <span class="st">"A_i_wage"</span>,
+               slb_title <span class="op">=</span> <span class="st">'A_i and alpha_i, wage'</span><span class="op">)</span></pre></div>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="fu">ggplot.A.alpha</span>(<span class="kw">df</span> <span class="kw">=</span> <span class="no">dfj</span>,
-               <span class="kw">svr_alpha</span> <span class="kw">=</span> <span class="st">'alpha_i_employ'</span>, <span class="kw">svr_A</span> <span class="kw">=</span> <span class="st">"A_i_employ"</span>,
-               <span class="kw">slb_title</span> <span class="kw">=</span> <span class="st">'Employment A_i and alpha_i Joint Distribution'</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb35"><pre class="downlit">
+<span class="fu">ggplot.A.alpha</span><span class="op">(</span>df <span class="op">=</span> <span class="va">dfj</span>,
+               svr_alpha <span class="op">=</span> <span class="st">'alpha_i_employ'</span>, svr_A <span class="op">=</span> <span class="st">"A_i_employ"</span>,
+               slb_title <span class="op">=</span> <span class="st">'Employment A_i and alpha_i Joint Distribution'</span><span class="op">)</span></pre></div>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div id="histogram-plots" class="section level3">
 <h3 class="hasAnchor">
 <a href="#histogram-plots" class="anchor"></a>Histogram Plots</h3>
 <p>What is the distribution of A given alpha. This is relevant in the linear regression case</p>
-<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="co"># Keep only relevant columns, and reshape data</span>
-<span class="no">dfj_hist</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">A_i_wage</span>, <span class="no">alpha_i_wage</span>)
-<span class="no">dfj_hist</span>$<span class="no">alpha_i_wage</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">dfj_hist</span>$<span class="no">alpha_i_wage</span>)
-<span class="no">dfj_hist</span>$<span class="no">alpha_i_wage</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">dfj_hist</span>$<span class="no">alpha_i_wage</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Age &lt;= 23\nalpha_i=$454'</span>, <span class="st">'Age &gt; 23\nalpha_i=$1071'</span>))
+<div class="sourceCode" id="cb36"><pre class="downlit">
+<span class="co"># Keep only relevant columns, and reshape data</span>
+<span class="va">dfj_hist</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">A_i_wage</span>, <span class="va">alpha_i_wage</span><span class="op">)</span>
+<span class="va">dfj_hist</span><span class="op">$</span><span class="va">alpha_i_wage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">dfj_hist</span><span class="op">$</span><span class="va">alpha_i_wage</span><span class="op">)</span>
+<span class="va">dfj_hist</span><span class="op">$</span><span class="va">alpha_i_wage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">dfj_hist</span><span class="op">$</span><span class="va">alpha_i_wage</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Age &lt;= 23\nalpha_i=$454'</span>, <span class="st">'Age &gt; 23\nalpha_i=$1071'</span><span class="op">)</span><span class="op">)</span>
 
 
-<span class="no">title_line1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"Wage A_i Distribution (Linear Wage), NSW Training Lalonde (AER, 1986)"</span>)
-<span class="no">title_line2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"By Two Unique Levels of alpha_i: for Age &lt;= 23 and for Age &gt; 23"</span>)
+<span class="va">title_line1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"Wage A_i Distribution (Linear Wage), NSW Training Lalonde (AER, 1986)"</span><span class="op">)</span>
+<span class="va">title_line2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"By Two Unique Levels of alpha_i: for Age &lt;= 23 and for Age &gt; 23"</span><span class="op">)</span>
 
 <span class="co"># Graph</span>
-<span class="no">dfj_hist</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span><span class="no">A_i_wage</span>, <span class="kw">fill</span><span class="kw">=</span><span class="no">alpha_i_wage</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span>( <span class="kw">color</span><span class="kw">=</span><span class="st">"#e9ecef"</span>, <span class="kw">alpha</span><span class="kw">=</span><span class="fl">0.6</span>, <span class="kw">position</span> <span class="kw">=</span> <span class="st">'identity'</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span>(<span class="kw">values</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#69b3a2"</span>, <span class="st">"#404080"</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">fill</span><span class="kw">=</span><span class="st">""</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">title_line1</span>, <span class="st">'\n'</span>, <span class="no">title_line2</span>),
-       <span class="kw">x</span> <span class="kw">=</span> <span class="st">'A_i = Expected Wage no Training (in thousands, 1979)'</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="st">'density'</span>,
-       <span class="kw">caption</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'Linear Wage Regression on training. Control for age, educ, race. Age &lt;= 23 or &gt; 23 interaction.'</span>))</pre></body></html></div>
+<span class="va">dfj_hist</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">A_i_wage</span>, fill<span class="op">=</span><span class="va">alpha_i_wage</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span><span class="op">(</span> color<span class="op">=</span><span class="st">"#e9ecef"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, position <span class="op">=</span> <span class="st">'identity'</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#69b3a2"</span>, <span class="st">"#404080"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>fill<span class="op">=</span><span class="st">""</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">title_line1</span>, <span class="st">'\n'</span>, <span class="va">title_line2</span><span class="op">)</span>,
+       x <span class="op">=</span> <span class="st">'A_i = Expected Wage no Training (in thousands, 1979)'</span>,
+       y <span class="op">=</span> <span class="st">'density'</span>,
+       caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'Linear Wage Regression on training. Control for age, educ, race. Age &lt;= 23 or &gt; 23 interaction.'</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -802,39 +819,41 @@ Wage and Employment allocation space parameters comparison.
 <h3 class="hasAnchor">
 <a href="#histogram-plots-and-table-highest-rank-reached" class="anchor"></a>Histogram Plots and Table highest Rank Reached</h3>
 <p>Looked highest rank reached for each (highest rank (smallest number ever reached)).</p>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="co"># Generate min and max gaps</span>
-<span class="no">dfj_highest</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">rank_max_wage</span>, <span class="no">rank_max_employ</span>)
+<div class="sourceCode" id="cb37"><pre class="downlit">
+<span class="co"># Generate min and max gaps</span>
+<span class="va">dfj_highest</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">rank_max_wage</span>, <span class="va">rank_max_employ</span><span class="op">)</span>
 
 <span class="co"># Wide to long</span>
-<span class="no">st_gap_prefix</span> <span class="kw">&lt;-</span> <span class="st">'rank_max'</span>
-<span class="no">dfj_highest_long</span> <span class="kw">&lt;-</span> <span class="no">dfj_highest</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(
-    <span class="kw">cols</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="no">st_gap_prefix</span>),
-    <span class="kw">names_to</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'employvswwage'</span>),
-    <span class="kw">names_pattern</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">st_gap_prefix</span>, <span class="st">"_(.*)"</span>),
-    <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'highestrank'</span>
-  )
+<span class="va">st_gap_prefix</span> <span class="op">&lt;-</span> <span class="st">'rank_max'</span>
+<span class="va">dfj_highest_long</span> <span class="op">&lt;-</span> <span class="va">dfj_highest</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>
+    cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="va">st_gap_prefix</span><span class="op">)</span>,
+    names_to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'employvswwage'</span><span class="op">)</span>,
+    names_pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">st_gap_prefix</span>, <span class="st">"_(.*)"</span><span class="op">)</span>,
+    values_to <span class="op">=</span> <span class="st">'highestrank'</span>
+  <span class="op">)</span>
 
 <span class="co"># Rank change to categories</span>
-<span class="no">dfj_highest_long</span> <span class="kw">&lt;-</span> <span class="no">dfj_highest_long</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">highestrank_grp</span> <span class="kw">=</span>
-           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">highestrank</span> <span class="kw">==</span> <span class="fl">1</span> ~ <span class="st">"Top A 1"</span>,
-                     <span class="no">highestrank</span> <span class="kw">&lt;=</span> <span class="fl">10</span>  <span class="kw">&amp;</span> <span class="no">highestrank</span> <span class="kw">&gt;</span> <span class="fl">1</span> ~ <span class="st">"Top B 10"</span>,
-                     <span class="no">highestrank</span> <span class="kw">&lt;=</span> <span class="fl">50</span> <span class="kw">&amp;</span> <span class="no">highestrank</span> <span class="kw">&gt;</span> <span class="fl">10</span> ~ <span class="st">"Top C 11 to 50"</span>,
-                     <span class="no">highestrank</span> <span class="kw">&lt;=</span> <span class="fl">100</span> <span class="kw">&amp;</span> <span class="no">highestrank</span> <span class="kw">&gt;</span> <span class="fl">50</span> ~ <span class="st">"Top D 51 to 100"</span>,
-                     <span class="no">highestrank</span> <span class="kw">&lt;=</span> <span class="fl">297</span> <span class="kw">&amp;</span> <span class="no">highestrank</span> <span class="kw">&gt;</span> <span class="fl">100</span> ~ <span class="st">"Top E 101 to 297"</span>,
-                     <span class="no">highestrank</span> <span class="kw">&gt;</span> <span class="fl">297</span> ~ <span class="st">"Top F &gt; 297"</span>))
+<span class="va">dfj_highest_long</span> <span class="op">&lt;-</span> <span class="va">dfj_highest_long</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>highestrank_grp <span class="op">=</span>
+           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">highestrank</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="st">"Top A 1"</span>,
+                     <span class="va">highestrank</span> <span class="op">&lt;=</span> <span class="fl">10</span>  <span class="op">&amp;</span> <span class="va">highestrank</span> <span class="op">&gt;</span> <span class="fl">1</span> <span class="op">~</span> <span class="st">"Top B 10"</span>,
+                     <span class="va">highestrank</span> <span class="op">&lt;=</span> <span class="fl">50</span> <span class="op">&amp;</span> <span class="va">highestrank</span> <span class="op">&gt;</span> <span class="fl">10</span> <span class="op">~</span> <span class="st">"Top C 11 to 50"</span>,
+                     <span class="va">highestrank</span> <span class="op">&lt;=</span> <span class="fl">100</span> <span class="op">&amp;</span> <span class="va">highestrank</span> <span class="op">&gt;</span> <span class="fl">50</span> <span class="op">~</span> <span class="st">"Top D 51 to 100"</span>,
+                     <span class="va">highestrank</span> <span class="op">&lt;=</span> <span class="fl">297</span> <span class="op">&amp;</span> <span class="va">highestrank</span> <span class="op">&gt;</span> <span class="fl">100</span> <span class="op">~</span> <span class="st">"Top E 101 to 297"</span>,
+                     <span class="va">highestrank</span> <span class="op">&gt;</span> <span class="fl">297</span> <span class="op">~</span> <span class="st">"Top F &gt; 297"</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Graph</span>
-<span class="no">dfj_highest_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span><span class="no">highestrank</span>, <span class="kw">fill</span><span class="kw">=</span><span class="no">employvswwage</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span>(<span class="kw">color</span><span class="kw">=</span><span class="st">"#e9ecef"</span>, <span class="kw">alpha</span><span class="kw">=</span><span class="fl">0.6</span>, <span class="kw">position</span> <span class="kw">=</span> <span class="st">'identity'</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span>(<span class="kw">values</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#69b3a2"</span>, <span class="st">"#404080"</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">fill</span><span class="kw">=</span><span class="st">""</span>)</pre></body></html></div>
+<span class="va">dfj_highest_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">highestrank</span>, fill<span class="op">=</span><span class="va">employvswwage</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">"#e9ecef"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, position <span class="op">=</span> <span class="st">'identity'</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#69b3a2"</span>, <span class="st">"#404080"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>fill<span class="op">=</span><span class="st">""</span><span class="op">)</span></pre></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-9-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="co"># Table</span>
-<span class="no">dfj_highest_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">employvswwage</span>, <span class="no">highestrank_grp</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">count</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>())</pre></body></html></div>
+<div class="sourceCode" id="cb39"><pre class="downlit">
+<span class="co"># Table</span>
+<span class="va">dfj_highest_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">employvswwage</span>, <span class="va">highestrank_grp</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>count <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## `summarise()` regrouping output by 'employvswwage' (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 12 x 3
 ## # Groups:   employvswwage [2]
@@ -863,41 +882,43 @@ Wage and Employment allocation space parameters comparison.
 <li>show table summary statistics differences</li>
 <li>show graph differences</li>
 </ol>
-<div class="sourceCode" id="cb42"><html><body><pre class="r"><span class="co"># Generate min and max gaps</span>
-<span class="no">dfj_gap</span> <span class="kw">&lt;-</span> <span class="no">dfj</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rank_gap_wage</span> <span class="kw">=</span> <span class="no">rank_min_wage</span> - <span class="no">rank_max_wage</span>,
-                          <span class="kw">rank_gap_employ</span> <span class="kw">=</span> <span class="no">rank_min_employ</span> - <span class="no">rank_max_employ</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">rank_gap_wage</span>, <span class="no">rank_gap_employ</span>)
+<div class="sourceCode" id="cb42"><pre class="downlit">
+<span class="co"># Generate min and max gaps</span>
+<span class="va">dfj_gap</span> <span class="op">&lt;-</span> <span class="va">dfj</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rank_gap_wage <span class="op">=</span> <span class="va">rank_min_wage</span> <span class="op">-</span> <span class="va">rank_max_wage</span>,
+                          rank_gap_employ <span class="op">=</span> <span class="va">rank_min_employ</span> <span class="op">-</span> <span class="va">rank_max_employ</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">rank_gap_wage</span>, <span class="va">rank_gap_employ</span><span class="op">)</span>
 
 <span class="co"># Wide to long</span>
-<span class="no">st_gap_prefix</span> <span class="kw">&lt;-</span> <span class="st">'rank_gap'</span>
-<span class="no">dfj_gap_long</span> <span class="kw">&lt;-</span> <span class="no">dfj_gap</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(
-    <span class="kw">cols</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="no">st_gap_prefix</span>),
-    <span class="kw">names_to</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'employvswwage'</span>),
-    <span class="kw">names_pattern</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">st_gap_prefix</span>, <span class="st">"_(.*)"</span>),
-    <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">'rank_gap'</span>
-  )
+<span class="va">st_gap_prefix</span> <span class="op">&lt;-</span> <span class="st">'rank_gap'</span>
+<span class="va">dfj_gap_long</span> <span class="op">&lt;-</span> <span class="va">dfj_gap</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>
+    cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="va">st_gap_prefix</span><span class="op">)</span>,
+    names_to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'employvswwage'</span><span class="op">)</span>,
+    names_pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">st_gap_prefix</span>, <span class="st">"_(.*)"</span><span class="op">)</span>,
+    values_to <span class="op">=</span> <span class="st">'rank_gap'</span>
+  <span class="op">)</span>
 
 <span class="co"># Rank change to categories</span>
-<span class="no">dfj_gap_long</span> <span class="kw">&lt;-</span> <span class="no">dfj_gap_long</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">rank_gap_grp</span> <span class="kw">=</span>
-           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">rank_gap</span> <span class="kw">==</span> <span class="fl">0</span> ~ <span class="st">"change A no change"</span>,
-                     <span class="no">rank_gap</span> <span class="kw">&lt;=</span> <span class="fl">50</span>  <span class="kw">&amp;</span> <span class="no">rank_gap</span> <span class="kw">&gt;</span> <span class="fl">0</span> ~ <span class="st">"change B 50 positions"</span>,
-                     <span class="no">rank_gap</span> <span class="kw">&lt;=</span> <span class="fl">100</span> <span class="kw">&amp;</span> <span class="no">rank_gap</span> <span class="kw">&gt;</span> <span class="fl">50</span> ~ <span class="st">"change C 51 to 100"</span>,
-                     <span class="no">rank_gap</span> <span class="kw">&lt;=</span> <span class="fl">200</span> <span class="kw">&amp;</span> <span class="no">rank_gap</span> <span class="kw">&gt;</span> <span class="fl">100</span> ~ <span class="st">"change D 101 to 200"</span>,
-                     <span class="no">rank_gap</span> <span class="kw">&lt;=</span> <span class="fl">400</span> <span class="kw">&amp;</span> <span class="no">rank_gap</span> <span class="kw">&gt;</span> <span class="fl">200</span> ~ <span class="st">"change E 201 to 400"</span>,
-                     <span class="no">rank_gap</span> <span class="kw">&gt;</span> <span class="fl">400</span> ~ <span class="st">"change F more than 401"</span>))
+<span class="va">dfj_gap_long</span> <span class="op">&lt;-</span> <span class="va">dfj_gap_long</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rank_gap_grp <span class="op">=</span>
+           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">rank_gap</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">~</span> <span class="st">"change A no change"</span>,
+                     <span class="va">rank_gap</span> <span class="op">&lt;=</span> <span class="fl">50</span>  <span class="op">&amp;</span> <span class="va">rank_gap</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">~</span> <span class="st">"change B 50 positions"</span>,
+                     <span class="va">rank_gap</span> <span class="op">&lt;=</span> <span class="fl">100</span> <span class="op">&amp;</span> <span class="va">rank_gap</span> <span class="op">&gt;</span> <span class="fl">50</span> <span class="op">~</span> <span class="st">"change C 51 to 100"</span>,
+                     <span class="va">rank_gap</span> <span class="op">&lt;=</span> <span class="fl">200</span> <span class="op">&amp;</span> <span class="va">rank_gap</span> <span class="op">&gt;</span> <span class="fl">100</span> <span class="op">~</span> <span class="st">"change D 101 to 200"</span>,
+                     <span class="va">rank_gap</span> <span class="op">&lt;=</span> <span class="fl">400</span> <span class="op">&amp;</span> <span class="va">rank_gap</span> <span class="op">&gt;</span> <span class="fl">200</span> <span class="op">~</span> <span class="st">"change E 201 to 400"</span>,
+                     <span class="va">rank_gap</span> <span class="op">&gt;</span> <span class="fl">400</span> <span class="op">~</span> <span class="st">"change F more than 401"</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Graph</span>
-<span class="no">dfj_gap_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span><span class="no">rank_gap</span>, <span class="kw">fill</span><span class="kw">=</span><span class="no">employvswwage</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span>(<span class="kw">color</span><span class="kw">=</span><span class="st">"#e9ecef"</span>, <span class="kw">alpha</span><span class="kw">=</span><span class="fl">0.6</span>, <span class="kw">position</span> <span class="kw">=</span> <span class="st">'identity'</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span>(<span class="kw">values</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#69b3a2"</span>, <span class="st">"#404080"</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">fill</span><span class="kw">=</span><span class="st">""</span>)</pre></body></html></div>
+<span class="va">dfj_gap_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">rank_gap</span>, fill<span class="op">=</span><span class="va">employvswwage</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">"#e9ecef"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, position <span class="op">=</span> <span class="st">'identity'</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#69b3a2"</span>, <span class="st">"#404080"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>fill<span class="op">=</span><span class="st">""</span><span class="op">)</span></pre></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="ffv_opt_sobin_rkone_allrw_training_files/figure-html/unnamed-chunk-10-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb44"><html><body><pre class="r"><span class="co"># Table</span>
-<span class="no">dfj_gap_long</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">employvswwage</span>, <span class="no">rank_gap_grp</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">count</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>())</pre></body></html></div>
+<div class="sourceCode" id="cb44"><pre class="downlit">
+<span class="co"># Table</span>
+<span class="va">dfj_gap_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">employvswwage</span>, <span class="va">rank_gap_grp</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>count <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>## `summarise()` regrouping output by 'employvswwage' (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 11 x 3
 ## # Groups:   employvswwage [2]
@@ -919,47 +940,48 @@ Wage and Employment allocation space parameters comparison.
 <div id="table-of-top-10-individuals" class="section level2">
 <h2 class="hasAnchor">
 <a href="#table-of-top-10-individuals" class="anchor"></a>Table of Top 10 Individuals</h2>
-<div class="sourceCode" id="cb47"><html><body><pre class="r">#
-# # Calculat the maximum rank reached by each from all the rhos we have
-# # The difference between this and the other max, this computes across all rhos, employment and wage
-#
-# dfj_top10 &lt;- dfj %&gt;%
-#     select(contains("rho_")) %&gt;%
-#     reduce(pmin) %&gt;%
-#     mutate(dfj, max_rank_rhos = .)
-#
-# dfj_top10 &lt;- dfj_top10 %&gt;% filter(max_rank_rhos &lt;= 10) %&gt;%
-#   select(id, age, educ, black, race,
-#          rho_c1_rk_employ, rho_c16_rk_employ, rho_c30_rk_employ,
-#          rho_c1_rk_wage, rho_c16_rk_wage, rho_c30_rk_wage) %&gt;%
-#   rename(emp_util = rho_c1_rk_employ,
-#          emp_CD   = rho_c16_rk_employ,
-#          emp_rawl = rho_c30_rk_employ,
-#          wag_util = rho_c1_rk_wage,
-#          wag_CD   = rho_c16_rk_wage,
-#          wag_rawl = rho_c30_rk_wage,
-#          ) %&gt;%
-#   arrange(age, educ, race)
-#
-# dim(dfj_top10)
-#
-# # Graphing Library
-# library(kableExtra)
-# # Load Data
-# dt &lt;- mtcars[1:5, 1:6]
-# # Generate latex string variable
-# st_out_tex &lt;- kable(dfj_top10, "latex")
-# print(st_out_tex)
-# # File out
-# # fileConn &lt;- file("./../../_file/tex/tex_sample_a_tab.tex")
-# fileConn &lt;- file("C:/users/fan/HgtOptiAlloDraft/_tab/Lalonde_wage_employ_top10.tex")
-# writeLines(st_out_tex, fileConn)
-# close(fileConn)
-#
-# # Display results here
-# dfj_top10 %&gt;%
-#     kable() %&gt;%
-#     kable_styling(bootstrap_options = c("striped", "hover", "responsive"))</pre></body></html></div>
+<div class="sourceCode" id="cb47"><pre class="downlit">
+<span class="co">#</span>
+<span class="co"># # Calculat the maximum rank reached by each from all the rhos we have</span>
+<span class="co"># # The difference between this and the other max, this computes across all rhos, employment and wage</span>
+<span class="co">#</span>
+<span class="co"># dfj_top10 &lt;- dfj %&gt;%</span>
+<span class="co">#     select(contains("rho_")) %&gt;%</span>
+<span class="co">#     reduce(pmin) %&gt;%</span>
+<span class="co">#     mutate(dfj, max_rank_rhos = .)</span>
+<span class="co">#</span>
+<span class="co"># dfj_top10 &lt;- dfj_top10 %&gt;% filter(max_rank_rhos &lt;= 10) %&gt;%</span>
+<span class="co">#   select(id, age, educ, black, race,</span>
+<span class="co">#          rho_c1_rk_employ, rho_c16_rk_employ, rho_c30_rk_employ,</span>
+<span class="co">#          rho_c1_rk_wage, rho_c16_rk_wage, rho_c30_rk_wage) %&gt;%</span>
+<span class="co">#   rename(emp_util = rho_c1_rk_employ,</span>
+<span class="co">#          emp_CD   = rho_c16_rk_employ,</span>
+<span class="co">#          emp_rawl = rho_c30_rk_employ,</span>
+<span class="co">#          wag_util = rho_c1_rk_wage,</span>
+<span class="co">#          wag_CD   = rho_c16_rk_wage,</span>
+<span class="co">#          wag_rawl = rho_c30_rk_wage,</span>
+<span class="co">#          ) %&gt;%</span>
+<span class="co">#   arrange(age, educ, race)</span>
+<span class="co">#</span>
+<span class="co"># dim(dfj_top10)</span>
+<span class="co">#</span>
+<span class="co"># # Graphing Library</span>
+<span class="co"># library(kableExtra)</span>
+<span class="co"># # Load Data</span>
+<span class="co"># dt &lt;- mtcars[1:5, 1:6]</span>
+<span class="co"># # Generate latex string variable</span>
+<span class="co"># st_out_tex &lt;- kable(dfj_top10, "latex")</span>
+<span class="co"># print(st_out_tex)</span>
+<span class="co"># # File out</span>
+<span class="co"># # fileConn &lt;- file("./../../_file/tex/tex_sample_a_tab.tex")</span>
+<span class="co"># fileConn &lt;- file("C:/users/fan/HgtOptiAlloDraft/_tab/Lalonde_wage_employ_top10.tex")</span>
+<span class="co"># writeLines(st_out_tex, fileConn)</span>
+<span class="co"># close(fileConn)</span>
+<span class="co">#</span>
+<span class="co"># # Display results here</span>
+<span class="co"># dfj_top10 %&gt;%</span>
+<span class="co">#     kable() %&gt;%</span>
+<span class="co">#     kable_styling(bootstrap_options = c("striped", "hover", "responsive"))</span></pre></div>
 </div>
   </div>
 
@@ -978,7 +1000,7 @@ Wage and Employment allocation space parameters comparison.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

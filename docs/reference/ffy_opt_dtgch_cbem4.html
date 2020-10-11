@@ -104,9 +104,6 @@ dtgch = data guatemala cebu height. There discrete groups, allowing for alpha to
   <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
 </li>
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
-</li>
-<li>
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
@@ -184,7 +181,7 @@ dtgch = data guatemala cebu height. There discrete groups, allowing for alpha to
 *ffv_opt_dtgch_cbem4.Rmd* tests the code here and generates rda file that is saved in data folder.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ffy_opt_dtgch_cbem4</span>()</pre>
+    <pre class="usage"><span class='fu'>ffy_opt_dtgch_cbem4</span><span class='op'>(</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -198,10 +195,14 @@ dtgch = data guatemala cebu height. There discrete groups, allowing for alpha to
 
     <p><a href='https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html'>https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html</a>
 <a href='https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html'>https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html</a></p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Fan Wang, <a href='http://fanwangecon.github.io'>http://fanwangecon.github.io</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ls_opti_alpha_A</span> <span class='kw'>&lt;-</span> <span class='fu'>ffy_opt_dtgch_cbem4</span>()
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>ls_opti_alpha_A</span>$<span class='no'>df_raw</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 10 x 17</span><span>
+    <pre class="examples"><div class='input'><span class='va'>ls_opti_alpha_A</span> <span class='op'>&lt;-</span> <span class='fu'>ffy_opt_dtgch_cbem4</span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>ls_opti_alpha_A</span><span class='op'>$</span><span class='va'>df_raw</span>, <span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 10 x 17</span><span>
 #&gt;    S.country vil.id indi.id sex   svymthRound momEdu wealthIdx   hgt    wgt
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #555555;'> 1</span><span> Cebu           1       2 Fema~          24    7.1       7.3  79.2 </span><span style='text-decoration: underline;'>10</span><span>776.
@@ -215,7 +216,8 @@ dtgch = data guatemala cebu height. There discrete groups, allowing for alpha to
 #&gt; </span><span style='color: #555555;'> 9</span><span> Cebu           1      10 Male           24   10.5       6.3  77.1  </span><span style='text-decoration: underline;'>9</span><span>442.
 #&gt; </span><span style='color: #555555;'>10</span><span> Cebu           1      11 Male           24    1.9       6.3  72.1  </span><span style='text-decoration: underline;'>6</span><span>627.
 #&gt; </span><span style='color: #555555;'># ... with 8 more variables: hgt0 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, wgt0 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, prot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, cal </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   p.A.prot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, p.A.nProt </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, momEduRound </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span style='color: #555555;'>, hgt0med </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>ls_opti_alpha_A</span>$<span class='no'>df_esti</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 10 x 9</span><span>
+#&gt; </span><span style='color: #555555;'>#   p.A.prot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, p.A.nProt </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, momEduRound </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span style='color: #555555;'>, hgt0med </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>ls_opti_alpha_A</span><span class='op'>$</span><span class='va'>df_esti</span>, <span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 10 x 9</span><span>
 #&gt;    S.country vil.id indi.id svymthRound alpha_lin alpha_log A_lin A_log     beta
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #555555;'> 1</span><span> Cebu           1       2          24    0.010</span><span style='text-decoration: underline;'>1</span><span>   0.006</span><span style='text-decoration: underline;'>69</span><span>  78.4  4.34 0.000</span><span style='text-decoration: underline;'>959</span><span>
@@ -243,7 +245,7 @@ dtgch = data guatemala cebu height. There discrete groups, allowing for alpha to
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

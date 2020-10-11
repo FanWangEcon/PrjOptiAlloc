@@ -58,9 +58,6 @@ for the Binary Allocation problem based on Theorem 1. Hand-input A and alpha val
   <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
 </li>
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
-</li>
-<li>
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
@@ -123,7 +120,8 @@ for the Binary Allocation problem based on Theorem 1. Hand-input A and alpha val
 
       
 
-      </header><script src="ffv_opt_sobin_rev_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="ffv_opt_sobin_rev_files/kePrint-0.0.1/kePrint.js"></script><div class="row">
+      </header><script src="ffv_opt_sobin_rev_files/header-attrs-2.4/header-attrs.js"></script><script src="ffv_opt_sobin_rev_files/kePrint-0.0.1/kePrint.js"></script><link href="ffv_opt_sobin_rev_files/lightable-0.0.1/lightable.css" rel="stylesheet">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Welfare Test Resource Equivalent Variation (REV) Computation (Line by Line)</h1>
@@ -140,16 +138,18 @@ for the Binary Allocation problem based on Theorem 1. Hand-input A and alpha val
 <div id="load-dependencies" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-dependencies" class="anchor"></a>Load Dependencies</h2>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(<span class="kw">list</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span>(<span class="kw">all.names</span> <span class="kw">=</span> <span class="fl">TRUE</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">knitr.duplicate.label</span> <span class="kw">=</span> <span class="st">'allow'</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tibble</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span>all.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>knitr.duplicate.label <span class="op">=</span> <span class="st">'allow'</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">PrjOptiAlloc</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fanwangecon.github.io/PrjOptiAlloc/">PrjOptiAlloc</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">knitr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">kableExtra</span>)</pre></body></html></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span></pre></div>
 </div>
 <div id="implement-algorithm-line-by-line" class="section level2">
 <h2 class="hasAnchor">
@@ -158,14 +158,15 @@ for the Binary Allocation problem based on Theorem 1. Hand-input A and alpha val
 <h3 class="hasAnchor">
 <a href="#generate-testing-rank-data" class="anchor"></a>Generate Testing Rank Data</h3>
 <p>Generate data needed.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># 1. Generate A and alpha Testing Vectors, random list no meanings</span>
-<span class="no">ar_alpha</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.1</span>,<span class="fl">1.5</span>,<span class="fl">2.5</span>,<span class="fl">4</span>  ,<span class="fl">9</span>,<span class="fl">1.2</span>,<span class="fl">3</span>,<span class="fl">2</span>,<span class="fl">8</span>)
-<span class="no">ar_A</span> <span class="kw">&lt;-</span>     <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.5</span>,<span class="fl">1.5</span>,<span class="fl">3.5</span>,<span class="fl">6.5</span>,<span class="fl">1.9</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">6</span>,<span class="fl">4</span>)
-<span class="no">ar_beta</span> <span class="kw">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_A</span>)) + <span class="fl">1</span>/<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_A</span>)
-<span class="no">mt_alpha_A</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="no">ar_alpha</span>, <span class="no">ar_A</span>, <span class="no">ar_beta</span>)
-<span class="no">ar_st_varnames</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span>)
-<span class="no">tb_alpha_A</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_alpha_A</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span>(~<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ar_st_varnames</span>))
-<span class="no">tb_alpha_A</span></pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># 1. Generate A and alpha Testing Vectors, random list no meanings</span>
+<span class="va">ar_alpha</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">1.5</span>,<span class="fl">2.5</span>,<span class="fl">4</span>  ,<span class="fl">9</span>,<span class="fl">1.2</span>,<span class="fl">3</span>,<span class="fl">2</span>,<span class="fl">8</span><span class="op">)</span>
+<span class="va">ar_A</span> <span class="op">&lt;-</span>     <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">1.5</span>,<span class="fl">3.5</span>,<span class="fl">6.5</span>,<span class="fl">1.9</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">6</span>,<span class="fl">4</span><span class="op">)</span>
+<span class="va">ar_beta</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_A</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_A</span><span class="op">)</span>
+<span class="va">mt_alpha_A</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">ar_alpha</span>, <span class="va">ar_A</span>, <span class="va">ar_beta</span><span class="op">)</span>
+<span class="va">ar_st_varnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span><span class="op">)</span>
+<span class="va">tb_alpha_A</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">mt_alpha_A</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span>
+<span class="va">tb_alpha_A</span></pre></div>
 <pre><code>## # A tibble: 9 x 3
 ##   alpha     A  beta
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -178,20 +179,21 @@ for the Binary Allocation problem based on Theorem 1. Hand-input A and alpha val
 ## 7   3     4   0.111
 ## 8   2     6   0.111
 ## 9   8     4   0.111</code></pre>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">ar_rho</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.99</span>)
-<span class="kw">for</span> (<span class="no">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))) {
-  <span class="no">fl_rho</span> <span class="kw">&lt;-</span> <span class="no">ar_rho</span>[<span class="no">it_rho_ctr</span>]
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="va">ar_rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.99</span><span class="op">)</span>
+<span class="kw">for</span> <span class="op">(</span><span class="va">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">fl_rho</span> <span class="op">&lt;-</span> <span class="va">ar_rho</span><span class="op">[</span><span class="va">it_rho_ctr</span><span class="op">]</span>
 
-  <span class="no">ls_ranks</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/ffp_opt_sobin_target_row.html">ffp_opt_sobin_target_row</a></span>(<span class="no">tb_alpha_A</span>[<span class="fl">1</span>,], <span class="no">fl_rho</span>, <span class="no">ar_A</span>, <span class="no">ar_alpha</span>, <span class="no">ar_beta</span>)
-  <span class="no">it_rank</span> <span class="kw">&lt;-</span> <span class="no">ls_ranks</span>$<span class="no">it_rank</span>
-  <span class="no">ar_it_rank</span> <span class="kw">&lt;-</span> <span class="no">ls_ranks</span>$<span class="no">ar_it_rank</span>
-  <span class="no">ar_fl_rank_val</span> <span class="kw">&lt;-</span> <span class="no">ls_ranks</span>$<span class="no">ar_fl_rank_val</span>
+  <span class="va">ls_ranks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ffp_opt_sobin_target_row.html">ffp_opt_sobin_target_row</a></span><span class="op">(</span><span class="va">tb_alpha_A</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span>, <span class="va">fl_rho</span>, <span class="va">ar_A</span>, <span class="va">ar_alpha</span>, <span class="va">ar_beta</span><span class="op">)</span>
+  <span class="va">it_rank</span> <span class="op">&lt;-</span> <span class="va">ls_ranks</span><span class="op">$</span><span class="va">it_rank</span>
+  <span class="va">ar_it_rank</span> <span class="op">&lt;-</span> <span class="va">ls_ranks</span><span class="op">$</span><span class="va">ar_it_rank</span>
+  <span class="va">ar_fl_rank_val</span> <span class="op">&lt;-</span> <span class="va">ls_ranks</span><span class="op">$</span><span class="va">ar_fl_rank_val</span>
 
-  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'fl_rho:'</span>, <span class="no">fl_rho</span>, <span class="st">'it_rank:'</span>, <span class="no">it_rank</span>, <span class="st">'\n'</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'ar_it_rank:'</span>, <span class="no">ar_it_rank</span>, <span class="st">'\n'</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'ar_fl_rank_val:'</span>, <span class="no">ar_fl_rank_val</span>, <span class="st">'\n'</span>)
+  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'fl_rho:'</span>, <span class="va">fl_rho</span>, <span class="st">'it_rank:'</span>, <span class="va">it_rank</span>, <span class="st">'\n'</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'ar_it_rank:'</span>, <span class="va">ar_it_rank</span>, <span class="st">'\n'</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'ar_fl_rank_val:'</span>, <span class="va">ar_fl_rank_val</span>, <span class="st">'\n'</span><span class="op">)</span>
 
-}</pre></body></html></div>
+<span class="op">}</span></pre></div>
 <pre><code>## fl_rho: 0.99 it_rank: 9 
 ## ar_it_rank: 9 7 5 3 1 8 4 6 2 
 ## ar_fl_rank_val: 1 14.79282 24.46935 38.92284 87.90466 11.77704 29.32046 19.49807 77.92111</code></pre>
@@ -200,30 +202,32 @@ for the Binary Allocation problem based on Theorem 1. Hand-input A and alpha val
 <h3 class="hasAnchor">
 <a href="#compute-rev" class="anchor"></a>Compute REV</h3>
 <p>Compute REV giving observable and ranking</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># Use the just generated optimal ranking above</span>
-<span class="no">ar_it_obs</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">0</span>)
-<span class="no">ar_opti_r</span> <span class="kw">&lt;-</span> <span class="no">ar_it_rank</span>
-<span class="no">mt_rev</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_opti_r</span>)), <span class="no">ar_it_obs</span>, <span class="no">ar_opti_r</span>, <span class="no">ar_A</span>, <span class="no">ar_alpha</span>, <span class="no">ar_beta</span>)
-<span class="no">ar_st_varnames</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'id'</span>, <span class="st">'observed'</span>, <span class="st">'optimal'</span>, <span class="st">'A'</span>, <span class="st">'alpha'</span>, <span class="st">'beta'</span>)
-<span class="no">tb_onevar</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(<span class="no">mt_rev</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span>(~<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">ar_st_varnames</span>)) <span class="kw">%&gt;%</span>
-                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">optimal</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="co"># Use the just generated optimal ranking above</span>
+<span class="va">ar_it_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">0</span><span class="op">)</span>
+<span class="va">ar_opti_r</span> <span class="op">&lt;-</span> <span class="va">ar_it_rank</span>
+<span class="va">mt_rev</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_opti_r</span><span class="op">)</span><span class="op">)</span>, <span class="va">ar_it_obs</span>, <span class="va">ar_opti_r</span>, <span class="va">ar_A</span>, <span class="va">ar_alpha</span>, <span class="va">ar_beta</span><span class="op">)</span>
+<span class="va">ar_st_varnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'id'</span>, <span class="st">'observed'</span>, <span class="st">'optimal'</span>, <span class="st">'A'</span>, <span class="st">'alpha'</span>, <span class="st">'beta'</span><span class="op">)</span>
+<span class="va">tb_onevar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">mt_rev</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">optimal</span><span class="op">)</span></pre></div>
 <pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
 ## Using compatibility `.name_repair`.
 ## This warning is displayed once every 8 hours.
 ## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">it_w_res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">ar_it_obs</span>)
-<span class="no">fl_rho</span> <span class="kw">&lt;-</span> <span class="no">ar_rho</span>
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="va">it_w_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ar_it_obs</span><span class="op">)</span>
+<span class="va">fl_rho</span> <span class="op">&lt;-</span> <span class="va">ar_rho</span>
 
 <span class="co"># Generate util observed and util unobserved columns</span>
-<span class="no">tb_onevar</span> <span class="kw">&lt;-</span> <span class="no">tb_onevar</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">utility</span> <span class="kw">=</span> <span class="no">beta</span>*((<span class="no">A</span>+<span class="no">alpha</span>)^<span class="no">fl_rho</span> - <span class="no">A</span>^<span class="no">fl_rho</span>)) <span class="kw">%&gt;%</span>
-                           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">util_ob</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">observed</span> <span class="kw">==</span> <span class="fl">1</span> ~ <span class="no">utility</span>,
-                                                      <span class="fl">TRUE</span> ~ <span class="fl">0</span> )) <span class="kw">%&gt;%</span>
-                           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">util_notob</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">observed</span> <span class="kw">==</span> <span class="fl">0</span> ~ <span class="no">utility</span>,
-                                                         <span class="fl">TRUE</span> ~ <span class="fl">0</span> ))
+<span class="va">tb_onevar</span> <span class="op">&lt;-</span> <span class="va">tb_onevar</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>utility <span class="op">=</span> <span class="va">beta</span><span class="op">*</span><span class="op">(</span><span class="op">(</span><span class="va">A</span><span class="op">+</span><span class="va">alpha</span><span class="op">)</span><span class="op">^</span><span class="va">fl_rho</span> <span class="op">-</span> <span class="va">A</span><span class="op">^</span><span class="va">fl_rho</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>util_ob <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">observed</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="va">utility</span>,
+                                                      <span class="cn">TRUE</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>util_notob <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">observed</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">~</span> <span class="va">utility</span>,
+                                                         <span class="cn">TRUE</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Display</span>
-<span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">tb_onevar</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span>(<span class="kw">bootstrap_options</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">tb_onevar</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <table class="table table table-striped table-hover table-condensed table-responsive">
 <thead><tr>
 <th style="text-align:right;">
@@ -522,20 +526,21 @@ util_notob
 <div id="generate-util-observed-um-and-not-observed-reverse-sum" class="section level3">
 <h3 class="hasAnchor">
 <a href="#generate-util-observed-um-and-not-observed-reverse-sum" class="anchor"></a>Generate Util observed um and not observed Reverse Sum</h3>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># Generate directional cumulative sums</span>
-<span class="no">tb_onevar</span> <span class="kw">&lt;-</span> <span class="no">tb_onevar</span> <span class="kw">%&gt;%</span>
-                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(-<span class="no">optimal</span>) <span class="kw">%&gt;%</span>
-                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">util_ob_sum</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="no">util_ob</span>)) <span class="kw">%&gt;%</span>
-                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">optimal</span>) <span class="kw">%&gt;%</span>
-                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">util_notob_sum</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="no">util_notob</span>)) <span class="kw">%&gt;%</span>
-                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">observed</span>, <span class="no">optimal</span>, <span class="no">alpha</span>, <span class="no">A</span>, <span class="no">beta</span>,
-                       <span class="no">utility</span>,
-                       <span class="no">util_ob</span>, <span class="no">util_ob_sum</span>,
-                       <span class="no">util_notob</span>, <span class="no">util_notob_sum</span>)
+<div class="sourceCode" id="cb10"><pre class="downlit">
+<span class="co"># Generate directional cumulative sums</span>
+<span class="va">tb_onevar</span> <span class="op">&lt;-</span> <span class="va">tb_onevar</span> <span class="op">%&gt;%</span>
+                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">optimal</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>util_ob_sum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span><span class="op">(</span><span class="va">util_ob</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">optimal</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>util_notob_sum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span><span class="op">(</span><span class="va">util_notob</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">observed</span>, <span class="va">optimal</span>, <span class="va">alpha</span>, <span class="va">A</span>, <span class="va">beta</span>,
+                       <span class="va">utility</span>,
+                       <span class="va">util_ob</span>, <span class="va">util_ob_sum</span>,
+                       <span class="va">util_notob</span>, <span class="va">util_notob_sum</span><span class="op">)</span>
 
 <span class="co"># Display</span>
-<span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">tb_onevar</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span>(<span class="kw">bootstrap_options</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">tb_onevar</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <table class="table table table-striped table-hover table-condensed table-responsive">
 <thead><tr>
 <th style="text-align:right;">
@@ -890,22 +895,23 @@ util_notob_sum
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co"># Following Theorem 1, simply compare util_ob_sum vs util_notob_sum</span>
-<span class="no">tb_onevar</span> <span class="kw">&lt;-</span> <span class="no">tb_onevar</span> <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">opti_better_obs</span> <span class="kw">=</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">util_notob_sum</span>/<span class="no">util_ob_sum</span> <span class="kw">&gt;</span> <span class="fl">1</span> ~ <span class="fl">1</span>,
-                         <span class="fl">TRUE</span> ~ <span class="fl">0</span>)
-             ) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">observed</span>, <span class="no">optimal</span>,
-             <span class="no">utility</span>,
-             <span class="no">util_ob</span>, <span class="no">util_ob_sum</span>,
-             <span class="no">util_notob</span>, <span class="no">util_notob_sum</span>,
-             <span class="no">opti_better_obs</span>,
-             <span class="no">alpha</span>, <span class="no">A</span>, <span class="no">beta</span>)
+<div class="sourceCode" id="cb11"><pre class="downlit">
+<span class="co"># Following Theorem 1, simply compare util_ob_sum vs util_notob_sum</span>
+<span class="va">tb_onevar</span> <span class="op">&lt;-</span> <span class="va">tb_onevar</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>opti_better_obs <span class="op">=</span>
+               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">util_notob_sum</span><span class="op">/</span><span class="va">util_ob_sum</span> <span class="op">&gt;</span> <span class="fl">1</span> <span class="op">~</span> <span class="fl">1</span>,
+                         <span class="cn">TRUE</span> <span class="op">~</span> <span class="fl">0</span><span class="op">)</span>
+             <span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">observed</span>, <span class="va">optimal</span>,
+             <span class="va">utility</span>,
+             <span class="va">util_ob</span>, <span class="va">util_ob_sum</span>,
+             <span class="va">util_notob</span>, <span class="va">util_notob_sum</span>,
+             <span class="va">opti_better_obs</span>,
+             <span class="va">alpha</span>, <span class="va">A</span>, <span class="va">beta</span><span class="op">)</span>
 
 <span class="co"># Display</span>
-<span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">tb_onevar</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span>(<span class="kw">bootstrap_options</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">tb_onevar</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <table class="table table table-striped table-hover table-condensed table-responsive">
 <thead><tr>
 <th style="text-align:right;">
@@ -1290,23 +1296,24 @@ beta
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># Find the Rank number tha tmatches the First 1 in opti_better_obs</span>
-<span class="no">tb_onevar</span> <span class="kw">&lt;-</span> <span class="no">tb_onevar</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">opti_better_obs_cumu</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="no">opti_better_obs</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">min_w_hat</span> <span class="kw">=</span>
-           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(<span class="no">opti_better_obs_cumu</span> <span class="kw">==</span> <span class="fl">1</span> ~ <span class="no">optimal</span>,
-                     <span class="fl">TRUE</span> ~ <span class="fl">0</span>)) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">id</span>, <span class="no">observed</span>, <span class="no">optimal</span>,
-             <span class="no">utility</span>,
-             <span class="no">util_ob</span>, <span class="no">util_ob_sum</span>,
-             <span class="no">util_notob</span>, <span class="no">util_notob_sum</span>,
-             <span class="no">opti_better_obs</span>,
-             <span class="no">min_w_hat</span>,
-             <span class="no">alpha</span>, <span class="no">A</span>, <span class="no">beta</span>)
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="co"># Find the Rank number tha tmatches the First 1 in opti_better_obs</span>
+<span class="va">tb_onevar</span> <span class="op">&lt;-</span> <span class="va">tb_onevar</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>opti_better_obs_cumu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span><span class="op">(</span><span class="va">opti_better_obs</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>min_w_hat <span class="op">=</span>
+           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">opti_better_obs_cumu</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="va">optimal</span>,
+                     <span class="cn">TRUE</span> <span class="op">~</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">observed</span>, <span class="va">optimal</span>,
+             <span class="va">utility</span>,
+             <span class="va">util_ob</span>, <span class="va">util_ob_sum</span>,
+             <span class="va">util_notob</span>, <span class="va">util_notob_sum</span>,
+             <span class="va">opti_better_obs</span>,
+             <span class="va">min_w_hat</span>,
+             <span class="va">alpha</span>, <span class="va">A</span>, <span class="va">beta</span><span class="op">)</span>
 
 <span class="co"># Display</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">tb_onevar</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span>(<span class="kw">bootstrap_options</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</pre></body></html></div>
+  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">tb_onevar</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <table class="table table table-striped table-hover table-condensed table-responsive">
 <thead><tr>
 <th style="text-align:right;">
@@ -1721,16 +1728,19 @@ beta
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="co"># Compute REV</span>
-<span class="no">it_min_w_hat</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">tb_onevar</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">min_w_hat</span>))
-<span class="no">it_w_hat_obs</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">ar_it_obs</span>)
-<span class="no">delta_rev</span> <span class="kw">&lt;-</span> <span class="fl">1</span>-(<span class="no">it_min_w_hat</span>/<span class="no">it_w_hat_obs</span>)
+<div class="sourceCode" id="cb13"><pre class="downlit">
+<span class="co"># Compute REV</span>
+<span class="va">it_min_w_hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">tb_onevar</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">min_w_hat</span><span class="op">)</span><span class="op">)</span>
+<span class="va">it_w_hat_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ar_it_obs</span><span class="op">)</span>
+<span class="va">delta_rev</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">-</span><span class="op">(</span><span class="va">it_min_w_hat</span><span class="op">/</span><span class="va">it_w_hat_obs</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'it_min_w_hat:'</span>, <span class="no">it_min_w_hat</span>, <span class="st">'\n'</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'it_min_w_hat:'</span>, <span class="va">it_min_w_hat</span>, <span class="st">'\n'</span><span class="op">)</span></pre></div>
 <pre><code>## it_min_w_hat: 2</code></pre>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'it_w_hat_obs:'</span>, <span class="no">it_w_hat_obs</span>, <span class="st">'\n'</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb15"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'it_w_hat_obs:'</span>, <span class="va">it_w_hat_obs</span>, <span class="st">'\n'</span><span class="op">)</span></pre></div>
 <pre><code>## it_w_hat_obs: 4</code></pre>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'delta_rev:'</span>, <span class="no">delta_rev</span>, <span class="st">'\n'</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb17"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'delta_rev:'</span>, <span class="va">delta_rev</span>, <span class="st">'\n'</span><span class="op">)</span></pre></div>
 <pre><code>## delta_rev: 0.5</code></pre>
 </div>
 </div>
@@ -1738,7 +1748,8 @@ beta
 <h2 class="hasAnchor">
 <a href="#function-test" class="anchor"></a>Function test</h2>
 <p>Test the function written based on the details above.</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="co"># ar_alpha &lt;- c(0.1,1.5,2.5,4  ,9,1.2,3,2,8)</span>
+<div class="sourceCode" id="cb19"><pre class="downlit">
+<span class="co"># ar_alpha &lt;- c(0.1,1.5,2.5,4  ,9,1.2,3,2,8)</span>
 <span class="co"># ar_A &lt;-     c(0.5,1.5,3.5,6.5,1.9,3,4,6,4)</span>
 <span class="co"># ar_beta &lt;-  rep(0, length(ar_A)) + 1/length(ar_A)</span>
 <span class="co"># mt_alpha_A &lt;- cbind(ar_alpha, ar_A, ar_beta)</span>
@@ -1746,25 +1757,26 @@ beta
 <span class="co"># tb_alpha_A &lt;- as_tibble(mt_alpha_A) %&gt;% rename_all(~c(ar_st_varnames))</span>
 <span class="co"># tb_alpha_A</span>
 <span class="co"># ar_rho &lt;- c(-1)</span>
-<span class="kw">for</span> (<span class="no">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))) {
-  <span class="no">fl_rho</span> <span class="kw">&lt;-</span> <span class="no">ar_rho</span>[<span class="no">it_rho_ctr</span>]
+<span class="kw">for</span> <span class="op">(</span><span class="va">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">fl_rho</span> <span class="op">&lt;-</span> <span class="va">ar_rho</span><span class="op">[</span><span class="va">it_rho_ctr</span><span class="op">]</span>
 
-  <span class="no">ls_ranks</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/ffp_opt_sobin_target_row.html">ffp_opt_sobin_target_row</a></span>(<span class="no">tb_alpha_A</span>[<span class="fl">1</span>,], <span class="no">fl_rho</span>, <span class="no">ar_A</span>, <span class="no">ar_alpha</span>, <span class="no">ar_beta</span>)
-  <span class="no">it_rank</span> <span class="kw">&lt;-</span> <span class="no">ls_ranks</span>$<span class="no">it_rank</span>
-  <span class="no">ar_it_rank</span> <span class="kw">&lt;-</span> <span class="no">ls_ranks</span>$<span class="no">ar_it_rank</span>
-  <span class="no">ar_fl_rank_val</span> <span class="kw">&lt;-</span> <span class="no">ls_ranks</span>$<span class="no">ar_fl_rank_val</span>
+  <span class="va">ls_ranks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ffp_opt_sobin_target_row.html">ffp_opt_sobin_target_row</a></span><span class="op">(</span><span class="va">tb_alpha_A</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span>, <span class="va">fl_rho</span>, <span class="va">ar_A</span>, <span class="va">ar_alpha</span>, <span class="va">ar_beta</span><span class="op">)</span>
+  <span class="va">it_rank</span> <span class="op">&lt;-</span> <span class="va">ls_ranks</span><span class="op">$</span><span class="va">it_rank</span>
+  <span class="va">ar_it_rank</span> <span class="op">&lt;-</span> <span class="va">ls_ranks</span><span class="op">$</span><span class="va">ar_it_rank</span>
+  <span class="va">ar_fl_rank_val</span> <span class="op">&lt;-</span> <span class="va">ls_ranks</span><span class="op">$</span><span class="va">ar_fl_rank_val</span>
 
-  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'fl_rho:'</span>, <span class="no">fl_rho</span>, <span class="st">'it_rank:'</span>, <span class="no">it_rank</span>, <span class="st">'\n'</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'ar_it_rank:'</span>, <span class="no">ar_it_rank</span>, <span class="st">'\n'</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">'ar_fl_rank_val:'</span>, <span class="no">ar_fl_rank_val</span>, <span class="st">'\n'</span>)
+  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'fl_rho:'</span>, <span class="va">fl_rho</span>, <span class="st">'it_rank:'</span>, <span class="va">it_rank</span>, <span class="st">'\n'</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'ar_it_rank:'</span>, <span class="va">ar_it_rank</span>, <span class="st">'\n'</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'ar_fl_rank_val:'</span>, <span class="va">ar_fl_rank_val</span>, <span class="st">'\n'</span><span class="op">)</span>
 
-}</pre></body></html></div>
+<span class="op">}</span></pre></div>
 <pre><code>## fl_rho: 0.99 it_rank: 9 
 ## ar_it_rank: 9 7 5 3 1 8 4 6 2 
 ## ar_fl_rank_val: 1 14.79282 24.46935 38.92284 87.90466 11.77704 29.32046 19.49807 77.92111</code></pre>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="no">ar_bin_observed</span> <span class="kw">&lt;-</span> <span class="no">ar_it_obs</span>
-<span class="no">ar_queue_optimal</span> <span class="kw">&lt;-</span> <span class="no">ar_it_rank</span>
-<span class="fu"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span>(<span class="no">ar_queue_optimal</span>, <span class="no">ar_bin_observed</span>, <span class="no">ar_A</span>, <span class="no">ar_alpha</span>, <span class="no">ar_beta</span>, <span class="no">fl_rho</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb21"><pre class="downlit">
+<span class="va">ar_bin_observed</span> <span class="op">&lt;-</span> <span class="va">ar_it_obs</span>
+<span class="va">ar_queue_optimal</span> <span class="op">&lt;-</span> <span class="va">ar_it_rank</span>
+<span class="fu"><a href="../reference/ffp_opt_sobin_rev.html">ffp_opt_sobin_rev</a></span><span class="op">(</span><span class="va">ar_queue_optimal</span>, <span class="va">ar_bin_observed</span>, <span class="va">ar_A</span>, <span class="va">ar_alpha</span>, <span class="va">ar_beta</span>, <span class="va">fl_rho</span><span class="op">)</span></pre></div>
 <pre><code>## [1] 0.5</code></pre>
 </div>
   </div>
@@ -1784,7 +1796,7 @@ beta
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

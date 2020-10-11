@@ -37,6 +37,10 @@ ffp_opt_anlyz_rhgin_dis(
 \item{fl_teacher_increase_number}{is the amount of resources (in measure if svr_measure_i is not NA)
 available for allocation.}
 
+\item{bl_df_alloc_il}{boolean if true this will output a matrix where each column is a different
+i individual and each row is a position along the queue, and each cell is the level of allocation
+for individual i when the overall allocation queue is up to the current queue position.}
+
 \item{svr_beta_i}{string variable name for planner bias}
 
 \item{svr_measure_i}{string variable name for mass for this type of recipient, default NA

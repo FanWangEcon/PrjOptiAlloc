@@ -27,6 +27,8 @@ ffp_snw_process_inputs(
   svr_c_value = "ctilde",
   svr_mass = "mass",
   ar_rho = c(1),
+  bl_df_alloc_il = FALSE,
+  bl_return_allQ_V = FALSE,
   bl_threshold = FALSE,
   it_check_headorspouse = 12,
   it_check_perkids = 5,

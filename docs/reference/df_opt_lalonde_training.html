@@ -110,9 +110,6 @@ re78, real earnings in 1978." />
   <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
 </li>
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
-</li>
-<li>
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
@@ -196,7 +193,7 @@ re75, real earnings in 1975.
 re78, real earnings in 1978.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_lalonde_training</span>)</pre>
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>df_opt_lalonde_training</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
@@ -210,9 +207,10 @@ re78, real earnings in 1978.</p>
     <p>Lalonde, R. (1986) "Evaluating the Econometric Evaluations of Training Programs with Experimental Data", American Economic Review, 604–620.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>REconTools</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_lalonde_training</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_opt_lalonde_training</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt;     X trt age educ black hisp marr nodeg re74     re75      re78
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://fanwangecon.github.io/REconTools/'>REconTools</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>df_opt_lalonde_training</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>df_opt_lalonde_training</span>, <span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;     X trt age educ black hisp marr nodeg re74     re75      re78
 #&gt; 1   1   0  23   10     1    0    0     1    0    0.000     0.000
 #&gt; 2   2   0  26   12     0    0    0     0    0    0.000 12383.680
 #&gt; 3   3   0  22    9     1    0    0     1    0    0.000     0.000
@@ -222,7 +220,8 @@ re78, real earnings in 1978.</p>
 #&gt; 7   7   0  18    9     1    0    0     1    0    0.000  9227.052
 #&gt; 8   8   0  27   12     1    0    0     0   NA 2483.851  3552.268
 #&gt; 9   9   0  24    8     0    0    0     1    0    0.000 10569.270
-#&gt; 10 10   0  34   11     1    0    1     1    0    0.000  6040.335</div><div class='input'><span class='kw pkg'>REconTools</span><span class='kw ns'>::</span><span class='fu'><a href='https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html'>ff_summ_percentiles</a></span>(<span class='no'>df_opt_lalonde_training</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `funs()` is deprecated as of dplyr 0.8.0.</span>
+#&gt; 10 10   0  34   11     1    0    1     1    0    0.000  6040.335</div><div class='input'><span class='fu'>REconTools</span><span class='fu'>::</span><span class='fu'><a href='https://fanwangecon.github.io/REconTools/reference/ff_summ_percentiles.html'>ff_summ_percentiles</a></span><span class='op'>(</span><span class='va'>df_opt_lalonde_training</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: `funs()` is deprecated as of dplyr 0.8.0.</span>
 #&gt; <span class='warning'>Please use a list of either functions or lambdas: </span>
 #&gt; <span class='warning'></span>
 #&gt; <span class='warning'>  # Simple named list: </span>
@@ -278,7 +277,7 @@ re78, real earnings in 1978.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

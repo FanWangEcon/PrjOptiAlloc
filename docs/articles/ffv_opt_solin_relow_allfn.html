@@ -58,9 +58,6 @@ Use the Guatemala-Cebu scrambled nutrition and height early childhood data, same
   <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
 </li>
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
-</li>
-<li>
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
@@ -123,7 +120,7 @@ Use the Guatemala-Cebu scrambled nutrition and height early childhood data, same
 
       
 
-      </header><script src="ffv_opt_solin_relow_allfn_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="ffv_opt_solin_relow_allfn_files/header-attrs-2.4/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Function Test Lower-Bounded Linear-Continuous Allocation with Linear Regression</h1>
@@ -156,37 +153,41 @@ Use the Guatemala-Cebu scrambled nutrition and height early childhood data, same
 <div id="load-dependencies" class="section level3">
 <h3 class="hasAnchor">
 <a href="#load-dependencies" class="anchor"></a>Load Dependencies</h3>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(<span class="kw">list</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span>(<span class="kw">all.names</span> <span class="kw">=</span> <span class="fl">TRUE</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">knitr.duplicate.label</span> <span class="kw">=</span> <span class="st">'allow'</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stringr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">broom</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span>all.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>knitr.duplicate.label <span class="op">=</span> <span class="st">'allow'</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/">broom</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">REconTools</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">PrjOptiAlloc</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fanwangecon.github.io/REconTools/">REconTools</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fanwangecon.github.io/PrjOptiAlloc/">PrjOptiAlloc</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">knitr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">kableExtra</span>)</pre></body></html></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span></pre></div>
 </div>
 <div id="get-data-and-regression-results" class="section level3">
 <h3 class="hasAnchor">
 <a href="#get-data-and-regression-results" class="anchor"></a>Get Data and Regression Results</h3>
 <p>Generate four categories by initial height and mother’s education levels combinations.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># Load Data and Estimation Results: A and alpha, lin and loglin</span>
-<span class="no">ls_opti_alpha_A</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/ffy_opt_dtgch_cbem4.html">ffy_opt_dtgch_cbem4</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># Load Data and Estimation Results: A and alpha, lin and loglin</span>
+<span class="va">ls_opti_alpha_A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ffy_opt_dtgch_cbem4.html">ffy_opt_dtgch_cbem4</a></span><span class="op">(</span><span class="op">)</span></pre></div>
 <pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
 ## Using compatibility `.name_repair`.
 ## This warning is displayed once every 8 hours.
 ## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">df_raw</span> <span class="kw">&lt;-</span> <span class="no">ls_opti_alpha_A</span>$<span class="no">df_raw</span>
-<span class="no">df_hw_cebu_m24</span> <span class="kw">&lt;-</span> <span class="no">df_raw</span>
-<span class="no">df_esti</span> <span class="kw">&lt;-</span> <span class="no">ls_opti_alpha_A</span>$<span class="no">df_esti</span>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="va">df_raw</span> <span class="op">&lt;-</span> <span class="va">ls_opti_alpha_A</span><span class="op">$</span><span class="va">df_raw</span>
+<span class="va">df_hw_cebu_m24</span> <span class="op">&lt;-</span> <span class="va">df_raw</span>
+<span class="va">df_esti</span> <span class="op">&lt;-</span> <span class="va">ls_opti_alpha_A</span><span class="op">$</span><span class="va">df_esti</span>
 
 <span class="co"># Review dataframes</span>
 <span class="co"># raw file</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_raw</span>, <span class="fl">10</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df_raw</span>, <span class="fl">10</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 10 x 17
 ##    S.country vil.id indi.id sex   svymthRound momEdu wealthIdx   hgt    wgt
 ##    &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
@@ -202,7 +203,8 @@ Use the Guatemala-Cebu scrambled nutrition and height early childhood data, same
 ## 10 Cebu           1      11 Male           24    1.9       6.3  72.1  6627.
 ## # ... with 8 more variables: hgt0 &lt;dbl&gt;, wgt0 &lt;dbl&gt;, prot &lt;dbl&gt;, cal &lt;dbl&gt;,
 ## #   p.A.prot &lt;dbl&gt;, p.A.nProt &lt;dbl&gt;, momEduRound &lt;fct&gt;, hgt0med &lt;fct&gt;</code></pre>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">df_esti</span>, <span class="fl">10</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df_esti</span>, <span class="fl">10</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 10 x 9
 ##    S.country vil.id indi.id svymthRound alpha_lin alpha_log A_lin A_log     beta
 ##    &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
@@ -216,8 +218,9 @@ Use the Guatemala-Cebu scrambled nutrition and height early childhood data, same
 ##  8 Cebu           1       9          24    0.0101   0.00669  78.0  4.34 0.000959
 ##  9 Cebu           1      10          24    0.0662   0.0139   80.0  4.36 0.000959
 ## 10 Cebu           1      11          24    0.0602   0.0121   77.7  4.33 0.000959</code></pre>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># Attach</span>
-<span class="fu"><a href="https://rdrr.io/r/base/attach.html">attach</a></span>(<span class="no">df_raw</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="co"># Attach</span>
+<span class="kw"><a href="https://rdrr.io/r/base/attach.html">attach</a></span><span class="op">(</span><span class="va">df_raw</span><span class="op">)</span></pre></div>
 <pre><code>## The following objects are masked from df_hw:
 ## 
 ##     cal, hgt, hgt0, hgt0med, indi.id, momEdu, momEduRound, p.A.nProt,
@@ -231,83 +234,85 @@ Use the Guatemala-Cebu scrambled nutrition and height early childhood data, same
 <div id="common-parameters-for-optimal-allocation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#common-parameters-for-optimal-allocation" class="anchor"></a>Common Parameters for Optimal Allocation</h3>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co"># Child Count</span>
-<span class="no">df_hw_cebu_m24_full</span> <span class="kw">&lt;-</span> <span class="no">df_hw_cebu_m24</span>
-<span class="no">it_obs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">df_hw_cebu_m24</span>)[<span class="fl">1</span>]
+<div class="sourceCode" id="cb11"><pre class="downlit">
+<span class="co"># Child Count</span>
+<span class="va">df_hw_cebu_m24_full</span> <span class="op">&lt;-</span> <span class="va">df_hw_cebu_m24</span>
+<span class="va">it_obs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">df_hw_cebu_m24</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
 
 <span class="co"># Total Resource Count</span>
-<span class="no">ar_prot_data</span> <span class="kw">=</span> <span class="no">df_hw_cebu_m24</span>$<span class="no">prot</span>
-<span class="no">fl_N_agg</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">ar_prot_data</span>)
+<span class="va">ar_prot_data</span> <span class="op">=</span> <span class="va">df_hw_cebu_m24</span><span class="op">$</span><span class="va">prot</span>
+<span class="va">fl_N_agg</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ar_prot_data</span><span class="op">)</span>
 
 <span class="co"># Vector of Planner Preference</span>
-<span class="no">ar_rho</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">200</span>, -<span class="fl">100</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">100</span>, -<span class="fl">25</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">25</span>, -<span class="fl">5</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>),
-           <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">5</span>, -<span class="fl">1</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">1</span>, -<span class="fl">0.01</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.01</span>, <span class="fl">0.25</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0.25</span>, <span class="fl">0.99</span>, <span class="kw">length.out</span><span class="kw">=</span><span class="fl">5</span>))
-<span class="no">ar_rho</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">50</span>, -<span class="fl">25</span>, -<span class="fl">10</span>)
-<span class="no">ar_rho</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">ar_rho</span>)</pre></body></html></div>
+<span class="va">ar_rho</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">200</span>, <span class="op">-</span><span class="fl">100</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">100</span>, <span class="op">-</span><span class="fl">25</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">25</span>, <span class="op">-</span><span class="fl">5</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span>,
+           <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="op">-</span><span class="fl">1</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">0.01</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.25</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="fl">0.99</span>, length.out<span class="op">=</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_rho</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">50</span>, <span class="op">-</span><span class="fl">25</span>, <span class="op">-</span><span class="fl">10</span><span class="op">)</span>
+<span class="va">ar_rho</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span></pre></div>
 </div>
 <div id="optimal-linear-allocation-crs" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optimal-linear-allocation-crs" class="anchor"></a>Optimal Linear Allocation (CRS)</h3>
 <p>This also works with any CRS CES.</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># Matrixes to Store Solution Results</span>
-<span class="no">tb_opti_alloc_all_rho</span> <span class="kw">&lt;-</span> <span class="no">df_esti</span>
-<span class="no">mt_hev_lin</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>), <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">2</span>)
-<span class="no">mt_opti_N</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(, <span class="kw">nrow</span> <span class="kw">=</span> <span class="no">it_obs</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))
-<span class="no">mt_opti_H</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(, <span class="kw">nrow</span> <span class="kw">=</span> <span class="no">it_obs</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="co"># Matrixes to Store Solution Results</span>
+<span class="va">tb_opti_alloc_all_rho</span> <span class="op">&lt;-</span> <span class="va">df_esti</span>
+<span class="va">mt_hev_lin</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+<span class="va">mt_opti_N</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>, nrow <span class="op">=</span> <span class="va">it_obs</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span><span class="op">)</span>
+<span class="va">mt_opti_H</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>, nrow <span class="op">=</span> <span class="va">it_obs</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># A. First Loop over Planner Preference</span>
 <span class="co"># Generate Rank Order</span>
-<span class="kw">for</span> (<span class="no">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>))) {
-  <span class="no">rho</span> <span class="kw">=</span> <span class="no">ar_rho</span>[<span class="no">it_rho_ctr</span>]
+<span class="kw">for</span> <span class="op">(</span><span class="va">it_rho_ctr</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">rho</span> <span class="op">=</span> <span class="va">ar_rho</span><span class="op">[</span><span class="va">it_rho_ctr</span><span class="op">]</span>
 
   <span class="co"># B. Parameters for solving the optimal allocation problem</span>
-  <span class="no">df</span> <span class="kw">&lt;-</span> <span class="no">df_esti</span>
-  <span class="no">svr_A_i</span> <span class="kw">&lt;-</span> <span class="st">'A_lin'</span>
-  <span class="no">svr_alpha_i</span> <span class="kw">&lt;-</span> <span class="st">'alpha_lin'</span>
-  <span class="no">svr_beta_i</span> <span class="kw">&lt;-</span> <span class="st">'beta'</span>
-  <span class="no">fl_N_agg</span> <span class="kw">&lt;-</span> <span class="no">fl_N_agg</span>
-  <span class="no">fl_rho</span> <span class="kw">&lt;-</span> <span class="no">rho</span>
+  <span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df_esti</span>
+  <span class="va">svr_A_i</span> <span class="op">&lt;-</span> <span class="st">'A_lin'</span>
+  <span class="va">svr_alpha_i</span> <span class="op">&lt;-</span> <span class="st">'alpha_lin'</span>
+  <span class="va">svr_beta_i</span> <span class="op">&lt;-</span> <span class="st">'beta'</span>
+  <span class="va">fl_N_agg</span> <span class="op">&lt;-</span> <span class="va">fl_N_agg</span>
+  <span class="va">fl_rho</span> <span class="op">&lt;-</span> <span class="va">rho</span>
 
   <span class="co"># C. Invoke optimal linear (crs) solution problem</span>
   <span class="co"># ar_opti is the array of optimal choices, it is in df_opti as well.</span>
   <span class="co"># use df_opti for merging, because that contains the individual keys.</span>
   <span class="co"># actually file here should contain unique keys, unique key ID as required input. should return?</span>
   <span class="co"># actually it is fine, the function here needs the key, not solin_flinr</span>
+  
+  <span class="va">svr_inpalc</span> <span class="op">&lt;-</span> <span class="st">'opti_allocate'</span>
+  <span class="va">svr_expout</span> <span class="op">&lt;-</span> <span class="st">'opti_exp_outcome'</span>
+  <span class="va">ls_lin_solu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ffp_opt_solin_relow.html">ffp_opt_solin_relow</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">svr_A_i</span>, <span class="va">svr_alpha_i</span>, <span class="va">svr_beta_i</span>, <span class="va">fl_N_agg</span>, <span class="va">fl_rho</span>,
+                                     <span class="va">svr_inpalc</span>, <span class="va">svr_expout</span><span class="op">)</span>
+  <span class="va">tb_opti</span> <span class="op">&lt;-</span> <span class="va">ls_lin_solu</span><span class="op">$</span><span class="va">df_opti</span>
+  <span class="va">ar_opti_inpalc</span> <span class="op">&lt;-</span> <span class="va">ls_lin_solu</span><span class="op">$</span><span class="va">ar_opti_inpalc</span>
+  <span class="va">ar_opti_expout</span> <span class="op">&lt;-</span> <span class="va">ls_lin_solu</span><span class="op">$</span><span class="va">ar_opti_expout</span>
 
-  <span class="no">svr_inpalc</span> <span class="kw">&lt;-</span> <span class="st">'opti_allocate'</span>
-  <span class="no">svr_expout</span> <span class="kw">&lt;-</span> <span class="st">'opti_exp_outcome'</span>
-  <span class="no">ls_lin_solu</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/ffp_opt_solin_relow.html">ffp_opt_solin_relow</a></span>(<span class="no">df</span>, <span class="no">svr_A_i</span>, <span class="no">svr_alpha_i</span>, <span class="no">svr_beta_i</span>, <span class="no">fl_N_agg</span>, <span class="no">fl_rho</span>,
-                                     <span class="no">svr_inpalc</span>, <span class="no">svr_expout</span>)
-  <span class="no">tb_opti</span> <span class="kw">&lt;-</span> <span class="no">ls_lin_solu</span>$<span class="no">df_opti</span>
-  <span class="no">ar_opti_inpalc</span> <span class="kw">&lt;-</span> <span class="no">ls_lin_solu</span>$<span class="no">ar_opti_inpalc</span>
-  <span class="no">ar_opti_expout</span> <span class="kw">&lt;-</span> <span class="no">ls_lin_solu</span>$<span class="no">ar_opti_expout</span>
-
-  <span class="no">mt_opti_N</span>[, <span class="no">it_rho_ctr</span>] <span class="kw">=</span> <span class="no">ar_opti_inpalc</span>
-  <span class="no">mt_opti_H</span>[, <span class="no">it_rho_ctr</span>] <span class="kw">=</span> <span class="no">ar_opti_expout</span>
+  <span class="va">mt_opti_N</span><span class="op">[</span>, <span class="va">it_rho_ctr</span><span class="op">]</span> <span class="op">=</span> <span class="va">ar_opti_inpalc</span>
+  <span class="va">mt_opti_H</span><span class="op">[</span>, <span class="va">it_rho_ctr</span><span class="op">]</span> <span class="op">=</span> <span class="va">ar_opti_expout</span>
 
   <span class="co"># m. Keep for df collection individual key + optimal allocation</span>
   <span class="co"># _on stands for optimal nutritional choices</span>
   <span class="co"># _eh stands for expected height</span>
-  <span class="no">tb_opti_main_results</span> <span class="kw">&lt;-</span> <span class="no">tb_opti</span> <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'lowest_rank_alpha'</span>, <span class="st">'lowest_rank_beta'</span>)))
-  <span class="no">tb_opti_allocate_wth_key</span> <span class="kw">&lt;-</span> <span class="no">tb_opti</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">one_of</a></span>(<span class="st">'indi.id'</span>, <span class="no">svr_inpalc</span>, <span class="no">svr_expout</span>)) <span class="kw">%&gt;%</span>
-                                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(!!<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, <span class="no">it_rho_ctr</span>, <span class="st">'_on'</span>) <span class="kw">:=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_inpalc</span>),
-                                       !!<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'rho_c'</span>, <span class="no">it_rho_ctr</span>, <span class="st">'_eh'</span>) <span class="kw">:=</span> !!<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span>(<span class="no">svr_expout</span>))
+  <span class="va">tb_opti_main_results</span> <span class="op">&lt;-</span> <span class="va">tb_opti</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html">one_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'lowest_rank_alpha'</span>, <span class="st">'lowest_rank_beta'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">tb_opti_allocate_wth_key</span> <span class="op">&lt;-</span> <span class="va">tb_opti</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html">one_of</a></span><span class="op">(</span><span class="st">'indi.id'</span>, <span class="va">svr_inpalc</span>, <span class="va">svr_expout</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'rho_c'</span>, <span class="va">it_rho_ctr</span>, <span class="st">'_on'</span><span class="op">)</span> <span class="op">:=</span> <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_inpalc</span><span class="op">)</span>,
+                                       <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'rho_c'</span>, <span class="va">it_rho_ctr</span>, <span class="st">'_eh'</span><span class="op">)</span> <span class="op">:=</span> <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">svr_expout</span><span class="op">)</span><span class="op">)</span>
 
   <span class="co"># n. merge optimal allocaiton results from different planner preference</span>
-  <span class="no">tb_opti_alloc_all_rho</span> <span class="kw">&lt;-</span> <span class="no">tb_opti_alloc_all_rho</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">tb_opti_allocate_wth_key</span>, <span class="kw">by</span><span class="kw">=</span><span class="st">'indi.id'</span>)
+  <span class="va">tb_opti_alloc_all_rho</span> <span class="op">&lt;-</span> <span class="va">tb_opti_alloc_all_rho</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">tb_opti_allocate_wth_key</span>, by<span class="op">=</span><span class="st">'indi.id'</span><span class="op">)</span>
 
   <span class="co"># print subset</span>
-  <span class="kw">if</span> (<span class="no">it_rho_ctr</span> <span class="kw">==</span> <span class="fl">1</span> <span class="kw">|</span> <span class="no">it_rho_ctr</span> <span class="kw">==</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>) <span class="kw">|</span> <span class="no">it_rho_ctr</span> <span class="kw">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">ar_rho</span>)/<span class="fl">2</span>)) {
-    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">''</span>)
-    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'</span>)
-    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">'xxx rho:'</span>, <span class="no">rho</span>))
-    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'</span>)
-    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'</span>)
+  <span class="kw">if</span> <span class="op">(</span><span class="va">it_rho_ctr</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">|</span> <span class="va">it_rho_ctr</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span> <span class="op">|</span> <span class="va">it_rho_ctr</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_rho</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">''</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'xxx rho:'</span>, <span class="va">rho</span><span class="op">)</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'</span><span class="op">)</span>
 
-    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">tb_opti_main_results</span>))
-  }
-}</pre></body></html></div>
+    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">tb_opti_main_results</span><span class="op">)</span><span class="op">)</span>
+  <span class="op">}</span>
+<span class="op">}</span></pre></div>
 <pre><code>## Warning: Unknown columns: `lowest_rank_alpha`, `lowest_rank_beta`</code></pre>
 <pre><code>## [1] ""
 ## [1] "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -513,7 +518,7 @@ Use the Guatemala-Cebu scrambled nutrition and height early childhood data, same
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

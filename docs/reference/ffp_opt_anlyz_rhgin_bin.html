@@ -102,9 +102,6 @@ invokes ffp_opt_sobin_target_row. The example tests think of as bottled protein.
   <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
 </li>
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
-</li>
-<li>
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
@@ -180,19 +177,19 @@ invokes ffp_opt_sobin_target_row. The example tests think of as bottled protein.
 invokes ffp_opt_sobin_target_row. The example tests think of as bottled protein.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ffp_opt_anlyz_rhgin_bin</span>(
-  <span class='no'>df</span>,
-  <span class='no'>svr_id_i</span>,
-  <span class='kw'>svr_A_i</span> <span class='kw'>=</span> <span class='st'>"A"</span>,
-  <span class='kw'>svr_alpha_i</span> <span class='kw'>=</span> <span class='st'>"alpha"</span>,
-  <span class='kw'>svr_beta_i</span> <span class='kw'>=</span> <span class='st'>"beta"</span>,
-  <span class='kw'>ar_rho</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.5</span>, <span class='fl'>0.1</span>, -<span class='fl'>1</span>, -<span class='fl'>20</span>),
-  <span class='kw'>svr_rho</span> <span class='kw'>=</span> <span class='st'>"rho"</span>,
-  <span class='kw'>svr_rho_val</span> <span class='kw'>=</span> <span class='st'>"rho_val"</span>,
-  <span class='kw'>svr_inpalc</span> <span class='kw'>=</span> <span class='st'>"rank"</span>,
-  <span class='kw'>svr_expout</span> <span class='kw'>=</span> <span class='st'>"opti_exp_outcome"</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>ffp_opt_anlyz_rhgin_bin</span><span class='op'>(</span>
+  <span class='va'>df</span>,
+  <span class='va'>svr_id_i</span>,
+  svr_A_i <span class='op'>=</span> <span class='st'>"A"</span>,
+  svr_alpha_i <span class='op'>=</span> <span class='st'>"alpha"</span>,
+  svr_beta_i <span class='op'>=</span> <span class='st'>"beta"</span>,
+  ar_rho <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.5</span>, <span class='fl'>0.1</span>, <span class='op'>-</span><span class='fl'>1</span>, <span class='op'>-</span><span class='fl'>20</span><span class='op'>)</span>,
+  svr_rho <span class='op'>=</span> <span class='st'>"rho"</span>,
+  svr_rho_val <span class='op'>=</span> <span class='st'>"rho_val"</span>,
+  svr_inpalc <span class='op'>=</span> <span class='st'>"rank"</span>,
+  svr_expout <span class='op'>=</span> <span class='st'>"opti_exp_outcome"</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -250,18 +247,23 @@ invokes ffp_opt_sobin_target_row. The example tests think of as bottled protein.
 
     <p><a href='https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin_bin.html'>https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin_bin.html</a>
 <a href='https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_car.html'>https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_car.html</a></p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Fan Wang, <a href='http://fanwangecon.github.io'>http://fanwangecon.github.io</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_dtgch_cbem4</span>)
-<span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='no'>df_opt_dtgch_cbem4</span>
-<span class='no'>svr_id_i</span> <span class='kw'>&lt;-</span> <span class='st'>'indi.id'</span>
-<span class='no'>svr_A_i</span> <span class='kw'>&lt;-</span> <span class='st'>'A_lin'</span>
-<span class='no'>svr_alpha_i</span> <span class='kw'>&lt;-</span> <span class='st'>'alpha_lin'</span>
-<span class='no'>svr_beta_i</span> <span class='kw'>&lt;-</span> <span class='st'>'beta'</span>
-<span class='no'>ar_rho</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>50</span>, -<span class='fl'>10</span>, -<span class='fl'>0.1</span>, <span class='fl'>0.1</span>, <span class='fl'>0.5</span>, <span class='fl'>0.7</span>)
-<span class='no'>ls_bin_solu_all_rhos</span> <span class='kw'>&lt;-</span> <span class='fu'>ffp_opt_anlyz_rhgin_bin</span>(<span class='no'>df</span>, <span class='no'>svr_id_i</span>, <span class='no'>svr_A_i</span>, <span class='no'>svr_alpha_i</span>, <span class='no'>svr_beta_i</span>, <span class='no'>ar_rho</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = "indi.id"</span></div><div class='input'><span class='no'>df_all_rho</span> <span class='kw'>&lt;-</span> <span class='no'>ls_bin_solu_all_rhos</span>$<span class='no'>df_all_rho</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_all_rho</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>svr_id_i</span>, <span class='no'>svr_A_i</span>, <span class='no'>svr_alpha_i</span>, <span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>starts_with</a></span>(<span class='st'>"rho"</span>)), <span class='fl'>30</span>)</div><div class='output co'>#&gt; <span class='message'>Note: Using an external vector in selections is ambiguous.</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>df_opt_dtgch_cbem4</span><span class='op'>)</span>
+<span class='va'>df</span> <span class='op'>&lt;-</span> <span class='va'>df_opt_dtgch_cbem4</span>
+<span class='va'>svr_id_i</span> <span class='op'>&lt;-</span> <span class='st'>'indi.id'</span>
+<span class='va'>svr_A_i</span> <span class='op'>&lt;-</span> <span class='st'>'A_lin'</span>
+<span class='va'>svr_alpha_i</span> <span class='op'>&lt;-</span> <span class='st'>'alpha_lin'</span>
+<span class='va'>svr_beta_i</span> <span class='op'>&lt;-</span> <span class='st'>'beta'</span>
+<span class='va'>ar_rho</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>50</span>, <span class='op'>-</span><span class='fl'>10</span>, <span class='op'>-</span><span class='fl'>0.1</span>, <span class='fl'>0.1</span>, <span class='fl'>0.5</span>, <span class='fl'>0.7</span><span class='op'>)</span>
+<span class='va'>ls_bin_solu_all_rhos</span> <span class='op'>&lt;-</span> <span class='fu'>ffp_opt_anlyz_rhgin_bin</span><span class='op'>(</span><span class='va'>df</span>, <span class='va'>svr_id_i</span>, <span class='va'>svr_A_i</span>, <span class='va'>svr_alpha_i</span>, <span class='va'>svr_beta_i</span>, <span class='va'>ar_rho</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Joining, by = "indi.id"</span></div><div class='input'><span class='va'>df_all_rho</span> <span class='op'>&lt;-</span> <span class='va'>ls_bin_solu_all_rhos</span><span class='op'>$</span><span class='va'>df_all_rho</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>df_all_rho</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>svr_id_i</span>, <span class='va'>svr_A_i</span>, <span class='va'>svr_alpha_i</span>, <span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>starts_with</a></span><span class='op'>(</span><span class='st'>"rho"</span><span class='op'>)</span><span class='op'>)</span>, <span class='fl'>30</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Note: Using an external vector in selections is ambiguous.</span>
 #&gt; <span class='message'><span style='color: #0000BB;'>i</span><span> Use `all_of(svr_id_i)` instead of `svr_id_i` to silence this message.</span>
 #&gt; <span class='message'></span><span style='color: #0000BB;'>i</span><span> See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</span>
 #&gt; <span class='message'></span><span style='color: #555555;'>This message is displayed once per session.</span><span></span></div><div class='output co'>#&gt; <span class='message'>Note: Using an external vector in selections is ambiguous.</span>
@@ -283,7 +285,8 @@ invokes ffp_opt_sobin_target_row. The example tests think of as bottled protein.
 #&gt; </span><span style='color: #555555;'> 8</span><span>       9  78.0    0.010</span><span style='text-decoration: underline;'>1</span><span>       823       883       883       883       883
 #&gt; </span><span style='color: #555555;'> 9</span><span>      10  80.0    0.066</span><span style='text-decoration: underline;'>2</span><span>       572       483       166       166       166
 #&gt; </span><span style='color: #555555;'>10</span><span>      11  77.7    0.060</span><span style='text-decoration: underline;'>2</span><span>       126       126       358       358       358
-#&gt; </span><span style='color: #555555;'># ... with 20 more rows, and 1 more variable: rho_c6_rk </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_all_rho</span>, <span class='fl'>15</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 15 x 18</span><span>
+#&gt; </span><span style='color: #555555;'># ... with 20 more rows, and 1 more variable: rho_c6_rk </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>df_all_rho</span>, <span class='fl'>15</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 15 x 18</span><span>
 #&gt;    indi.id A_lin alpha_lin    beta rank_min rank_max avg_rank S.country vil.id
 #&gt;      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #555555;'> 1</span><span>       2  78.4    0.010</span><span style='text-decoration: underline;'>1</span><span> 9.59</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span>      967      937     962  Cebu           1
@@ -303,7 +306,8 @@ invokes ffp_opt_sobin_target_row. The example tests think of as bottled protein.
 #&gt; </span><span style='color: #555555;'>15</span><span>      16  78.8    0.032</span><span style='text-decoration: underline;'>3</span><span> 9.59</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span>      566      552     564. Cebu           1
 #&gt; </span><span style='color: #555555;'># ... with 9 more variables: svymthRound </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, alpha_log </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, A_log </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   rho_c1_rk </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, rho_c2_rk </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, rho_c3_rk </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, rho_c4_rk </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   rho_c5_rk </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, rho_c6_rk </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>df_all_rho</span>)</div><div class='output co'>#&gt;     indi.id           A_lin         alpha_lin            beta          
+#&gt; </span><span style='color: #555555;'>#   rho_c5_rk </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, rho_c6_rk </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>df_all_rho</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;     indi.id           A_lin         alpha_lin            beta          
 #&gt;  Min.   :   2.0   Min.   :73.70   Min.   :0.01014   Min.   :0.0009588  
 #&gt;  1st Qu.: 298.5   1st Qu.:77.73   1st Qu.:0.01014   1st Qu.:0.0009588  
 #&gt;  Median : 627.0   Median :78.45   Median :0.06018   Median :0.0009588  
@@ -337,8 +341,9 @@ invokes ffp_opt_sobin_target_row. The example tests think of as bottled protein.
 #&gt;  Median : 522.0   Median : 522.0  
 #&gt;  Mean   : 522.0   Mean   : 522.0  
 #&gt;  3rd Qu.: 782.5   3rd Qu.: 782.5  
-#&gt;  Max.   :1043.0   Max.   :1043.0  </div><div class='input'><span class='no'>df_all_rho_long</span> <span class='kw'>&lt;-</span> <span class='no'>ls_bin_solu_all_rhos</span>$<span class='no'>df_all_rho_long</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_all_rho_long</span>, <span class='fl'>15</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 15 x 7</span><span>
+#&gt;  Max.   :1043.0   Max.   :1043.0  </div><div class='input'><span class='va'>df_all_rho_long</span> <span class='op'>&lt;-</span> <span class='va'>ls_bin_solu_all_rhos</span><span class='op'>$</span><span class='va'>df_all_rho_long</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>df_all_rho_long</span>, <span class='fl'>15</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 15 x 7</span><span>
 #&gt;    indi.id A_lin alpha_lin     beta   rho rho_val  rank
 #&gt;      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>
 #&gt; </span><span style='color: #555555;'> 1</span><span>       2  78.4    0.010</span><span style='text-decoration: underline;'>1</span><span> 0.000</span><span style='text-decoration: underline;'>959</span><span>     1   -</span><span style='color: #BB0000;'>50</span><span>     937
@@ -355,7 +360,8 @@ invokes ffp_opt_sobin_target_row. The example tests think of as bottled protein.
 #&gt; </span><span style='color: #555555;'>12</span><span>       3  79.9    0.032</span><span style='text-decoration: underline;'>3</span><span> 0.000</span><span style='text-decoration: underline;'>959</span><span>     6     0.7   669
 #&gt; </span><span style='color: #555555;'>13</span><span>       4  78.9    0.032</span><span style='text-decoration: underline;'>3</span><span> 0.000</span><span style='text-decoration: underline;'>959</span><span>     1   -</span><span style='color: #BB0000;'>50</span><span>     583
 #&gt; </span><span style='color: #555555;'>14</span><span>       4  78.9    0.032</span><span style='text-decoration: underline;'>3</span><span> 0.000</span><span style='text-decoration: underline;'>959</span><span>     2   -</span><span style='color: #BB0000;'>10</span><span>     578
-#&gt; </span><span style='color: #555555;'>15</span><span>       4  78.9    0.032</span><span style='text-decoration: underline;'>3</span><span> 0.000</span><span style='text-decoration: underline;'>959</span><span>     3    -</span><span style='color: #BB0000;'>0.1</span><span>   578</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>df_all_rho_long</span>)</div><div class='output co'>#&gt;     indi.id           A_lin         alpha_lin            beta          
+#&gt; </span><span style='color: #555555;'>15</span><span>       4  78.9    0.032</span><span style='text-decoration: underline;'>3</span><span> 0.000</span><span style='text-decoration: underline;'>959</span><span>     3    -</span><span style='color: #BB0000;'>0.1</span><span>   578</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>df_all_rho_long</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;     indi.id           A_lin         alpha_lin            beta          
 #&gt;  Min.   :   2.0   Min.   :73.70   Min.   :0.01014   Min.   :0.0009588  
 #&gt;  1st Qu.: 298.0   1st Qu.:77.72   1st Qu.:0.01014   1st Qu.:0.0009588  
 #&gt;  Median : 627.0   Median :78.45   Median :0.06018   Median :0.0009588  
@@ -384,7 +390,7 @@ invokes ffp_opt_sobin_target_row. The example tests think of as bottled protein.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

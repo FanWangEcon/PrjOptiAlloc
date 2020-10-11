@@ -24,6 +24,9 @@ ffp_opt_sodis_value(
 )
 }
 \arguments{
+\item{bl_return_allQ_V}{boolean if true returns value along the entire allocation queue
+including queue segments after resource limits. This is more time consuming when set to true.}
+
 \item{svr_beta_i}{string variable name for planner bias}
 
 \item{svr_measure_i}{string variable name for mass for this type of recipient, default NA

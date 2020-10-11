@@ -102,9 +102,6 @@ solin, linear solution. relow, relative to lowest" />
   <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
 </li>
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a>
-</li>
-<li>
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
@@ -180,7 +177,7 @@ solin, linear solution. relow, relative to lowest" />
 solin, linear solution. relow, relative to lowest</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_dtgch_cbem4_rrlop</span>)</pre>
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>df_opt_dtgch_cbem4_rrlop</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
@@ -194,13 +191,14 @@ solin, linear solution. relow, relative to lowest</p>
     <p>“Early life height and weight production functions with endogenous energy and protein inputs”, September 2016, 65-81, Economics &amp; Human Biology, 22, Esteban Puentes, Fan Wang, Jere R. Behrman, Flavio Cunha, John Hoddinott, John A. Maluccio, Linda S. Adair, Judith Borja and Reynaldo Martorell</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>df_opt_dtgch_cbem4_rrlop</span>)
-<span class='no'>ar_opti_inpalc</span> <span class='kw'>&lt;-</span> <span class='no'>df_opt_dtgch_cbem4_rrlop</span><span class='kw'>[[</span><span class='st'>'opti_allocate'</span>]]
-<span class='no'>ar_opti_expout</span> <span class='kw'>&lt;-</span> <span class='no'>df_opt_dtgch_cbem4_rrlop</span><span class='kw'>[[</span><span class='st'>'opti_exp_outcome'</span>]]
-<span class='no'>ar_opti_inpalc_cv</span> <span class='kw'>&lt;-</span> (<span class='no'>ar_opti_inpalc</span> - <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='no'>ar_opti_inpalc</span>))/<span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span>(<span class='no'>ar_opti_inpalc</span>)
-<span class='no'>ar_opti_expout_cv</span> <span class='kw'>&lt;-</span> (<span class='no'>ar_opti_expout</span> - <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='no'>ar_opti_expout</span>))/<span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span>(<span class='no'>ar_opti_expout</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>df_opt_dtgch_cbem4_rrlop</span><span class='op'>)</span>
+<span class='va'>ar_opti_inpalc</span> <span class='op'>&lt;-</span> <span class='va'>df_opt_dtgch_cbem4_rrlop</span><span class='op'>[[</span><span class='st'>'opti_allocate'</span><span class='op'>]</span><span class='op'>]</span>
+<span class='va'>ar_opti_expout</span> <span class='op'>&lt;-</span> <span class='va'>df_opt_dtgch_cbem4_rrlop</span><span class='op'>[[</span><span class='st'>'opti_exp_outcome'</span><span class='op'>]</span><span class='op'>]</span>
+<span class='va'>ar_opti_inpalc_cv</span> <span class='op'>&lt;-</span> <span class='op'>(</span><span class='va'>ar_opti_inpalc</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>ar_opti_inpalc</span><span class='op'>)</span><span class='op'>)</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>ar_opti_inpalc</span><span class='op'>)</span>
+<span class='va'>ar_opti_expout_cv</span> <span class='op'>&lt;-</span> <span class='op'>(</span><span class='va'>ar_opti_expout</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>ar_opti_expout</span><span class='op'>)</span><span class='op'>)</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>ar_opti_expout</span><span class='op'>)</span>
 <span class='co'># Print</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df_opt_dtgch_cbem4_rrlop</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 10 x 21</span><span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>df_opt_dtgch_cbem4_rrlop</span>, <span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 10 x 21</span><span>
 #&gt;    indi.id     A alpha    beta rank_val rank_y_inter_idx lowest_rank_A
 #&gt;      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #555555;'> 1</span><span>      33  1.42 0.722 0.026</span><span style='text-decoration: underline;'>1</span><span>      2.03               15          1.12
@@ -220,7 +218,8 @@ solin, linear solution. relow, relative to lowest</p>
 #&gt; </span><span style='color: #555555;'>#   rela_slope_to_lowest_cumsum_invert </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   rela_intercept_to_lowest_cumsum_invert </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   opti_lowest_spline_knots </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, tot_devi </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, allocate_lowest </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   opti_allocate </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, allocate_total </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, opti_exp_outcome </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>df_opt_dtgch_cbem4_rrlop</span>)</div><div class='output co'>#&gt;     indi.id            A             alpha             beta          
+#&gt; </span><span style='color: #555555;'>#   opti_allocate </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, allocate_total </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, opti_exp_outcome </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>df_opt_dtgch_cbem4_rrlop</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;     indi.id            A             alpha             beta          
 #&gt;  Min.   : 1.00   Min.   :1.001   Min.   :0.1222   Min.   :0.0004062  
 #&gt;  1st Qu.:13.25   1st Qu.:1.226   1st Qu.:0.3442   1st Qu.:0.0100739  
 #&gt;  Median :25.50   Median :1.445   Median :0.5527   Median :0.0195919  
@@ -268,7 +267,9 @@ solin, linear solution. relow, relative to lowest</p>
 #&gt;  Median :5.681   Median :1.471   
 #&gt;  Mean   :5.681   Mean   :1.529   
 #&gt;  3rd Qu.:5.681   3rd Qu.:1.743   
-#&gt;  Max.   :5.681   Max.   :1.985   </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='st'>'opti allocation and outcomes rescaled:'</span>)</div><div class='output co'>#&gt; [1] "opti allocation and outcomes rescaled:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='no'>ar_opti_expout_cv</span>, <span class='no'>ar_opti_inpalc_cv</span>))</div><div class='output co'>#&gt;       ar_opti_expout_cv ar_opti_inpalc_cv
+#&gt;  Max.   :5.681   Max.   :1.985   </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='st'>'opti allocation and outcomes rescaled:'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "opti allocation and outcomes rescaled:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>ar_opti_expout_cv</span>, <span class='va'>ar_opti_inpalc_cv</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;       ar_opti_expout_cv ar_opti_inpalc_cv
 #&gt;  [1,]       -0.47697041        -0.5054186
 #&gt;  [2,]       -1.77230323        -0.1758999
 #&gt;  [3,]       -1.21411292         1.1897164
@@ -334,7 +335,7 @@ solin, linear solution. relow, relative to lowest</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

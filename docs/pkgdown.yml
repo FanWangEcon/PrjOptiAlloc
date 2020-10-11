@@ -1,5 +1,5 @@
-pandoc: 2.7.3
-pkgdown: 1.5.1
+pandoc: 2.10.1
+pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   ffv_opt_anlyz_rhgin: ffv_opt_anlyz_rhgin.html
@@ -20,7 +20,7 @@ articles:
   ffv_opt_solin_relow_allrw: ffv_opt_solin_relow_allrw.html
   ffv_opt_solog_bisec_allrw: ffv_opt_solog_bisec_allrw.html
   PrjOptiAlloc: PrjOptiAlloc.html
-last_built: 2020-08-09T10:55Z
+last_built: 2020-10-11T14:52Z
 urls:
   reference: https://fanwangecon.github.io/PrjOptiAlloc/reference
   article: https://fanwangecon.github.io/PrjOptiAlloc/articles
