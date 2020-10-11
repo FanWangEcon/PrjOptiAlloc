@@ -8,6 +8,7 @@ ffp_snw_process_inputs(
  
     srt_simu_path = "C:/Users/fan/Documents/Dropbox (UH-ECON)/PrjNygaardSorensenWang/Output/",
   snm_simu_csv = "snwx_v_planner_moredense_a100zh266_e2m2.csv",
+  df_plan_v_tilde_full = NULL,
   fl_max_phaseout = 238000,
   it_bin_dollar_before_phaseout = 2500,
   fl_percheck_dollar = 100,
@@ -27,6 +28,8 @@ ffp_snw_process_inputs(
   svr_mass = "mass",
   ar_rho = c(1),
   bl_threshold = FALSE,
+  it_check_headorspouse = 12,
+  it_check_perkids = 5,
   bl_given_firstcheck = FALSE,
   bl_non_inc_adjust = FALSE,
   bl_print = TRUE,

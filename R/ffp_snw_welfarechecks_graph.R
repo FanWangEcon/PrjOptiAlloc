@@ -9,7 +9,7 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
                                    bl_optimal_with_age_groups = FALSE,
                                    st_img_suffix='',
                                    bl_save_img=FALSE,
-                                   it_img_width = 135, it_img_height = 96,
+                                   it_img_width = 270, it_img_height = 216,
                                    st_img_units='mm', it_img_res = 300, it_img_pointsize = 7,
                                    spt_img_save='C:/Users/fan/Documents/Dropbox (UH-ECON)/PrjNygaardSorensenWang/Results/2020-07-29/Graphs/') {
 
@@ -302,6 +302,7 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
       if (st_img_name %in% ls_st_logy) {
         plt_cur <- plt_cur +
           theme(
+            text = element_text(size = 12),
             legend.title = element_blank(),
             legend.position = c(0.14, 0.9),
             legend.background = element_rect(fill = "white", colour = "black", linetype='solid')) +
@@ -310,6 +311,7 @@ ffp_snw_graph_feasible <- function(ar_rho, df_input_il_noninc_covar,
       } else {
         plt_cur <- plt_cur +
           theme(
+            text = element_text(size = 12),
             legend.title = element_blank(),
             legend.position = c(0.14, 0.9),
             legend.background = element_rect(fill = "white", colour = "black", linetype='solid')) +

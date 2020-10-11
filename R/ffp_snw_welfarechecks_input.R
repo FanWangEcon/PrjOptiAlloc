@@ -19,6 +19,8 @@ ffp_snw_process_inputs <-
            svr_c_value = 'ctilde',
            svr_mass = 'mass',
            ar_rho = c(1),
+           bl_df_alloc_il = FALSE,
+           bl_return_allQ_V = FALSE,
            bl_threshold = FALSE,
            it_check_headorspouse = 12,
            it_check_perkids = 5,
@@ -588,9 +590,9 @@ ffp_snw_process_inputs <-
       ffp_opt_anlyz_rhgin_dis(ar_rho,
                               fl_dis_w_mass,
                               df_input_il_c,
-                              bl_df_alloc_il = FALSE,
+                              bl_df_alloc_il = bl_df_alloc_il,
                               bl_return_V = TRUE,
-                              bl_return_allQ_V = FALSE,
+                              bl_return_allQ_V = bl_return_allQ_V,
                               bl_return_inner_V = FALSE,
                               svr_measure_i = 'mass_i')))
     df_queue_il_long_c <-ls_dis_solu_c$df_queue_il_long
@@ -618,9 +620,9 @@ ffp_snw_process_inputs <-
       ffp_opt_anlyz_rhgin_dis(ar_rho,
                               fl_dis_w_mass,
                               df_input_il_v,
-                              bl_df_alloc_il = FALSE,
+                              bl_df_alloc_il = bl_df_alloc_il,
                               bl_return_V = TRUE,
-                              bl_return_allQ_V = FALSE,
+                              bl_return_allQ_V = bl_return_allQ_V,
                               bl_return_inner_V = FALSE,
                               svr_measure_i = 'mass_i')))
     df_queue_il_long_v <-ls_dis_solu_v$df_queue_il_long
@@ -782,16 +784,26 @@ ffp_snw_process_inputs <-
       }
     }
 
-    return(list(df_input_il_noninc_covar=df_input_il_noninc_covar,
-                df_queue_il_long_v=df_queue_il_long_v,
-                df_alloc_i_long_covar_c=df_alloc_i_long_covar_c,
-                df_alloc_i_long_covar_v=df_alloc_i_long_covar_v,
-                stg_subtitle=subtitle,
-                stg_caption=stg_caption,
-                tb_rho_rev_c=tb_rho_rev_c,
-                tb_rho_vstar_c=tb_rho_vstar_c,
-                tb_rho_rev_v=tb_rho_rev_v,
-                tb_rho_vstar_v=tb_rho_vstar_v))
+    # list to return
+    ls_return <- list(df_input_il_noninc_covar=df_input_il_noninc_covar,
+                      df_queue_il_long_c=df_queue_il_long_c,
+                      df_queue_il_long_v=df_queue_il_long_v,
+                      df_alloc_i_long_covar_c=df_alloc_i_long_covar_c,
+                      df_alloc_i_long_covar_v=df_alloc_i_long_covar_v,
+                      stg_subtitle=subtitle,
+                      stg_caption=stg_caption,
+                      tb_rho_rev_c=tb_rho_rev_c,
+                      tb_rho_vstar_c=tb_rho_vstar_c,
+                      tb_rho_rev_v=tb_rho_rev_v,
+                      tb_rho_vstar_v=tb_rho_vstar_v)
+
+    # Add element queue panel to return list
+    if (bl_df_alloc_il) {
+      ls_return$df_alloc_il_long_c <- ls_dis_solu_c$df_alloc_il_long
+      ls_return$df_alloc_il_long_v <- ls_dis_solu_v$df_alloc_il_long
+    }
+
+    return(ls_return)
   }
 
 

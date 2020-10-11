@@ -23,6 +23,9 @@ ffp_opt_anlyz_rhgin_dis <- function(ar_rho,
   #'
   #' @param fl_teacher_increase_number is the amount of resources (in measure if svr_measure_i is not NA)
   #' available for allocation.
+  #' @param bl_df_alloc_il boolean if true this will output a matrix where each column is a different
+  #' i individual and each row is a position along the queue, and each cell is the level of allocation
+  #' for individual i when the overall allocation queue is up to the current queue position.
   #' @param svr_beta_i string variable name for planner bias
   #' @param svr_measure_i string variable name for mass for this type of recipient, default NA
   #' mass of recipient is the measure of recipient of this type in the population. This measure
@@ -221,7 +224,9 @@ ffp_opt_anlyz_rhgin_dis <- function(ar_rho,
 
        df_alloc_il_long <- df_queue_il_long %>%
          select(one_of(svr_rho, svr_id_i, svr_inpalc)) %>%
-         group_by(!!sym(svr_rho)) %>%
+         group_by(!!sym(svr_rho))
+
+       df_alloc_il_long <- df_alloc_il_long %>%
          do(alloc_i_upto_Q =
               ff_panel_expand_longrosterwide(df=.,
                                              svr_id_t=svr_inpalc,

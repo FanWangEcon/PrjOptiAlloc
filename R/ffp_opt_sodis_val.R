@@ -16,6 +16,8 @@ ffp_opt_sodis_value <- function(fl_rho, df_queue_il,
 #' this is an array of values, at each Q point. Potentially output for all Q. Or
 #' only show this for all queue points up to the actual resource limit, D_Wbin_il = 1.
 #'
+#' @param bl_return_allQ_V boolean if true returns value along the entire allocation queue
+#' including queue segments after resource limits. This is more time consuming when set to true.
 #' @param svr_beta_i string variable name for planner bias
 #' @param svr_measure_i string variable name for mass for this type of recipient, default NA
 #' mass of recipient is the measure of recipient of this type in the population. This measure
