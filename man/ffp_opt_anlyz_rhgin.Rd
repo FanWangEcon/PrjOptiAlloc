@@ -2,7 +2,8 @@
 % Please edit documentation in R/ffp_opt_anlyz.R
 \name{ffp_opt_anlyz_rhgin}
 \alias{ffp_opt_anlyz_rhgin}
-\title{Theorem 2, Bounded Linear Allocation solution, loop along a vector of planner inequality preference (rho)}
+\title{Theorem 2, Bounded Linear Allocation solution, loop along a vector of
+planner inequality preference (rho)}
 \usage{
 ffp_opt_anlyz_rhgin(
   df,
@@ -17,39 +18,47 @@ ffp_opt_anlyz_rhgin(
 )
 }
 \arguments{
-\item{df}{tibble data table including variables using svr names below each row is potentially an individual who will receive alternative allocations}
+\item{df}{tibble data table including variables using svr names below each
+row is potentially an individual who will receive alternative allocations}
 
-\item{svr_id_i}{string name of the identify key for each i, to make sure merging happens properly}
+\item{svr_id_i}{string name of the identify key for each i, to make sure
+merging happens properly}
 
-\item{svr_A_i}{string name of the A_i variable, dot product of covariates and coefficients}
+\item{svr_A_i}{string name of the A_i variable, dot product of covariates
+and coefficients}
 
-\item{svr_alpha_i}{string name of the alpha_i variable, individual-specific (marginal-effects)}
+\item{svr_alpha_i}{string name of the alpha_i variable, individual-specific
+(marginal-effects)}
 
-\item{svr_beta_i}{string name of the beta_i variable, relative preference weight for each child}
+\item{svr_beta_i}{string name of the beta_i variable, relative preference
+weight for each child}
 
-\item{fl_N_agg}{float total resource avaible for allocation, if not specific, sum by svr_N_i}
+\item{fl_N_agg}{float total resource avaible for allocation, if not
+specific, sum by svr_N_i}
 
-\item{ar_rho}{array preferences for equality for the planner}
+\item{ar_rho}{array preferences for equality for the planner, each value
+from negative infinity to 1}
 
-\item{svr_inpalc}{string variable name for newly generated input optimal allocation}
+\item{svr_inpalc}{string variable name for newly generated input optimal
+allocation}
 
 \item{svr_expout}{string variable name for newly generated expected outcome}
 }
 \value{
 a dataframe that expands the df inputs with additional results.
 
-a list with a dataframe and an array
-\itemize{
-  \item df_opti_alloc_all_rho - table with columns for optimal allocation and exp outcome different rhos
-  \item mt_opti_alloc_all_rho - a matrix row = indi, col = rho, value = optimal allocation
-  \item mt_expc_outcm_all_rho - a matrix row = indi, col = rho, value = exp outcome optimal allocations
-  \item mt_gini - a matrix row = rhos, col = opti-allo and exp-out, value = gini
-}
+a list with a dataframe and an array \itemize{ \item
+  df_opti_alloc_all_rho - table with columns for optimal allocation and exp
+  outcome different rhos \item mt_opti_alloc_all_rho - a matrix row = indi,
+  col = rho, value = optimal allocation \item mt_expc_outcm_all_rho - a
+  matrix row = indi, col = rho, value = exp outcome optimal allocations
+  \item mt_gini - a matrix row = rhos, col = opti-allo and exp-out, value =
+  gini }
 }
 \description{
-Works with linear allocation problems. The function
-invokes ffp_opt_solin_relow, has parameters that are also required for that function.
-The addition here is *fl_rho* becomes *ar_rho*
+Works with linear allocation problems. The function invokes
+ffp_opt_solin_relow, has parameters that are also required for that
+function. The addition here is *fl_rho* becomes *ar_rho*
 }
 \examples{
 data(df_opt_dtgch_cbem4)

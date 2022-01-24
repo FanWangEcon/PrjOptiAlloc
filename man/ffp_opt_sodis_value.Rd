@@ -2,7 +2,8 @@
 % Please edit documentation in R/ffp_opt_sodis_val.R
 \name{ffp_opt_sodis_value}
 \alias{ffp_opt_sodis_value}
-\title{Value at each W point along Queue, for one planner rho, given optimal allocation}
+\title{Value at each W point along Queue, for one planner rho, given optimal
+allocation}
 \usage{
 ffp_opt_sodis_value(
   fl_rho,
@@ -24,22 +25,25 @@ ffp_opt_sodis_value(
 )
 }
 \arguments{
-\item{bl_return_allQ_V}{boolean if true returns value along the entire allocation queue
-including queue segments after resource limits. This is more time consuming when set to true.}
+\item{bl_return_allQ_V}{boolean if true returns value along the entire
+allocation queue including queue segments after resource limits. This is
+more time consuming when set to true.}
 
 \item{svr_beta_i}{string variable name for planner bias}
 
-\item{svr_measure_i}{string variable name for mass for this type of recipient, default NA
-mass of recipient is the measure of recipient of this type in the population. This measure
-does not impact relative ranking optimal allocation across types, but determines how much
-to push individual types further along the allocation queue back. this should be 'mass_i',
+\item{svr_measure_i}{string variable name for mass for this type of
+recipient, default NA mass of recipient is the measure of recipient of this
+type in the population. This measure does not impact relative ranking
+optimal allocation across types, but determines how much to push individual
+types further along the allocation queue back. this should be 'mass_i',
 representing the measure of individuals in this group}
 }
 \description{
-After solving for optimal allocating queue, at each Q point, which corresponds to
-different level of aggregate resources available, show the value given optimal choices
-this is an array of values, at each Q point. Potentially output for all Q. Or
-only show this for all queue points up to the actual resource limit, D_Wbin_il = 1.
+After solving for optimal allocating queue, at each Q point,
+which corresponds to different level of aggregate resources available, show
+the value given optimal choices this is an array of values, at each Q point.
+Potentially output for all Q. Or only show this for all queue points up to
+the actual resource limit, D_Wbin_il = 1.
 }
 \references{
 \url{https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_sodis_value.html}

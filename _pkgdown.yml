@@ -1,5 +1,4 @@
 url: https://fanwangecon.github.io/PrjOptiAlloc
-
 title: "Optimal Allocation"
 
 authors:
@@ -9,16 +8,20 @@ authors:
 navbar:
   title: "Optimal Allocation"
   left:
-    - text: "Get Started"
-      href: articles/PrjOptiAlloc.html
+    # - text: "Get Started"
+    #   href: articles/PrjOptiAlloc.html
     - text: "Functions"
       href: reference/index.html
     - text: "Tutorials"
       href: articles/index.html
-    - text: "Paper"
-      href: https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf
-    # - text: "Slides"
-    #   href: https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf
+    - text: "Papers"
+      menu:
+        - text: "Optimal Allocations to Heterogeneous Agents with An Application to Stimulus Checks"
+          href: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3839890
+        - text: "Optimal Allocation of the COVID-19 Stimulus Checks"
+          href: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3691091
+        - text: "The Optimal Allocation of Resources among Heterogeneous Individuals"
+          href: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3547706
     - text: "News"
       href: news/index.html
     - text: "Other Sites"
@@ -39,14 +42,11 @@ navbar:
           href: https://fanwangecon.github.io/Tex4Econ/
         - text: "Python Examples"
           href: https://fanwangecon.github.io/pyfan/
-    - text: "Fan"
-      href: http://fanwangecon.github.io/
   right:
    - icon: fa-github
      href: https://github.com/fanwangecon/PrjOptiAlloc
    - icon: fa-twitter
      href: https://twitter.com/fanwangecon
-
 
 reference:
 - title: Optimal Allocation Functions
@@ -70,6 +70,11 @@ reference:
   contents:
   - starts_with("ffp_opt_solin")
   - ffp_opt_anlyz_rhgin
+- title: Optimal Allocation of Stimulus Checks
+  desc: Allocation files for Nygaard, Sorensen and Wang (2020) the optimal allocation of COVID-19 simulus checks.
+  contents:
+  - starts_with("ffp_snw")
+  - starts_with("ffp_nsw")
 - title: Data
 - subtitle: Simulated Data
   desc: Illustrative Testing
@@ -78,15 +83,13 @@ reference:
 - subtitle: Raw Datasets
   desc: Testing datasets
   contents:
-  - starts_with("df_opt_")
-  - -df_opt_dtgch_cbem4_rrlop
-  - -df_opt_dtgch_cbem4_rrlop_allrh
-  - -df_opt_dtgch_cbem4_rrlop_argin
-  - -df_opt_lalonde_training_employ
-  - -df_opt_lalonde_training_wage
-  - -df_opt_caschool_prep_i
-  - -df_opt_caschool_input_ib
-  - -df_opt_caschool_input_il
+  - df_opt_birthwt
+  - df_opt_caschool
+  - df_opt_nccrimes
+  - df_opt_dtgch_aorig
+  - df_opt_dtgch_cbem4
+  - df_opt_lalonde_training
+  - df_nsw_tiny_chk168_df_id
 - subtitle: Datasets with Optimal Allocation Results
   desc: Datset files with additional columns that store optimal allocation results or allocation space parameters
   contents:
@@ -98,15 +101,10 @@ reference:
   - df_opt_caschool_prep_i
   - df_opt_caschool_input_ib
   - df_opt_caschool_input_il
-- subtitle: For Optimal Allocation of Stimulus Checks
-  desc: Allocation files for Nygaard, Sorensen and Wang (2020) the optimal allocation of COVID-19 simulus checks.
-  contents:
-  - starts_with("ffp_snw")
 - title: Support Files
   desc: Support functions and sample files that generate allocation space parameters from estimation space
   contents:
   - starts_with("ffy_")
-
 
 articles:
 - title: Example N=2 Discrete and Bounded-Continuous Optimal Allocation
@@ -114,12 +112,14 @@ articles:
   contents:
   - ffv_opt_n2_fn
   - ffv_opt_n2_fn_welfare
+  - ffv_opt_n2_fn_rev_concept
 - title: Binary Allocation Testing Vignettes (mtcars, birthwt)
   desc: Testing the binary allocation solution line by line and with function. Use standard R testing datasets mtcars and birthwt. Test Welfare (REV) with hand-input example data.
   contents:
   - ffv_opt_sobin_rkone_allrw_car
   - ffv_opt_sobin_rkone_allrw_wgt
   - ffv_opt_sobin_rev
+  - ffv_opt_sobin_rev_concept
 - title: Binary Allocation Example Vignettes with a Job Training RCT
   desc: Demonstrate optimal binary allocation queue. Use empirical A and alpha from the NSW job training RCT from Lalonde (AER, 1986).
   contents:
@@ -147,12 +147,10 @@ articles:
   desc: Vignette that only conducts estimations and generate A and alpha for estimation space. Most A and alpha generated in various other files as well that also solve for optimal allocation.
   contents:
   - ffv_opt_dtgch_cbem4
-
-# - title: Binary Optimal Allocation Vignettes
-#   desc: Vignettes for functions that summarize dataframes
-#   contents:
-#   - starts_with("ffv_summ")
-
+- title: Optimal Stimulus Allocation and the Economic Stimulus Act of 2008
+  desc: Vignette that test functions related to the Economic Stimulus Act off 2008 for Nygård, Sørensen and Wang (2021)
+  contents:
+  - ffv_snw_stimulus_bush_2008
 
 template:
   params:

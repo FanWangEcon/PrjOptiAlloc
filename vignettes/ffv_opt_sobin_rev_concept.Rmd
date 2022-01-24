@@ -1,0 +1,265 @@
+---
+title: Resource Equivalent Variation with Two Individuals Analytical Example
+description: |
+  With two individuals of heterogeneous A and alpha, demonstrate the REV comparisons between
+  the actual allocation and optimal allocations by various planners. Work out core concepts.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Resource Equivalent Variation with Two Individuals Analytical Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+urlcolor: blue
+---
+
+In this file, we demonstrate the concept of Resource Equivalent Variations (REV), when there are two individuals
+
+## Load Dependencies
+
+```{r GlobalOptions, echo = T, results = 'hide', message=F, warning=F}
+rm(list = ls(all.names = TRUE))
+options(knitr.duplicate.label = 'allow')
+```
+```{r loadlib, echo = T, results = 'hide', message=F, warning=F}
+library(dplyr)
+library(tidyr)
+library(tibble)
+
+library(PrjOptiAlloc)
+
+library(knitr)
+library(kableExtra)
+```
+
+## Two Individuals and Stimulus Checks
+
+There are two individuals with heterogeneous consumption in the absence of stimulus checks $A$. Each has constant $\alpha_i$ that is constant over units of allocation, which means constant marginal propensity to consume. $\alpha_i=\text{MPC}*\text{check_size}$.
+
+Specifically, for these two people, $i=1$ has low income, with $A=1$. This means consumption for this low income individual is 1 dollar in the absence of the allocations. The high income individual, $i=2$, has $A=4$.
+
+Suppose that the high income person spends 100% of the money given, the low income person only 50%. This means, for a check of 1 dollar, $\alpha_{i=1} = 0.5$ and $\alpha_{i=2} = 1$
+
+### The Welfare Function
+
+Suppose we have a planner that cares about the value of consumption form the two individuals with different weights. Suppose the poorer person gets $\beta_1$ weight, and the richer person gets $\beta_2$ percent. The planner uses the CES/Atkinson function to aggregate over individual welfare. 
+
+$$
+U^{Util} = 
+\left(
+\beta_1\cdot\left(A_1 + \alpha_1\cdot\text{TR}_1\right)^{\rho} + 
+\beta_2\cdot\left(A_2 + \alpha_2\cdot\text{TR}_2\right)^{\rho}
+\right)^{\frac{1}{\rho}}
+$$
+
+The function that implements the CES index above. 
+
+```{r}
+ffi_ces_welfare <- function(fl_alloc_1, fl_alloc_2, 
+                            fl_rho, 
+                            fl_A_1 = 1, fl_A_2 = 4,
+                            fl_alpha_1 = 0.5, fl_alpha_2 = 1,
+                            fl_beta_1 = 0.55, fl_beta_2 = 0.45, 
+                            bl_verbose = FALSE) {
+  
+  # fl_alpha_1 and fl_alpha_2 are consumption increases from 1 dollar of check
+  
+  fl_planner_U <- (fl_beta_1*(fl_A_1 + fl_alpha_1*fl_alloc_1)^fl_rho + 
+    fl_beta_2*(fl_A_2 + fl_alpha_2*fl_alloc_2)^fl_rho)^(1/fl_rho)
+  
+  if (bl_verbose) {
+    st_output <- paste0('fl_planner_U=', fl_planner_U,
+                        ', rho=', fl_rho, 
+                        ', fl_alloc_1=', fl_alloc_1, 
+                        ', fl_alloc_2=', fl_alloc_2)
+    print(st_output)
+  }
+  
+  return(fl_planner_U)  
+}
+```
+
+## The Actual Allocation 
+
+Suppose under the actual allocation rule the government gives 1 dollar to the low income person and 1 dollar to the high income person. This would be a uniform allocation rule.  
+
+Under the actual allocation, out of the 2 dollar of stimulus, we get 1.5 dollar of consumption boost.
+
+$$
+\text{STIMULUS EFFECTS} = 1 \cdot 0.5 + 1 \cdot 1.0 = 1.5
+$$
+
+### Utilitarian Welfare under Actual Allocation
+
+The welfare for the Utilitarian planner is, under the actual allocation:
+
+$$
+U = \left(\frac{55}{100}\cdot\left(1 + 0.5\right)^1 + \frac{45}{100}\cdot\left(4 + 1\right)^1\right)^{1}
+=3.075
+$$
+Evaluate:
+```{r}
+fl_u_actual_utilitarian <- ffi_ces_welfare(1, 1, 1, bl_verbose=TRUE)
+```
+
+### Intermediate Planner Welfare under Actual Allocation
+
+The welfare for the $\rho=-1$, which means elasticity is $2$ planner is:
+
+$$
+U = 
+\left(
+  \frac{55}{100}\cdot\left(1 + 0.5\right)^{-1} + 
+  \frac{45}{100}\cdot\left(4 + 1\right)^{-1}
+\right)^{-1}
+=2.189781
+$$
+Evaluate:
+```{r}
+fl_u_actual_rho_neg1 <- ffi_ces_welfare(1, 1, -1, bl_verbose=TRUE)
+```
+
+### Close to Rawlsian Planner Welfare under Actual Allocation
+
+The welfare for the $\rho=-99$, which means elasticity is $0.01$ planner is:
+
+$$
+U = 
+\left(
+  \frac{55}{100}\cdot\left(1 + 0.5\right)^{-99} + 
+  \frac{45}{100}\cdot\left(4 + 1\right)^{-99}
+\right)^{\frac{1}{-99}}
+=1.509086
+$$
+Evaluate:
+```{r}
+fl_u_actual_rho_neg99 <- ffi_ces_welfare(1, 1, -99, bl_verbose=TRUE)
+```
+
+Note that for the actual Rawlsian, only the $A$ matters, $\alpha$ does not matter, nor do $\beta$. The relative value of $\beta$ is irrelevant as $\rho \rightarrow -\infty$ welfare is:
+
+$$
+\min\left(1+0.5, 4+1 \right)=1.5
+$$
+
+## The Utilitarian Optimal Allocation Problem
+
+### Utilitarian Optimal Allocation
+
+We only have 2 dollars, where would planner welfare be maximized for the Utilitarian? Despite our slight bias towards the poorer individual, our optimal choice, is to allocate all to the second individual 
+
+$$
+\arg\max_{0 \le \text{TR}_1 \le 2} 
+\left(
+  \frac{55}{100}\cdot\left(1 + 0.5\cdot\text{TR}_1\right)^1 + 
+  \frac{45}{100}\cdot\left(4 + 1\cdot\left(2-\text{TR}_1\right)\right)^1
+\right)^{1}
+=\text{TR}^{\ast}_1 = 0\\
+U\left(\text{TR}^{\ast}_1=0\right)=3.25
+$$
+Solve for optimal welfare over find grid of $\text{TR}_1$ chocies, we will create a function first:
+
+```{r}
+ffi_planner_optimal_choice <- function(fl_rho = 1,
+                                        fl_max_resource = 2,
+                                        it_tr_len = 1000, 
+                                        bl_graph = FALSE, 
+                                        bl_verbose = FALSE) {
+  # 1000 transfer points
+  ar_TR1 <- seq(0, fl_max_resource, length.out = it_tr_len)
+  
+  # Evaluate
+  ar_U <- ffi_ces_welfare(ar_TR1, fl_max_resource-ar_TR1, fl_rho)
+  
+  # max
+  it_max_idx <- which.max(ar_U)
+  fl_TR1_max <- ar_TR1[it_max_idx]
+  fl_U_max <- ar_U[it_max_idx]
+  
+  # Print
+  if (bl_verbose) {
+   print(paste0('fl_TR1_max=',fl_TR1_max,',fl_U_max=',fl_U_max)) 
+  }
+  
+  # Visualize
+  if (bl_graph) {
+   plot(ar_TR1, ar_U) 
+  }
+  
+  return(list(fl_TR1_max=fl_TR1_max, fl_U_max=fl_U_max))
+}
+```
+
+Call the function to solve for the Utilitarian problem:
+
+```{r}
+ffi_planner_optimal_choice(fl_rho=1, bl_graph=TRUE, bl_verbose=TRUE)
+```
+
+### REV for Utilitarian 
+
+How much less resources is needed by the Utilitarian to achieve the same welfare as under the actual allocation if allocations are optimal?
+
+We now solve an alternative problem, where we reduce the amount of resource available until we find the level of resources that would achieve the same welfare as under the actual allocation. 
+
+We will create a function for this:
+
+```{r}
+ffi_planner_rev <- function(fl_alter_U, 
+                                        fl_rho = 1,
+                                        fl_max_resource = 2,
+                                        it_res_len = 1000,
+                                        it_tr_len = 1000, 
+                                        bl_graph = FALSE, 
+                                        bl_verbose = FALSE) {
+  # 1000 transfer points
+  ar_resources <- seq(1e-5, fl_max_resource, length.out = it_res_len)
+  ar_opti_U <- matrix(0, 1, it_res_len)
+  
+  # Evaluate
+  it_ctr <- 0
+  bl_notpassed <- TRUE
+  for (fl_max_resource in ar_resources){
+    # counter
+    it_ctr <- it_ctr + 1
+    # solve for optimal
+    ls_optimal <- ffi_planner_optimal_choice(fl_rho = fl_rho,
+                                              fl_max_resource = fl_max_resource,
+                                              it_tr_len = it_tr_len, 
+                                              bl_graph = FALSE, 
+                                              bl_verbose = FALSE)
+    # Umax
+    fl_U_max <- ls_optimal$fl_U_max
+    if (fl_U_max <= fl_alter_U) {
+      if (bl_notpassed) {
+        fl_U_threshold <- fl_U_max
+        fl_res_threshold <- fl_max_resource
+        bl_notpassed <- FALSE
+      }
+    } 
+    # store
+    ar_opti_U[it_ctr] <- ls_optimal$fl_U_max
+  }
+  
+  # REV
+  fl_REV <- 1 - fl_res_threshold/fl_max_resource
+  
+  # Print
+  if (bl_verbose) {
+   print(paste0('fl_REV=',fl_REV,',fl_res_threshold=',fl_res_threshold,
+                ',fl_U_threshold=',fl_U_threshold,',fl_alter_U=',fl_alter_U)) 
+  }
+  
+  # Visualize
+  if (bl_graph) {
+   plot(ar_resources, ar_opti_U) 
+  }
+  
+  return(fl_REV)
+}
+```
+
+Use the function for the utilitarian:
+
+```{r}
+ffi_planner_rev(fl_u_actual_utilitarian, fl_rho = 1,
+                bl_graph = TRUE, bl_verbose = TRUE)
+```

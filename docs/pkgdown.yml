@@ -1,5 +1,5 @@
-pandoc: 2.10.1
-pkgdown: 1.6.1
+pandoc: 2.14.0.3
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   ffv_opt_anlyz_rhgin: ffv_opt_anlyz_rhgin.html
@@ -7,6 +7,7 @@ articles:
   ffv_opt_n2_fn: ffv_opt_n2_fn.html
   ffv_opt_n2_fn_welfare: ffv_opt_n2_fn_welfare.html
   ffv_opt_sobin_rev: ffv_opt_sobin_rev.html
+  ffv_opt_sobin_rev_concept: ffv_opt_sobin_rev_concept.html
   ffv_opt_sobin_rkone_allfc_training_logit: ffv_opt_sobin_rkone_allfc_training_logit.html
   ffv_opt_sobin_rkone_allfc_training_logit_sub: ffv_opt_sobin_rkone_allfc_training_logit_sub.html
   ffv_opt_sobin_rkone_allrw_car: ffv_opt_sobin_rkone_allrw_car.html
@@ -19,8 +20,9 @@ articles:
   ffv_opt_solin_relow_allfn: ffv_opt_solin_relow_allfn.html
   ffv_opt_solin_relow_allrw: ffv_opt_solin_relow_allrw.html
   ffv_opt_solog_bisec_allrw: ffv_opt_solog_bisec_allrw.html
+  ffv_snw_stimulus_bush_2008: ffv_snw_stimulus_bush_2008.html
   PrjOptiAlloc: PrjOptiAlloc.html
-last_built: 2020-10-11T14:52Z
+last_built: 2022-01-24T03:01Z
 urls:
   reference: https://fanwangecon.github.io/PrjOptiAlloc/reference
   article: https://fanwangecon.github.io/PrjOptiAlloc/articles

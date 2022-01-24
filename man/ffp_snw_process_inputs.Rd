@@ -2,7 +2,8 @@
 % Please edit documentation in R/ffp_snw_welfarechecks_input.R
 \name{ffp_snw_process_inputs}
 \alias{ffp_snw_process_inputs}
-\title{Processing Matlab Simulation results for allocation for Nygaard, Sorernsen and Wang (2020)}
+\title{Solving optimal allocation for Nygaard, Sorernsen and Wang (2020) given
+MPC and C simulation results.}
 \usage{
 ffp_snw_process_inputs(
  
@@ -15,9 +16,12 @@ ffp_snw_process_inputs(
   fl_multiple = 58056,
   it_max_checks = 44,
   fl_tax_hh = 128580000,
+  bl_per_capita = FALSE,
   it_max_age = 64,
   it_min_age = 18,
   it_age_bins = 2,
+  fl_rand_adj_A_prop = 0,
+  it_rand_adj_A_rng_seed = 0,
   ar_svr_csv = c("age", "marital", "kids", "checks", "ymin", "mass", "survive",
     "vtilde", "ctilde"),
   ar_svr_groups = c("marital", "kids", "age_group", "ymin_group"),
@@ -30,16 +34,46 @@ ffp_snw_process_inputs(
   bl_df_alloc_il = FALSE,
   bl_return_allQ_V = FALSE,
   bl_threshold = FALSE,
-  it_check_headorspouse = 12,
-  it_check_perkids = 5,
+  ls_stimulus_specs = list(st_biden_or_trump = "bidenchk", it_check_headorspouse = 12,
+    it_check_perkids = 5),
   bl_given_firstcheck = FALSE,
   bl_non_inc_adjust = FALSE,
   bl_print = TRUE,
   bl_print_verbose = FALSE
 )
 }
+\arguments{
+\item{bl_per_capita}{boolean per capita or not. If per capita, then
+household size will determine the weight to assign to each household.
+The consumptions should be divded by the household size, and the
+weights should be expanded by it. For example, if two households, 1
+with 2 members, 1 with 1 member. Then then consumption in the larger
+household should first be divided by two. Then the weight should be 2/3
+for the larger household, and 1/3 for the smaller household.}
+
+\item{fl_rand_adj_A_prop}{float a number larger than zero, it is the
+standard deviation of the shock to be drawn to perturb the entire
+vector for A/alpha, moving it up or down. If equal to zero, no effects.}
+
+\item{it_rand_adj_A_rng_seed}{random number seed for simulating
+perturbation draws}
+}
 \description{
-Matlab Simulation Process for Allocation
+First solve the model inside Matlab with code documented
+here: \url{https://fanwangecon.github.io/PrjOptiSNW/} from the paper
+Nygaard, Sorernsen and Wang (2020)
+(\url{https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3839890}). This
+model generates for households with varying income level, kids count, and
+marital status, the marginal propensity to consume different check
+increments, and consumption without stimulus checks. Also generates
+life-time value/welfare in the absence and with stimulus checks. This
+function then solves the optimal allocation problem given these inputs.
+
+Various parameters here determine the path to the csv file where
+simulation results are stored/outputted from matlab, and various variable
+names in the files, various allocation constraints on how much a
+household with certain child count and marital status can receive in
+terms of stimulus checks, and parameters relating to planner preferences.
 }
 \author{
 Fan Wang, \url{http://fanwangecon.github.io}

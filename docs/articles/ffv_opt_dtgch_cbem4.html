@@ -28,6 +28,8 @@ Regress height on protein inputs allowing for heterogeneous effects for each of 
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -40,23 +42,35 @@ Regress height on protein inputs allowing for heterogeneous effects for each of 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Optimal Allocation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../articles/PrjOptiAlloc.html">Get Started</a>
-</li>
-<li>
   <a href="../reference/index.html">Functions</a>
 </li>
 <li>
   <a href="../articles/index.html">Tutorials</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Papers
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3839890" class="external-link">Optimal Allocations to Heterogeneous Agents with An Application to Stimulus Checks</a>
+    </li>
+    <li>
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3691091" class="external-link">Optimal Allocation of the COVID-19 Stimulus Checks</a>
+    </li>
+    <li>
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3547706" class="external-link">The Optimal Allocation of Resources among Heterogeneous Individuals</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -69,44 +83,41 @@ Regress height on protein inputs allowing for heterogeneous effects for each of 
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="https://fanwangecon.github.io/REconTools/">R Tools for Data and Optimization</a>
+      <a href="https://fanwangecon.github.io/REconTools/" class="external-link">R Tools for Data and Optimization</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/R4Econ/">R Examples Data and Optimization</a>
+      <a href="https://fanwangecon.github.io/R4Econ/" class="external-link">R Examples Data and Optimization</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/Stat4Econ/">R Examples Introductory Statistics</a>
+      <a href="https://fanwangecon.github.io/Stat4Econ/" class="external-link">R Examples Introductory Statistics</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/Stata4Econ/">Stata Examples Regressions and Tables</a>
+      <a href="https://fanwangecon.github.io/Stata4Econ/" class="external-link">Stata Examples Regressions and Tables</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/M4Econ/">Matlab Examples Matrix and Graphs</a>
+      <a href="https://fanwangecon.github.io/M4Econ/" class="external-link">Matlab Examples Matrix and Graphs</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/Math4Econ/">Matlab Introductory Math for Econ</a>
+      <a href="https://fanwangecon.github.io/Math4Econ/" class="external-link">Matlab Introductory Math for Econ</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/Tex4Econ/">Latex and Paper Generation Examples</a>
+      <a href="https://fanwangecon.github.io/Tex4Econ/" class="external-link">Latex and Paper Generation Examples</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/pyfan/">Python Examples</a>
+      <a href="https://fanwangecon.github.io/pyfan/" class="external-link">Python Examples</a>
     </li>
   </ul>
-</li>
-<li>
-  <a href="http://fanwangecon.github.io/">Fan</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/fanwangecon/PrjOptiAlloc">
+  <a href="https://github.com/fanwangecon/PrjOptiAlloc" class="external-link">
     <span class="fa fa-github"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://twitter.com/fanwangecon">
+  <a href="https://twitter.com/fanwangecon" class="external-link">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -121,200 +132,199 @@ Regress height on protein inputs allowing for heterogeneous effects for each of 
 
       
 
-      </header><script src="ffv_opt_dtgch_cbem4_files/header-attrs-2.4/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Generate A and alpha Nutrition Height Test Regression Results</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/vignettes/ffv_opt_dtgch_cbem4.Rmd"><code>vignettes/ffv_opt_dtgch_cbem4.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/HEAD/vignettes/ffv_opt_dtgch_cbem4.Rmd" class="external-link"><code>vignettes/ffv_opt_dtgch_cbem4.Rmd</code></a></small>
       <div class="hidden name"><code>ffv_opt_dtgch_cbem4.Rmd</code></div>
 
     </div>
 
     
     
-<p>Generates data from the <a href="https://www.sciencedirect.com/science/article/pii/S1570677X16300107">Guatemala and Cebu dataset</a> jitter/rand version, select cebu only between 0 and 24. Generates four categories based on initial height and mother education levels. Regress height on protein inputs allowing for heterogeneous effecst for each of the four categories.</p>
-<div id="set-up" class="section level2">
-<h2 class="hasAnchor">
-<a href="#set-up" class="anchor"></a>Set Up</h2>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span>all.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>knitr.duplicate.label <span class="op">=</span> <span class="st">'allow'</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="co"># setwd('C:/Users/fan/PrjOptiAlloc')</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/">broom</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fanwangecon.github.io/REconTools/">REconTools</a></span><span class="op">)</span>
+<p>Generates data from the <a href="https://www.sciencedirect.com/science/article/pii/S1570677X16300107" class="external-link">Guatemala and Cebu dataset</a> jitter/rand version, select cebu only between 0 and 24. Generates four categories based on initial height and mother education levels. Regress height on protein inputs allowing for heterogeneous effecst for each of the four categories.</p>
+<div class="section level2">
+<h2 id="set-up">Set Up<a class="anchor" aria-label="anchor" href="#set-up"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html" class="external-link">ls</a></span><span class="op">(</span>all.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>knitr.duplicate.label <span class="op">=</span> <span class="st">'allow'</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># setwd('C:/Users/fan/PrjOptiAlloc')</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/" class="external-link">broom</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fanwangecon.github.io/REconTools/" class="external-link">REconTools</a></span><span class="op">)</span>
 
-<span class="va">bl_save_rda</span> <span class="op">=</span> <span class="cn">FALSE</span></pre></div>
+<span class="va">bl_save_rda</span> <span class="op">=</span> <span class="cn">FALSE</span></code></pre></div>
 </div>
-<div id="get-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#get-data" class="anchor"></a>Get Data</h2>
+<div class="section level2">
+<h2 id="get-data">Get Data<a class="anchor" aria-label="anchor" href="#get-data"></a>
+</h2>
 <p>Generate four categories by initial height and mother’s education levels combinations.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="co"># Load Library</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load Library</span>
 
 <span class="co"># Select Cebu Only</span>
-<span class="va">df_hw_cebu_m24</span> <span class="op">&lt;-</span> <span class="fu">REconTools</span><span class="fu">::</span><span class="va"><a href="https://fanwangecon.github.io/REconTools/reference/df_hgt_wgt.html">df_hgt_wgt</a></span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">S.country</span> <span class="op">==</span> <span class="st">'Cebu'</span> <span class="op">&amp;</span> <span class="va">svymthRound</span> <span class="op">==</span> <span class="fl">24</span> <span class="op">&amp;</span> <span class="va">prot</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">hgt</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">df_hw_cebu_m24</span> <span class="op">&lt;-</span> <span class="fu">REconTools</span><span class="fu">::</span><span class="va"><a href="https://fanwangecon.github.io/REconTools/reference/df_hgt_wgt.html" class="external-link">df_hgt_wgt</a></span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">S.country</span> <span class="op">==</span> <span class="st">'Cebu'</span> <span class="op">&amp;</span> <span class="va">svymthRound</span> <span class="op">==</span> <span class="fl">24</span> <span class="op">&amp;</span> <span class="va">prot</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">hgt</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># Generate Discrete Version of momEdu</span>
-<span class="va">df_hw_cebu_m24</span> <span class="op">&lt;-</span> <span class="va">df_hw_cebu_m24</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>momEduRound <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">momEdu</span>,
-                             breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="cn">Inf</span>, <span class="fl">10</span>, <span class="cn">Inf</span><span class="op">)</span>,
-                             labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MEduLow"</span>,<span class="st">"MEduHigh"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>hgt0med <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">hgt0</span>,
-                             breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="cn">Inf</span>, <span class="fl">50</span>, <span class="cn">Inf</span><span class="op">)</span>,
-                             labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"h0low"</span>,<span class="st">"h0high"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">df_hw_cebu_m24</span> <span class="op">&lt;-</span> <span class="va">df_hw_cebu_m24</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>momEduRound <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">momEdu</span>,
+                             breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="cn">Inf</span>, <span class="fl">10</span>, <span class="cn">Inf</span><span class="op">)</span>,
+                             labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MEduLow"</span>,<span class="st">"MEduHigh"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>hgt0med <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">hgt0</span>,
+                             breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="cn">Inf</span>, <span class="fl">50</span>, <span class="cn">Inf</span><span class="op">)</span>,
+                             labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"h0low"</span>,<span class="st">"h0high"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
-<span class="va">df_hw_cebu_m24</span><span class="op">$</span><span class="va">momEduRound</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">df_hw_cebu_m24</span><span class="op">$</span><span class="va">momEduRound</span><span class="op">)</span>
-<span class="va">df_hw_cebu_m24</span><span class="op">$</span><span class="va">hgt0med</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">df_hw_cebu_m24</span><span class="op">$</span><span class="va">hgt0med</span><span class="op">)</span>
+<span class="va">df_hw_cebu_m24</span><span class="op">$</span><span class="va">momEduRound</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">df_hw_cebu_m24</span><span class="op">$</span><span class="va">momEduRound</span><span class="op">)</span>
+<span class="va">df_hw_cebu_m24</span><span class="op">$</span><span class="va">hgt0med</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">df_hw_cebu_m24</span><span class="op">$</span><span class="va">hgt0med</span><span class="op">)</span>
 
 <span class="co"># Attach</span>
-<span class="kw"><a href="https://rdrr.io/r/base/attach.html">attach</a></span><span class="op">(</span><span class="va">df_hw_cebu_m24</span><span class="op">)</span></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/attach.html" class="external-link">attach</a></span><span class="op">(</span><span class="va">df_hw_cebu_m24</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="regression-with-data-and-construct-input-arrays" class="section level2">
-<h2 class="hasAnchor">
-<a href="#regression-with-data-and-construct-input-arrays" class="anchor"></a>Regression with Data and Construct Input Arrays</h2>
-<div id="linear-regression" class="section level3">
-<h3 class="hasAnchor">
-<a href="#linear-regression" class="anchor"></a>Linear Regression</h3>
+<div class="section level2">
+<h2 id="regression-with-data-and-construct-input-arrays">Regression with Data and Construct Input Arrays<a class="anchor" aria-label="anchor" href="#regression-with-data-and-construct-input-arrays"></a>
+</h2>
+<div class="section level3">
+<h3 id="linear-regression">Linear Regression<a class="anchor" aria-label="anchor" href="#linear-regression"></a>
+</h3>
 <p>Estimation <em>Production functions</em> or any other function. Below, Regression height outcomes on input interacted with the categories created before. This will generate category specific marginal effects.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="co"># Input Matrix</span>
-<span class="va">mt_lincv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">hgt0</span> <span class="op">+</span> <span class="va">wgt0</span><span class="op">)</span>
-<span class="va">mt_linht</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">sex</span><span class="op">:</span><span class="va">hgt0med</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Input Matrix</span>
+<span class="va">mt_lincv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">hgt0</span> <span class="op">+</span> <span class="va">wgt0</span><span class="op">)</span>
+<span class="va">mt_linht</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">sex</span><span class="op">:</span><span class="va">hgt0med</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
 
 <span class="co"># Regress Height At Month 24 on Nutritional Inputs with controls</span>
-<span class="va">rs_hgt_prot_lin</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">hgt</span> <span class="op">~</span> <span class="va">prot</span><span class="op">:</span><span class="va">mt_linht</span> <span class="op">+</span> <span class="va">mt_lincv</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">rs_hgt_prot_lin</span><span class="op">)</span><span class="op">)</span></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = hgt ~ prot:mt_linht + mt_lincv - 1)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -15.212  -2.339   0.088   2.437   9.805 
-## 
-## Coefficients:
-##                                       Estimate Std. Error t value Pr(&gt;|t|)    
-## mt_lincv(Intercept)                  5.638e+01  3.683e+00  15.307  &lt; 2e-16 ***
-## mt_lincvhgt0                         3.774e-01  8.723e-02   4.326 1.66e-05 ***
-## mt_lincvwgt0                         1.154e-03  3.705e-04   3.115  0.00189 ** 
-## prot:mt_linhtsexFemale:hgt0medh0low  1.014e-02  1.058e-02   0.959  0.33783    
-## prot:mt_linhtsexMale:hgt0medh0low    6.018e-02  9.625e-03   6.252 5.91e-10 ***
-## prot:mt_linhtsexFemale:hgt0medh0high 3.228e-02  1.332e-02   2.423  0.01558 *  
-## prot:mt_linhtsexMale:hgt0medh0high   6.619e-02  1.001e-02   6.612 6.05e-11 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 3.473 on 1036 degrees of freedom
-## Multiple R-squared:  0.9981, Adjusted R-squared:  0.9981 
-## F-statistic: 7.79e+04 on 7 and 1036 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="va">rs_hgt_prot_lin_tidy</span> <span class="op">=</span> <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy</a></span><span class="op">(</span><span class="va">rs_hgt_prot_lin</span><span class="op">)</span></pre></div>
+<span class="va">rs_hgt_prot_lin</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">hgt</span> <span class="op">~</span> <span class="va">prot</span><span class="op">:</span><span class="va">mt_linht</span> <span class="op">+</span> <span class="va">mt_lincv</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_hgt_prot_lin</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## </span>
+<span class="co">## Call:</span>
+<span class="co">## lm(formula = hgt ~ prot:mt_linht + mt_lincv - 1)</span>
+<span class="co">## </span>
+<span class="co">## Residuals:</span>
+<span class="co">##     Min      1Q  Median      3Q     Max </span>
+<span class="co">## -15.212  -2.339   0.088   2.437   9.805 </span>
+<span class="co">## </span>
+<span class="co">## Coefficients:</span>
+<span class="co">##                                       Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="co">## mt_lincv(Intercept)                  5.638e+01  3.683e+00  15.307  &lt; 2e-16 ***</span>
+<span class="co">## mt_lincvhgt0                         3.774e-01  8.723e-02   4.326 1.66e-05 ***</span>
+<span class="co">## mt_lincvwgt0                         1.154e-03  3.705e-04   3.115  0.00189 ** </span>
+<span class="co">## prot:mt_linhtsexFemale:hgt0medh0low  1.014e-02  1.058e-02   0.959  0.33783    </span>
+<span class="co">## prot:mt_linhtsexMale:hgt0medh0low    6.018e-02  9.625e-03   6.252 5.91e-10 ***</span>
+<span class="co">## prot:mt_linhtsexFemale:hgt0medh0high 3.228e-02  1.332e-02   2.423  0.01558 *  </span>
+<span class="co">## prot:mt_linhtsexMale:hgt0medh0high   6.619e-02  1.001e-02   6.612 6.05e-11 ***</span>
+<span class="co">## ---</span>
+<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="co">## </span>
+<span class="co">## Residual standard error: 3.473 on 1036 degrees of freedom</span>
+<span class="co">## Multiple R-squared:  0.9981, Adjusted R-squared:  0.9981 </span>
+<span class="co">## F-statistic: 7.79e+04 on 7 and 1036 DF,  p-value: &lt; 2.2e-16</span></code></pre>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">rs_hgt_prot_lin_tidy</span> <span class="op">=</span> <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">rs_hgt_prot_lin</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="log-linear-regression" class="section level3">
-<h3 class="hasAnchor">
-<a href="#log-linear-regression" class="anchor"></a>Log-Linear Regression</h3>
+<div class="section level3">
+<h3 id="log-linear-regression">Log-Linear Regression<a class="anchor" aria-label="anchor" href="#log-linear-regression"></a>
+</h3>
 <p>Now log-linear regressions, where inptut coefficient differs by input groups.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="co"># Input Matrix Generation</span>
-<span class="va">mt_logcv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">hgt0</span> <span class="op">+</span> <span class="va">wgt0</span><span class="op">)</span>
-<span class="va">mt_loght</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">sex</span><span class="op">:</span><span class="va">hgt0med</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Input Matrix Generation</span>
+<span class="va">mt_logcv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">hgt0</span> <span class="op">+</span> <span class="va">wgt0</span><span class="op">)</span>
+<span class="va">mt_loght</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">sex</span><span class="op">:</span><span class="va">hgt0med</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
 
 <span class="co"># Log and log regression for month 24</span>
-<span class="va">rs_hgt_prot_log</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">hgt</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">prot</span><span class="op">)</span><span class="op">:</span><span class="va">mt_loght</span> <span class="op">+</span> <span class="va">mt_logcv</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">rs_hgt_prot_log</span><span class="op">)</span><span class="op">)</span></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = log(hgt) ~ log(prot):mt_loght + mt_logcv - 1)
-## 
-## Residuals:
-##       Min        1Q    Median        3Q       Max 
-## -0.223890 -0.030027  0.002461  0.031047  0.118097 
-## 
-## Coefficients:
-##                                            Estimate Std. Error t value Pr(&gt;|t|)
-## mt_logcv(Intercept)                       4.087e+00  5.342e-02  76.512  &lt; 2e-16
-## mt_logcvhgt0                              4.305e-03  1.224e-03   3.516 0.000457
-## mt_logcvwgt0                              1.465e-05  4.733e-06   3.096 0.002012
-## log(prot):mt_loghtsexFemale:hgt0medh0low  6.687e-03  2.218e-03   3.014 0.002640
-## log(prot):mt_loghtsexMale:hgt0medh0low    1.209e-02  2.176e-03   5.557 3.49e-08
-## log(prot):mt_loghtsexFemale:hgt0medh0high 9.251e-03  2.441e-03   3.790 0.000159
-## log(prot):mt_loghtsexMale:hgt0medh0high   1.394e-02  2.288e-03   6.094 1.55e-09
-##                                              
-## mt_logcv(Intercept)                       ***
-## mt_logcvhgt0                              ***
-## mt_logcvwgt0                              ** 
-## log(prot):mt_loghtsexFemale:hgt0medh0low  ** 
-## log(prot):mt_loghtsexMale:hgt0medh0low    ***
-## log(prot):mt_loghtsexFemale:hgt0medh0high ***
-## log(prot):mt_loghtsexMale:hgt0medh0high   ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 0.04436 on 1036 degrees of freedom
-## Multiple R-squared:  0.9999, Adjusted R-squared:  0.9999 
-## F-statistic: 1.448e+06 on 7 and 1036 DF,  p-value: &lt; 2.2e-16</code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">rs_hgt_prot_log_tidy</span> <span class="op">=</span> <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy</a></span><span class="op">(</span><span class="va">rs_hgt_prot_log</span><span class="op">)</span></pre></div>
+<span class="va">rs_hgt_prot_log</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">hgt</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">prot</span><span class="op">)</span><span class="op">:</span><span class="va">mt_loght</span> <span class="op">+</span> <span class="va">mt_logcv</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_hgt_prot_log</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## </span>
+<span class="co">## Call:</span>
+<span class="co">## lm(formula = log(hgt) ~ log(prot):mt_loght + mt_logcv - 1)</span>
+<span class="co">## </span>
+<span class="co">## Residuals:</span>
+<span class="co">##       Min        1Q    Median        3Q       Max </span>
+<span class="co">## -0.223890 -0.030027  0.002461  0.031047  0.118097 </span>
+<span class="co">## </span>
+<span class="co">## Coefficients:</span>
+<span class="co">##                                            Estimate Std. Error t value Pr(&gt;|t|)</span>
+<span class="co">## mt_logcv(Intercept)                       4.087e+00  5.342e-02  76.512  &lt; 2e-16</span>
+<span class="co">## mt_logcvhgt0                              4.305e-03  1.224e-03   3.516 0.000457</span>
+<span class="co">## mt_logcvwgt0                              1.465e-05  4.733e-06   3.096 0.002012</span>
+<span class="co">## log(prot):mt_loghtsexFemale:hgt0medh0low  6.687e-03  2.218e-03   3.014 0.002640</span>
+<span class="co">## log(prot):mt_loghtsexMale:hgt0medh0low    1.209e-02  2.176e-03   5.557 3.49e-08</span>
+<span class="co">## log(prot):mt_loghtsexFemale:hgt0medh0high 9.251e-03  2.441e-03   3.790 0.000159</span>
+<span class="co">## log(prot):mt_loghtsexMale:hgt0medh0high   1.394e-02  2.288e-03   6.094 1.55e-09</span>
+<span class="co">##                                              </span>
+<span class="co">## mt_logcv(Intercept)                       ***</span>
+<span class="co">## mt_logcvhgt0                              ***</span>
+<span class="co">## mt_logcvwgt0                              ** </span>
+<span class="co">## log(prot):mt_loghtsexFemale:hgt0medh0low  ** </span>
+<span class="co">## log(prot):mt_loghtsexMale:hgt0medh0low    ***</span>
+<span class="co">## log(prot):mt_loghtsexFemale:hgt0medh0high ***</span>
+<span class="co">## log(prot):mt_loghtsexMale:hgt0medh0high   ***</span>
+<span class="co">## ---</span>
+<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="co">## </span>
+<span class="co">## Residual standard error: 0.04436 on 1036 degrees of freedom</span>
+<span class="co">## Multiple R-squared:  0.9999, Adjusted R-squared:  0.9999 </span>
+<span class="co">## F-statistic: 1.448e+06 on 7 and 1036 DF,  p-value: &lt; 2.2e-16</span></code></pre>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">rs_hgt_prot_log_tidy</span> <span class="op">=</span> <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">rs_hgt_prot_log</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="construct-input-arrays-a_i-and-alpha_i" class="section level3">
-<h3 class="hasAnchor">
-<a href="#construct-input-arrays-a_i-and-alpha_i" class="anchor"></a>Construct Input Arrays <span class="math inline">\(A_i\)</span> and <span class="math inline">\(\alpha_i\)</span>
+<div class="section level3">
+<h3 id="construct-input-arrays-a_i-and-alpha_i">Construct Input Arrays <span class="math inline">\(A_i\)</span> and <span class="math inline">\(\alpha_i\)</span><a class="anchor" aria-label="anchor" href="#construct-input-arrays-a_i-and-alpha_i"></a>
 </h3>
 <p>Multiply coefficient vector by covariate matrix to generate <em>A</em> vector that is child/individual specific.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="co"># Generate A_i</span>
-<span class="va">ar_Ai_lin</span> <span class="op">&lt;-</span> <span class="va">mt_lincv</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">rs_hgt_prot_lin_tidy</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">term</span>, <span class="st">'prot'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
-<span class="va">ar_Ai_log</span> <span class="op">&lt;-</span> <span class="va">mt_logcv</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">rs_hgt_prot_log_tidy</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">term</span>, <span class="st">'prot'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Generate A_i</span>
+<span class="va">ar_Ai_lin</span> <span class="op">&lt;-</span> <span class="va">mt_lincv</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">rs_hgt_prot_lin_tidy</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">term</span>, <span class="st">'prot'</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_Ai_log</span> <span class="op">&lt;-</span> <span class="va">mt_logcv</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">rs_hgt_prot_log_tidy</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">term</span>, <span class="st">'prot'</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Generate alpha_i</span>
-<span class="va">ar_alphai_lin</span> <span class="op">&lt;-</span> <span class="va">mt_linht</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">rs_hgt_prot_lin_tidy</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">term</span>, <span class="st">'prot'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
-<span class="va">ar_alphai_log</span> <span class="op">&lt;-</span> <span class="va">mt_loght</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">rs_hgt_prot_log_tidy</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">term</span>, <span class="st">'prot'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_alphai_lin</span> <span class="op">&lt;-</span> <span class="va">mt_linht</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">rs_hgt_prot_lin_tidy</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">term</span>, <span class="st">'prot'</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_alphai_log</span> <span class="op">&lt;-</span> <span class="va">mt_loght</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">rs_hgt_prot_log_tidy</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">term</span>, <span class="st">'prot'</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Child Weight</span>
-<span class="va">ar_beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_Ai_lin</span><span class="op">)</span>, times<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ar_Ai_lin</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ar_beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ar_Ai_lin</span><span class="op">)</span>, times<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ar_Ai_lin</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Estimation Results lin and log both store</span>
-<span class="va">mt_opti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">ar_alphai_lin</span>, <span class="va">ar_alphai_log</span>, <span class="va">ar_Ai_lin</span>, <span class="va">ar_Ai_log</span>, <span class="va">ar_beta</span><span class="op">)</span>
-<span class="va">ar_st_varnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'alpha_lin'</span>, <span class="st">'alpha_log'</span>, <span class="st">'A_lin'</span>, <span class="st">'A_log'</span>, <span class="st">'beta'</span><span class="op">)</span>
-<span class="va">df_esti_alpha_A_beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">mt_opti</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span></pre></div>
-<pre><code>## Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
-## Using compatibility `.name_repair`.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="co"># estimation results file to export (keeping data keys)</span>
-<span class="va">df_esti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span><span class="op">(</span><span class="va">df_hw_cebu_m24</span>, <span class="va">df_esti_alpha_A_beta</span><span class="op">)</span> <span class="op">%&gt;%</span>
-              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html">one_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'S.country'</span>, <span class="st">'vil.id'</span>, <span class="st">'indi.id'</span>, <span class="st">'svymthRound'</span>, <span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">mt_opti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">ar_alphai_lin</span>, <span class="va">ar_alphai_log</span>, <span class="va">ar_Ai_lin</span>, <span class="va">ar_Ai_log</span>, <span class="va">ar_beta</span><span class="op">)</span>
+<span class="va">ar_st_varnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'alpha_lin'</span>, <span class="st">'alpha_log'</span>, <span class="st">'A_lin'</span>, <span class="st">'A_log'</span>, <span class="st">'beta'</span><span class="op">)</span>
+<span class="va">df_esti_alpha_A_beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">mt_opti</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html" class="external-link">rename_all</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.</span>
+<span class="co">## Using compatibility `.name_repair`.</span>
+<span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
+<span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span></code></pre>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># estimation results file to export (keeping data keys)</span>
+<span class="va">df_esti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">df_hw_cebu_m24</span>, <span class="va">df_esti_alpha_A_beta</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html" class="external-link">one_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'S.country'</span>, <span class="st">'vil.id'</span>, <span class="st">'indi.id'</span>, <span class="st">'svymthRound'</span>, <span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Initate Dataframe that will store all estimates and optimal allocation relevant information</span>
-<span class="va">mt_opti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">ar_alphai_lin</span>, <span class="va">ar_Ai_lin</span>, <span class="va">ar_beta</span><span class="op">)</span>
-<span class="va">ar_st_varnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span><span class="op">)</span>
-<span class="va">tb_opti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">mt_opti</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">rename_all</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span>
+<span class="va">mt_opti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">ar_alphai_lin</span>, <span class="va">ar_Ai_lin</span>, <span class="va">ar_beta</span><span class="op">)</span>
+<span class="va">ar_st_varnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'alpha'</span>, <span class="st">'A'</span>, <span class="st">'beta'</span><span class="op">)</span>
+<span class="va">tb_opti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">mt_opti</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html" class="external-link">rename_all</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Unique beta, A, and alpha groups</span>
-<span class="va">tb_opti_unique</span> <span class="op">&lt;-</span> <span class="va">tb_opti</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">syms</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>n_obs_group<span class="op">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></pre></div>
-<pre><code>## `summarise()` regrouping output by 'alpha', 'A' (override with `.groups` argument)</code></pre>
+<span class="va">tb_opti_unique</span> <span class="op">&lt;-</span> <span class="va">tb_opti</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html" class="external-link">syms</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html" class="external-link">syms</a></span><span class="op">(</span><span class="va">ar_st_varnames</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_obs_group<span class="op">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## `summarise()` has grouped output by 'alpha', 'A'. You can override using the `.groups` argument.</span></code></pre>
 </div>
 </div>
-<div id="export-data-to-data-folder" class="section level2">
-<h2 class="hasAnchor">
-<a href="#export-data-to-data-folder" class="anchor"></a>Export Data to <em>/data</em> Folder</h2>
+<div class="section level2">
+<h2 id="export-data-to-data-folder">Export Data to <em>/data</em> Folder<a class="anchor" aria-label="anchor" href="#export-data-to-data-folder"></a>
+</h2>
 <p>I would like to be able to directly call the dataset generated here in various functions. Save the datafile we just created in the project folder.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="kw">if</span> <span class="op">(</span><span class="va">bl_save_rda</span><span class="op">)</span> <span class="op">{</span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="va">bl_save_rda</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">df_opt_dtgch_cbem4</span> <span class="op">&lt;-</span> <span class="va">df_esti</span>
-  <span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_data.html">use_data</a></span><span class="op">(</span><span class="va">df_opt_dtgch_cbem4</span>, <span class="va">df_opt_dtgch_cbem4</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="op">}</span></pre></div>
+  <span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_data.html" class="external-link">use_data</a></span><span class="op">(</span><span class="va">df_opt_dtgch_cbem4</span>, <span class="va">df_opt_dtgch_cbem4</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
 </div>
   </div>
 
@@ -329,11 +339,13 @@ Regress height on protein inputs allowing for heterogeneous effects for each of 
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://fanwangecon.github.io">Fan Wang</a>.</p>
+  <p></p>
+<p>Developed by <a href="https://fanwangecon.github.io" class="external-link">Fan Wang</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -341,6 +353,8 @@ Regress height on protein inputs allowing for heterogeneous effects for each of 
 
   
 
+
+  
 
   </body>
 </html>

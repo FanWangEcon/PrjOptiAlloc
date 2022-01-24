@@ -14,7 +14,8 @@ ffp_opt_sobin_rev(
 )
 }
 \arguments{
-\item{ar_queue_optimal}{optimal targeting array index of ranking from 1 to N targetting queue}
+\item{ar_queue_optimal}{optimal targeting array index of ranking from 1 to
+N targetting queue}
 
 \item{ar_bin_observed}{observed vector of binary zeros and ones}
 
@@ -22,13 +23,18 @@ ffp_opt_sobin_rev(
 
 \item{ar_alpha}{float array of planner bias}
 
-\item{ar_beta}{string name of the A_i variable, any nonlinear or linear evaluated expected outcome}
+\item{ar_beta}{string name of the A_i variable, any nonlinear or linear
+evaluated expected outcome}
+
+\item{fl_rho}{float preference for equality for the planner, negative
+infinity to 1}
 }
 \value{
 an float value for resource equivalent variation, see Theorem 1
 }
 \description{
-This does not solve for the full solution, just the targeting queue, individual position on queue.
+This does not solve for the full solution, just the targeting
+  queue, individual position on queue.
 }
 \examples{
 library(tibble)

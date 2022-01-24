@@ -1,6 +1,6 @@
 ffp_snw_process_inputs <-
-  function(srt_simu_path = 'C:/Users/fan/Documents/Dropbox (UH-ECON)/PrjNygaardSorensenWang/Output/',
-           snm_simu_csv = 'snwx_v_planner_moredense_a100zh266_e2m2.csv',
+  function(srt_simu_path = "C:/Users/fan/Documents/Dropbox (UH-ECON)/PrjNygaardSorensenWang/Output/",
+           snm_simu_csv = "snwx_v_planner_moredense_a100zh266_e2m2.csv",
            df_plan_v_tilde_full = NULL,
            fl_max_phaseout = 238000,
            it_bin_dollar_before_phaseout = 2500,
@@ -8,31 +8,64 @@ ffp_snw_process_inputs <-
            fl_multiple = 58056,
            it_max_checks = 44,
            fl_tax_hh = 128580000,
+           bl_per_capita = FALSE,
            it_max_age = 64,
            it_min_age = 18,
            it_age_bins = 2,
-           ar_svr_csv = c('age', 'marital', 'kids', 'checks',	'ymin', 'mass', 'survive', 'vtilde', 'ctilde'),
-           ar_svr_groups = c('marital', 'kids', 'age_group', 'ymin_group'),
-           ar_svr_groups_stats = c('mass', 'survive'),
-           svr_checks = 'checks',
-           svr_v_value = 'vtilde',
-           svr_c_value = 'ctilde',
-           svr_mass = 'mass',
+           fl_rand_adj_A_prop = 0,
+           it_rand_adj_A_rng_seed = 0,
+           ar_svr_csv = c("age", "marital", "kids", "checks", "ymin", "mass", "survive", "vtilde", "ctilde"),
+           ar_svr_groups = c("marital", "kids", "age_group", "ymin_group"),
+           ar_svr_groups_stats = c("mass", "survive"),
+           svr_checks = "checks",
+           svr_v_value = "vtilde",
+           svr_c_value = "ctilde",
+           svr_mass = "mass",
            ar_rho = c(1),
            bl_df_alloc_il = FALSE,
            bl_return_allQ_V = FALSE,
            bl_threshold = FALSE,
-           it_check_headorspouse = 12,
-           it_check_perkids = 5,
+           ls_stimulus_specs =
+             list(
+               st_biden_or_trump = "bidenchk",
+               it_check_headorspouse = 12,
+               it_check_perkids = 5
+             ),
            bl_given_firstcheck = FALSE,
            bl_non_inc_adjust = FALSE,
            bl_print = TRUE,
            bl_print_verbose = FALSE) {
-    #' Processing Matlab Simulation results for allocation for Nygaard, Sorernsen and Wang (2020)
+    #' Solving optimal allocation for Nygaard, Sorernsen and Wang (2020) given
+    #' MPC and C simulation results.
     #'
-    #' @description
-    #' Matlab Simulation Process for Allocation
+    #' @description First solve the model inside Matlab with code documented
+    #' here: \url{https://fanwangecon.github.io/PrjOptiSNW/} from the paper
+    #' Nygaard, Sorernsen and Wang (2020)
+    #' (\url{https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3839890}). This
+    #' model generates for households with varying income level, kids count, and
+    #' marital status, the marginal propensity to consume different check
+    #' increments, and consumption without stimulus checks. Also generates
+    #' life-time value/welfare in the absence and with stimulus checks. This
+    #' function then solves the optimal allocation problem given these inputs.
     #'
+    #' Various parameters here determine the path to the csv file where
+    #' simulation results are stored/outputted from matlab, and various variable
+    #' names in the files, various allocation constraints on how much a
+    #' household with certain child count and marital status can receive in
+    #' terms of stimulus checks, and parameters relating to planner preferences.
+    #'
+    #' @param bl_per_capita boolean per capita or not. If per capita, then
+    #'   household size will determine the weight to assign to each household.
+    #'   The consumptions should be divded by the household size, and the
+    #'   weights should be expanded by it. For example, if two households, 1
+    #'   with 2 members, 1 with 1 member. Then then consumption in the larger
+    #'   household should first be divided by two. Then the weight should be 2/3
+    #'   for the larger household, and 1/3 for the smaller household.
+    #' @param fl_rand_adj_A_prop float a number larger than zero, it is the
+    #'   standard deviation of the shock to be drawn to perturb the entire
+    #'   vector for A/alpha, moving it up or down. If equal to zero, no effects.
+    #' @param it_rand_adj_A_rng_seed random number seed for simulating
+    #'   perturbation draws
     #' @author Fan Wang, \url{http://fanwangecon.github.io}
     #' @export
     #'
@@ -103,13 +136,15 @@ ffp_snw_process_inputs <-
     # svr_v_value <- 'vtilde'
     # svr_c_value <- 'ctilde'
 
+    ## Allocation type --------------------
+    st_biden_or_trump <- ls_stimulus_specs$st_biden_or_trump
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # mt_plan_v_tilde <- read.csv(paste0(srt_simu_path, snm_simu_csv), header=FALSE)
 
     if (is.null(df_plan_v_tilde_full)) {
-      df_plan_v_tilde_full <- as_tibble(read.csv(paste0(srt_simu_path, snm_simu_csv), header=FALSE)) %>%
-        rename_all(~c(ar_svr_csv))
+      df_plan_v_tilde_full <- as_tibble(read.csv(paste0(srt_simu_path, snm_simu_csv), header = FALSE)) %>%
+        rename_all(~ c(ar_svr_csv))
     }
 
     if (bl_given_firstcheck) {
@@ -148,77 +183,73 @@ ffp_snw_process_inputs <-
     # Column 7: Population weight Of that particular group (in the stationary distribution)
     # Column 8: Survival probability of that particular age (since the planner knows that some of the individuals will die before next period, so wasn't sure how you wanted me to include that. I did not already include it in V^tilde)
     # Column 9: Value of planner as in the slides (with the exception that I didn't multiply by the survival probability
-
-
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    if (bl_print_verbose){
+    if (bl_print_verbose) {
       REconTools::ff_summ_percentiles(df_plan_v_tilde)
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    if (bl_print){
-      print(paste0('sum(df_plan_v_tilde %>% pull(mass)=', sum(df_plan_v_tilde %>% pull(mass))))
+    if (bl_print) {
+      print(paste0("sum(df_plan_v_tilde %>% pull(mass)=", sum(df_plan_v_tilde %>% pull(mass))))
     }
 
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Age Groups
     if (it_max_age < 64) {
-
-      ar_agecut = seq(it_min_age-1, it_max_age, length.out=it_age_bins+1)
-
+      ar_agecut <- seq(it_min_age - 1, it_max_age, length.out = it_age_bins + 1)
     } else {
-
       if (it_age_bins == 4) {
         # G4 grouping
         if (it_max_age == 64) {
           # four groups
-          ar_agecut = c(it_min_age-1, 30, 40, 50, 64)
+          ar_agecut <- c(it_min_age - 1, 30, 40, 50, 64)
         } else {
-          ar_agecut = c(it_min_age-1, 30, 40, 50, 64, it_max_age)
+          ar_agecut <- c(it_min_age - 1, 30, 40, 50, 64, it_max_age)
         }
       } else {
-        ar_agecut = seq(it_min_age-1, it_max_age, length.out=it_age_bins+1)
+        ar_agecut <- seq(it_min_age - 1, it_max_age, length.out = it_age_bins + 1)
       }
-
     }
 
     # Dimensions
-    if (bl_print){
-      print(paste0('dim(df_plan_v_tilde)=',dim(df_plan_v_tilde)))
+    if (bl_print) {
+      print(paste0("dim(df_plan_v_tilde)=", dim(df_plan_v_tilde)))
     }
 
     # df_plan_v_tilde_yjm <- df_plan_v_tilde
     df_plan_v_tilde_yjm <- df_plan_v_tilde %>%
       mutate(age_group = (cut(age, ar_agecut))) %>%
       group_by(marital, kids, checks, ymin, age_group) %>%
-      summarize(vtilde = sum(vtilde*mass)/sum(mass),
-                ctilde = sum(ctilde*mass)/sum(mass),
-                mass = sum(mass),
-                survive = mean(survive)) %>%
+      summarize(
+        vtilde = sum(vtilde * mass) / sum(mass),
+        ctilde = sum(ctilde * mass) / sum(mass),
+        mass = sum(mass),
+        survive = mean(survive)
+      ) %>%
       ungroup()
 
     # Remove
     rm(df_plan_v_tilde)
 
     # Summarize
-    if (bl_print){
-      print(paste0('dim(df_plan_v_tilde_yjm)=',dim(df_plan_v_tilde_yjm)))
+    if (bl_print) {
+      print(paste0("dim(df_plan_v_tilde_yjm)=", dim(df_plan_v_tilde_yjm)))
     }
-    if (bl_print_verbose){
+    if (bl_print_verbose) {
       REconTools::ff_summ_percentiles(df_plan_v_tilde_yjm)
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Number of Cuts Before th Mas Phase Out Point.
-    fl_thres = fl_max_phaseout/fl_multiple
+    fl_thres <- fl_max_phaseout / fl_multiple
     # Solution Grid Precision prior to max_phaseout point.
-    inc_grid1 = seq(0, fl_thres, length.out=(fl_max_phaseout)/it_bin_dollar_before_phaseout)
-    fl_grid_gap = inc_grid1[2] - inc_grid1[1]
+    inc_grid1 <- seq(0, fl_thres, length.out = (fl_max_phaseout) / it_bin_dollar_before_phaseout)
+    fl_grid_gap <- inc_grid1[2] - inc_grid1[1]
     # Not all inc_grid1 points are valid, there are some elements that have no mass
-    fl_min_ymin_posmass = min(df_plan_v_tilde_yjm %>% pull(ymin))
+    fl_min_ymin_posmass <- min(df_plan_v_tilde_yjm %>% pull(ymin))
     # First group is min
-    ar_ycut = c(0, inc_grid1[inc_grid1>fl_min_ymin_posmass+fl_grid_gap], 7)
+    ar_ycut <- c(0, inc_grid1[inc_grid1 > fl_min_ymin_posmass + fl_grid_gap], 7)
 
     # alternative method
     # fl_max_full_phaseout = fl_max_phaseout/fl_multiple
@@ -232,17 +263,19 @@ ffp_snw_process_inputs <-
     #   7,
     #   length.out=(it_inc_groups - 1))[2:(it_inc_groups - 1)])
 
-    if (bl_print){
-      print(paste0('ar_ycut*fl_multiple:',ar_ycut*fl_multiple))
+    if (bl_print) {
+      print(paste0("ar_ycut*fl_multiple:", ar_ycut * fl_multiple))
     }
-    it_inc_groups = length(ar_ycut)
-    fl_inc_gap = (ar_ycut[3]-ar_ycut[2])*fl_multiple
-    fl_inc_min = min(df_plan_v_tilde_yjm %>% pull(ymin))*fl_multiple
-    subtitle = paste0('1 unit along x-axis = $', round(fl_inc_gap),
-                      ', x-axis min = $', round(fl_inc_min),
-                      ', x-axis final group >= $', round(ar_ycut[length(ar_ycut)-1]*fl_multiple))
-    if (bl_print){
-      print(paste0('subtitle:',subtitle))
+    it_inc_groups <- length(ar_ycut)
+    fl_inc_gap <- (ar_ycut[3] - ar_ycut[2]) * fl_multiple
+    fl_inc_min <- min(df_plan_v_tilde_yjm %>% pull(ymin)) * fl_multiple
+    subtitle <- paste0(
+      "1 unit along x-axis = $", round(fl_inc_gap),
+      ", x-axis min = $", round(fl_inc_min),
+      ", x-axis final group >= $", round(ar_ycut[length(ar_ycut) - 1] * fl_multiple)
+    )
+    if (bl_print) {
+      print(paste0("subtitle:", subtitle))
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -252,108 +285,221 @@ ffp_snw_process_inputs <-
     df_plan_v_tilde_ygrpjm <- df_plan_v_tilde_yjm %>%
       mutate(ymin_group = (cut(ymin, ar_ycut))) %>%
       group_by(marital, kids, checks, age_group, ymin_group) %>%
-      summarize(vtilde = sum(vtilde*mass)/sum(mass),
-                ctilde = sum(ctilde*mass)/sum(mass),
-                mass = sum(mass),
-                survive = mean(survive)) %>%
+      summarize(
+        vtilde = sum(vtilde * mass) / sum(mass),
+        ctilde = sum(ctilde * mass) / sum(mass),
+        mass = sum(mass),
+        survive = mean(survive)
+      ) %>%
       ungroup()
+
+
+    # Per capita allocation means shifting the C level per-capita level c
+    # rescale consumption to per at per capita level first, for larger households
+    # have to also change weights.
+    if (bl_per_capita) {
+      df_plan_v_tilde_ygrpjm <- df_plan_v_tilde_ygrpjm %>%
+        mutate(
+          hhsize = (kids + marital + 1),
+          ctilde_hh = ctilde,
+          vtilde_hh = vtilde,
+          ctilde = ctilde / hhsize,
+          vtilde = vtilde / hhsize
+        )
+    } else {
+      # hhsize = 1, per capita does not matter, all equal size, if not per-capita
+      df_plan_v_tilde_ygrpjm <- df_plan_v_tilde_ygrpjm %>%
+        mutate(
+          hhsize = 1,
+          ctilde_hh = ctilde,
+          vtilde_hh = vtilde,
+          ctilde = ctilde / hhsize,
+          vtilde = vtilde / hhsize
+        )
+    }
+    if (bl_print_verbose) {
+      df_test <- df_plan_v_tilde_ygrpjm %>%
+        mutate(ctilde_hh = ctilde, ctilde = ctilde / hhsize)
+      mutate(ctilde_same = case_when(ctilde == ctilde_hh ~ 1, TRUE ~ 0))
+      REconTools::ff_summ_percentiles(df_test)
+    }
 
     # Remove
     rm(df_plan_v_tilde_yjm)
 
     # Summarize
-    if (bl_print_verbose){
+    if (bl_print_verbose) {
       REconTools::ff_summ_percentiles(df_plan_v_tilde_ygrpjm)
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    if (bl_print){
-      print(paste0('sum(df_plan_v_tilde_ygrpjm %>% pull(mass))',sum(df_plan_v_tilde_ygrpjm %>% pull(mass))))
+    if (bl_print) {
+      print(paste0("sum(df_plan_v_tilde_ygrpjm %>% pull(mass))", sum(df_plan_v_tilde_ygrpjm %>% pull(mass))))
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # group id
-    svr_group_id <- 'group_id'
+    svr_group_id <- "group_id"
     # Define
     ls_svr_group_vars <- ar_svr_groups
     # panel dataframe following
     df_plan_v_tilde_id <- df_plan_v_tilde_ygrpjm %>%
       arrange(!!!syms(ls_svr_group_vars)) %>%
       group_by(!!!syms(ls_svr_group_vars)) %>%
-      mutate(!!sym(svr_group_id) := (row_number()==1)*1) %>%
+      mutate(!!sym(svr_group_id) := (row_number() == 1) * 1) %>%
       ungroup() %>%
       rowid_to_column(var = "id") %>%
       mutate(!!sym(svr_group_id) := cumsum(!!sym(svr_group_id))) %>%
       select(one_of(svr_group_id, ls_svr_group_vars), everything())
 
-    if (bl_print_verbose){
+    if (bl_print_verbose) {
       REconTools::ff_summ_percentiles(df_plan_v_tilde_id)
     }
 
-    ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    if (bl_print_verbose){
-      REconTools::ff_summ_count_unique_by_groups(df_plan_v_tilde_id,ls_svr_group_vars,svr_group_id)
+    ## Perturbation ---------------------------------------------------------------------------------------------------
+
+    if (fl_rand_adj_A_prop != 0) {
+
+      # 1. The number of distinct types for allocation, and the zero check A level
+      # dataframe row count = unique groups, A level (c no checks)
+      # fl_rand_adj_A_prop = 0 no change, fl_rand_adj_A_prop = 0.1, 10 percent
+      df_check0_c_v_draw_sd <- df_plan_v_tilde_id %>%
+        filter(!!sym(svr_checks) == 0) %>%
+        select(one_of(svr_group_id, svr_c_value, svr_v_value)) %>%
+        mutate(
+          sd_c = !!sym(svr_c_value) * fl_rand_adj_A_prop,
+          sd_v = !!sym(svr_v_value) * fl_rand_adj_A_prop
+        )
+
+      # 2. Draw from random normal distribution, once for each one of the distinct types
+      # seeds adjusted as function parameter
+      it_allocate_type_n <- dim(df_check0_c_v_draw_sd)[1]
+      set.seed(it_rand_adj_A_rng_seed)
+      ar_perturb_draws_c <- rnorm(it_allocate_type_n, mean = 0, sd = 1)
+      ar_perturb_draws_v <- rnorm(it_allocate_type_n, mean = 0, sd = 1)
+
+      # 3, Adjust draws by the appropriate group-specific standard deviations
+      df_check0_c_v_draw_sd <- cbind(df_check0_c_v_draw_sd, ar_perturb_draws_c, ar_perturb_draws_v)
+      df_check0_c_v_draw_sd <- df_check0_c_v_draw_sd %>%
+        mutate(
+          ar_perturb_draws_c = ar_perturb_draws_c * sd_c,
+          ar_perturb_draws_v = ar_perturb_draws_v * sd_v
+        )
+
+      # 4. Merge back with full file as an additional column
+      df_plan_v_tilde_id <- df_plan_v_tilde_id %>% left_join(
+        df_check0_c_v_draw_sd %>% select(one_of(svr_group_id), ar_perturb_draws_c, ar_perturb_draws_v),
+        by = svr_group_id
+      )
+
+      # 5. Add the perturbed value to all V and C (this means only perturbing A)
+      # the distance in C between checks are preserved, just the entire vectored moved up or down
+      bl_graph_check <- FALSE
+      if (bl_graph_check) {
+        par(new = FALSE)
+        ar_c_ori <- df_plan_v_tilde_id[[svr_c_value]]
+        ar_c_perturbed <- df_plan_v_tilde_id[[svr_c_value]] + df_plan_v_tilde_id$ar_perturb_draws_c
+        hist(ar_c_perturbed, col = "red", breaks = 20)
+        par(new = T)
+        hist(ar_c_ori, add = T, col = "blue", breaks = 20)
+        df_c_c_perturbed <- cbind(ar_c_ori, ar_c_perturbed)
+        summary(df_c_c_perturbed)
+        REconTools::ff_summ_percentiles(as.tibble(df_c_c_perturbed), bl_statsasrows = TRUE)
+      }
+
+      df_plan_v_tilde_id <- df_plan_v_tilde_id %>%
+        mutate(
+          !!sym(svr_c_value) := !!sym(svr_c_value) + ar_perturb_draws_c,
+          !!sym(svr_v_value) := !!sym(svr_v_value) + ar_perturb_draws_v
+        ) %>%
+        select(-ar_perturb_draws_c, -ar_perturb_draws_v) %>%
+        select(one_of(svr_group_id, ls_svr_group_vars), everything())
     }
-    if (bl_print_verbose){
+
+
+    ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+    if (bl_print_verbose) {
+      REconTools::ff_summ_count_unique_by_groups(df_plan_v_tilde_id, ls_svr_group_vars, svr_group_id)
+    }
+    if (bl_print_verbose) {
       REconTools::ff_summ_percentiles(df_plan_v_tilde_id, bl_statsasrows = FALSE)
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Select Grouping by Variables
     df_id <- df_plan_v_tilde_id %>%
-      select(one_of(svr_group_id, ls_svr_group_vars, ar_svr_groups_stats)) %>%
+      select(one_of(svr_group_id, ls_svr_group_vars, ar_svr_groups_stats), hhsize) %>%
       group_by(!!!syms(svr_group_id)) %>%
-      slice_head() %>% ungroup() %>%
-      select(one_of(svr_group_id, ls_svr_group_vars, ar_svr_groups_stats)) %>%
+      slice_head() %>%
+      ungroup() %>%
+      select(one_of(svr_group_id, ls_svr_group_vars, ar_svr_groups_stats), hhsize) %>%
       rename(id_i = !!sym(svr_group_id))
     ar_group_ids <- unique(df_id %>% pull(id_i))
 
     # Summarize
-    if (bl_print_verbose){
+    if (bl_print_verbose) {
       REconTools::ff_summ_percentiles(df_id)
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    if (bl_print){
-      print(paste0('sum(df_id %>% pull(mass))', sum(df_id %>% pull(mass))))
+    if (bl_print) {
+      print(paste0("sum(df_id %>% pull(mass))", sum(df_id %>% pull(mass))))
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Select 4 variables
     df_value <- df_plan_v_tilde_id %>%
-      select(one_of(svr_group_id, svr_checks, svr_v_value, svr_c_value))
+      select(one_of(svr_group_id, svr_checks, svr_v_value, svr_c_value), hhsize)
     # remove
     rm(df_plan_v_tilde_id)
     # Summarize
-    if (bl_print_verbose){
+    if (bl_print_verbose) {
       REconTools::ff_summ_percentiles(df_value)
       REconTools::ff_summ_count_unique_by_groups(df_value, svr_group_id, svr_group_id)
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # per capita household weight, not equal beta_i weight
+    # note this is pulled from df_id
+    ar_hhsize <- df_id %>% pull(hhsize)
+    fl_hhsize_sum <- sum(ar_hhsize)
+
+    ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # 1. id column and id_il
-    df_il <- df_value %>% rename(id_i = !!sym(svr_group_id)) %>%
+    df_il <- df_value %>%
+      rename(id_i = !!sym(svr_group_id)) %>%
       mutate(id_il = row_number()) %>%
       select(id_i, id_il, everything())
     # 2. D_max_i and D_il
+    # fl_hhsize_sum = sum or row count
+    # if bl_per_capita: hhsize = marital + kids + 1 if per capita, fl_hhsize_sum is the sum of hhsize
+    # if !bl_per_capita: hhsize = 1, fl_hhsize_sum is sum of rows
     df_il <- df_il %>%
-      arrange(id_i, svr_checks) %>% group_by(id_i) %>%
+      arrange(id_i, svr_checks) %>%
+      group_by(id_i) %>%
       mutate(D_max_i = max(!!sym(svr_checks))) %>%
       rename(D_il = !!sym(svr_checks)) %>%
-      mutate(beta_i = 1/n()) %>%
+      # mutate(beta_i = 1/n()) %>%
+      mutate(beta_i = hhsize / fl_hhsize_sum) %>%
       select(id_i, id_il, D_max_i, D_il, everything())
     # Summarize
-    if (bl_print_verbose){
+    if (bl_print_verbose) {
       REconTools::ff_summ_percentiles(df_il)
+      sum(df_il %>% mutate(beta_ii = 1 / n()) %>% pull(beta_ii))
+      sum(df_il %>% pull(beta_i))
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # 3. A_il and alpha_il
     df_il_U <- df_il %>%
-      mutate(c_alpha_il = lead(!!sym(svr_c_value)) - (!!sym(svr_c_value)),
-             v_alpha_il = lead(!!sym(svr_v_value)) - (!!sym(svr_v_value))) %>%
-      rename(c_A_il = !!sym(svr_c_value),
-             v_A_il = !!sym(svr_v_value)) %>%
+      mutate(
+        c_alpha_il = lead(!!sym(svr_c_value)) - (!!sym(svr_c_value)),
+        v_alpha_il = lead(!!sym(svr_v_value)) - (!!sym(svr_v_value))
+      ) %>%
+      rename(
+        c_A_il = !!sym(svr_c_value),
+        v_A_il = !!sym(svr_v_value)
+      ) %>%
       ungroup()
 
     # 4. drop max check
@@ -363,7 +509,7 @@ ffp_snw_process_inputs <-
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_caschool_input_il.html
-    if (bl_print_verbose){
+    if (bl_print_verbose) {
       # id_i id_il D_max_i  D_il  A_il alpha_il  beta_i
       head(df_il_U, 50)
       tail(df_il_U, 50)
@@ -379,12 +525,13 @@ ffp_snw_process_inputs <-
     #                             v_A_il <  0.01 ~ 0.01 ))
     # Minimum A
     fl_min_v_A_il <- min(df_il_U$v_A_il) + 0.01
+    fl_min_v_A_il <- 0
     # Rescale by minimum
     df_il_U <- df_il_U %>%
       mutate(v_A_il = v_A_il - fl_min_v_A_il)
 
     # Summarize
-    if (bl_print){
+    if (bl_print) {
       REconTools::ff_summ_percentiles(df_il_U)
     }
 
@@ -393,13 +540,13 @@ ffp_snw_process_inputs <-
     set.seed(123)
     it_draw <- length(ar_group_ids)
     # it_draw <- 30
-    ar_group_rand <- ar_group_ids[sample(length(ar_group_ids), it_draw, replace=FALSE)]
+    ar_group_rand <- ar_group_ids[sample(length(ar_group_ids), it_draw, replace = FALSE)]
     df_input_il <- df_il_U %>%
       filter(id_i %in% ar_group_rand) %>%
       mutate(id_il = row_number())
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    if (bl_non_inc_adjust){
+    if (bl_non_inc_adjust) {
       # Update c_alpha_il
       df_input_il_noninc <- df_input_il %>%
         arrange((D_il)) %>%
@@ -408,7 +555,7 @@ ffp_snw_process_inputs <-
         unnest(c(c_alpha_il_noninc)) %>%
         group_by(id_i) %>%
         mutate(D_il = row_number()) %>%
-        left_join(df_input_il, by=(c('id_i'='id_i', 'D_il'='D_il')))
+        left_join(df_input_il, by = (c("id_i" = "id_i", "D_il" = "D_il")))
 
       # Update v_alpha_il
       df_input_il_noninc <- df_input_il_noninc %>%
@@ -418,7 +565,7 @@ ffp_snw_process_inputs <-
         unnest(c(v_alpha_il_noninc)) %>%
         group_by(id_i) %>%
         mutate(D_il = row_number()) %>%
-        left_join(df_input_il_noninc, by=(c('id_i'='id_i', 'D_il'='D_il')))
+        left_join(df_input_il_noninc, by = (c("id_i" = "id_i", "D_il" = "D_il")))
 
       # replace
       df_input_il_noninc <- df_input_il_noninc %>%
@@ -430,29 +577,71 @@ ffp_snw_process_inputs <-
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    df_input_il_covid_actual <- df_input_il_noninc %>%
-      left_join(df_id, by = "id_i") %>%
-      mutate(ymin_group = as.numeric(ymin_group)) %>%
-      ungroup() %>% rowwise() %>%
-      mutate(actual_checks =
-               ffi_vox_checks_ykm(ymin_group, marital, kids,
-                                  ar_ycut, fl_multiple, fl_percheck_dollar)) %>%
-      ungroup()
+
+    if (st_biden_or_trump == "bushchck") {
+      # Bush 2008 problem actual stimulus
+      # Work with the df_id dataframe to add on lower and upper income bounds
+      df_id_checkadded_actual <- ffp_snw_stimulus_checks_bush_add2dfid(
+        df_id,
+        fl_multiple = fl_multiple,
+        fl_percheck_dollar = fl_percheck_dollar,
+        fl_stimulus_child = 300,
+        fl_stimulus_adult_min = 300,
+        fl_stimulus_adult_max = 600,
+        fl_phase_out_per_dollar_income = 0.05
+      )
+
+      # Join with df_id, add bush_rebate_n_c column
+      df_id_actual <- df_id %>% left_join(df_id_checkadded_actual %>% select(id_i, bush_rebate_n_checks), by = "id_i")
+
+      # Add actual_checks to datafrrame
+      df_input_il_covid_actual <- df_input_il_noninc %>%
+        left_join(df_id_actual, by = "id_i") %>%
+        mutate(
+          ymin_group_str = ymin_group,
+          ymin_group = as.numeric(ymin_group)
+        ) %>%
+        mutate(actual_checks = bush_rebate_n_checks) %>%
+        ungroup()
+    } else {
+      # Actual Stimulus COVID related
+      df_input_il_covid_actual <- df_input_il_noninc %>%
+        left_join(df_id, by = "id_i") %>%
+        mutate(
+          ymin_group_str = ymin_group,
+          ymin_group = as.numeric(ymin_group)
+        ) %>%
+        ungroup() %>%
+        rowwise() %>%
+        mutate(
+          actual_checks =
+            ffi_vox_checks_bidencheck(
+              ymin_group, marital, kids,
+              ar_ycut, fl_multiple, fl_percheck_dollar
+            )
+        ) %>%
+        ungroup()
+    }
+
+    # add actual checks to file
+    df_input_il_noninc <- df_input_il_noninc %>%
+      left_join(df_input_il_covid_actual %>% select(id_i, D_il, actual_checks, ymin_group_str), by = (c("id_i" = "id_i", "D_il" = "D_il")))
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Summarize:
-    if (bl_print){
+    if (bl_print) {
       REconTools::ff_summ_percentiles(df_input_il_covid_actual)
     }
-    if (bl_print_verbose){
+    if (bl_print_verbose) {
       # Group Summarize:
-      ls_svr_group_vars_cact <- c('ymin_group', 'age_group', 'marital', 'kids')
+      ls_svr_group_vars_cact <- c("ymin_group", "age_group", "marital", "kids")
       REconTools::ff_summ_bygroup(
-        df_input_il_covid_actual, ls_svr_group_vars_cact, 'actual_checks')$df_table_grp_stats
+        df_input_il_covid_actual, ls_svr_group_vars_cact, "actual_checks"
+      )$df_table_grp_stats
       # Group Summarize:
-      REconTools::ff_summ_bygroup(df_input_il_covid_actual, c('ymin_group'), 'actual_checks')$df_table_grp_stats
-      REconTools::ff_summ_bygroup(df_input_il_covid_actual, c('marital'), 'actual_checks')$df_table_grp_stats
-      REconTools::ff_summ_bygroup(df_input_il_covid_actual, c('kids'), 'actual_checks')$df_table_grp_stats
+      REconTools::ff_summ_bygroup(df_input_il_covid_actual, c("ymin_group"), "actual_checks")$df_table_grp_stats
+      REconTools::ff_summ_bygroup(df_input_il_covid_actual, c("marital"), "actual_checks")$df_table_grp_stats
+      REconTools::ff_summ_bygroup(df_input_il_covid_actual, c("kids"), "actual_checks")$df_table_grp_stats
     }
 
     ## ----- Reset Based on First Check amounts, Reset df_input_il_noninc
@@ -462,28 +651,37 @@ ffp_snw_process_inputs <-
 
       # 2020 consumption
       df_input_il_covid_actual <- df_input_il_covid_actual %>%
-        filter(case_when(actual_checks == 0 ~ D_il <= it_max_checks,
-                         TRUE ~ D_il >= (actual_checks + 1) & D_il <= (actual_checks + 1 + it_max_checks - 1))) %>%
-        filter() %>% arrange(id_i, D_il) %>% group_by(id_i) %>%
+        filter(case_when(
+          actual_checks == 0 ~ D_il <= it_max_checks,
+          TRUE ~ D_il >= (actual_checks + 1) & D_il <= (actual_checks + 1 + it_max_checks - 1)
+        )) %>%
+        filter() %>%
+        arrange(id_i, D_il) %>%
+        group_by(id_i) %>%
         mutate(D_il = row_number()) %>%
-        mutate(D_max_i = it_max_checks) %>% ungroup() %>%
-        arrange(id_i, D_il) %>% mutate(id_il = row_number())
+        mutate(D_max_i = it_max_checks) %>%
+        ungroup() %>%
+        arrange(id_i, D_il) %>%
+        mutate(id_il = row_number())
 
       # reset df_input_il_noninc
       df_input_il_noninc <- df_input_il_covid_actual %>%
-        select(id_i, id_il, D_max_i, D_il, v_A_il, c_A_il, beta_i, c_alpha_il, v_alpha_il)
+        select(id_i, id_il, D_max_i, D_il, v_A_il, c_A_il, beta_i, c_alpha_il, v_alpha_il, actual_checks, ymin_group_str)
+
       # summarize
-      if (bl_print_verbose){
+      if (bl_print_verbose) {
         REconTools::ff_summ_percentiles(df_input_il_covid_actual)
       }
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     mass_sum <- df_input_il_covid_actual %>% summarize(mass_sum = sum(mass))
-    fl_cost_max_checks_all <- mass_sum*fl_percheck_dollar*fl_tax_hh
-    st_covid_check_cost <- paste0('Cost All Max Checks=$', round(fl_cost_max_checks_all/1000000000,2),
-                                  ' bil (assume ',round(fl_tax_hh/1000000,2),' mil tax households)')
-    if (bl_print){
+    fl_cost_max_checks_all <- mass_sum * fl_percheck_dollar * fl_tax_hh
+    st_covid_check_cost <- paste0(
+      "Cost All Max Checks=$", round(fl_cost_max_checks_all / 1000000000, 2),
+      " bil (assume ", round(fl_tax_hh / 1000000, 2), " mil tax households)"
+    )
+    if (bl_print) {
       print(st_covid_check_cost)
     }
 
@@ -491,37 +689,63 @@ ffp_snw_process_inputs <-
     mass_sum_covid_vox_actual <- df_input_il_covid_actual %>%
       filter(actual_checks >= D_il) %>%
       summarize(mass_cumsum = sum(mass))
-    fl_cost_actual <- mass_sum_covid_vox_actual*fl_percheck_dollar*fl_tax_hh
-    st_covid_check_cost <- paste0('VOX Policy Cost=$', round(fl_cost_actual/1000000000,2),
-                                  ' bil (assume ',round(fl_tax_hh/1000000,2),
-                                  ' mil tax households, use SNW 2020 simulated P(Kids, Marry, INcome))')
-    if (bl_print){
+    fl_cost_actual <- mass_sum_covid_vox_actual * fl_percheck_dollar * fl_tax_hh
+    st_covid_check_cost <- paste0(
+      "VOX Policy Cost=$", round(fl_cost_actual / 1000000000, 2),
+      " bil (assume ", round(fl_tax_hh / 1000000, 2),
+      " mil tax households, use SNW 2020 simulated P(Kids, Marry, INcome))"
+    )
+    if (bl_print) {
       print(st_covid_check_cost)
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Beta_i and mass adjustments
+    df_mass_i_adjust <- df_input_il_covid_actual %>%
+      filter(case_when(
+        actual_checks == 0 ~ D_il == 1, # if check = 0, filter D_il = 1
+        TRUE ~ D_il == actual_checks
+      )) %>%
+      mutate(
+        mass_sum = sum(mass),
+        mass_per_capita = mass * hhsize.x,
+        mass_per_capita_sum = sum(mass_per_capita)
+      ) %>%
+      mutate(mass_per_capita_scaled = (mass_per_capita / mass_per_capita_sum) * mass_sum) %>%
+      select(id_i, mass_per_capita_scaled)
+
     # 2020 consumption
     df_input_ib_c <- df_input_il_covid_actual %>%
-      filter(case_when(actual_checks == 0 ~ D_il == 1, # if check = 0, filter D_il = 1
-                       TRUE ~ D_il == actual_checks)) %>%
+      filter(case_when(
+        actual_checks == 0 ~ D_il == 1, # if check = 0, filter D_il = 1
+        TRUE ~ D_il == actual_checks
+      )) %>%
       rename(A_i_l0 = c_A_il) %>%
-      mutate(alpha_o_i = case_when(actual_checks == 0 ~ 0,
-                                   TRUE ~ c_alpha_il)) %>%
-      select(id_i, A_i_l0, alpha_o_i, beta_i, mass, actual_checks) %>%
-      mutate(mass_i = mass, beta_i = 1)
+      mutate(alpha_o_i = case_when(
+        actual_checks == 0 ~ 0,
+        TRUE ~ c_alpha_il
+      )) %>%
+      left_join(df_mass_i_adjust, by = "id_i") %>%
+      select(id_i, A_i_l0, alpha_o_i, beta_i, mass_per_capita_scaled, actual_checks) %>%
+      mutate(mass_i = mass_per_capita_scaled, beta_i = 1)
 
     # value
     df_input_ib_v <- df_input_il_covid_actual %>%
-      filter(case_when(actual_checks == 0 ~ D_il == 1, # if check = 0, filter D_il = 1
-                       TRUE ~ D_il == actual_checks)) %>%
+      filter(case_when(
+        actual_checks == 0 ~ D_il == 1, # if check = 0, filter D_il = 1
+        TRUE ~ D_il == actual_checks
+      )) %>%
       rename(A_i_l0 = v_A_il) %>%
-      mutate(alpha_o_i = case_when(actual_checks == 0 ~ 0,
-                                   TRUE ~ v_alpha_il)) %>%
-      select(id_i, A_i_l0, alpha_o_i, beta_i, mass, actual_checks) %>%
-      mutate(mass_i = mass, beta_i = 1)
+      mutate(alpha_o_i = case_when(
+        actual_checks == 0 ~ 0,
+        TRUE ~ v_alpha_il
+      )) %>%
+      left_join(df_mass_i_adjust, by = "id_i") %>%
+      select(id_i, A_i_l0, alpha_o_i, beta_i, mass_per_capita_scaled, actual_checks, ymin_group_str) %>%
+      mutate(mass_i = mass_per_capita_scaled, beta_i = 1)
 
     # summarize
-    if (bl_print){
+    if (bl_print) {
       REconTools::ff_summ_percentiles(df_input_ib_c)
       REconTools::ff_summ_percentiles(df_input_ib_v)
     }
@@ -534,37 +758,85 @@ ffp_snw_process_inputs <-
     it_total_checks <- as.numeric(it_total_checks)
     # this is the measure of checks available given VOX allocation and simulated mass
     # summarize
-    if (bl_print){
-      print(paste0('mass_sum_covid_vox_actual=',mass_sum_covid_vox_actual))
+    if (bl_print) {
+      print(paste0("mass_sum_covid_vox_actual=", mass_sum_covid_vox_actual))
     }
     # And this point, the number is not important
     fl_dis_w <- it_total_checks
     fl_dis_w_mass <- as.numeric(mass_sum_covid_vox_actual)
-    if (bl_print){
-      print(paste0('fl_dis_w=',fl_dis_w))
+    if (bl_print) {
+      print(paste0("fl_dis_w=", fl_dis_w))
     }
 
     ## ---- Modify Maximum Allocation Point for Each Individual
     # The modification below means that
     if (bl_threshold) {
-      if (bl_print){
-        print(paste0('(df_input_il_noninc)=',(df_input_il_noninc)))
+
+      # Get problem type
+      if (bl_print) {
+        print(paste0("(df_input_il_noninc)=", (df_input_il_noninc)))
       }
-      # Threshold frame
+
+      # Solve the either the 2008 problem or the COVID related problems
+      if (st_biden_or_trump == "bushchck") {
+        # Bush 2008 problem solution, also see: vignettes\ffv_snw_stimulus_bush_2008.Rmd
+
+        # Get parameters that define allocation bounds, max bounds
+        fl_stimulus_child <- ls_stimulus_specs$fl_stimulus_child
+        fl_stimulus_adult_min <- ls_stimulus_specs$fl_stimulus_adult_min
+        fl_stimulus_adult_max <- ls_stimulus_specs$fl_stimulus_adult_max
+        fl_per_adult_phase_out <- ls_stimulus_specs$fl_per_adult_phase_out
+        fl_phase_out_per_dollar_income <- ls_stimulus_specs$fl_phase_out_per_dollar_income
+
+        # Work with the df_id dataframe to add on lower and upper income bounds
+        df_id_checkadded_x3chd_x3adthgbdlwbd <- ffp_snw_stimulus_checks_bush_add2dfid(
+          df_id,
+          fl_multiple = fl_multiple,
+          fl_percheck_dollar = fl_percheck_dollar,
+          fl_stimulus_child = fl_stimulus_child,
+          fl_stimulus_adult_min = fl_stimulus_adult_min,
+          fl_stimulus_adult_max = fl_stimulus_adult_max,
+          fl_phase_out_per_dollar_income = fl_phase_out_per_dollar_income
+        )
+
+        # Join with df_id, add bush_rebate_n_c column
+        df_id_alter <- df_id %>% left_join(
+          df_id_checkadded_x3chd_x3adthgbdlwbd %>% select(id_i, bush_rebate_n_checks),
+          by = "id_i"
+        )
+
+        # Add D_max_i to datafrrame
+        df_input_il_noninc <- df_input_il_noninc %>%
+          left_join(df_id_alter, by = "id_i") %>%
+          mutate(D_max_i = bush_rebate_n_checks)
+      } else {
+        # Various COVID stimulus problems
+
+        # Get parameters that define allocation bounds, max bounds
+        it_check_perkids <- ls_stimulus_specs$it_check_perkids
+        it_check_headorspouse <- ls_stimulus_specs$it_check_headorspouse
+
+        # D_max_i is the max stimulus bound, for COVID problem, the bound is common
+        # for all individuals in kids/marital group, regardless of income levels.
+        df_input_il_noninc <- df_input_il_noninc %>%
+          left_join(df_id, by = "id_i") %>%
+          mutate(D_max_i = kids * it_check_perkids + marital * it_check_headorspouse + it_check_headorspouse)
+      }
+
+      # Select out key variables, etc
       df_input_il_noninc <- df_input_il_noninc %>%
-        left_join(df_id, by = "id_i") %>%
-        mutate(D_max_i = kids*it_check_perkids + marital*it_check_headorspouse + it_check_headorspouse) %>%
         filter(D_max_i >= D_il) %>%
-        select(id_i, v_alpha_il, D_il, c_alpha_il, id_il, D_max_i, v_A_il, c_A_il, beta_i) %>%
+        select(id_i, v_alpha_il, D_il, c_alpha_il, id_il, D_max_i, v_A_il, c_A_il, beta_i, actual_checks, ymin_group_str) %>%
         ungroup() %>%
         arrange(id_i, D_il) %>%
         mutate(id_il = row_number())
+
       # Threshold summarize
-      if (bl_print_verbose){
+      if (bl_print_verbose) {
         table(df_input_il_noninc$D_max_i)
       }
       # Reduced Dimension
-      if (bl_print){
+      if (bl_print) {
         print(dim(df_input_il_noninc))
       }
     }
@@ -579,26 +851,33 @@ ffp_snw_process_inputs <-
 
     # merge with mass, and set beta to 1
     df_input_il_c <- df_input_il_c %>%
-      mutate(beta_i = 1) %>%
-      left_join(df_id %>% select(id_i, mass), by='id_i') %>%
+      # mutate(beta_i = 1) %>%
+      left_join(df_id %>% select(id_i, mass), by = "id_i") %>%
       rename(mass_i = mass) %>%
-      select(id_i, id_il, D_max_i, D_il, A_il, alpha_il, beta_i, mass_i) %>%
+      select(id_i, id_il, D_max_i, D_il, A_il, alpha_il, beta_i, mass_i, actual_checks, ymin_group_str) %>%
       ungroup()
+
+    # joint with betamassi
+    df_input_il_c <- df_input_il_c %>%
+      left_join(df_mass_i_adjust, by = "id_i") %>%
+      rename(vmassbeta_i = mass_per_capita_scaled)
 
     # Solve with Function
     ls_dis_solu_c <- suppressWarnings(suppressMessages(
-      ffp_opt_anlyz_rhgin_dis(ar_rho,
-                              fl_dis_w_mass,
-                              df_input_il_c,
-                              bl_df_alloc_il = bl_df_alloc_il,
-                              bl_return_V = TRUE,
-                              bl_return_allQ_V = bl_return_allQ_V,
-                              bl_return_inner_V = FALSE,
-                              svr_measure_i = 'mass_i')))
-    df_queue_il_long_c <-ls_dis_solu_c$df_queue_il_long
+      ffp_nsw_opt_anlyz_rhgin_dis(ar_rho,
+        fl_dis_w_mass,
+        df_input_il_c,
+        bl_df_alloc_il = bl_df_alloc_il,
+        bl_return_V = TRUE,
+        bl_return_allQ_V = bl_return_allQ_V,
+        bl_return_inner_V = FALSE,
+        svr_measure_i = "mass_i",
+        svr_betameasure_i = "vmassbeta_i"
+      )
+    ))
+    df_queue_il_long_c <- ls_dis_solu_c$df_queue_il_long
     df_alloc_i_long_c <- ls_dis_solu_c$df_alloc_i_long
     df_rho_gini_c <- ls_dis_solu_c$df_rho_gini
-
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Inputs
@@ -609,29 +888,37 @@ ffp_snw_process_inputs <-
       select(-c_A_il, -c_alpha_il)
     # merge with mass, and set beta to 1
     df_input_il_v <- df_input_il_v %>%
-      mutate(beta_i = 1) %>%
-      left_join(df_id %>% select(id_i, mass), by='id_i') %>%
+      # mutate(beta_i = 1) %>%
+      left_join(df_id %>% select(id_i, mass), by = "id_i") %>%
       rename(mass_i = mass) %>%
-      select(id_i, id_il, D_max_i, D_il, A_il, alpha_il, beta_i, mass_i) %>%
+      select(id_i, id_il, D_max_i, D_il, A_il, alpha_il, beta_i, mass_i, actual_checks, ymin_group_str) %>%
       ungroup()
+    # joint with betamassi
+    df_input_il_v <- df_input_il_v %>%
+      left_join(df_mass_i_adjust, by = "id_i") %>%
+      rename(vmassbeta_i = mass_per_capita_scaled)
+
 
     # Solve with Function
     ls_dis_solu_v <- suppressWarnings(suppressMessages(
-      ffp_opt_anlyz_rhgin_dis(ar_rho,
-                              fl_dis_w_mass,
-                              df_input_il_v,
-                              bl_df_alloc_il = bl_df_alloc_il,
-                              bl_return_V = TRUE,
-                              bl_return_allQ_V = bl_return_allQ_V,
-                              bl_return_inner_V = FALSE,
-                              svr_measure_i = 'mass_i')))
-    df_queue_il_long_v <-ls_dis_solu_v$df_queue_il_long
+      ffp_nsw_opt_anlyz_rhgin_dis(ar_rho,
+        fl_dis_w_mass,
+        df_input_il_v,
+        bl_df_alloc_il = bl_df_alloc_il,
+        bl_return_V = TRUE,
+        bl_return_allQ_V = bl_return_allQ_V,
+        bl_return_inner_V = FALSE,
+        svr_measure_i = "mass_i",
+        svr_betameasure_i = "vmassbeta_i"
+      )
+    ))
+    df_queue_il_long_v <- ls_dis_solu_v$df_queue_il_long
     df_alloc_i_long_v <- ls_dis_solu_v$df_alloc_i_long
     df_rho_gini_v <- ls_dis_solu_v$df_rho_gini
 
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    if (bl_print_verbose){
+    if (bl_print_verbose) {
       REconTools::ff_summ_percentiles(df_queue_il_long_c, bl_statsasrows = FALSE)
       REconTools::ff_summ_percentiles(df_alloc_i_long_c, bl_statsasrows = FALSE)
       REconTools::ff_summ_percentiles(df_queue_il_long_v, bl_statsasrows = FALSE)
@@ -641,22 +928,23 @@ ffp_snw_process_inputs <-
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     tb_rho_rev_c <-
       PrjOptiAlloc::ffp_opt_anlyz_sodis_rev(ar_rho,
-                                            fl_dis_w_mass,
-                                            df_input_ib = df_input_ib_c,
-                                            df_queue_il_long_with_V = df_queue_il_long_c,
-                                            svr_measure_i = 'mass_i')
+        fl_dis_w_mass,
+        df_input_ib = df_input_ib_c,
+        df_queue_il_long_with_V = df_queue_il_long_c,
+        svr_measure_i = "mass_i"
+      )
 
     # this is assuming: bl_return_allQ_V = FALSE
     tb_rho_vstar_c <- df_queue_il_long_c %>%
-        filter(!is.na(V_star_Q_il)) %>%
-        arrange(rho_val, Q_il) %>%
-        group_by(rho_val) %>%
-        summarise(V_star_resource = max(V_star_Q_il)) %>%
-        ungroup()
+      filter(!is.na(V_star_Q_il)) %>%
+      arrange(rho_val, Q_il) %>%
+      group_by(rho_val) %>%
+      summarise(V_star_resource = max(V_star_Q_il)) %>%
+      ungroup()
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Display Results
-    if (bl_print){
+    if (bl_print) {
       print(tb_rho_rev_c)
       print(tb_rho_vstar_c)
     }
@@ -664,22 +952,23 @@ ffp_snw_process_inputs <-
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     tb_rho_rev_v <-
       PrjOptiAlloc::ffp_opt_anlyz_sodis_rev(ar_rho,
-                                            fl_dis_w_mass,
-                                            df_input_ib = df_input_ib_v,
-                                            df_queue_il_long_with_V = df_queue_il_long_v,
-                                            svr_measure_i = 'mass_i')
+        fl_dis_w_mass,
+        df_input_ib = df_input_ib_v,
+        df_queue_il_long_with_V = df_queue_il_long_v,
+        svr_measure_i = "mass_i"
+      )
 
     # this is assuming: bl_return_allQ_V = FALSE
     tb_rho_vstar_v <- df_queue_il_long_v %>%
-        filter(!is.na(V_star_Q_il)) %>%
-        arrange(rho_val, Q_il) %>%
-        group_by(rho_val) %>%
-        summarise(V_star_resource = max(V_star_Q_il)) %>%
-        ungroup()
+      filter(!is.na(V_star_Q_il)) %>%
+      arrange(rho_val, Q_il) %>%
+      group_by(rho_val) %>%
+      summarise(V_star_resource = max(V_star_Q_il)) %>%
+      ungroup()
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Display Results
-    if (bl_print){
+    if (bl_print) {
       print(tb_rho_rev_v)
     }
 
@@ -688,11 +977,13 @@ ffp_snw_process_inputs <-
     df_input_il_noninc_covar <- df_input_il_noninc %>%
       left_join(df_id, by = "id_i") %>%
       filter(kids <= 4) %>%
-      mutate(ymin_group = as.numeric(ymin_group),
-             kids = as.factor(kids),
-             marital = as.factor(marital),
-             age_group = as.factor(age_group),
-             checks = D_il)
+      mutate(
+        ymin_group = as.numeric(ymin_group),
+        kids = as.factor(kids),
+        marital = as.factor(marital),
+        age_group = as.factor(age_group),
+        checks = D_il
+      )
 
     # Summarize
     df_alloc_i_long_covar_v <- df_alloc_i_long_v %>%
@@ -702,18 +993,16 @@ ffp_snw_process_inputs <-
       left_join(df_id, by = "id_i") %>%
       filter(kids <= 4)
 
-
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    stg_source = paste0('SNW 2020 Simulation')
-    stg_age = paste0('Age Between ', it_min_age, ' and ', it_max_age, '; Income Groups = ', it_inc_groups)
-    stg_caption = paste0(stg_source, '\n', stg_age)
-
+    stg_source <- paste0("SNW 2020 Simulation")
+    stg_age <- paste0("Age Between ", it_min_age, " and ", it_max_age, "; Income Groups = ", it_inc_groups)
+    stg_caption <- paste0(stg_source, "\n", stg_age)
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     df_alloc_i_long_covar_v <- df_alloc_i_long_covar_v %>%
-      left_join(df_input_ib_v %>% select(id_i, actual_checks), by='id_i')
+      left_join(df_input_ib_v %>% select(id_i, actual_checks), by = "id_i")
     df_alloc_i_long_covar_c <- df_alloc_i_long_covar_c %>%
-      left_join(df_input_ib_c %>% select(id_i, actual_checks), by='id_i')
+      left_join(df_input_ib_c %>% select(id_i, actual_checks), by = "id_i")
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     df_alloc_i_long_covar_v %>%
@@ -723,79 +1012,92 @@ ffp_snw_process_inputs <-
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # v table
     df_alloc_i_long_covar_v <- df_alloc_i_long_covar_v %>%
-      rename(allocate_check_optimal = D_star_i,
-             allocate_check_actual = actual_checks) %>%
-      pivot_longer(cols = starts_with('allocate_check_'),
-                   names_to = c('allocate_type'),
-                   names_pattern = paste0("allocate_check_(.*)"),
-                   values_to = "checks")
+      rename(
+        allocate_check_optimal = D_star_i,
+        allocate_check_actual = actual_checks
+      ) %>%
+      pivot_longer(
+        cols = starts_with("allocate_check_"),
+        names_to = c("allocate_type"),
+        names_pattern = paste0("allocate_check_(.*)"),
+        values_to = "checks"
+      )
 
     # c table
     df_alloc_i_long_covar_c <- df_alloc_i_long_covar_c %>%
-      rename(allocate_check_optimal = D_star_i,
-             allocate_check_actual = actual_checks) %>%
-      pivot_longer(cols = starts_with('allocate_check_'),
-                   names_to = c('allocate_type'),
-                   names_pattern = paste0("allocate_check_(.*)"),
-                   values_to = "checks")
+      rename(
+        allocate_check_optimal = D_star_i,
+        allocate_check_actual = actual_checks
+      ) %>%
+      pivot_longer(
+        cols = starts_with("allocate_check_"),
+        names_to = c("allocate_type"),
+        names_pattern = paste0("allocate_check_(.*)"),
+        values_to = "checks"
+      )
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    if (bl_print_verbose){
-      ls_svr_groups <- c('ymin_group', 'age_group', 'marital', 'kids')
+    if (bl_print_verbose) {
+      ls_svr_groups <- c("ymin_group", "age_group", "marital", "kids")
       for (svr_group in ls_svr_groups) {
 
         # Group by variable
-        print(paste0('current group = ', svr_group))
+        print(paste0("current group = ", svr_group))
 
         # Summarize
         df <- df_alloc_i_long_covar_c
-        vars.group <- c('rho_val', svr_group, 'allocate_type')
-        var.numeric <- 'checks'
-        str.stats.group <- 'allperc'
+        vars.group <- c("rho_val", svr_group, "allocate_type")
+        var.numeric <- "checks"
+        str.stats.group <- "allperc"
         ar.perc <- c(0.10, 0.25, 0.50, 0.75, 0.90)
         ls_summ_by_group <- REconTools::ff_summ_bygroup(
-          df, vars.group, var.numeric, str.stats.group, ar.perc)
-        if (bl_print_verbose){
+          df, vars.group, var.numeric, str.stats.group, ar.perc
+        )
+        if (bl_print_verbose) {
           print(ls_summ_by_group$df_table_grp_stats)
         }
       }
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    if (bl_print_verbose){
-      ls_svr_groups <- c('ymin_group', 'age_group', 'marital', 'kids')
+    if (bl_print_verbose) {
+      ls_svr_groups <- c("ymin_group", "age_group", "marital", "kids")
       for (svr_group in ls_svr_groups) {
 
         # Group by variable
-        print(paste0('current group = ', svr_group))
+        print(paste0("current group = ", svr_group))
 
         # Summarize
         df <- df_alloc_i_long_covar_v
-        vars.group <- c('rho_val', svr_group, 'allocate_type')
-        var.numeric <- 'checks'
-        str.stats.group <- 'allperc'
+        vars.group <- c("rho_val", svr_group, "allocate_type")
+        var.numeric <- "checks"
+        str.stats.group <- "allperc"
         ar.perc <- c(0.10, 0.25, 0.50, 0.75, 0.90)
         ls_summ_by_group <- REconTools::ff_summ_bygroup(
-          df, vars.group, var.numeric, str.stats.group, ar.perc)
-        if (bl_print_verbose){
+          df, vars.group, var.numeric, str.stats.group, ar.perc
+        )
+        if (bl_print_verbose) {
           print(ls_summ_by_group$df_table_grp_stats)
         }
-
       }
     }
 
     # list to return
-    ls_return <- list(df_input_il_noninc_covar=df_input_il_noninc_covar,
-                      df_queue_il_long_c=df_queue_il_long_c,
-                      df_queue_il_long_v=df_queue_il_long_v,
-                      df_alloc_i_long_covar_c=df_alloc_i_long_covar_c,
-                      df_alloc_i_long_covar_v=df_alloc_i_long_covar_v,
-                      stg_subtitle=subtitle,
-                      stg_caption=stg_caption,
-                      tb_rho_rev_c=tb_rho_rev_c,
-                      tb_rho_vstar_c=tb_rho_vstar_c,
-                      tb_rho_rev_v=tb_rho_rev_v,
-                      tb_rho_vstar_v=tb_rho_vstar_v)
+    ls_return <- list(
+      df_input_il_noninc_covar = df_input_il_noninc_covar,
+      df_queue_il_long_c = df_queue_il_long_c,
+      df_queue_il_long_v = df_queue_il_long_v,
+      df_alloc_i_long_covar_c = df_alloc_i_long_covar_c,
+      df_alloc_i_long_covar_v = df_alloc_i_long_covar_v,
+      stg_subtitle = subtitle,
+      stg_caption = stg_caption,
+      tb_rho_rev_c = tb_rho_rev_c,
+      tb_rho_vstar_c = tb_rho_vstar_c,
+      tb_rho_rev_v = tb_rho_rev_v,
+      tb_rho_vstar_v = tb_rho_vstar_v,
+      df_rho_gini_c = df_rho_gini_c,
+      df_rho_gini_v = df_rho_gini_v
+    )
 
     # Add element queue panel to return list
     if (bl_df_alloc_il) {
@@ -803,13 +1105,14 @@ ffp_snw_process_inputs <-
       ls_return$df_alloc_il_long_v <- ls_dis_solu_v$df_alloc_il_long
     }
 
+    # return outputs
     return(ls_return)
   }
 
 
 ffp_snw_process_inputs_core <-
-  function(srt_simu_path = 'C:/Users/fan/Documents/Dropbox (UH-ECON)/PrjNygaardSorensenWang/Output/',
-           snm_simu_csv = 'snwx_v_planner_moredense_a100zh266_e2m2.csv',
+  function(srt_simu_path = "C:/Users/fan/Documents/Dropbox (UH-ECON)/PrjNygaardSorensenWang/Output/",
+           snm_simu_csv = "snwx_v_planner_moredense_a100zh266_e2m2.csv",
            df_plan_v_tilde_full = df_plan_v_tilde_full,
            fl_max_phaseout = 238000,
            it_bin_dollar_before_phaseout = 2500,
@@ -821,30 +1124,43 @@ ffp_snw_process_inputs_core <-
            it_max_age = 64,
            it_min_age = 18,
            ar_ycut = NULL,
-           ar_agecut = c(17,29,39,49,64),
-           ar_svr_csv = c('age', 'marital', 'kids', 'checks',	'ymin', 'mass', 'survive', 'vtilde', 'ctilde'),
-           ar_svr_groups = c('marital', 'kids', 'age_group', 'ymin_group'),
-           ar_svr_groups_stats = c('mass', 'survive'),
-           svr_checks = 'checks',
-           svr_v_value = 'vtilde',
-           svr_c_value = 'ctilde',
-           svr_mass = 'mass',
+           ar_agecut = c(17, 29, 39, 49, 64),
+           ar_svr_csv = c("age", "marital", "kids", "checks", "ymin", "mass", "survive", "vtilde", "ctilde"),
+           ar_svr_groups = c("marital", "kids", "age_group", "ymin_group"),
+           ar_svr_groups_stats = c("mass", "survive"),
+           svr_checks = "checks",
+           svr_v_value = "vtilde",
+           svr_c_value = "ctilde",
+           svr_mass = "mass",
            ar_rho = c(1),
            bl_threshold = FALSE,
-           it_check_headorspouse = 12,
-           it_check_perkids = 5,
+           ls_stimulus_specs =
+             list(
+               st_biden_or_trump = "bidenchk",
+               it_check_headorspouse = 12,
+               it_check_perkids = 5
+             ),
            bl_given_firstcheck = FALSE,
            bl_non_inc_adjust = FALSE,
            bl_print = TRUE,
            bl_print_verbose = FALSE) {
-    #' Processing Matlab Simulation results for allocation for Nygaard, Sorernsen and Wang (2020) Core.
+    #' Contains file processing components of
+    #' \code{\link{ffp_snw_process_inputs}} function
     #'
-    #' @description
-    #' Matlab Simulation Process for Allocation
+    #' @description \code{\link{ffp_snw_process_inputs}} solves allocation
+    #' problems after first processing input files to generate MPCs. This file
+    #' contains the initial parts of \code{\link{ffp_snw_process_inputs}}
+    #' and only processes inputs files to generate MPCs so that MPC tables etc
+    #' can be generated. This file does not proceed to do optimal allocation.
+    #' Should be merged with \code{\link{ffp_snw_process_inputs}} so that
+    #' code does not repeat.
     #'
     #' @author Fan Wang, \url{http://fanwangecon.github.io}
     #' @export
     #'
+
+    ## Allocation type --------------------
+    st_biden_or_trump <- ls_stimulus_specs$st_biden_or_trump
 
     # mt_plan_v_tilde <- read.csv(paste0(srt_simu_path, snm_simu_csv), header=FALSE)
     df_plan_v_tilde <- df_plan_v_tilde_full %>%
@@ -874,56 +1190,62 @@ ffp_snw_process_inputs_core <-
     df_plan_v_tilde_yjm <- df_plan_v_tilde %>%
       mutate(age_group = (cut(age, ar_agecut))) %>%
       group_by(marital, kids, checks, ymin, age_group) %>%
-      summarize(vtilde = sum(vtilde*mass)/sum(mass),
-                ctilde = sum(ctilde*mass)/sum(mass),
-                mass = sum(mass),
-                survive = mean(survive)) %>%
+      summarize(
+        vtilde = sum(vtilde * mass) / sum(mass),
+        ctilde = sum(ctilde * mass) / sum(mass),
+        mass = sum(mass),
+        survive = mean(survive)
+      ) %>%
       ungroup()
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Number of Cuts Before th Mas Phase Out Point.
-    fl_thres = fl_max_phaseout/fl_multiple
+    fl_thres <- fl_max_phaseout / fl_multiple
     # Solution Grid Precision prior to max_phaseout point.
-    inc_grid1 = seq(0, fl_thres, length.out=(fl_max_phaseout)/it_bin_dollar_before_phaseout)
-    inc_grid2 = seq(fl_thres, 7, length.out=(fl_max_phaseout)/it_bin_dollar_after_phaseout)
-    inc_grid1 = unique(c(inc_grid1, inc_grid2))
-    fl_grid_gap = inc_grid1[2] - inc_grid1[1]
+    inc_grid1 <- seq(0, fl_thres, length.out = (fl_max_phaseout) / it_bin_dollar_before_phaseout)
+    inc_grid2 <- seq(fl_thres, 7, length.out = (fl_max_phaseout) / it_bin_dollar_after_phaseout)
+    inc_grid1 <- unique(c(inc_grid1, inc_grid2))
+    fl_grid_gap <- inc_grid1[2] - inc_grid1[1]
     # Not all inc_grid1 points are valid, there are some elements that have no mass
-    fl_min_ymin_posmass = min(df_plan_v_tilde_yjm %>% pull(ymin))
+    fl_min_ymin_posmass <- min(df_plan_v_tilde_yjm %>% pull(ymin))
     # First group is min
 
     # use externally provided ar_ycut or use ar_ycut calculations here.
-    if (is.null (ar_ycut)) {
-      ar_ycut = c(0, inc_grid1[inc_grid1>fl_min_ymin_posmass+fl_grid_gap])
+    if (is.null(ar_ycut)) {
+      ar_ycut <- c(0, inc_grid1[inc_grid1 > fl_min_ymin_posmass + fl_grid_gap])
     }
 
-    it_inc_groups = length(ar_ycut)
-    fl_inc_gap = (ar_ycut[3]-ar_ycut[2])*fl_multiple
-    fl_inc_min = min(df_plan_v_tilde_yjm %>% pull(ymin))*fl_multiple
-    subtitle = paste0('1 unit along x-axis = $', round(fl_inc_gap),
-                      ', x-axis min = $', round(fl_inc_min),
-                      ', x-axis final group >= $', round(ar_ycut[length(ar_ycut)-1]*fl_multiple))
+    it_inc_groups <- length(ar_ycut)
+    fl_inc_gap <- (ar_ycut[3] - ar_ycut[2]) * fl_multiple
+    fl_inc_min <- min(df_plan_v_tilde_yjm %>% pull(ymin)) * fl_multiple
+    subtitle <- paste0(
+      "1 unit along x-axis = $", round(fl_inc_gap),
+      ", x-axis min = $", round(fl_inc_min),
+      ", x-axis final group >= $", round(ar_ycut[length(ar_ycut) - 1] * fl_multiple)
+    )
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     df_plan_v_tilde_ygrpjm <- df_plan_v_tilde_yjm %>%
       mutate(ymin_group = (cut(ymin, ar_ycut))) %>%
       group_by(marital, kids, checks, age_group, ymin_group) %>%
-      summarize(vtilde = sum(vtilde*mass)/sum(mass),
-                ctilde = sum(ctilde*mass)/sum(mass),
-                mass = sum(mass),
-                survive = mean(survive)) %>%
+      summarize(
+        vtilde = sum(vtilde * mass) / sum(mass),
+        ctilde = sum(ctilde * mass) / sum(mass),
+        mass = sum(mass),
+        survive = mean(survive)
+      ) %>%
       ungroup()
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # group id
-    svr_group_id <- 'group_id'
+    svr_group_id <- "group_id"
     # Define
     ls_svr_group_vars <- ar_svr_groups
     # panel dataframe following
     df_plan_v_tilde_id <- df_plan_v_tilde_ygrpjm %>%
       arrange(!!!syms(ls_svr_group_vars)) %>%
       group_by(!!!syms(ls_svr_group_vars)) %>%
-      mutate(!!sym(svr_group_id) := (row_number()==1)*1) %>%
+      mutate(!!sym(svr_group_id) := (row_number() == 1) * 1) %>%
       ungroup() %>%
       rowid_to_column(var = "id") %>%
       mutate(!!sym(svr_group_id) := cumsum(!!sym(svr_group_id))) %>%
@@ -934,7 +1256,8 @@ ffp_snw_process_inputs_core <-
     df_id <- df_plan_v_tilde_id %>%
       select(one_of(svr_group_id, ls_svr_group_vars, ar_svr_groups_stats)) %>%
       group_by(!!!syms(svr_group_id)) %>%
-      slice_head() %>% ungroup() %>%
+      slice_head() %>%
+      ungroup() %>%
       select(one_of(svr_group_id, ls_svr_group_vars, ar_svr_groups_stats)) %>%
       rename(id_i = !!sym(svr_group_id))
     ar_group_ids <- unique(df_id %>% pull(id_i))
@@ -946,24 +1269,30 @@ ffp_snw_process_inputs_core <-
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # 1. id column and id_il
-    df_il <- df_value %>% rename(id_i = !!sym(svr_group_id)) %>%
+    df_il <- df_value %>%
+      rename(id_i = !!sym(svr_group_id)) %>%
       mutate(id_il = row_number()) %>%
       select(id_i, id_il, everything())
     # 2. D_max_i and D_il
     df_il <- df_il %>%
-      arrange(id_i, svr_checks) %>% group_by(id_i) %>%
+      arrange(id_i, svr_checks) %>%
+      group_by(id_i) %>%
       mutate(D_max_i = max(!!sym(svr_checks))) %>%
       rename(D_il = !!sym(svr_checks)) %>%
-      mutate(beta_i = 1/n()) %>%
+      mutate(beta_i = 1 / n()) %>%
       select(id_i, id_il, D_max_i, D_il, everything())
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # 3. A_il and alpha_il
     df_il_U <- df_il %>%
-      mutate(c_alpha_il = lead(!!sym(svr_c_value)) - (!!sym(svr_c_value)),
-             v_alpha_il = lead(!!sym(svr_v_value)) - (!!sym(svr_v_value))) %>%
-      rename(c_A_il = !!sym(svr_c_value),
-             v_A_il = !!sym(svr_v_value)) %>%
+      mutate(
+        c_alpha_il = lead(!!sym(svr_c_value)) - (!!sym(svr_c_value)),
+        v_alpha_il = lead(!!sym(svr_v_value)) - (!!sym(svr_v_value))
+      ) %>%
+      rename(
+        c_A_il = !!sym(svr_c_value),
+        v_A_il = !!sym(svr_v_value)
+      ) %>%
       ungroup()
 
     # 4. drop max check
@@ -979,6 +1308,7 @@ ffp_snw_process_inputs_core <-
     #                             v_A_il <  0.01 ~ 0.01 ))
     # Minimum A
     fl_min_v_A_il <- min(df_il_U$v_A_il) + 0.01
+    fl_min_v_A_il <- 0
     # Rescale by minimum
     df_il_U <- df_il_U %>%
       mutate(v_A_il = v_A_il - fl_min_v_A_il)
@@ -988,13 +1318,13 @@ ffp_snw_process_inputs_core <-
     set.seed(123)
     it_draw <- length(ar_group_ids)
     # it_draw <- 30
-    ar_group_rand <- ar_group_ids[sample(length(ar_group_ids), it_draw, replace=FALSE)]
+    ar_group_rand <- ar_group_ids[sample(length(ar_group_ids), it_draw, replace = FALSE)]
     df_input_il <- df_il_U %>%
       filter(id_i %in% ar_group_rand) %>%
       mutate(id_il = row_number())
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    if (bl_non_inc_adjust){
+    if (bl_non_inc_adjust) {
       # Update c_alpha_il
       df_input_il_noninc <- df_input_il %>%
         arrange((D_il)) %>%
@@ -1003,7 +1333,7 @@ ffp_snw_process_inputs_core <-
         unnest(c(c_alpha_il_noninc)) %>%
         group_by(id_i) %>%
         mutate(D_il = row_number()) %>%
-        left_join(df_input_il, by=(c('id_i'='id_i', 'D_il'='D_il')))
+        left_join(df_input_il, by = (c("id_i" = "id_i", "D_il" = "D_il")))
 
       # Update v_alpha_il
       df_input_il_noninc <- df_input_il_noninc %>%
@@ -1013,7 +1343,7 @@ ffp_snw_process_inputs_core <-
         unnest(c(v_alpha_il_noninc)) %>%
         group_by(id_i) %>%
         mutate(D_il = row_number()) %>%
-        left_join(df_input_il_noninc, by=(c('id_i'='id_i', 'D_il'='D_il')))
+        left_join(df_input_il_noninc, by = (c("id_i" = "id_i", "D_il" = "D_il")))
 
       # replace
       df_input_il_noninc <- df_input_il_noninc %>%
@@ -1028,10 +1358,15 @@ ffp_snw_process_inputs_core <-
     df_input_il_covid_actual <- df_input_il_noninc %>%
       left_join(df_id, by = "id_i") %>%
       mutate(ymin_group = as.numeric(ymin_group)) %>%
-      ungroup() %>% rowwise() %>%
-      mutate(actual_checks =
-               ffi_vox_checks_ykm(ymin_group, marital, kids,
-                                  ar_ycut, fl_multiple, fl_percheck_dollar)) %>%
+      ungroup() %>%
+      rowwise() %>%
+      mutate(
+        actual_checks =
+          ffi_vox_checks_bidencheck(
+            ymin_group, marital, kids,
+            ar_ycut, fl_multiple, fl_percheck_dollar
+          )
+      ) %>%
       ungroup()
 
     ## ----- Reset Based on First Check amounts, Reset df_input_il_noninc
@@ -1041,28 +1376,36 @@ ffp_snw_process_inputs_core <-
 
       # 2020 consumption
       df_input_il_covid_actual <- df_input_il_covid_actual %>%
-        filter(case_when(actual_checks == 0 ~ D_il <= it_max_checks,
-                         TRUE ~ D_il >= (actual_checks + 1) & D_il <= (actual_checks + 1 + it_max_checks - 1))) %>%
-        filter() %>% arrange(id_i, D_il) %>% group_by(id_i) %>%
+        filter(case_when(
+          actual_checks == 0 ~ D_il <= it_max_checks,
+          TRUE ~ D_il >= (actual_checks + 1) & D_il <= (actual_checks + 1 + it_max_checks - 1)
+        )) %>%
+        filter() %>%
+        arrange(id_i, D_il) %>%
+        group_by(id_i) %>%
         mutate(D_il = row_number()) %>%
-        mutate(D_max_i = it_max_checks) %>% ungroup() %>%
-        arrange(id_i, D_il) %>% mutate(id_il = row_number())
+        mutate(D_max_i = it_max_checks) %>%
+        ungroup() %>%
+        arrange(id_i, D_il) %>%
+        mutate(id_il = row_number())
 
       # reset df_input_il_noninc
       df_input_il_noninc <- df_input_il_covid_actual %>%
         select(id_i, id_il, D_max_i, D_il, v_A_il, c_A_il, beta_i, c_alpha_il, v_alpha_il)
       # summarize
-      if (bl_print_verbose){
+      if (bl_print_verbose) {
         REconTools::ff_summ_percentiles(df_input_il_covid_actual)
       }
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     mass_sum <- df_input_il_covid_actual %>% summarize(mass_sum = sum(mass))
-    fl_cost_max_checks_all <- mass_sum*fl_percheck_dollar*fl_tax_hh
-    st_covid_check_cost <- paste0('Cost All Max Checks=$', round(fl_cost_max_checks_all/1000000000,2),
-                                  ' bil (assume ',round(fl_tax_hh/1000000,2),' mil tax households)')
-    if (bl_print){
+    fl_cost_max_checks_all <- mass_sum * fl_percheck_dollar * fl_tax_hh
+    st_covid_check_cost <- paste0(
+      "Cost All Max Checks=$", round(fl_cost_max_checks_all / 1000000000, 2),
+      " bil (assume ", round(fl_tax_hh / 1000000, 2), " mil tax households)"
+    )
+    if (bl_print) {
       print(st_covid_check_cost)
     }
 
@@ -1070,32 +1413,42 @@ ffp_snw_process_inputs_core <-
     mass_sum_covid_vox_actual <- df_input_il_covid_actual %>%
       filter(actual_checks >= D_il) %>%
       summarize(mass_cumsum = sum(mass))
-    fl_cost_actual <- mass_sum_covid_vox_actual*fl_percheck_dollar*fl_tax_hh
-    st_covid_check_cost <- paste0('VOX Policy Cost=$', round(fl_cost_actual/1000000000,2),
-                                  ' bil (assume ',round(fl_tax_hh/1000000,2),
-                                  ' mil tax households, use SNW 2020 simulated P(Kids, Marry, INcome))')
-    if (bl_print){
+    fl_cost_actual <- mass_sum_covid_vox_actual * fl_percheck_dollar * fl_tax_hh
+    st_covid_check_cost <- paste0(
+      "VOX Policy Cost=$", round(fl_cost_actual / 1000000000, 2),
+      " bil (assume ", round(fl_tax_hh / 1000000, 2),
+      " mil tax households, use SNW 2020 simulated P(Kids, Marry, INcome))"
+    )
+    if (bl_print) {
       print(st_covid_check_cost)
     }
 
     ## ------------------------------------------------------------------------------------------------------------------------------------------------------------
     # 2020 consumption
     df_input_ib_c <- df_input_il_covid_actual %>%
-      filter(case_when(actual_checks == 0 ~ D_il == 1, # if check = 0, filter D_il = 1
-                       TRUE ~ D_il == actual_checks)) %>%
+      filter(case_when(
+        actual_checks == 0 ~ D_il == 1, # if check = 0, filter D_il = 1
+        TRUE ~ D_il == actual_checks
+      )) %>%
       rename(A_i_l0 = c_A_il) %>%
-      mutate(alpha_o_i = case_when(actual_checks == 0 ~ 0,
-                                   TRUE ~ c_alpha_il)) %>%
+      mutate(alpha_o_i = case_when(
+        actual_checks == 0 ~ 0,
+        TRUE ~ c_alpha_il
+      )) %>%
       select(id_i, A_i_l0, alpha_o_i, beta_i, mass, actual_checks) %>%
       mutate(mass_i = mass, beta_i = 1)
 
     # value
     df_input_ib_v <- df_input_il_covid_actual %>%
-      filter(case_when(actual_checks == 0 ~ D_il == 1, # if check = 0, filter D_il = 1
-                       TRUE ~ D_il == actual_checks)) %>%
+      filter(case_when(
+        actual_checks == 0 ~ D_il == 1, # if check = 0, filter D_il = 1
+        TRUE ~ D_il == actual_checks
+      )) %>%
       rename(A_i_l0 = v_A_il) %>%
-      mutate(alpha_o_i = case_when(actual_checks == 0 ~ 0,
-                                   TRUE ~ v_alpha_il)) %>%
+      mutate(alpha_o_i = case_when(
+        actual_checks == 0 ~ 0,
+        TRUE ~ v_alpha_il
+      )) %>%
       select(id_i, A_i_l0, alpha_o_i, beta_i, mass, actual_checks) %>%
       mutate(mass_i = mass, beta_i = 1)
 
@@ -1113,10 +1466,57 @@ ffp_snw_process_inputs_core <-
     ## ---- Modify Maximum Allocation Point for Each Individual
     # The modification below means that
     if (bl_threshold) {
+      if (bl_print) {
+        print(paste0("(df_input_il_noninc)=", (df_input_il_noninc)))
+      }
+
+      if (st_biden_or_trump == "bushchck") {
+        # Bush 2008 problem solution, also see: vignettes\ffv_snw_stimulus_bush_2008.Rmd
+
+        # Get parameters that define allocation bounds, max bounds
+        fl_stimulus_child <- ls_stimulus_specs$fl_stimulus_child
+        fl_stimulus_adult_min <- ls_stimulus_specs$fl_stimulus_adult_min
+        fl_stimulus_adult_max <- ls_stimulus_specs$fl_stimulus_adult_max
+        fl_per_adult_phase_out <- ls_stimulus_specs$fl_per_adult_phase_out
+        fl_phase_out_per_dollar_income <- ls_stimulus_specs$fl_phase_out_per_dollar_income
+
+        # Work with the df_id dataframe to add on lower and upper income bounds
+        df_id_checkadded_x3chd_x3adthgbdlwbd <- ffp_snw_stimulus_checks_bush_add2dfid(
+          df_id,
+          fl_multiple = fl_multiple,
+          fl_percheck_dollar = fl_percheck_dollar,
+          fl_stimulus_child = fl_stimulus_child,
+          fl_stimulus_adult_min = fl_stimulus_adult_min,
+          fl_stimulus_adult_max = fl_stimulus_adult_max,
+          fl_phase_out_per_dollar_income = fl_phase_out_per_dollar_income
+        )
+
+        # Join with df_id, add bush_rebate_n_c column
+        df_id_alter <- df_id %>% left_join(
+          df_id_checkadded_x3chd_x3adthgbdlwbd %>% select(id_i, bush_rebate_n_checks),
+          by = "id_i"
+        )
+
+        # Add D_max_i to datafrrame
+        df_input_il_noninc <- df_input_il_noninc %>%
+          left_join(df_id_alter, by = "id_i") %>%
+          mutate(D_max_i = bush_rebate_n_checks)
+      } else {
+        # Various COVID stimulus problems
+
+        # Get parameters that define allocation bounds, max bounds
+        it_check_perkids <- ls_stimulus_specs$it_check_perkids
+        it_check_headorspouse <- ls_stimulus_specs$it_check_headorspouse
+
+        # D_max_i is the max stimulus bound, for COVID problem, the bound is common
+        # for all individuals in kids/marital group, regardless of income levels.
+        df_input_il_noninc <- df_input_il_noninc %>%
+          left_join(df_id, by = "id_i") %>%
+          mutate(D_max_i = kids * it_check_perkids + marital * it_check_headorspouse + it_check_headorspouse)
+      }
+
       # Threshold frame
       df_input_il_noninc <- df_input_il_noninc %>%
-        left_join(df_id, by = "id_i") %>%
-        mutate(D_max_i = kids*it_check_perkids + marital*it_check_headorspouse + it_check_headorspouse) %>%
         filter(D_max_i >= D_il) %>%
         select(id_i, v_alpha_il, D_il, c_alpha_il, id_il, D_max_i, v_A_il, c_A_il, beta_i) %>%
         ungroup() %>%
@@ -1124,10 +1524,12 @@ ffp_snw_process_inputs_core <-
         mutate(id_il = row_number())
     }
 
-    return(list(mass_sum = mass_sum ,
-                mass_sum_covid_vox_actual = mass_sum_covid_vox_actual,
-                df_input_il_noninc = df_input_il_noninc,
-                df_id = df_id))
+    return(list(
+      mass_sum = mass_sum,
+      mass_sum_covid_vox_actual = mass_sum_covid_vox_actual,
+      df_input_il_noninc = df_input_il_noninc,
+      df_id = df_id
+    ))
   }
 
 ffi_alpha_non_increasing_adj_flatten <- function(ar_alpha, fl_min_inc_bd = 1e-20) {
@@ -1139,21 +1541,19 @@ ffi_alpha_non_increasing_adj_flatten <- function(ar_alpha, fl_min_inc_bd = 1e-20
   ar_cur_adj[1] <- ar_cur[1]
 
   for (it_ctr in 2:length(ar_cur)) {
-
     fl_cur_val <- ar_cur[it_ctr]
-    fl_last_val <- ar_cur_adj[it_ctr-1]
+    fl_last_val <- ar_cur_adj[it_ctr - 1]
 
+    # print(paste0('fl_cur_val=', fl_cur_val, ',fl_last_val=', fl_last_val))
     if (fl_cur_val > fl_last_val) {
-      ar_cur_adj[it_ctr] = fl_last_val
+      ar_cur_adj[it_ctr] <- fl_last_val
     } else {
-      ar_cur_adj[it_ctr] = fl_cur_val
+      ar_cur_adj[it_ctr] <- fl_cur_val
     }
-
   }
 
   # return
   return(ar_cur_adj)
-
 }
 
 ffi_alpha_non_increasing_adj_cumusum <- function(ar_alpha, fl_min_inc_bd = 1e-20) {
@@ -1168,16 +1568,16 @@ ffi_alpha_non_increasing_adj_cumusum <- function(ar_alpha, fl_min_inc_bd = 1e-20
   # New Array of NAs
   ar_cur_df_adj <- rep(NA, length(ar_cur_diff))
   # No changes needed if difference is negative, or zero, non-increasing
-  ar_cur_df_adj[ar_cur_diff<=0] = 0
+  ar_cur_df_adj[ar_cur_diff <= 0] <- 0
   # Record changes if positive
-  ar_cur_df_adj[ar_cur_diff>0] = ar_cur_diff[ar_cur_diff>0]
+  ar_cur_df_adj[ar_cur_diff > 0] <- ar_cur_diff[ar_cur_diff > 0]
   # Cumulative sum adjustment needed
   ar_cur_adj_cumsum <- cumsum(ar_cur_df_adj)
-  ar_cur_adj_cumsum <- c(0, ar_cur_adj_cumsum);
+  ar_cur_adj_cumsum <- c(0, ar_cur_adj_cumsum)
   # Add adjustment to original array
   ar_cur_adj <- ar_cur - ar_cur_adj_cumsum
   # Make sure Adjusted changes are non-negative
-  ar_cur_adj[ar_cur_adj < fl_min_inc_bd] = fl_min_inc_bd
+  ar_cur_adj[ar_cur_adj < fl_min_inc_bd] <- fl_min_inc_bd
 
   # return
   return(ar_cur_adj)
@@ -1225,69 +1625,185 @@ ffi_vox_checks_ykm <- function(ymin_group, marital, kids,
 
   # income minimum and maximum,
   # by construction: length(ar_ycut_dollar) = max(ymin_group) + 1
-  ar_ycut_dollar = ar_ycut*fl_multiple
-  it_ygroups = length(ar_ycut_dollar)
+  ar_ycut_dollar <- ar_ycut * fl_multiple
+  it_ygroups <- length(ar_ycut_dollar)
 
   # Default no checks
-  fl_check_dollor = 0
+  fl_check_dollor <- 0
 
   # Only provide checks if not in the last income group, where all receive none
   if (ymin_group < it_ygroups - 1) {
 
     # start point household head
-    fl_check_dollar = 1200
+    fl_check_dollar <- 1200
 
     # married household gets more, marital = 0, 1
-    fl_check_dollar = fl_check_dollar + marital*1200
+    fl_check_dollar <- fl_check_dollar + marital * 1200
 
     # Households with kids: 0, 1,2,3,4
-    fl_check_dollar = fl_check_dollar + kids*500
+    fl_check_dollar <- fl_check_dollar + kids * 500
 
 
     # lower and upper bounds on income
-    fl_inc_group_lower_bound = ar_ycut_dollar[ymin_group]
-    fl_inc_group_upper_bound = ar_ycut_dollar[ymin_group+1]
+    fl_inc_group_lower_bound <- ar_ycut_dollar[ymin_group]
+    fl_inc_group_upper_bound <- ar_ycut_dollar[ymin_group + 1]
 
     # A grid of income between these two points: 10 points
-    ar_inc_grid = seq(fl_inc_group_lower_bound, fl_inc_group_upper_bound,
-                      length.out=it_inc_subgroups)
+    ar_inc_grid <- seq(fl_inc_group_lower_bound, fl_inc_group_upper_bound,
+      length.out = it_inc_subgroups
+    )
 
     # What is the tax rate at each point of these incomes given marry and kids?
-    ar_check_reduce_inc_grid = matrix(data=NA, nrow=length(ar_inc_grid), ncol=1)
+    ar_check_reduce_inc_grid <- matrix(data = NA, nrow = length(ar_inc_grid), ncol = 1)
 
     # as income increases, fl_check_dollar go down
-    it_ctr = 0
+    it_ctr <- 0
     for (fl_inc in ar_inc_grid) {
-
-      it_ctr = it_ctr + 1
+      it_ctr <- it_ctr + 1
 
       if (marital == 0 && kids == 0) {
         # The benefit would start decreasing at a rate of $5 for every additional $100 in income
-        fl_check_reduce = ((max(fl_inc - 75000,0))/100)*5
+        fl_check_reduce <- ((max(fl_inc - 75000, 0)) / 100) * 5
       }
 
       # phaseout starts $112,500 for heads of household
       if (marital == 0 && kids != 0) {
         # The benefit would start decreasing at a rate of $5 for every additional $100 in income
-        fl_check_reduce = ((max(fl_inc - 112500,0))/100)*5
+        fl_check_reduce <- ((max(fl_inc - 112500, 0)) / 100) * 5
       }
 
       # phaseout starts $150,000 for heads of household
-      if (marital == 1 ) {
+      if (marital == 1) {
         # The benefit would start decreasing at a rate of $5 for every additional $100 in income
-        fl_check_reduce = ((max(fl_inc - 150000,0))/100)*5
+        fl_check_reduce <- ((max(fl_inc - 150000, 0)) / 100) * 5
       }
 
-      ar_check_reduce_inc_grid[it_ctr] = max(0, fl_check_dollar - fl_check_reduce)
-
+      ar_check_reduce_inc_grid[it_ctr] <- max(0, fl_check_dollar - fl_check_reduce)
     }
 
-    fl_check_dollor = mean(ar_check_reduce_inc_grid)
-
+    fl_check_dollor <- mean(ar_check_reduce_inc_grid)
   }
 
   # Check Numbers
-  fl_avg_checks = round(fl_check_dollor/fl_percheck_dollar, 0)
+  fl_avg_checks <- round(fl_check_dollor / fl_percheck_dollar, 0)
+
+  return(fl_avg_checks)
+}
+
+ffi_vox_checks_bidencheck <- function(ymin_group, marital, kids,
+                                      ar_ycut,
+                                      fl_multiple = 58056, fl_percheck_dollar = 100,
+                                      it_inc_subgroups = 10) {
+  # if policy change, also go modify section *Modify Maximum Allocation Point for Each Individual* in main above
+  # ar_ycut_usd <- c(0, 20000, 40000, 60000, 80000, 100000, 100000000)
+  # ar_ycut <- ar_ycut_usd/fl_multiple
+  # fl_multiple <- 58056
+  # fl_percheck_dollar <- 100
+  # # Poorest married 4 kids
+  # ffi_vox_checks_bidencheck(1,1,4, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # # Test Function
+  # ffi_vox_checks_bidencheck(2,0,0, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # ffi_vox_checks_bidencheck(2,1,1, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # ffi_vox_checks_bidencheck(2,1,3, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # ffi_vox_checks_bidencheck(2,1,3, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # # Test Function
+  # ffi_vox_checks_bidencheck(4,0,0, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # ffi_vox_checks_bidencheck(4,1,1, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # ffi_vox_checks_bidencheck(4,1,3, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # ffi_vox_checks_bidencheck(4,1,3, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # # Test Function
+  # ffi_vox_checks_bidencheck(5,0,0, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # ffi_vox_checks_bidencheck(5,1,1, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # ffi_vox_checks_bidencheck(5,1,3, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # ffi_vox_checks_bidencheck(6,1,3, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # # Test Function
+  # ffi_vox_checks_bidencheck(11,0,0, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # ffi_vox_checks_bidencheck(11,1,1, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # ffi_vox_checks_bidencheck(11,1,3, ar_ycut, fl_multiple, fl_percheck_dollar)
+  # ffi_vox_checks_bidencheck(11,1,3, ar_ycut, fl_multiple, fl_percheck_dollar)
+
+  # income minimum and maximum,
+  # by construction: length(ar_ycut_dollar) = max(ymin_group) + 1
+  ar_ycut_dollar <- ar_ycut * fl_multiple
+  it_ygroups <- length(ar_ycut_dollar)
+
+  # Default no checks
+  fl_check_dollor <- 0
+
+  # Only provide checks if not in the last income group, where all receive none
+  if (ymin_group < it_ygroups - 1) {
+    fl_slope_m0k0 <- 1400 / (80000 - 75000)
+    fl_slope_m0k1 <- 2800 / (120000 - 112500)
+    fl_slope_m0k2 <- 4200 / (120000 - 112500)
+    fl_slope_m0k3 <- 5600 / (120000 - 112500)
+    fl_slope_m0k4 <- 7000 / (120000 - 112500)
+
+    fl_slope_m1k0 <- 2800 / (160000 - 150000)
+    fl_slope_m1k1 <- 4200 / (160000 - 150000)
+    fl_slope_m1k2 <- 5600 / (160000 - 150000)
+    fl_slope_m1k3 <- 7000 / (160000 - 150000)
+    fl_slope_m1k4 <- 8400 / (160000 - 150000)
+
+    # start point household head
+    fl_check_dollar <- 1400
+
+    # married household gets more, marital = 0, 1
+    fl_check_dollar <- fl_check_dollar + marital * 1400
+
+    # Households with kids: 0, 1,2,3,4
+    fl_check_dollar <- fl_check_dollar + kids * 1400
+
+
+    # lower and upper bounds on income
+    fl_inc_group_lower_bound <- ar_ycut_dollar[ymin_group]
+    fl_inc_group_upper_bound <- ar_ycut_dollar[ymin_group + 1]
+
+    # A grid of income between these two points: 10 points
+    ar_inc_grid <- seq(fl_inc_group_lower_bound, fl_inc_group_upper_bound,
+      length.out = it_inc_subgroups
+    )
+
+    # What is the tax rate at each point of these incomes given marry and kids?
+    ar_check_reduce_inc_grid <- matrix(data = NA, nrow = length(ar_inc_grid), ncol = 1)
+
+    # as income increases, fl_check_dollar go down
+    it_ctr <- 0
+    for (fl_inc in ar_inc_grid) {
+      it_ctr <- it_ctr + 1
+
+      # phaseout starts $75,000 for single
+      # phaseout starts $112,500 for heads of household unmarried
+      # phaseout starts $150,000 for heads of household married
+      if (marital == 0 && kids == 0) {
+        fl_check_reduce <- ((max(fl_inc - 75000, 0)) * fl_slope_m0k0)
+      } else if (marital == 0 && kids == 1) {
+        fl_check_reduce <- ((max(fl_inc - 112500, 0)) * fl_slope_m0k1)
+      } else if (marital == 0 && kids == 2) {
+        fl_check_reduce <- ((max(fl_inc - 112500, 0)) * fl_slope_m0k2)
+      } else if (marital == 0 && kids == 3) {
+        fl_check_reduce <- ((max(fl_inc - 112500, 0)) * fl_slope_m0k3)
+      } else if (marital == 0 && kids == 4) {
+        fl_check_reduce <- ((max(fl_inc - 112500, 0)) * fl_slope_m0k4)
+      } else if (marital == 1 && kids == 0) {
+        fl_check_reduce <- ((max(fl_inc - 150000, 0)) * fl_slope_m1k0)
+      } else if (marital == 1 && kids == 1) {
+        fl_check_reduce <- ((max(fl_inc - 150000, 0)) * fl_slope_m1k1)
+      } else if (marital == 1 && kids == 2) {
+        fl_check_reduce <- ((max(fl_inc - 150000, 0)) * fl_slope_m1k2)
+      } else if (marital == 1 && kids == 3) {
+        fl_check_reduce <- ((max(fl_inc - 150000, 0)) * fl_slope_m1k3)
+      } else if (marital == 1 && kids == 4) {
+        fl_check_reduce <- ((max(fl_inc - 150000, 0)) * fl_slope_m1k4)
+      }
+
+      ar_check_reduce_inc_grid[it_ctr] <- max(0, fl_check_dollar - fl_check_reduce)
+    }
+
+    fl_check_dollor <- mean(ar_check_reduce_inc_grid)
+  }
+
+  # Check Numbers
+  fl_avg_checks <- round(fl_check_dollor / fl_percheck_dollar, 0)
 
   return(fl_avg_checks)
 }

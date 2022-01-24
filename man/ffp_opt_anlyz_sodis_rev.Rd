@@ -21,47 +21,60 @@ ffp_opt_anlyz_sodis_rev(
 )
 }
 \arguments{
-\item{ar_rho}{array preferences for equality for the planner}
+\item{ar_rho}{array preferences for equality for the planner, each value
+from negative infinity to 1}
 
-\item{it_w_agg}{integer data/observed aggregate resources, \eqn{\hat{W}^{o}}.}
+\item{it_w_agg}{integer data/observed aggregate resources,
+\eqn{\hat{W}^{o}}.}
 
-\item{df_input_ib}{dataframe of \eqn{A_{0,i}} and \eqn{\alpha_{o,i}}, constructed based
-on individual \eqn{A} without allocation, and the cumulative aggregate effects of allocation
-given what is oboserved. The dataframe needs three variables, \eqn{A_{0,i}}, \eqn{\alpha_{o,i}}
-and \eqn{\beta_{i}}. Note that an ID variable is not needed. Because no merging is needed. Also
-note that \eqn{\rho} values are not needed because that will be supplied by \strong{df_queue_il_long_with_V}.}
+\item{df_input_ib}{dataframe of \eqn{A_{0,i}} and \eqn{\alpha_{o,i}},
+constructed based on individual \eqn{A} without allocation, and the
+cumulative aggregate effects of allocation given what is oboserved. The
+dataframe needs three variables, \eqn{A_{0,i}}, \eqn{\alpha_{o,i}} and
+\eqn{\beta_{i}}. Note that an ID variable is not needed. Because no
+merging is needed. Also note that \eqn{\rho} values are not needed
+because that will be supplied by \strong{df_queue_il_long_with_V}.}
 
-\item{df_queue_il_long_with_V}{dataframe with optimal allocation resource expansion results,
-including the value along resource expansion so that observed value can be compared to.}
+\item{df_queue_il_long_with_V}{dataframe with optimal allocation resource
+expansion results, including the value along resource expansion so that
+observed value can be compared to.}
 
-\item{svr_A_i_l0}{string variable name in the \strong{df_input_ib} dataframe for \eqn{A_{0,i}}.}
+\item{svr_A_i_l0}{string variable name in the \strong{df_input_ib}
+dataframe for \eqn{A_{0,i}}.}
 
-\item{svr_alpha_o_i}{string variable name in the \strong{df_input_ib} dataframe for \eqn{\alpha_{o,i}}.}
+\item{svr_alpha_o_i}{string variable name in the \strong{df_input_ib}
+dataframe for \eqn{\alpha_{o,i}}.}
 }
 \description{
-Welfare distance is very easy to compute given analytical resource expansion path. For
-each planner preference, the solution does not generate optimal allocation for a particular level
-of aggregate resources, but generates queue of allocations that uniquely define allocation
-along the entire resource expansion. Because of this, it is possible to trivially compute value
-given optimal choices at each incremental point of the resourc expansion path.
+Welfare distance is very easy to compute given analytical
+resource expansion path. For each planner preference, the solution does not
+generate optimal allocation for a particular level of aggregate resources,
+but generates queue of allocations that uniquely define allocation along
+the entire resource expansion. Because of this, it is possible to trivially
+compute value given optimal choices at each incremental point of the
+resourc expansion path.
 
-The value along the resource expansion path that is dependent on preference is stored
-inside the \strong{df_queue_il_long_with_V} dataframe's variable \emph{svr_V_star_Q_il}.
-Note in a normal problem the resource expansion path goes up to infinity, but given the upper
-bounds in the individual allocations, the resource expansion path is finite where the final
-point is equivalent to the sum of maximum allocations across individuals. In the resource
-expansion path dataframe \strong{df_queue_il_long_with_V}, additional variables needed are:
-\emph{svr_rho} and \emph{svr_rho_val} for the \eqn{\rho} key and value; \emph{svr_inpalc} which
-is the queue ranking number, but is also equivalent to the current aggregate resource level. If
-there are 2 individuals with in total at most 11 units of allocations, and the problem was solved
-at three different plann preference levels, this dataframe would have \eqn{11 \cdot 3} rows.
+The value along the resource expansion path that is dependent on preference
+is stored inside the \strong{df_queue_il_long_with_V} dataframe's variable
+\emph{svr_V_star_Q_il}. Note in a normal problem the resource expansion
+path goes up to infinity, but given the upper bounds in the individual
+allocations, the resource expansion path is finite where the final point is
+equivalent to the sum of maximum allocations across individuals. In the
+resource expansion path dataframe \strong{df_queue_il_long_with_V},
+additional variables needed are: \emph{svr_rho} and \emph{svr_rho_val} for
+the \eqn{\rho} key and value; \emph{svr_inpalc} which is the queue ranking
+number, but is also equivalent to the current aggregate resource level. If
+there are 2 individuals with in total at most 11 units of allocations, and
+the problem was solved at three different plann preference levels, this
+dataframe would have \eqn{11 \cdot 3} rows.
 
-On the othe rhand, we need from dataframe \strong{df_input_ib} information on alternative
-allocations. If there are two individuals, this dataframe would only have two rows. There are
-three variables needed: \emph{A_i_l0} for the needs at allocation equal to zero; \emph{alpha_o_i}
-for the effectiveness measured given cumulative observed allocation for each individual \eqn{i};
-and also needed for value calculation \emph{beta_i}. Note that these are the three ingredients
-that are individual specific.
+On the othe rhand, we need from dataframe \strong{df_input_ib} information
+on alternative allocations. If there are two individuals, this dataframe
+would only have two rows. There are three variables needed: \emph{A_i_l0}
+for the needs at allocation equal to zero; \emph{alpha_o_i} for the
+effectiveness measured given cumulative observed allocation for each
+individual \eqn{i}; and also needed for value calculation \emph{beta_i}.
+Note that these are the three ingredients that are individual specific.
 }
 \examples{
 data(df_opt_caschool_input_ib)

@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -37,23 +39,35 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">Optimal Allocation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="articles/PrjOptiAlloc.html">Get Started</a>
-</li>
-<li>
   <a href="reference/index.html">Functions</a>
 </li>
 <li>
   <a href="articles/index.html">Tutorials</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Papers
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3839890" class="external-link">Optimal Allocations to Heterogeneous Agents with An Application to Stimulus Checks</a>
+    </li>
+    <li>
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3691091" class="external-link">Optimal Allocation of the COVID-19 Stimulus Checks</a>
+    </li>
+    <li>
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3547706" class="external-link">The Optimal Allocation of Resources among Heterogeneous Individuals</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="news/index.html">News</a>
@@ -66,44 +80,41 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="https://fanwangecon.github.io/REconTools/">R Tools for Data and Optimization</a>
+      <a href="https://fanwangecon.github.io/REconTools/" class="external-link">R Tools for Data and Optimization</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/R4Econ/">R Examples Data and Optimization</a>
+      <a href="https://fanwangecon.github.io/R4Econ/" class="external-link">R Examples Data and Optimization</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/Stat4Econ/">R Examples Introductory Statistics</a>
+      <a href="https://fanwangecon.github.io/Stat4Econ/" class="external-link">R Examples Introductory Statistics</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/Stata4Econ/">Stata Examples Regressions and Tables</a>
+      <a href="https://fanwangecon.github.io/Stata4Econ/" class="external-link">Stata Examples Regressions and Tables</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/M4Econ/">Matlab Examples Matrix and Graphs</a>
+      <a href="https://fanwangecon.github.io/M4Econ/" class="external-link">Matlab Examples Matrix and Graphs</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/Math4Econ/">Matlab Introductory Math for Econ</a>
+      <a href="https://fanwangecon.github.io/Math4Econ/" class="external-link">Matlab Introductory Math for Econ</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/Tex4Econ/">Latex and Paper Generation Examples</a>
+      <a href="https://fanwangecon.github.io/Tex4Econ/" class="external-link">Latex and Paper Generation Examples</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/pyfan/">Python Examples</a>
+      <a href="https://fanwangecon.github.io/pyfan/" class="external-link">Python Examples</a>
     </li>
   </ul>
-</li>
-<li>
-  <a href="http://fanwangecon.github.io/">Fan</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/fanwangecon/PrjOptiAlloc">
+  <a href="https://github.com/fanwangecon/PrjOptiAlloc" class="external-link">
     <span class="fa fa-github"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://twitter.com/fanwangecon">
+  <a href="https://twitter.com/fanwangecon" class="external-link">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -122,174 +133,55 @@
   <div class="contents col-md-9">
 
 
-<p>This is a research project <a href="https://fanwangecon.github.io/PrjOptiAlloc/">website</a> for solving individual-specific optimal allocation problems. Various results from <a href="https://fanwangecon.github.io/">Fan</a>’s <a href="http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Optimal Allocation paper</a> are implemented here as R code in one package that supports the paper.</p>
-<p><a href="https://github.com/FanWangEcon/PrjOptiAlloc/commits/master"><img src="https://img.shields.io/github/last-commit/fanwangecon/PrjOptiAlloc"></a> <a href="https://github.com/FanWangEcon/PrjOptiAlloc/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/fanwangecon/PrjOptiAlloc"></a> <a href="https://github.com/FanWangEcon/PrjOptiAlloc/issues"><img src="https://img.shields.io/github/issues/fanwangecon/PrjOptiAlloc"></a> <a href="https://github.com/FanWangEcon/PrjOptiAlloc/pulls"><img src="https://img.shields.io/github/issues-pr/fanwangecon/PrjOptiAlloc"></a></p>
-<div id="usage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
-<p>The <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a> tab contains the latest version of the optimal allocation paper. The <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue_Present.pdf">Slides</a> tab provides the latest version of the paper presentation file. The <a href="https://fanwangecon.github.io/PrjOptiAlloc/news/index.html">News</a> tab provides updates when code/paper versions changes.</p>
-<p>The <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/index.html">Functions</a> tab provides a list of functions that implements discrete and bounded-continuous optimal allocation problems. It also includes estimation functions, data functions, and other support functions.</p>
-<p>The <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/index.html">Tutorials</a> tab provides groups of vignettes that solve the various types of optimal allocation problems step by step from raw data to optimal allocation queues without invoking external functions. These step by step results are converted into ingredients of different <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/index.html">functions</a>. Some Vignettes solve for optimal allocation programs by calling these functions directly rather than solving step by step.</p>
+<p>This is a research project <a href="https://fanwangecon.github.io/PrjOptiAlloc/">website</a> for solving individual-specific optimal allocation problems. This projects supports <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3839890" class="external-link">Nygaard, Sorensen, and Wang (2021)</a>.</p>
+<p><a href="https://github.com/FanWangEcon/PrjOptiAlloc/commits/master" class="external-link"><img src="https://img.shields.io/github/last-commit/fanwangecon/PrjOptiAlloc"></a> <a href="https://github.com/FanWangEcon/PrjOptiAlloc/graphs/commit-activity" class="external-link"><img src="https://img.shields.io/github/commit-activity/m/fanwangecon/PrjOptiAlloc"></a> <a href="https://github.com/FanWangEcon/PrjOptiAlloc/issues" class="external-link"><img src="https://img.shields.io/github/issues/fanwangecon/PrjOptiAlloc"></a> <a href="https://github.com/FanWangEcon/PrjOptiAlloc/pulls" class="external-link"><img src="https://img.shields.io/github/issues-pr/fanwangecon/PrjOptiAlloc"></a></p>
+<div class="section level2">
+<h2 id="support-projects">Support Projects<a class="anchor" aria-label="anchor" href="#support-projects"></a>
+</h2>
+<ul>
+<li>“Optimal Allocations to Heterogeneous Agents with An Application to Stimulus Checks”: This project supports <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3839890" class="external-link">Nygaard, Sorensen, and Wang (2021)</a>, which focuses on stimulus check and tax rebate optimal allocation problems. <a href="https://github.com/FanWangEcon/PrjOptiSNW" class="external-link">PrjOptiSNW</a> solves the dynamic programming problems for the paper, and this project handles solving optimal stimulus allocation problems.</li>
+<li>“The Optimal Allocation of Resources among Heterogeneous Individuals”: This project supports <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3547706" class="external-link">Nygaard, Sorensen, and Wang (2020)</a>, which focuses on COVID-19 stimulus checks related problems. <a href="https://github.com/FanWangEcon/PrjOptiSNW" class="external-link">PrjOptiSNW</a> solves the dynamic programming problems for the paper, and this project handles solving optimal stimulus allocation problems.</li>
+<li>“The Optimal Allocation of Resources Among Heterogeneous Individuals”: This project supports <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3547706" class="external-link">Wang (2020)</a>, which focuses on generic optimal allocation problems.</li>
+</ul>
 </div>
-<div id="data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data" class="anchor"></a>Data</h2>
-<p>To demonstrate intuitions graphically, I provide under the <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/index.html">Tutorials</a> tab numerical examples when the number of candidate recipients of allocations is two. Most files under the <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/index.html">Tutorials</a> tab use empirical data where the number of candidate recipients is several hundred or more. For these problems, computational brute-force comparison methods quickly become intractable due to factorially increasing choice-sets and exponentially increasing state-spaces. In constrast, the <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Optimal Allocation paper</a> provides closed-form solutions to several classes of optimal allocation problems under CES preference aggregation. The computational burden of the solutions increase only linearly with the number of candidate recipients of allocations.</p>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
+<p>The <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/index.html">Functions</a> tab provides a list of functions that implements discrete and bounded-continuous optimal allocation problems. It also includes estimation functions, data functions, and other support functions.</p>
+<p>The <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/index.html">Tutorials</a> tab provides groups of vignettes that solve the various types of optimal allocation problems step-by-step from raw data to optimal allocation queues without invoking external functions. These step by step results are converted into ingredients of different <a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/index.html">functions</a>. Some Vignettes solve for optimal allocation programs by calling these functions directly rather than solving step-by-step.</p>
+</div>
+<div class="section level2">
+<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+</h2>
+<p>To demonstrate intuitions graphically, the <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/index.html">Tutorials</a> tab provides numerical examples when the number of candidate recipients of allocations is two. Most files under the <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/index.html">Tutorials</a> tab use empirical data where the number of candidate recipients is several hundred or more. For these problems, computational brute-force comparison methods quickly become intractable due to factorially increasing choice-sets and exponentially increasing state-spaces. We provide closed-form solutions to several classes of optimal allocation problems under CES preference aggregation. The computational burden of the solutions increases only linearly with the number of candidate recipients of allocations.</p>
 <p>Datasets used include:</p>
-<ol>
+<ol style="list-style-type: decimal">
 <li><a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_birthwt.html">R Testing Dataset Birth Weight</a></li>
-<li><a href="https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/mtcars.html">R Testing Dataset mtcars</a></li>
+<li><a href="https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/mtcars.html" class="external-link">R Testing Dataset mtcars</a></li>
 <li>
-<a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_caschool.html">California Test Score Data</a> from <a href="https://www.amazon.com/dp/B00XIGZW9W/ref=dp-kindle-redirect?_encoding=UTF8&amp;btkr=1">Stock and Watson (2003)</a>
+<a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_caschool.html">California Test Score Data</a> from <a href="https://www.amazon.com/dp/B00XIGZW9W/ref=dp-kindle-redirect?_encoding=UTF8&amp;btkr=1" class="external-link">Stock and Watson (2003)</a>
 </li>
 <li>
-<a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_caschool.html">NSW Job Training Data</a> from <a href="https://www.jstor.org/stable/1806062?">Lalonde (1986)</a>
+<a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_caschool.html">NSW Job Training Data</a> from <a href="https://www.jstor.org/stable/1806062?" class="external-link">Lalonde (1986)</a>
 </li>
 <li>
-<a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_aorig.html">Guatemala and Philippines Nutrition and Height Data</a> from <a href="https://www-sciencedirect-com.ezproxy.lib.uh.edu/science/article/pii/S1570677X16300107">Puentes el. al (2006)</a>
+<a href="https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_aorig.html">Guatemala and Philippines Nutrition and Height Data</a> from <a href="https://www-sciencedirect-com.ezproxy.lib.uh.edu/science/article/pii/S1570677X16300107" class="external-link">Puentes el. al (2006)</a>
 </li>
+<li>See <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3839890" class="external-link">Nygaard, Sorensen, and Wang (2021)</a> and <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3547706" class="external-link">Nygaard, Sorensen, and Wang (2020)</a> for relevant data structures in those settings.</li>
 </ol>
 </div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>The tools here depend on <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/base-package.html">base R</a>, <a href="https://www.tidyverse.org/">tidyverse</a> and <a href="https://www.tidymodels.org/">tidymodels</a>. After installing those, two packages should be installed, <a href="http://fanwangecon.github.io/">fan</a>’s <a href="http://fanwangecon.github.io/REconTools/">REconTools</a>, which provides a number of support tools required, as well as this package itself <a href="http://fanwangecon.github.io/PrjOptiAlloc/">PrjOptiAllocs</a>. For installation help, see <a href="http://r-pkgs.had.co.nz/intro.html">devtools</a>.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>The tools here depend on <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/base-package.html" class="external-link">base R</a>, <a href="https://www.tidyverse.org/" class="external-link">tidyverse</a>, and <a href="https://www.tidymodels.org/" class="external-link">tidymodels</a>. After installing those, two packages should be installed, <a href="http://fanwangecon.github.io/" class="external-link">fan</a>’s <a href="http://fanwangecon.github.io/REconTools/" class="external-link">REconTools</a>, which provides a number of support tools required, as well as this package itself <a href="http://fanwangecon.github.io/PrjOptiAlloc/" class="external-link">PrjOptiAllocs</a>. For installation help, see <a href="http://r-pkgs.had.co.nz/intro.html" class="external-link">devtools</a>.</p>
 <p>Installing the package will download all datasets, functions as well as vignettes associated with the project.</p>
-<pre><code><a href="https://devtools.r-lib.org//reference/remote-reexports.html"># To Install the Programs in the R folder of the REconTools Repository
-devtools::install_github("fanwangecon/PrjOptiAlloc")
-# There are various dependencies that need to be installed, including
-devtools::install_github("fanwangecon/REconTools")</a></code></pre>
-<p>See <a href="https://github.com/FanWangEcon">here</a> for all of <a href="https://fanwangecon.github.io/">Fan</a>’s public repositories. Please contact <a href="https://fanwangecon.github.io/">FanWangEcon</a> for issues or problems.</p>
-<!--
-# General Idea
-
-We approach an estimation/allocation problem here is in three steps.
-
-## 1.1 Causal Estimation
-
-We estimate some causal relationship between individual specific allocable input $V_i$ and some outcome of interest. For example, we can estimate the relationship between nutritional supplements and height growth, the effect of a training program on employment chances, the relationship between teacher-student-ratio and test scores, or the effect of offering savings accounts to households in village economies. Finding causal estimates in reduced form or structural context is the main objective of most empirical papers. Generally, most research ends with finding what inputs/factors/policies matter, and how much they matter.
-
-## 1.2 Optimal Allocation given Estimates
-
-What are the allocative implications of the causal estimates and observables? One way to think about this is that we might want to randomize in order to estimate causal effects, but given our estimates, how should we allocate among heterogeneous individuals the finite resources that we found to be beneficial. A development Aid agency, an NGO or a government branch has limited budgets to purchase nutrition, to offer training spots, to hire additional teachers, and to offer savings account access to village households. How do we allocate resources, given resource constraints, heterogeneities across individuals, heterogeneous effects of treatment, and planner preferences and biases?
-
-Using the optimal allocation theorems developed in [Fan](https://fanwangecon.github.io/)'s [Optimal Allocation paper](http://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf), it turns out, we can analytical solve for the individual allocation problem analytically. Various pages on the site provides tutorials and examples for different theorems.
-
-# 2. Optimal Allocation
-
-## 2.1 Optimal Targeting Queue
-
-The key analytical concept that make the solutions possible is the Optimal Targeting Queue. It turns out, in both discrete and continuous cases, we can analytical solve for the optimal ranking in which individuals should receive allocations. This ranking, crucially, is invariant to resources. In the discrete cases, the ranking is the allocation. For example, for the binary allocation problem, the theorems will tell us, given the planner's preference for efficiency and equality, exactly who should be the first to receive a training opportunity, the 2nd, the 3rd, etc.
-
-## 2.2 Optimal Targeting Queue and Knots
-
-One might think the targeting queue concept is not relevant for the continuous problems, because there, we need to figure out how much to provide to each individual, not just who should receive first or second. But it turns out that for the continuous problem, the solution is to first analytically find who should be the first individual to receive allocations. Then, there is an analytical function that maps total resource available to how much this first recipient should optimally receive as total resource availability increase. This function, it turns out, is a linear spline, and each successive knot of the spline is where the next individual in the optimal targeting queue begins to receive allocations.
-
-So we first find the optimal targeting queue of who should begin to receive first, second, and third. Then we find the optimal targeting knots associated with the targeting queue, which tells us how much resources is needed before an individual begins to receive. These two analytical sequences lead to analytical solutions to each individual's optimal allocation solution.
-
-## 2.3 Brute-Force vs Analytical Solutions
-
-While the brute-force computational problem is infeasible to solve, the analytical solutions are instantaneous to implement even as the number of candidate recipient of allocations increase to large $N$.
-
-How to optimally allocate across individuals is a computationally difficult question to answer because if we want to allocate to $N$ individuals given $W$ units of resource, the choice set grows factorially with each additional individual, and the state space of the problem grows exponentially with each additional individual. How much the planner can allocate to each individual will be a function of the attributes of all other candidate recipients of allocations.
-
-Trying to solve this problem using brute-force comparison of all possible allocations is computational infeasible even with very small $N$. For example, if we have 700 individuals and 200 training spots, the number of possible combinations is $\frac{700!}{(700=200)!200!}$. This number can not be calculated by normal programs, it is significantly large than $10^{308}$, which is the maximum number allowed by double precision.
-
-# 3. Accessible Welfare Analysis
-
-## 3.1 Allocation and Misallocation
-
-With analytical results on what is optimal, we can also compute an interesting welfare measure, which the paper calls REV (resource equivalent variation).
-
-Suppose there are 10 bottles of protein, and 5 kids. If we randomly allocate, 5 kids will get the proteins. There are $\frac{10!}{5!5!}=252$ combinations of allocations. The random allocation is one of these 252 allocations. The optimal allocation is also one of these 252 allocations. The chance that the random allocation is optimal is 1 out of 252.
-
-But how far away is the random allocation away from the optimal? How much resource is wasted by not allocating more optimally?
-
-## 3.2 Resource Equivalent Variation
-
-To address this, we can use expenditure minimization. We can evaluate the utility of the planner given planner preferences at the observed allocations. Then we can solve for how much less resources is needed to achieve the same level of planner utility if we were allocating optimally? This is an analytical object because it is a function of the analytical optimal targeting queue.
-
-For the example here, we had 5 bottles, perhaps the planner have the same utility (given the equality of efficiency objective it has) if only 2 bottles were offered to the top 2 ranked individuals on the targeting queue. REV in this case would be $\frac{5-2}{5}=0.6$. 60 percent of the resource, we can say, is misallocated.
-
-The exciting thing here is that welfare calculation traditionally has been mainly a tool/concept that macro-economists use. The dominant concept is CEV (consumption equivalent variation). REV is applying in some sense a similar idea, but now to wide swaths of reduced form empirical estimation results. As a simple post estimation command, empirical researchers can evaluate the welfare implications of the observables they see given they estimates they find.
-
-## 3.3 From the Utilitarian to the Rawlsian
-
-For the more equality focused planner, the top two ranked could be the two kids who were be expected to be the shortest without the nutrition. For the more efficiency minded planner, the top two ranked could be the two kids for whom additional nutrient have the greatest marginal effects. As we shift along the  preference spectrum from the Utilitarian to the Rawlsian, the rankings of each of the 10 individuals on the optimal targeting queue shift.
-
-# 4 Optimal Allocation Discrete Problems
-
-## 4.1 Binary Allocations
-
-This works out the binary allocation problem using the *mtcars* dateaset.
-
-1. [**line by line vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_car.html): data to estimation to optimal allocation to planner preference to gini
-
-## 4.2 Discrete Allocation
-
-This works out the discrete allocation problem using the *caschool* dataset. We study allocating additional (homogeneous) teachers to schools.
-
-1. [**line by line vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allrw.html): data to estimation to optimal allocation with various planner preference
-2. [**call functions vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sodis_rkone_casch_allfn.html): shorter file that calls functions in */R* folder.
-
-## 4.3 Allocation Examples
-
-1. [**Wage and Job Training vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_training_wage.html)
-2. [**Employment and Job Training vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allfc_training_logit.html)
-3. [**Birth Weight and Doctor's Visits vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_sobin_rkone_allrw_wgt.html)
-
-# 5 Optimal Allocation Continuous Linear Problems
-
-Linear Optimal Allocations for the *N_i* and *H_i* problem. Optimal constrained resource allocation given continuous linear estimation results. The continuous linear estimation results could be based on causal reduced form estimation, or production function estimation results.
-
-## 5.1 Allocation Function
-
-Taking estimation results as function parameters, we solve the optimal allocation problem using the function below.
-
-1. [**function reference**](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_solin_relow.html): solves optimal allocations given linear estimates
-2. [**function testing vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow.html): illustrate function math steps
-
-## 5.2 Allocation Start to End
-
-Here, to illustrate all steps, we start from loading in data, estimate, allocate and analyze. This is the full vignette that shows all steps to. The steps here become three parts. First, get estimates from estimation function from some existing research project. Second, use our [optimal allocation function](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow.html)/algoritm given estimation results. Third, analyze allocation results's implications for equality of allocations.
-
-These functions show in practice how the various tools can be used in sequence to solve and anlyze the optimal allocation problem.
-
-1. [**line by line**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow_allrw.html): data to estimation to optimal allocation to planner preference to gini
-2. [**call functions**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solin_relow_allfn.html): from data to gini call functions calling various functions in sequence.
-
-## 5.3 Saved Allocation Examples
-
-To make the allocation results transparent, we store example allocation results from the [Height and Protein](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html) data, which has slightly more than 1000 observations.
-
-1. [**data reference**](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop.html): reference file describing example allocation data.
-2. [**rda data file**](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop.rda): download the rda datafile and open in R to review example allocation results
-
-# 6 Optimal Allocation Decreasing Returns Log Linear Problem
-
-Decreasing returns, log linear problem solutions.
-
-1. [**bisection testing vignette**](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffv_opt_solog_bisec_allrw.html): solves optimal allocations given linear estimates
-2. [**nutrition allocation vignette**](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solog_asame_allrw.html): illustrate function math steps
-
-# 7 Support Files
-
-## 7.1 Generate Regression Results Examples
-
-First, we generate some regression results. These provide the optimal allocation problems with parameter inputs.
-
-1. **Height and Protein**: linear and log linear production function
-    - Data generation function: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffy_opt_dtgch_cbem4.html) \| [save data vignette](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_dtgch_cbem4.html)
-    - Saved data file: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4.rda)
-
-## 7.2 Allocation Distributional Analysis
-
-1. **Planner Preference and Gini**: variety of planner elasticity and resulting allocation gini
-    - Data generation function: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/ffp_opt_anlyz_rhgin.html) \| [save data vignette](https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_anlyz_rhgin.html)
-    - Saved example (height linear) allocations: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop_allrh.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_allrh.rda)
-    - Saved example (height linear) gini: [reference](https://fanwangecon.github.io/PrjOptiAlloc/reference/df_opt_dtgch_cbem4_rrlop_argin.html) \| [data file](https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/data/df_opt_dtgch_cbem4_rrlop_argin.rda) -->
+<pre><code><span class="co"># To Install the Programs in the R folder of the REconTools Repository</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"fanwangecon/PrjOptiAlloc"</span><span class="op">)</span>
+<span class="co"># There are various dependencies that need to be installed, including</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"fanwangecon/REconTools"</span><span class="op">)</span></code></pre>
+<p>See <a href="https://github.com/FanWangEcon" class="external-link">here</a> for all of <a href="https://fanwangecon.github.io/" class="external-link">Fan</a>’s public repositories. Please contact <a href="https://fanwangecon.github.io/" class="external-link">FanWangEcon</a> for issues or problems.</p>
 <hr>
-<p>Please contact <a href="https://github.com/FanWangEcon"><img src="https://img.shields.io/github/followers/fanwangecon?label=FanWangEcon&amp;style=social"></a> <a href="https://twitter.com/fanwangecon"><img src="https://img.shields.io/twitter/follow/fanwangecon?label=%20&amp;style=social"></a> for issues or problems.</p>
+<p>Please contact <a href="https://github.com/FanWangEcon" class="external-link"><img src="https://img.shields.io/github/followers/fanwangecon?label=FanWangEcon&amp;style=social"></a> <a href="https://twitter.com/fanwangecon" class="external-link"><img src="https://img.shields.io/twitter/follow/fanwangecon?label=%20&amp;style=social"></a> for issues or problems.</p>
 <p><img src="https://img.shields.io/github/repo-size/fanwangecon/PrjOptiAlloc" alt="RepoSize"><img src="https://img.shields.io/github/languages/code-size/fanwangecon/PrjOptiAlloc" alt="CodeSize"><img src="https://img.shields.io/github/languages/top/fanwangecon/PrjOptiAlloc" alt="Language"><img src="https://img.shields.io/github/downloads/fanwangecon/PrjOptiAlloc/total" alt="Release"><img src="https://img.shields.io/github/license/fanwangecon/PrjOptiAlloc" alt="License"></p>
 </div>
 
@@ -297,49 +189,59 @@ First, we generate some regression results. These provide the optimal allocation
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/FanWangEcon/PrjOptiAlloc/">https://​github.com/​FanWangEcon/​PrjOptiAlloc/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/FanWangEcon/PrjOptiAlloc/issues">https://​github.com/​FanWangEcon/​PrjOptiAlloc/​issues</a>
-</li>
-</ul>
-</div>
-<div class="license">
-<h2>License</h2>
-<ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>
-<a href="https://fanwangecon.github.io">Fan Wang</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-2640-5420" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="https://github.com/FanWangEcon/PrjOptiAlloc/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/FanWangEcon/PrjOptiAlloc/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="license">
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/FanWangEcon/PrjOptiAlloc"><img src="http://hits.dwyl.io/fanwangecon/PrjOptiAlloc.svg" alt="HitCount"></a></li>
-<li><a href="https://github.com/FanWangEcon/PrjOptiAlloc/stargazers"><img src="https://img.shields.io/github/stars/fanwangecon/PrjOptiAlloc?style=social" alt="Star"></a></li>
-<li><a href="https://github.com/FanWangEcon/PrjOptiAlloc/network/members"><img src="https://img.shields.io/github/forks/fanwangecon/PrjOptiAlloc?style=social" alt="Fork"></a></li>
-<li><a href="https://github.com/FanWangEcon/PrjOptiAlloc/watchers"><img src="https://img.shields.io/github/watchers/fanwangecon/PrjOptiAlloc?style=social" alt="Star"></a></li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing PrjOptiAlloc</a></li>
+</ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>
+<a href="https://fanwangecon.github.io" class="external-link">Fan Wang</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-2640-5420" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/FanWangEcon/PrjOptiAlloc/stargazers" class="external-link"><img src="https://img.shields.io/github/stars/fanwangecon/PrjOptiAlloc?style=social" alt="Star"></a></li>
+<li><a href="https://github.com/FanWangEcon/PrjOptiAlloc/network/members" class="external-link"><img src="https://img.shields.io/github/forks/fanwangecon/PrjOptiAlloc?style=social" alt="Fork"></a></li>
+<li><a href="https://github.com/FanWangEcon/PrjOptiAlloc/watchers" class="external-link"><img src="https://img.shields.io/github/watchers/fanwangecon/PrjOptiAlloc?style=social" alt="Star"></a></li>
+</ul>
+</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://fanwangecon.github.io">Fan Wang</a>.</p>
+  <p></p>
+<p>Developed by <a href="https://fanwangecon.github.io" class="external-link">Fan Wang</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -347,6 +249,8 @@ First, we generate some regression results. These provide the optimal allocation
 
   
 
+
+  
 
   </body>
 </html>

@@ -2,7 +2,8 @@
 % Please edit documentation in R/ffp_opt_anlyz.R
 \name{ffp_opt_anlyz_rhgin_bin}
 \alias{ffp_opt_anlyz_rhgin_bin}
-\title{Theorem 1, Binary Optimal Allocation solution, loop along a vector of planner inequality preference (rho)}
+\title{Theorem 1, Binary Optimal Allocation solution, loop along a vector of
+planner inequality preference (rho)}
 \usage{
 ffp_opt_anlyz_rhgin_bin(
   df,
@@ -19,36 +20,48 @@ ffp_opt_anlyz_rhgin_bin(
 )
 }
 \arguments{
-\item{df}{tibble data table including variables using svr names below each row is potentially an individual who will receive alternative allocations}
+\item{df}{tibble data table including variables using svr names below each
+row is potentially an individual who will receive alternative allocations}
 
-\item{svr_id_i}{string name of the identify key for each i, to make sure merging happens properly}
+\item{svr_id_i}{string name of the identify key for each i, to make sure
+merging happens properly}
 
-\item{svr_A_i}{string name of the A_i variable, dot product of covariates and coefficients}
+\item{svr_A_i}{string name of the A_i variable, dot product of covariates
+and coefficients}
 
-\item{svr_alpha_i}{string name of the alpha_i variable, individual specific elasticity information}
+\item{svr_alpha_i}{string name of the alpha_i variable, individual specific
+elasticity information}
 
-\item{svr_beta_i}{string name of the beta_i variable, relative preference weight for each child}
+\item{svr_beta_i}{string name of the beta_i variable, relative preference
+weight for each child}
 
-\item{ar_rho}{array preferences for equality for the planner}
+\item{ar_rho}{array preferences for equality for the planner, each value
+from negative infinity to 1}
 
-\item{svr_rho}{string variable name for the index planner inequality aversion variable, initially rho, then called rho, this is the index variable, index for each one of the rho values}
+\item{svr_rho}{string variable name for the index planner inequality
+aversion variable, initially rho, then called rho, this is the index
+variable, index for each one of the rho values}
 
-\item{svr_rho_val}{string variable name for the value of the planner inequality aversion variable}
+\item{svr_rho_val}{string variable name for the value of the planner
+inequality aversion variable}
 
-\item{svr_inpalc}{string variable name for newly generated input optimal allocation}
+\item{svr_inpalc}{string variable name for newly generated input optimal
+allocation}
 
 \item{svr_expout}{string variable name for newly generated expected outcome}
+
+\item{verbose}{boolean print out intermediary function outputs}
 }
 \value{
-a list with a dataframe and an array
-\itemize{
-  \item df_all_rho - table where optimal targets given rhos are additional columns, note rank_max = highest rank reachest, lowest number
-  \item df_all_rho_long - long version of df_all_rho, single column all targets another column rho values
-}
+a list with a dataframe and an array \itemize{ \item df_all_rho -
+  table where optimal targets given rhos are additional columns, note
+  rank_max = highest rank reachest, lowest number \item df_all_rho_long -
+  long version of df_all_rho, single column all targets another column rho
+  values }
 }
 \description{
-Works with binary allocation problems. The function
-invokes ffp_opt_sobin_target_row. The example tests think of as bottled protein.
+Works with binary allocation problems. The function invokes
+ffp_opt_sobin_target_row. The example tests think of as bottled protein.
 }
 \examples{
 library(dplyr)

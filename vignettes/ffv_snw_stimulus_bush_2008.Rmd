@@ -1,0 +1,250 @@
+---
+title: Bush Checks from the Economic Stimulus Act of 2008
+description: |
+  In 2008, the Bush administration sent out stimulus checks as tax rebates. The checks are a function of income, marital status, and the number of children. We have functions that computable taxable income given income, tax liability given income, and also stimulus amount given income.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Bush Checks from the Economic Stimulus Act of 2008}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+urlcolor: blue
+---
+
+In 2008, the Bush administration sent out stimulus checks as tax rebates ([Economic Stimulus Act of 2008](https://en.wikipedia.org/wiki/Economic_Stimulus_Act_of_2008)). The checks are a function of income, marital status, and the number of children. We have functions that computable taxable income given income, tax liability given income, and also stimulus amount given income.
+
+## Taxable Income and Tax Liability in 2008
+
+First, we test the taxable income function.
+
+```{r}
+ar_income <- c(1e4, 2e4, 4e4, 8e4, 1.6e5)
+ls_taxable <- ffp_snw_tax_liability(ar_income)
+mn_taxable_income <- ls_taxable$mn_taxable_income
+mn_tax_liability <- ls_taxable$mn_tax_liability
+```
+
+Second, show the taxable income schedule.
+
+```{r}
+print('mn_taxable_income')
+print(mn_taxable_income)
+```
+
+Third, show the tax liability schedule.
+
+```{r}
+print('mn_tax_liability')
+print(mn_tax_liability)
+```
+
+## Stimulus Checks (Tax Rebate) Under Bush Economic Stimulus Act of 2008
+
+Find taxable income, tax liability, and then finally stimulus checks (tax-rebates) amounts for households with 10k, 20k, 30k, 40k, 50k, 60k, 70k, 80k, 90k, 100k, and 160k income, and all kids and marital status combinations.
+
+```{r}
+# Income array
+ar_income <- c(1e4, 2e4, 3e4, 4e4, 5e4, 6e4, 7e4, 8e4, 9e4, 1.6e5)
+
+# Store stimulus checks amounts
+mn_stimulus_check <- array(NA, dim=c(length(ar_income), 2, 5))
+
+# Solve and Store stimulus by kids count and marital status
+for (it_kids in 0:4){
+  for (bl_marital in c(0,1)){
+    # Solve and Store
+    ar_stimulus_check <- ffp_snw_stimulus_checks_bush(ar_income, it_kids, bl_marital)
+    mn_stimulus_check[, bl_marital+1, it_kids+1] <- ar_stimulus_check
+  }
+}
+
+# Labeling
+dimnames(mn_stimulus_check)[[1]] = paste0('income=', round(ar_income, 0))
+dimnames(mn_stimulus_check)[[2]] = paste0('married=', 0:1)
+dimnames(mn_stimulus_check)[[3]] = paste0('kids=', 0:4)
+
+# Print
+print('mn_stimulus_check')
+print(mn_stimulus_check)
+```
+## Compute Average Stimulus by Income Bin for Multiple Households in Dataframe
+
+We have a dataframe of households, where each household is defined by the number of kids in the household, marital status, and also income bin. Note that this is an income bin, not a specific income level. We computes an approximate income-bin (and marital status and kids count) specific stimulus amount by evaluating the stimulus checks function along a fine grid of income levels from the min to the max point of the income-bin, and simply take the average.
+
+We do this first for the actual stimulus that households should receive under the Economic Stimulus Act of 2008. We then adjust parameters for the stimulus function and compute alternative max-stimulus bounds for each income bin.
+
+### Test the Stimulus Determiniation Function Line by ine
+
+We develop the function by testing out the code line by line first. 
+
+First, load in the testing dataframe *df_nsw_tiny_chk168_df_id*.
+
+```{r}
+# Load file
+data(df_nsw_tiny_chk168_df_id)
+df_id <- df_nsw_tiny_chk168_df_id
+# Print results
+print(df_id)
+```
+Second, parse the *ymin_group* group.
+
+```{r}
+# what 1 in model equals to
+fl_multiple <- 58056
+
+# Define input variables
+svr_ymin_group <- 'ymin_group'
+
+# Parse the ymin group
+df_id <- df_id %>%
+    rowwise() %>%
+    mutate(!!sym(svr_ymin_group) := as.character(!!sym(svr_ymin_group))) %>%
+    mutate(y_group_min = substring(strsplit(!!sym(svr_ymin_group), ",")[[1]][1], 2),
+           y_group_max = gsub(strsplit(!!sym(svr_ymin_group), ",")[[1]][2],  pattern = "]", replacement = "")) %>%
+    mutate(y_group_min = fl_multiple*as.numeric(y_group_min), 
+           y_group_max = fl_multiple*as.numeric(y_group_max)) %>%
+    ungroup()
+# Print results
+print(df_id[1:10,])
+```
+
+Third, generate an income array with *y_group_min* and *y_group_max*, and call the stimulus function to solve for stimulus along the income array, and then take average. Set various parameters
+
+```{r}
+# Dollar per Check
+fl_percheck_dollar <- 100
+
+# Define input variables
+svr_id <- 'id_i'
+svr_marital <- 'marital'
+svr_kids <- 'kids'
+
+# Define other parameters
+fl_stimulus_child <- 300
+fl_stimulus_adult_min <- 300
+fl_stimulus_adult_max <- 600
+fl_per_adult_phase_out <- 75000
+fl_phase_out_per_dollar_income <- 0.05
+
+# fl_stimulus_child <- ls_stimulus_specs$fl_stimulus_child
+# fl_stimulus_adult_min <- ls_stimulus_specs$fl_stimulus_adult_min
+# fl_stimulus_adult_max <- ls_stimulus_specs$fl_stimulus_adult_max
+# fl_per_adult_phase_out <- ls_stimulus_specs$fl_per_adult_phase_out
+# fl_phase_out_per_dollar_income <- ls_stimulus_specs$fl_phase_out_per_dollar_income
+
+# Compute stimulus, averaging over array of income-specific stimulus
+df_id <- df_id %>% 
+  group_by(!!sym(svr_id)) %>%
+  do(bush_rebate = 
+       mean(ffp_snw_stimulus_checks_bush(
+         ar_income = seq(.[['y_group_min']],
+                         .[['y_group_max']], 
+                         length.out=100),
+         it_kids = .[[svr_kids]], 
+         bl_marital = .[[svr_marital]],
+         fl_stimulus_child=fl_stimulus_child,
+         fl_stimulus_adult_min=fl_stimulus_adult_min,
+         fl_stimulus_adult_max=fl_stimulus_adult_max,
+         fl_per_adult_phase_out=fl_per_adult_phase_out,
+         fl_phase_out_per_dollar_income=fl_phase_out_per_dollar_income
+       ))) %>%
+  unnest(c(bush_rebate)) %>%
+  mutate(bush_rebate_n_checks = round(bush_rebate/fl_percheck_dollar)) %>% 
+  left_join(df_id, by=svr_id)
+
+# Display results
+print(df_id)
+```
+
+### Test the Function 
+
+Now we test the function *ffp_snw_stimulus_checks_bush_add2dfid()*. 
+
+#### Test Actual Stimulus Allocation
+
+First, we add in the actual policy bounds:
+
+```{r}
+# Call and solve
+df_id <- df_nsw_tiny_chk168_df_id
+df_id_checkadded_actual <- ffp_snw_stimulus_checks_bush_add2dfid(
+  df_id,
+  it_income_n_in_seg = 100,
+  fl_multiple = 58056,
+  fl_percheck_dollar = 100,
+  fl_stimulus_child=300,
+  fl_stimulus_adult_min=300, fl_stimulus_adult_max=600,
+  fl_per_adult_phase_out=75000,
+  fl_phase_out_per_dollar_income=0.05)
+# Display
+print(df_id_checkadded_actual[1:10,])
+# Summarize
+vars.group <- c('kids', 'marital')
+var.numeric <- 'bush_rebate'
+str.stats.group <- 'allperc'
+ar.perc <- c(0.01, 0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.70, 0.90)
+ls_summ_by_group <- ff_summ_bygroup(df_id_checkadded_actual, 
+                                    vars.group, var.numeric, str.stats.group, ar.perc)
+df_table_grp_stats <- ls_summ_by_group$df_table_grp_stats
+print(round(df_table_grp_stats,0) %>% 
+        select(vars.group, one_of(
+          'mean', '1%', '5%', '10%', '20%', '30%', '50%', '90%')))
+```
+
+#### Test Tripling Tax Rebate Bound for Higher Income Households
+
+Second, we will triple the amount of stimulus received for adult and for kids, but keep the base amount the same, and set phase-out per_dollar income to 0. By doing this, we are no longer finding the stimulus under the actual policy, but generating upper allocation bounds based on tax-liability.
+
+```{r}
+# Child stimulus triple
+fl_stimulus_child=300*3
+fl_stimulus_adult_max=600*3
+fl_phase_out_per_dollar_income=0
+# Call and solve
+df_id <- df_nsw_tiny_chk168_df_id
+df_id_checkadded_x3chd_x3adthgbd <- ffp_snw_stimulus_checks_bush_add2dfid(
+  df_id,
+  fl_multiple = 58056,
+  fl_percheck_dollar = 100,
+  fl_stimulus_child=fl_stimulus_child,
+  fl_stimulus_adult_min=300, fl_stimulus_adult_max=fl_stimulus_adult_max,
+  fl_phase_out_per_dollar_income=fl_phase_out_per_dollar_income)
+# Display
+print(df_id_checkadded_x3chd_x3adthgbd[1:10,])
+# Summarize
+ls_summ_by_group <- ff_summ_bygroup(df_id_checkadded_x3chd_x3adthgbd, 
+                                    vars.group, var.numeric, str.stats.group, ar.perc)
+df_table_grp_stats <- ls_summ_by_group$df_table_grp_stats
+print(round(df_table_grp_stats,0) %>% 
+        select(vars.group, one_of(
+          'mean', '1%', '5%', '10%', '20%', '30%', '50%', '90%')))
+```
+
+#### Test Tripling Tax Rebate Bound for Higher Income Households and Tripling Upper Bound for Lower Income Households As Well
+
+Third, we will triple the amount of stimulus received for adult and for kids, and also triple the base amount (upper-bound) for lowest income group, and set phase-out per_dollar income to 0.
+
+```{r}
+# Child stimulus triple
+fl_stimulus_child=300*3
+fl_stimulus_adult_max=600*3
+fl_stimulus_adult_min=300*3
+fl_phase_out_per_dollar_income=0
+# Call and solve
+df_id <- df_nsw_tiny_chk168_df_id
+df_id_checkadded_x3chd_x3adthgbdlwbd <- ffp_snw_stimulus_checks_bush_add2dfid(
+  df_id,
+  fl_multiple = 58056,
+  fl_percheck_dollar = 100,
+  fl_stimulus_child=fl_stimulus_child,
+  fl_stimulus_adult_min=fl_stimulus_adult_min, fl_stimulus_adult_max=fl_stimulus_adult_max,
+  fl_phase_out_per_dollar_income=fl_phase_out_per_dollar_income)
+# Display
+print(df_id_checkadded_x3chd_x3adthgbdlwbd[1:10,])
+# Summarize
+ls_summ_by_group <- ff_summ_bygroup(df_id_checkadded_x3chd_x3adthgbdlwbd, 
+                                    vars.group, var.numeric, str.stats.group, ar.perc)
+df_table_grp_stats <- ls_summ_by_group$df_table_grp_stats
+print(round(df_table_grp_stats,0) %>% 
+        select(vars.group, one_of(
+          'mean', '1%', '5%', '10%', '20%', '30%', '50%', '90%')))
+```

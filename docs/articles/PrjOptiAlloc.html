@@ -26,6 +26,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,23 +40,35 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Optimal Allocation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../articles/PrjOptiAlloc.html">Get Started</a>
-</li>
-<li>
   <a href="../reference/index.html">Functions</a>
 </li>
 <li>
   <a href="../articles/index.html">Tutorials</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Papers
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
 <li>
-  <a href="https://fanwangecon.github.io/assets/FanWang_OptimalTargetingQueue.pdf">Paper</a>
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3839890" class="external-link">Optimal Allocations to Heterogeneous Agents with An Application to Stimulus Checks</a>
+    </li>
+    <li>
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3691091" class="external-link">Optimal Allocation of the COVID-19 Stimulus Checks</a>
+    </li>
+    <li>
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3547706" class="external-link">The Optimal Allocation of Resources among Heterogeneous Individuals</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -67,44 +81,41 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="https://fanwangecon.github.io/REconTools/">R Tools for Data and Optimization</a>
+      <a href="https://fanwangecon.github.io/REconTools/" class="external-link">R Tools for Data and Optimization</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/R4Econ/">R Examples Data and Optimization</a>
+      <a href="https://fanwangecon.github.io/R4Econ/" class="external-link">R Examples Data and Optimization</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/Stat4Econ/">R Examples Introductory Statistics</a>
+      <a href="https://fanwangecon.github.io/Stat4Econ/" class="external-link">R Examples Introductory Statistics</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/Stata4Econ/">Stata Examples Regressions and Tables</a>
+      <a href="https://fanwangecon.github.io/Stata4Econ/" class="external-link">Stata Examples Regressions and Tables</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/M4Econ/">Matlab Examples Matrix and Graphs</a>
+      <a href="https://fanwangecon.github.io/M4Econ/" class="external-link">Matlab Examples Matrix and Graphs</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/Math4Econ/">Matlab Introductory Math for Econ</a>
+      <a href="https://fanwangecon.github.io/Math4Econ/" class="external-link">Matlab Introductory Math for Econ</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/Tex4Econ/">Latex and Paper Generation Examples</a>
+      <a href="https://fanwangecon.github.io/Tex4Econ/" class="external-link">Latex and Paper Generation Examples</a>
     </li>
     <li>
-      <a href="https://fanwangecon.github.io/pyfan/">Python Examples</a>
+      <a href="https://fanwangecon.github.io/pyfan/" class="external-link">Python Examples</a>
     </li>
   </ul>
-</li>
-<li>
-  <a href="http://fanwangecon.github.io/">Fan</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/fanwangecon/PrjOptiAlloc">
+  <a href="https://github.com/fanwangecon/PrjOptiAlloc" class="external-link">
     <span class="fa fa-github"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://twitter.com/fanwangecon">
+  <a href="https://twitter.com/fanwangecon" class="external-link">
     <span class="fa fa-twitter"></span>
      
   </a>
@@ -119,28 +130,28 @@
 
       
 
-      </header><script src="PrjOptiAlloc_files/header-attrs-2.4/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to The Optimal Allocation Problem</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/master/vignettes/PrjOptiAlloc.Rmd"><code>vignettes/PrjOptiAlloc.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/FanWangEcon/PrjOptiAlloc/blob/HEAD/vignettes/PrjOptiAlloc.Rmd" class="external-link"><code>vignettes/PrjOptiAlloc.Rmd</code></a></small>
       <div class="hidden name"><code>PrjOptiAlloc.Rmd</code></div>
 
     </div>
 
     
     
-<div id="premise" class="section level2">
-<h2 class="hasAnchor">
-<a href="#premise" class="anchor"></a>Premise</h2>
-<p>Suppose there is an intervention scale-up for a nutritional intervention. Prior, an RCT showed that a nutritional intervention where children were provided with <a href="https://doi.org/10.1016/j.ehb.2016.03.002">bottles of proteins</a> effectively increased height.</p>
-<p>Suppose an organization, such as the <a href="https://www.wfpusa.org/">World Food Program</a> (WFP), is interested in distributing food aid to reduce stunting. <a href="http://www.fao.org/state-of-food-security-nutrition">150 million</a> children under five years of age are stunted, but resources are limited. Given prior research, how should the WFP best allocate its limited resources?</p>
+<div class="section level2">
+<h2 id="premise">Premise<a class="anchor" aria-label="anchor" href="#premise"></a>
+</h2>
+<p>Suppose there is an intervention scale-up for a nutritional intervention. Prior, an RCT showed that a nutritional intervention where children were provided with <a href="https://doi.org/10.1016/j.ehb.2016.03.002" class="external-link">bottles of proteins</a> effectively increased height.</p>
+<p>Suppose an organization, such as the <a href="https://www.wfpusa.org/" class="external-link">World Food Program</a> (WFP), is interested in distributing food aid to reduce stunting. <a href="http://www.fao.org/state-of-food-security-nutrition" class="external-link">150 million</a> children under five years of age are stunted, but resources are limited. Given prior research, how should the WFP best allocate its limited resources?</p>
 </div>
-<div id="planner-preferences" class="section level2">
-<h2 class="hasAnchor">
-<a href="#planner-preferences" class="anchor"></a>Planner Preferences</h2>
+<div class="section level2">
+<h2 id="planner-preferences">Planner Preferences<a class="anchor" aria-label="anchor" href="#planner-preferences"></a>
+</h2>
 <p>What is optimal might depend on the preferences of the planner? I use <em>CES preference aggregation</em> to allow for inequality aversions as well as bias:</p>
 <ol style="list-style-type: decimal">
 <li>What is the WFP’s <em>Inequality Aversion</em>?
@@ -165,9 +176,9 @@
 </li>
 </ol>
 </div>
-<div id="heterogeneities-among-candidate-recipients" class="section level2">
-<h2 class="hasAnchor">
-<a href="#heterogeneities-among-candidate-recipients" class="anchor"></a>Heterogeneities Among Candidate Recipients</h2>
+<div class="section level2">
+<h2 id="heterogeneities-among-candidate-recipients">Heterogeneities Among Candidate Recipients<a class="anchor" aria-label="anchor" href="#heterogeneities-among-candidate-recipients"></a>
+</h2>
 <p>What is optimal might depend on prior estimates and observables on children? Needs and effectiveness are based on estimates and observables:</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -178,16 +189,16 @@
 <em>Bounds</em>: What are the upper and lower bounds on how many bottles of protein shakes, or how many grams of protein intakes a child could take at the most or must take at the minimum?</li>
 </ol>
 </div>
-<div id="from-estimation-to-allocation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#from-estimation-to-allocation" class="anchor"></a>From Estimation to Allocation</h2>
+<div class="section level2">
+<h2 id="from-estimation-to-allocation">From Estimation to Allocation<a class="anchor" aria-label="anchor" href="#from-estimation-to-allocation"></a>
+</h2>
 <p>We estimate some causal relationship between individual-specific allocable input <em>V</em> and some outcome of interest <em>EH</em>. Finding causal estimates in reduced form or structural context is the main objective of most empirical papers. Generally, most research ends with finding what inputs/factors/policies matter and how much they matter.</p>
 <p>What are the allocative implications of the causal estimates and observables? One way to think about this is that we might want to randomize in order to estimate causal effects, but given our estimates, how should we allocate among heterogeneous individuals the finite resources that we found to be beneficial.</p>
 <p>The key tradeoff here is between <em>needs</em> and <em>effectiveness</em>. What is the expected outcome without allocation (needs), and what are the expected effects of allocations <em>effectiveness</em>. These might be heterogeneous among individuals and might not coincide. The optimal allocation problem is computationally very intensive if we are to consider all possible combinations of allocations.</p>
 </div>
-<div id="optimal-allocation-queues" class="section level2">
-<h2 class="hasAnchor">
-<a href="#optimal-allocation-queues" class="anchor"></a>Optimal Allocation Queues</h2>
+<div class="section level2">
+<h2 id="optimal-allocation-queues">Optimal Allocation Queues<a class="anchor" aria-label="anchor" href="#optimal-allocation-queues"></a>
+</h2>
 <p>The key concept that makes the solutions possible is the <em>Optimal Allocation Queue</em>. In both discrete and bounded-continuous (linear) cases, we can analytically solve for the optimal ranking in which individuals should begin and stop to receive allocations. These rankings, crucially, are invariant to resources when the marginal effects of allocations are nonincreasing. Nonincreasing marginal effects lead to resource (income) expansion paths that do not bend backward.</p>
 <p>One might think the allocation queue concept is not relevant for the continuous problems, because there, we need to figure out how much to provide to each individual, not just who should receive first or second. But it turns out that for the bounded-continuous problem, the solution is to first analytically find who should be the first individual to receive allocations. Then, there is an analytical function that maps total resources available to how much this first recipient should optimally receive as total resource availability increases. This function, it turns out, is a linear spline (when marginal returns are linear), and each successive knot of the spline is where the next individual in the optimal targeting queue begins to receive allocations.</p>
 <p>For the bounded-continuous problems, in the paper, I only discuss the linear case with constant-returns. When returns are decreasing, there are no analytical solutions. I do provide the solution to the log-linear problem using bisection in this vignette: <a href="https://fanwangecon.github.io/PrjOptiAlloc/articles/ffv_opt_solog_bisec_allrw.html">Loglinear Optimal Allocation Implicit Bisection Solution</a></p>
@@ -296,11 +307,13 @@ This paper asks, given  -->
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://fanwangecon.github.io">Fan Wang</a>.</p>
+  <p></p>
+<p>Developed by <a href="https://fanwangecon.github.io" class="external-link">Fan Wang</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -308,6 +321,8 @@ This paper asks, given  -->
 
   
 
+
+  
 
   </body>
 </html>

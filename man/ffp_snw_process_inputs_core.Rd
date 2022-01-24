@@ -2,7 +2,8 @@
 % Please edit documentation in R/ffp_snw_welfarechecks_input.R
 \name{ffp_snw_process_inputs_core}
 \alias{ffp_snw_process_inputs_core}
-\title{Processing Matlab Simulation results for allocation for Nygaard, Sorernsen and Wang (2020) Core.}
+\title{Contains file processing components of
+\code{\link{ffp_snw_process_inputs}} function}
 \usage{
 ffp_snw_process_inputs_core(
  
@@ -30,8 +31,8 @@ ffp_snw_process_inputs_core(
   svr_mass = "mass",
   ar_rho = c(1),
   bl_threshold = FALSE,
-  it_check_headorspouse = 12,
-  it_check_perkids = 5,
+  ls_stimulus_specs = list(st_biden_or_trump = "bidenchk", it_check_headorspouse = 12,
+    it_check_perkids = 5),
   bl_given_firstcheck = FALSE,
   bl_non_inc_adjust = FALSE,
   bl_print = TRUE,
@@ -39,7 +40,13 @@ ffp_snw_process_inputs_core(
 )
 }
 \description{
-Matlab Simulation Process for Allocation
+\code{\link{ffp_snw_process_inputs}} solves allocation
+problems after first processing input files to generate MPCs. This file
+contains the initial parts of \code{\link{ffp_snw_process_inputs}}
+and only processes inputs files to generate MPCs so that MPC tables etc
+can be generated. This file does not proceed to do optimal allocation.
+Should be merged with \code{\link{ffp_snw_process_inputs}} so that
+code does not repeat.
 }
 \author{
 Fan Wang, \url{http://fanwangecon.github.io}
